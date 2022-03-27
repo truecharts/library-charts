@@ -1116,3 +1116,11 @@ mariadb:
   existingSecret: "mariadbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
+
+# -- mongodb dependency configuration
+# @default -- See below
+mongodb:
+  enabled: false
+  existingSecret: "mongodbcreds"
+  # -- can be used to make an easy accessable note which URLS to use to access the DB.
+  url: {}
