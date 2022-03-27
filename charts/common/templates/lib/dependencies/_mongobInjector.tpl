@@ -27,22 +27,21 @@ data:
   mongodb-password: {{ $dbPass | b64enc | quote }}
   mongodb-root-password: {{ $rootPass | b64enc | quote }}
 {{- end }}
-  # url: {{ ( printf "sql://%v:%v@%v-mongodb:3306/%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  # urlnossl: {{ ( printf "sql://%v:%v@%v-mongodb:3306/%v?sslmode=disable" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  # plainporthost: {{ ( printf "%v-%v:3306" .Release.Name "mongodb" ) | b64enc | quote }}
-  # plainhost: {{ ( printf "%v-%v" .Release.Name "mongodb" ) | b64enc | quote }}
-  # jdbc: {{ ( printf "jdbc:sqlserver://%v-mongodb:3306/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  # jdbc-mysql: {{ ( printf "jdbc:mysql://%v-mongodb:3306/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  # jdbc-mongodb: {{ ( printf "jdbc:mongodb://%v-mongodb:3306/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
+  url: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
+  urlssl: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?ssl=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
+  urltls: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?tls=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
+  plainhost: {{ ( printf "%v-%v" .Release.Name "mongodb" ) | b64enc | quote }}
+  plainporthost: {{ ( printf "%v-%v:27017" .Release.Name "mongodb" ) | b64enc | quote }}
+  jdbc: {{ ( printf "jdbc:mongodb://%v-mongodb:27017/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
 type: Opaque
-# {{- $_ := set .Values.mongodb "mongodbPassword" ( $dbPass | quote ) }}
-# {{- $_ := set .Values.mongodb "mongodbRootPassword" ( $rootPass | quote ) }}
-# {{- $_ := set .Values.mongodb.url "plain" ( ( printf "%v-%v" .Release.Name "mongodb" ) | quote ) }}
-# {{- $_ := set .Values.mongodb.url "plainhost" ( ( printf "%v-%v" .Release.Name "mongodb" ) | quote ) }}
-# {{- $_ := set .Values.mongodb.url "plainport" ( ( printf "%v-%v:3306" .Release.Name "mongodb" ) | quote ) }}
-# {{- $_ := set .Values.mongodb.url "plainporthost" ( ( printf "%v-%v:3306" .Release.Name "mongodb" ) | quote ) }}
-# {{- $_ := set .Values.mongodb.url "complete" ( ( printf "sql://%v:%v@%v-mongodb:3306/%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | quote ) }}
-# {{- $_ := set .Values.mongodb.url "jdbc" ( ( printf "jdbc:sqlserver://%v-mongodb:3306/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | quote ) }}
+{{- $_ := set .Values.mongodb "mongodbPassword" ( $dbPass | quote ) }}
+{{- $_ := set .Values.mongodb "mongodbRootPassword" ( $rootPass | quote ) }}
+{{- $_ := set .Values.mongodb.url "plain" ( ( printf "%v-%v" .Release.Name "mongodb" ) | quote ) }}
+{{- $_ := set .Values.mongodb.url "plainhost" ( ( printf "%v-%v" .Release.Name "mongodb" ) | quote ) }}
+{{- $_ := set .Values.mongodb.url "plainport" ( ( printf "%v-%v:27017" .Release.Name "mongodb" ) | quote ) }}
+{{- $_ := set .Values.mongodb.url "plainporthost" ( ( printf "%v-%v:27017" .Release.Name "mongodb" ) | quote ) }}
+{{- $_ := set .Values.mongodb.url "complete" ( ( printf "mongodb://%v:%v@%v-mongodb:27017/%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | quote ) }}
+{{- $_ := set .Values.mongodb.url "jdbc" ( ( printf "jdbc:mongodb://%v-mongodb:27017/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | quote ) }}
 
 {{- end }}
 {{- end -}}
