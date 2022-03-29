@@ -287,11 +287,6 @@ secret: {}
 #        ...
 env: {}
 
-## Variables with values set from templates, example
-## With a release name of: demo, the example env value will be: demo-admin
-envTpl: {}
-  # TEMPLATE_VALUE: "{{ .Release.Name }}-admin"
-
 ## Variables with values from (for example) the Downward API
 ## See https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/
 envValueFrom: {}
@@ -304,6 +299,7 @@ envFrom: []
 #     name: config-map-name
 # - secretRef:
 #     name: secret-name
+
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
 

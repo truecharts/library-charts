@@ -100,10 +100,6 @@
       {{- end }}
     {{- end }}
   {{- end }}
-   {{- range $key, $value := .Values.envTpl }}
-    - name: {{ $key }}
-      value: {{ tpl $value $ | quote }}
-   {{- end }}
    {{- range $key, $value := .Values.envValueFrom }}
     - name: {{ $key }}
       valueFrom:
@@ -138,10 +134,6 @@
   {{- else }}
   {{- end }}
   {{- end -}}
-  {{- if .Values.secret }}
-    - secretRef:
-        name: {{ include "common.names.fullname" . }}
-  {{- end }}
   ports:
   {{- include "common.controller.ports" . | trim | nindent 4 }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}
