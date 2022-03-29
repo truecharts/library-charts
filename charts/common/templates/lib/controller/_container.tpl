@@ -100,10 +100,6 @@
       {{- end }}
     {{- end }}
   {{- end }}
-   {{- range $key, $value := .Values.envTpl }}
-    - name: {{ $key }}
-      value: {{ tpl $value $ | quote }}
-   {{- end }}
    {{- range $key, $value := .Values.envValueFrom }}
     - name: {{ $key }}
       valueFrom:
@@ -128,7 +124,7 @@
     {{- end }}
   {{- end}}
   envFrom:
-  {{- range .Values.envFrom -}}
+  {{- range .Values.envFrom }}
   {{- if  .secretRef }}
     - secretRef:
         name: {{ tpl .secretRef.name $ | quote }}
@@ -137,10 +133,6 @@
         name: {{ tpl .configMapRef.name $ | quote }}
   {{- else }}
   {{- end }}
-  {{- end -}}
-  {{- if .Values.secret }}
-    - secretRef:
-        name: {{ include "common.names.fullname" . }}
   {{- end }}
   ports:
   {{- include "common.controller.ports" . | trim | nindent 4 }}

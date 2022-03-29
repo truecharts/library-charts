@@ -252,24 +252,6 @@ class Test < ChartTest
         assert_equal(values[:env].keys[3].to_s, mainContainer["env"][14]["name"])
         assert_equal(values[:env].values[3][:fieldRef][:fieldPath], mainContainer["env"][14]["valueFrom"]["fieldRef"]["fieldPath"])
       end
-
-      it 'set "static" secret variables' do
-        expectedSecretName = 'common-test'
-        values = {
-          secret: {
-            STATIC_SECRET: 'value_of_secret'
-          }
-        }
-        chart.value values
-        secret = chart.resources(kind: "Secret").find{ |s| s["metadata"]["name"] == expectedSecretName }
-        refute_nil(secret)
-        assert_equal(values[:secret].values[0].to_s, secret["stringData"]["STATIC_SECRET"])
-
-        deployment = chart.resources(kind: "Deployment").first
-        containers = deployment["spec"]["template"]["spec"]["containers"]
-        mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(expectedSecretName, mainContainer["envFrom"][0]["secretRef"]["name"])
-      end
     end
 
   end

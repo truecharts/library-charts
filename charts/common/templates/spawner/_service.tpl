@@ -1,7 +1,7 @@
 {{/*
 Renders the Service objects required by the chart.
 */}}
-{{- define "common.service" -}}
+{{- define "common.spawner.service" -}}
   {{- /* Generate named services as required */ -}}
   {{- range $name, $service := .Values.service }}
     {{- if $service.enabled -}}
