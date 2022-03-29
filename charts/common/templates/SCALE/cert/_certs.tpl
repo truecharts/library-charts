@@ -18,7 +18,7 @@ Retrieve public key of certificate
 {{- define "common.SCALE.cert.publicKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert "publicKey" true) -}}
-{{ include "common.cert" $values }}
+{{ include "common.SCALE.cert" $values }}
 {{- end -}}
 
 
@@ -28,7 +28,7 @@ Retrieve private key of certificate
 {{- define "common.SCALE.cert.privateKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{ include "common.cert" $values }}
+{{ include "common.SCALE.cert" $values }}
 {{- end -}}
 
 {{/*

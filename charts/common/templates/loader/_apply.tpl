@@ -25,11 +25,11 @@ Secondary entrypoint and primary loader for the common chart
     {{- include "common.addon.netshoot" . }}
   {{- end -}}
 
-  {{- /* Build the confimaps */ -}}
+  {{- /* Build the configmaps */ -}}
   {{ include "common.spawner.configmap" . | nindent 0 }}
 
   {{- /* Build the secrets */ -}}
-  {{ include "common.spawner.secret" .  | nindent 0 }}
+  {{ include "common.spawner.secret" . | nindent 0 }}
 
   {{- /* Build the templates */ -}}
   {{- include "common.spawner.pvc" . }}
