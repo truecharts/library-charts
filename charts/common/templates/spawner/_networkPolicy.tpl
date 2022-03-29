@@ -13,7 +13,7 @@ Renders the networkPolicy objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "networkPolicy" $networkPolicyValues) -}}
-      {{- include "common.class.networkPolicy" $ }}
+      {{- include "common.class.networkpolicy" $ }}
     {{- end }}
   {{- end }}
 {{- end }}
