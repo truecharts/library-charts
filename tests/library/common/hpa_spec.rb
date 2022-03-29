@@ -14,8 +14,10 @@ class Test < ChartTest
 
       it 'can be enabled' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true
+          }
           }
         }
         chart.value values
@@ -25,8 +27,10 @@ class Test < ChartTest
 
       it 'default target is common.names.fullname ' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true
+            }
           }
         }
         chart.value values
@@ -36,8 +40,10 @@ class Test < ChartTest
 
       it 'default numer of replicas is min 1 max 3' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true
+          }
           }
         }
         chart.value values
@@ -50,70 +56,80 @@ class Test < ChartTest
     describe 'hpa::customsettings' do
       it 'can override target' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true,
             target: "targetname"
+          }
           }
         }
         chart.value values
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
-        assert_equal(values[:autoscaling][:target],hpa["spec"]["scaleTargetRef"]["name"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:target],hpa["spec"]["scaleTargetRef"]["name"])
       end
 
       it 'can change min and max replicas' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true,
             minReplicas: 4,
             maxReplicas: 8
           }
+          }
         }
         chart.value values
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
-        assert_equal(values[:autoscaling][:minReplicas],hpa["spec"]["minReplicas"])
-        assert_equal(values[:autoscaling][:maxReplicas],hpa["spec"]["maxReplicas"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:minReplicas],hpa["spec"]["minReplicas"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:maxReplicas],hpa["spec"]["maxReplicas"])
       end
 
       it 'can set targetCPUUtilizationPercentage' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true,
             targetCPUUtilizationPercentage: 60
+          }
           }
         }
         chart.value values
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_equal("cpu",hpa["spec"]["metrics"][0]["resource"]["name"])
-        assert_equal(values[:autoscaling][:targetCPUUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:targetCPUUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
       end
 
       it 'can set targetMemoryUtilizationPercentage' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true,
             targetMemoryUtilizationPercentage: 70
+          }
           }
         }
         chart.value values
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_equal("memory",hpa["spec"]["metrics"][0]["resource"]["name"])
-        assert_equal(values[:autoscaling][:targetMemoryUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:targetMemoryUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
       end
 
       it 'can set both targetCPU and targetMemoryUtilizationPercentage' do
         values = {
-          autoscaling: {
+          horizontalPodAutoscaler: {
+            main: {
             enabled: true,
             targetCPUUtilizationPercentage: 60,
             targetMemoryUtilizationPercentage: 70
+            }
           }
         }
         chart.value values
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_equal("cpu",hpa["spec"]["metrics"][0]["resource"]["name"])
-        assert_equal(values[:autoscaling][:targetCPUUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:targetCPUUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
         assert_equal("memory",hpa["spec"]["metrics"][1]["resource"]["name"])
-        assert_equal(values[:autoscaling][:targetMemoryUtilizationPercentage],hpa["spec"]["metrics"][1]["resource"]["targetAverageUtilization"])
+        assert_equal(values[:horizontalPodAutoscaler][:main][:targetMemoryUtilizationPercentage],hpa["spec"]["metrics"][1]["resource"]["targetAverageUtilization"])
       end
     end
   end
