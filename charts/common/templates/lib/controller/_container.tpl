@@ -124,7 +124,7 @@
     {{- end }}
   {{- end}}
   envFrom:
-  {{- range .Values.envFrom -}}
+  {{- range .Values.envFrom }}
   {{- if  .secretRef }}
     - secretRef:
         name: {{ tpl .secretRef.name $ | quote }}
@@ -133,7 +133,7 @@
         name: {{ tpl .configMapRef.name $ | quote }}
   {{- else }}
   {{- end }}
-  {{- end -}}
+  {{- end }}
   ports:
   {{- include "common.controller.ports" . | trim | nindent 4 }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}
