@@ -255,20 +255,19 @@ rbac:
 # -- Configure networkPolicy for the chart here.
 # @default -- See below
 networkPolicy:
-  # -- Enables or disables the networkPolicy
-  enabled: false
+  main:
+    # -- Enables or disables the networkPolicy
+    enabled: false
 
-  # customizes the podSelector (defaults to the helm-chart selector-labels
-  # podSelector:
+    # customizes the podSelector (defaults to the helm-chart selector-labels
+    # podSelector:
 
-  # -- add or remove Policy types. Options: ingress, egress, ingress-egress
-  policyType: ""
-
-  # -- add or remove egress policies
-  egress: []
-
-  # -- add or remove egress policies
-  ingress: []
+    # -- add or remove Policy types. Options: ingress, egress, ingress-egress
+    policyType: ""
+    # -- add or remove egress policies
+    egress: []
+    # -- add or remove egress policies
+    ingress: []
 
 # -- Use this directly attach a pod to a SCALE interface.
 # Please be aware: This bypasses k8s services
