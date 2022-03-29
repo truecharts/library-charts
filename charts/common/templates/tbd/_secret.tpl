@@ -1,17 +1,19 @@
 {{/*
-The Secret object to be created.
+Renders the Secret objects required by the chart.
 */}}
-{{- define "common.secret" }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-type: Opaque
-{{- with .Values.secret }}
-stringData:
-  {{- toYaml . | nindent 2 }}
-{{- end }}
+{{- define "common.secret" -}}
+  {{- /* Generate named secrets as required */ -}}
+  {{- range $name, $secret := .Values.secret }}
+    {{- if $secret.enabled -}}
+      {{- $secretValues := $secret -}}
+
+      {{/* set the default nameOverride to the Secret name */}}
+      {{- if not $secretValues.nameOverride -}}
+        {{- $_ := set $secretValues "nameOverride" $name -}}
+      {{ end -}}
+
+      {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
+      {{- include "common.classes.secret" $ }}
+    {{- end }}
+  {{- end }}
 {{- end }}
