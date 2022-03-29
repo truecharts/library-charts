@@ -32,3 +32,12 @@ common-*kind*-*optional_catagory*-*name*-*optional_subname*
 
 For example:
 `common-helper-service-primary`
+
+## Pod structure
+
+Generally speaking the refactor will allow for extra pods to be defined.
+At the same time persistence, ingress and services will still be at the root level and not defined per-pod.
+
+This is primarily because SCALE GUI plays nicer when we sort things per object-type rather than per-pod.
+
+This also happens to be somewhat closer to native k8s, where services and ingresses are not a per-pod thing, but a seperate object linked/bound to a certain pod.
