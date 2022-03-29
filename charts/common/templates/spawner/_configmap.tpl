@@ -1,7 +1,7 @@
 {{/*
 Renders the configMap objects required by the chart.
 */}}
-{{- define "common.configmap" -}}
+{{- define "common.spawner.configmap" -}}
   {{- /* Generate named configMaps as required */ -}}
   {{- range $name, $configmap := .Values.configmap }}
     {{- if $configmap.enabled -}}
