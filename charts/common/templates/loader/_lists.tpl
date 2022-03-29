@@ -11,7 +11,6 @@
   {{ include "common.lib.values.persistence.list" . }}
   {{ include "common.lib.values.persistence.label.list" . }}
   {{ include "common.lib.values.persistence.annotations.list" . }}
-  {{ include "common.lib.values.device.list" . }}
 
   {{ include "common.lib.values.service.list" . }}
 
