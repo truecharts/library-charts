@@ -4,7 +4,7 @@ Blueprint for the NetworkPolicy object that can be included in the addon.
 {{- define "common.class.networkpolicy" -}}
   {{- $fullName := include "common.names.fullname" . -}}
   {{- $networkPolicyName := $fullName -}}
-  {{- $values := $values -}}
+  {{- $values := .Values.networkPolicy -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.networkPolicy -}}
