@@ -2,7 +2,7 @@
 
 {{- if .Values.portal }}
 {{- if .Values.portal.enabled }}
-{{- $primaryService := get .Values.service (include "common.service.primary" .) }}
+{{- $primaryService := get .Values.service (include "common.helper.service.primary" .) }}
 {{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
 {{- $ingr := index .Values.ingress (keys .Values.ingress | first) -}}
 {{- $host := "$node_ip" }}

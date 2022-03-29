@@ -17,8 +17,8 @@ within the common library.
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
   {{- end -}}
 
-  {{- $primaryService := get .Values.service (include "common.service.primary" .) -}}
-  {{- $autoLinkService := get .Values.service (include "common.service.primary" .) -}}
+  {{- $primaryService := get .Values.service (include "common.helper.service.primary" .) -}}
+  {{- $autoLinkService := get .Values.service (include "common.helper.service.primary" .) -}}
   {{- $defaultServiceName := $fullName -}}
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
     {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}

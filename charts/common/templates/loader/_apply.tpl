@@ -1,7 +1,7 @@
 {{/*
 Secondary entrypoint and primary loader for the common chart
 */}}
-{{- define "common.postSetup" -}}
+{{- define "common.loader.apply" -}}
   {{- /* Render the externalInterfaces */ -}}
   {{ include "common.classes.externalInterfaces" .  | nindent 0 }}
 
