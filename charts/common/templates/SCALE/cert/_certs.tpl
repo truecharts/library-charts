@@ -5,7 +5,7 @@ Retrieve true/false if certificate is configured
 {{- if .ObjectValues.certHolder.scaleCert -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{- template "common.cert_present" $values -}}
+{{- template "common.SCALE.cert_present" $values -}}
 {{- else -}}
 {{- false -}}
 {{- end -}}
