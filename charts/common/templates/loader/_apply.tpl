@@ -50,7 +50,7 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.rbac" . | nindent 0 }}
 
-  {{ include "common.hpa" . | nindent 0 }}
+  {{ include "common.class.hpa" . | nindent 0 }}
 
   {{ include "common.spawner.service" . | nindent 0 }}
 

@@ -191,13 +191,27 @@ stdin: false
 
 # -- Add a Horizontal Pod Autoscaler
 # @default -- <disabled>
-autoscaling:
-  enabled: false
-  target:  # deploymentname
-  minReplicas:  # 1
-  maxReplicas:  # 100
-  targetCPUUtilizationPercentage:  # 80
-  targetMemoryUtilizationPercentage:  # 80
+horizontalPodAutoscaler:
+  main:
+    enabled: false
+    # -- deployment kind of target
+    # @default -- main pod
+    targetKind:
+    # -- name of the targeted deployment
+    # @default -- main pod
+    target:
+    # -- minimum amount of replica's to spawn
+    # @default -- 1
+    minReplicas:
+    # -- minimum amount of replica's to spawn
+    # @default -- 100
+    maxReplicas:
+    # -- minimum amount of replica's to spawn
+    # @default -- 80
+    targetCPUUtilizationPercentage:
+    # -- minimum amount of replica's to spawn
+    # @default -- 80
+    targetMemoryUtilizationPercentage:
 
 # -- Create serviceaccount
 # @default -- See below
