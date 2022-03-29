@@ -1,5 +1,6 @@
 {{/* merge deviceList with Persitence */}}
 {{- define "common.lib.values.device.list" -}}
+  {{- $perDict := dict }}
   {{- range $index, $item := .Values.deviceList -}}
     {{- $name := ( printf "device-%s" ( $index | toString ) ) }}
     {{- if $item.name }}
