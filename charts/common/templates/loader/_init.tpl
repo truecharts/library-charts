@@ -1,7 +1,21 @@
-{{- define "common.setup" -}}
+{{- define "common.loader.init" -}}
 
 {{- /* Merge the local chart values and the common chart defaults */ -}}
-{{- include "common.values" . }}
+{{- include "common.values.init" . }}
+
+{{- include "common.loader.lists" . }}
+
+{{- include "common.lib.values.capabilities" . }}
+
+{{- include "common.lib.values.supplementalGroups" . }}
+
+{{- include "common.lib.values.securityContext.privileged" . }}
+
+{{- include "common.lib.values.persistence.simple" . }}
+
+{{- include "common.lib.values.volumeClaimTemplates.simple" . }}
+
+{{- include "common.lib.values.service.simple" . }}
 
 {{- /* Autogenerate postgresql passwords if needed */ -}}
 {{- include "common.dependencies.postgresql.injector" . }}

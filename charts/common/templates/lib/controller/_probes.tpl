@@ -2,10 +2,10 @@
 Probes selection logic.
 */}}
 {{- define "common.controller.probes" -}}
-{{- $primaryService := get .Values.service (include "common.service.primary" .) -}}
+{{- $primaryService := get .Values.service (include "common.helper.service.primary" .) -}}
 {{- $primaryPort := "" -}}
 {{- if $primaryService -}}
-  {{- $primaryPort = get $primaryService.ports (include "common.classes.service.ports.primary" (dict "serviceName" (include "common.service.primary" .) "values" $primaryService)) -}}
+  {{- $primaryPort = get $primaryService.ports (include "common.classes.service.ports.primary" (dict "serviceName" (include "common.helper.service.primary" .) "values" $primaryService)) -}}
 {{- end -}}
 {{- $probeType := "TCP" -}}
 
