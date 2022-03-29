@@ -1,5 +1,5 @@
 {{/* Renders the Ingress objects required by the chart */}}
-{{- define "common.ingress" -}}
+{{- define "common.spawner.ingress" -}}
   {{- /* Generate named ingresses as required */ -}}
   {{- range $name, $ingress := .Values.ingress }}
     {{- if $ingress.enabled -}}
@@ -21,7 +21,7 @@
           {{- end }}
           {{- $_ := set $tlsValues "nameOverride" $nameOverride -}}
           {{- $_ := set $ "ObjectValues" (dict "certHolder" $tlsValues) -}}
-          {{- include "common.cert.secret" $ }}
+          {{- include "common.SCALE.cert.secret" $ }}
         {{- end }}
       {{- end }}
     {{- end }}
