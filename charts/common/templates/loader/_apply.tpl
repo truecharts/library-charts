@@ -3,7 +3,7 @@ Secondary entrypoint and primary loader for the common chart
 */}}
 {{- define "common.loader.apply" -}}
   {{- /* Render the externalInterfaces */ -}}
-  {{ include "common.classes.externalInterfaces" .  | nindent 0 }}
+  {{ include "common.SCALE.externalInterfaces" .  | nindent 0 }}
 
   {{- /* Enable code-server add-on if required */ -}}
   {{- if .Values.addons.codeserver.enabled }}
@@ -25,11 +25,14 @@ Secondary entrypoint and primary loader for the common chart
     {{- include "common.addon.netshoot" . }}
   {{- end -}}
 
-  {{- /* Build the confimap */ -}}
-  {{ include "common.configmap" . | nindent 0 }}
+  {{- /* Build the confimaps */ -}}
+  {{ include "common.spawner.configmap" . | nindent 0 }}
+
+  {{- /* Build the secrets */ -}}
+  {{ include "common.spawner.secret" .  | nindent 0 }}
 
   {{- /* Build the templates */ -}}
-  {{- include "common.pvc" . }}
+  {{- include "common.spawner.pvc" . }}
 
   {{- include "common.serviceAccount" . }}
 
@@ -49,13 +52,9 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.hpa" . | nindent 0 }}
 
-  {{ include "common.service" . | nindent 0 }}
+  {{ include "common.spawner.service" . | nindent 0 }}
 
-  {{ include "common.ingress" .  | nindent 0 }}
-
-  {{- if .Values.secret -}}
-    {{ include "common.secret" .  | nindent 0 }}
-  {{- end -}}
+  {{ include "common.spawner.ingress" .  | nindent 0 }}
 
   {{ include "common.configmap.portal" .  | nindent 0 }}
 

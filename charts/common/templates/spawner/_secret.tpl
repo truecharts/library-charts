@@ -1,7 +1,7 @@
 {{/*
 Renders the Secret objects required by the chart.
 */}}
-{{- define "common.secret" -}}
+{{- define "common.spawner.secret" -}}
   {{- /* Generate named secrets as required */ -}}
   {{- range $name, $secret := .Values.secret }}
     {{- if $secret.enabled -}}

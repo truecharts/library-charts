@@ -1,7 +1,7 @@
 {{/*
 Retrieve true/false if certificate is configured
 */}}
-{{- define "common.cert.available" -}}
+{{- define "common.SCALE.cert.available" -}}
 {{- if .ObjectValues.certHolder.scaleCert -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
@@ -15,7 +15,7 @@ Retrieve true/false if certificate is configured
 {{/*
 Retrieve public key of certificate
 */}}
-{{- define "common.cert.publicKey" -}}
+{{- define "common.SCALE.cert.publicKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert "publicKey" true) -}}
 {{ include "common.cert" $values }}
@@ -25,7 +25,7 @@ Retrieve public key of certificate
 {{/*
 Retrieve private key of certificate
 */}}
-{{- define "common.cert.privateKey" -}}
+{{- define "common.SCALE.cert.privateKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
 {{ include "common.cert" $values }}
@@ -34,7 +34,7 @@ Retrieve private key of certificate
 {{/*
 Retrieve true/false if certificate is available in ixCertificates
 */}}
-{{- define "common.cert_present" -}}
+{{- define "common.SCALE.cert_present" -}}
 {{- $values := . -}}
 {{- hasKey $values.Values.ixCertificates ($values.commonCertOptions.certKeyName | toString) -}}
 {{- end -}}
@@ -43,7 +43,7 @@ Retrieve true/false if certificate is available in ixCertificates
 {{/*
 Retrieve certificate from variable name
 */}}
-{{- define "common.cert" -}}
+{{- define "common.SCALE.cert" -}}
 {{- $values := . -}}
 {{- $certKey := ($values.commonCertOptions.certKeyName | toString) -}}
 {{- if hasKey $values.Values.ixCertificates $certKey -}}
