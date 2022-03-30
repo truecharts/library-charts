@@ -29,7 +29,7 @@ Return  the proper Storage Class
       {{- $output = ( printf "ix-storage-class-%s"  .global.Release.Name ) -}}
     {{- end }}
   {{- end -}}
-{{- end -}}
 {{- printf "storageClassName: %s" $output -}}
+{{- end -}}
 
 {{- end -}}
