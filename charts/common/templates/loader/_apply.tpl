@@ -58,5 +58,5 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.configmap.portal" .  | nindent 0 }}
 
-  {{ include "common.networkpolicy" . | nindent 0 }}
+  {{ include "common.spawner.networkpolicy" . | nindent 0 }}
 {{- end -}}

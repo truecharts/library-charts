@@ -1,19 +1,38 @@
 {{/*
 Blueprint for the NetworkPolicy object that can be included in the addon.
 */}}
-{{- define "common.networkpolicy" -}}
-{{- if .Values.networkPolicy.enabled }}
+{{- define "common.class.networkpolicy" -}}
+  {{- $fullName := include "common.names.fullname" . -}}
+  {{- $networkPolicyName := $fullName -}}
+  {{- $values := .Values.networkPolicy -}}
+
+  {{- if hasKey . "ObjectValues" -}}
+    {{- with .ObjectValues.networkPolicy -}}
+      {{- $values = . -}}
+    {{- end -}}
+  {{ end -}}
+
+  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+    {{- $networkPolicyName = printf "%v-%v" $networkPolicyName $values.nameOverride -}}
+  {{- end }}
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
+  name: {{ $networkPolicyName }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
-  name: {{ include "common.names.fullname" . }}
+    {{- with $values.labels }}
+       {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   podSelector:
-  {{- if .Values.networkPolicy.podSelector }}
-  {{- with .Values.networkPolicy.podSelector }}
+  {{- if $values.podSelector }}
+  {{- with $values.podSelector }}
     {{- . | toYaml | nindent 4 }}
   {{- end -}}
   {{- else }}
@@ -21,20 +40,20 @@ spec:
     {{- include "common.labels.selectorLabels" . | nindent 6 }}
   {{- end }}
 
-  {{- if .Values.networkPolicy.policyType }}
-  {{- if eq .Values.networkPolicy.policyType "ingress" }}
+  {{- if $values.policyType }}
+  {{- if eq $values.policyType "ingress" }}
   policyTypes: ["Ingress"]
-  {{- else if eq .Values.networkPolicy.policyType "egress" }}
+  {{- else if eq $values.policyType "egress" }}
   policyTypes: ["Egress"]
 
-  {{- else if eq .Values.networkPolicy.policyType "ingress-egress" }}
+  {{- else if eq $values.policyType "ingress-egress" }}
   policyTypes: ["Ingress", "Egress"]
   {{- end -}}
   {{- end -}}
 
-  {{- if .Values.networkPolicy.egress }}
+  {{- if $values.egress }}
   egress:
-  {{- range .Values.networkPolicy.egress }}
+  {{- range $values.egress }}
   - to:
     {{- range .to }}
     {{- $nss := false }}
@@ -95,9 +114,9 @@ spec:
   {{- end -}}
   {{- end -}}
 
-  {{- if .Values.networkPolicy.ingress }}
+  {{- if $values.ingress }}
   ingress:
-  {{- range .Values.networkPolicy.ingress }}
+  {{- range $values.ingress }}
   - from:
     {{- range .from }}
     {{- $nss := false }}
@@ -156,7 +175,4 @@ spec:
   {{- end -}}
   {{- end -}}
   {{- end -}}
-
-
-{{- end -}}
 {{- end -}}
