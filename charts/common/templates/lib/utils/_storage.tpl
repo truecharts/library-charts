@@ -9,6 +9,7 @@ Return  the proper Storage Class
 {{- $output := "" -}}
 
 {{- if ( hasKey .persistence "storageClass" ) -}}
+  {{- if $storageClass -}}
   {{- if (eq "-" $storageClass) -}}
     {{- $output = "\"\"" -}}
   {{- else if (eq "SCALE-ZFS" $storageClass ) }}
@@ -16,6 +17,8 @@ Return  the proper Storage Class
   {{- else }}
     {{- $output = $storageClass -}}
   {{- end -}}
+  {{- end -}}
+{{- printf "storageClassName: %s" $output -}}
 {{- else if .global }}
   {{- if .global.Values.storageClass -}}
     {{- $output = .global.Values.storageClass -}}
