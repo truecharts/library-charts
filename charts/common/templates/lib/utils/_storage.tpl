@@ -5,10 +5,10 @@ Return  the proper Storage Class
 */}}
 {{- define "common.storage.class" -}}
 
-{{- $storageClass := .persistence.storageClass -}}
+{{- $storageClass :=  .persistence.storageClass  -}}
 {{- $output := "" -}}
 
-{{- if $storageClass -}}
+{{- if ( hasKey .persistence "storageClass" ) -}}
   {{- if (eq "-" $storageClass) -}}
     {{- $output = "\"\"" -}}
   {{- else if (eq "SCALE-ZFS" $storageClass ) }}
