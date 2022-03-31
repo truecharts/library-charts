@@ -18,8 +18,9 @@ Return  the proper Storage Class
       {{- $output = $storageClass -}}
     {{- end -}}
     {{- printf "storageClassName: %s" $output -}}
+  {{- else -}}
+    {{- printf "%s" "storageClassName: " -}}
   {{- end -}}
-  {{- printf "%s" "storageClassName: " -}}
 {{- else if .global }}
   {{- if .global.Values.storageClass -}}
     {{- $output = .global.Values.storageClass -}}
