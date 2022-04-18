@@ -27,9 +27,13 @@ data:
   mongodb-password: {{ $dbPass | b64enc | quote }}
   mongodb-root-password: {{ $rootPass | b64enc | quote }}
 {{- end }}
-  url: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  urlssl: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?ssl=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
-  urltls: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?tls=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
+  url: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase ) | b64enc | quote }}
+  urlssl: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v&ssl=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase ) | b64enc | quote }}
+  urltls: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v&tls=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase ) | b64enc | quote }}
+  urlreplicaset: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v&?replicaSet=%v" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbReplicasetName ) | b64enc | quote }}
+  urlreplicasetssl: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v&?replicaSet=%v&ssl=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbReplicasetName ) | b64enc | quote }}
+  urlreplicasettlk: {{ ( printf "mongodb://%v:%v@%v-mongodb:27017/%v?authSource=%v&?replicaSet=%v&tls=true" .Values.mongodb.mongodbUsername $dbPass .Release.Name .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbDatabase .Values.mongodb.mongodbReplicasetName ) | b64enc | quote }}
+  urlreplicasetoplog: {{ ( printf "mongodb://root:%v@%v-mongodb:27017/local?authSource=admin" $rootPass .Release.Name ) | b64enc | quote }}
   plainhost: {{ ( printf "%v-%v" .Release.Name "mongodb" ) | b64enc | quote }}
   plainporthost: {{ ( printf "%v-%v:27017" .Release.Name "mongodb" ) | b64enc | quote }}
   jdbc: {{ ( printf "jdbc:mongodb://%v-mongodb:27017/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | b64enc | quote }}
