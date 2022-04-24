@@ -893,9 +893,6 @@ persistence:
     hostPath: /etc/localtime
     # -- Automatic set permissions using chown and chmod
     setPermissions: false
-    # -- Specifying a hostPathType adds a check before trying to mount the path.
-    # See Kubernetes documentation for options.
-    hostPathType: "File"
     # -- Specify if the path should be mounted read-only.
     readOnly: true
 
