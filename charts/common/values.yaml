@@ -885,7 +885,7 @@ persistence:
     # -- Define the secret items to be mounted
     items:
       - key: username
-        path: my-group/my-
+        path: my-group/my-username
   localtime:
     enabled: true
     type: hostPath
