@@ -890,7 +890,8 @@ persistence:
     enabled: true
     type: hostPath
     # -- Which path on the host should be mounted.
-    hostPath: /etc/localtime
+    hostPath: /etc
+    subPath: localtime
     # -- Automatic set permissions using chown and chmod
     setPermissions: false
     # -- Specify if the path should be mounted read-only.
