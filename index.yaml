@@ -3,6 +3,27 @@ entries:
   common:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-05-18T06:23:50.924404908Z"
+    description: Function library for TrueCharts
+    digest: da90e4b1e9633dc61e615ef8d786db29299ec4e19e0fb6a90045d73fe990d342
+    home: https://github.com/truecharts/apps/tree/master/charts/common
+    icon: https://avatars.githubusercontent.com/u/76400755
+    keywords:
+    - truecharts
+    - library-chart
+    - common
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: info@truecharts.org
+      name: TrueCharts
+      url: https://truecharts.org
+    name: common
+    type: library
+    urls:
+    - https://github.com/truecharts/library-charts/releases/download/common-9.3.16/common-9.3.16.tgz
+    version: 9.3.16
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-05-17T06:23:39.198915015Z"
     description: Function library for TrueCharts
     digest: 01398da9186ccf1ac7448101278be9c9910ca70d5702fb4cf33ae384b119a0e8
@@ -550,6 +571,27 @@ entries:
   dep-common:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-05-18T06:23:51.074660881Z"
+    description: Function library for TrueCharts
+    digest: 8a553b4491d8fb239c1454c60f2e26a0d24ed990489859b99ca232439fa43b60
+    home: https://github.com/truecharts/apps/tree/master/charts/common
+    icon: https://avatars.githubusercontent.com/u/76400755
+    keywords:
+    - truecharts
+    - library-chart
+    - common
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: info@truecharts.org
+      name: TrueCharts
+      url: https://truecharts.org
+    name: dep-common
+    type: library
+    urls:
+    - https://github.com/truecharts/library-charts/releases/download/dep-common-9.3.16/dep-common-9.3.16.tgz
+    version: 9.3.16
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-05-17T06:23:39.364988336Z"
     description: Function library for TrueCharts
     digest: cb609f071b064a885e860d20c6202ce3dbd0b647764afd884ef5b41007464631
@@ -737,4 +779,4 @@ entries:
     urls:
     - https://github.com/truecharts/library-charts/releases/download/dep-common-9.3.7/dep-common-9.3.7.tgz
     version: 9.3.7
-generated: "2022-05-17T06:23:39.36524104Z"
+generated: "2022-05-18T06:23:51.074874603Z"
