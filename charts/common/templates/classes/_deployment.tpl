@@ -2,32 +2,43 @@
 This template serves as the blueprint for the Deployment objects that are created
 within the common library.
 */}}
-{{- define "common.deployment" }}
+{{- define "common.class.deployment" }}
+{{- $values := .Values.pod -}}
+{{- if hasKey . "ObjectValues" -}}
+  {{- with .ObjectValues.pod -}}
+    {{- $values = . -}}
+  {{- end -}}
+{{ end -}}
+
+{{- $podName := include "common.names.fullname" . -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- $podName = printf "%v-%v" $podName $values.nameOverride -}}
+{{ end -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
+  name: {{ $podName }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
-    {{- with .Values.controller.labels }}
+    {{- with $values.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
   {{- include "common.annotations.workload" . | nindent 4 }}
-  {{- with .Values.controller.annotations }}
+  {{- with $values.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
-  replicas: {{ .Values.controller.replicas }}
-  {{- $strategy := default "Recreate" .Values.controller.strategy }}
+  revisionHistoryLimit: {{ $values.revisionHistoryLimit }}
+  replicas: {{ $values.replicas }}
+  {{- $strategy := default "Recreate" $values.strategy }}
   {{- if and (ne $strategy "Recreate") (ne $strategy "RollingUpdate") }}
     {{- fail (printf "Not a valid strategy type for Deployment (%s)" $strategy) }}
   {{- end }}
   strategy:
     type: {{ $strategy }}
-    {{- with .Values.controller.rollingUpdate }}
+    {{- with $values.rollingUpdate }}
       {{- if and (eq $strategy "RollingUpdate") (or .surge .unavailable) }}
     rollingUpdate:
         {{- with .unavailable }}
@@ -45,7 +56,7 @@ spec:
     metadata:
       annotations:
       {{- include "common.annotations.workload.spec" . | nindent 8 }}
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.pod.annotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -54,5 +65,5 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "common.controller.pod" . | nindent 6 }}
+      {{- include "common.lib.pod" . | nindent 6 }}
 {{- end }}

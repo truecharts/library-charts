@@ -2,35 +2,46 @@
 This template serves as the blueprint for the StatefulSet objects that are created
 within the common library.
 */}}
-{{- define "common.statefulset" }}
+{{- define "common.class.statefulset" }}
 {{- $values := .Values }}
 {{- $releaseName := .Release.Name }}
+{{- $values := .Values.pod -}}
+{{- if hasKey . "ObjectValues" -}}
+  {{- with .ObjectValues.pod -}}
+    {{- $values = . -}}
+  {{- end -}}
+{{ end -}}
+
+{{- $podName := include "common.names.fullname" . -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- $podName = printf "%v-%v" $podName $values.nameOverride -}}
+{{ end -}}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "common.names.fullname" . }}
+  name: {{ $podName }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
-    {{- with .Values.controller.labels }}
+    {{- with $values.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.controller.annotations }}
+  {{- with $values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
-  replicas: {{ .Values.controller.replicas }}
-  {{- $strategy := default "RollingUpdate" .Values.controller.strategy }}
+  revisionHistoryLimit: {{ $values.revisionHistoryLimit }}
+  replicas: {{ $values.replicas }}
+  {{- $strategy := default "RollingUpdate" $values.strategy }}
   {{- if and (ne $strategy "OnDelete") (ne $strategy "RollingUpdate") }}
     {{- fail (printf "Not a valid strategy type for StatefulSet (%s)" $strategy) }}
   {{- end }}
   updateStrategy:
     type: {{ $strategy }}
-    {{- if and (eq $strategy "RollingUpdate") .Values.controller.rollingUpdate.partition }}
+    {{- if and (eq $strategy "RollingUpdate") $values.rollingUpdate.partition }}
     rollingUpdate:
-      partition: {{ .Values.controller.rollingUpdate.partition }}
+      partition: {{ $values.rollingUpdate.partition }}
     {{- end }}
   selector:
     matchLabels:
@@ -38,7 +49,7 @@ spec:
   serviceName: {{ include "common.names.fullname" . }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.pod.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -48,7 +59,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "common.controller.pod" . | nindent 6 }}
+      {{- include "ccommon.lib.pod" . | nindent 6 }}
   volumeClaimTemplates:
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
     {{- $vctname := $index }}

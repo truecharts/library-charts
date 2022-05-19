@@ -36,17 +36,7 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.spawner.serviceaccount" . | nindent 0 }}
 
-  {{- if .Values.controller.enabled }}
-    {{- if eq .Values.controller.type "deployment" }}
-      {{- include "common.deployment" . | nindent 0 }}
-    {{ else if eq .Values.controller.type "daemonset" }}
-      {{- include "common.daemonset" . | nindent 0 }}
-    {{ else if eq .Values.controller.type "statefulset"  }}
-      {{- include "common.statefulset" . | nindent 0 }}
-    {{ else }}
-      {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) }}
-    {{- end -}}
- {{- end -}}
+  {{ include "common.spawner.pod" . | nindent 0 }}
 
   {{ include "common.spawner.rbac" . | nindent 0 }}
 
