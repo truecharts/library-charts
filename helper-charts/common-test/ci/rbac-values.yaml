@@ -61,4 +61,5 @@ rbac:
         - watch
 
 serviceAccount:
-  create: true
+  main:
+    create: true
