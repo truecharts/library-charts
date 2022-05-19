@@ -48,6 +48,8 @@ Secondary entrypoint and primary loader for the common chart
     {{- end -}}
  {{- end -}}
 
+  {{ include "common.spawner.serviceaccount" . | nindent 0 }}
+
   {{ include "common.rbac" . | nindent 0 }}
 
   {{ include "common.spawner.hpa" . | nindent 0 }}
