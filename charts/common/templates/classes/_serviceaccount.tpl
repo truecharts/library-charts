@@ -17,7 +17,6 @@ using the common library.
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $saName = printf "%v-%v" $saName $values.nameOverride -}}
   {{- end }}
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -29,5 +28,4 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end }}
 {{- end }}
