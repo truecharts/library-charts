@@ -253,6 +253,9 @@ rbac:
     # -- Set Rules on the ClusterRole
     rules: {}
 
+    # -- Defines default subject serviceAccount Name.
+    # serviceAccountName: ""
+
     # -- Add subjects to the ClusterRoleBinding.
     # includes the above created serviceaccount
     subjects: {}
