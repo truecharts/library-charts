@@ -21,12 +21,12 @@ metadata:
   name: {{ $podName }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
+    {{- with $values.controllerLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
   {{- include "common.annotations.workload" . | nindent 4 }}
-  {{- with $values.annotations }}
+  {{- with $values.controllerAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -38,7 +38,7 @@ spec:
     metadata:
       annotations:
       {{- include "common.annotations.workload.spec" . | nindent 8 }}
-      {{- with .Values.pod.annotations }}
+      {{- with $values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:

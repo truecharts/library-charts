@@ -1,9 +1,14 @@
-{{/* merge controllerAnnotationsList with controllerAnnotations */}}
+{{/* merge podAnnotationsList with controllerAnnotations */}}
 {{- define "common.lib.values.controller.annotations.list" -}}
+  {{- range $index, $item := .Values.pod }}
+  {{- if $item.enabled }}
   {{- $controllerAnnotationsDict := dict }}
-  {{- range .Values.controller.annotationsList }}
+  {{- range $item.controllerAnnotationsList }}
   {{- $_ := set $controllerAnnotationsDict .name .value }}
   {{- end }}
-  {{- $controlleranno := merge .Values.controller.annotations $controllerAnnotationsDict }}
-  {{- $_ := set .Values.controller "annotations" (deepCopy $controlleranno) -}}
+  {{- $tmp := $item.controllerAnnotations }}
+  {{- $controllerlab := merge $tmp $controllerAnnotationsDict }}
+  {{- $_ := set $item "controllerAnnotations" (deepCopy $controllerlab) -}}
+  {{- end }}
+  {{- end }}
 {{- end -}}

@@ -1,9 +1,14 @@
 {{/* merge podAnnotationsList with podAnnotations */}}
 {{- define "common.lib.values.pod.annotations.list" -}}
+  {{- range $index, $item := .Values.pod }}
+  {{- if $item.enabled }}
   {{- $podAnnotationsDict := dict }}
-  {{- range .Values.podAnnotationsList }}
+  {{- range $item.podAnnotationsList }}
   {{- $_ := set $podAnnotationsDict .name .value }}
   {{- end }}
-  {{- $podanno := merge .Values.podAnnotations $podAnnotationsDict }}
-  {{- $_ := set .Values "podAnnotations" (deepCopy $podanno) -}}
+  {{- $tmp := $item.podAnnotations }}
+  {{- $podlab := merge $tmp $podAnnotationsDict }}
+  {{- $_ := set $item "podAnnotations" (deepCopy $podlab) -}}
+  {{- end }}
+  {{- end }}
 {{- end -}}

@@ -1,9 +1,14 @@
 {{/* merge podLabelsList with podLabels */}}
 {{- define "common.lib.values.pod.label.list" -}}
+  {{- range $index, $item := .Values.pod }}
+  {{- if $item.enabled }}
   {{- $podLabelsDict := dict }}
-  {{- range .Values.controller.labelsList }}
+  {{- range $item.podLabelsList }}
   {{- $_ := set $podLabelsDict .name .value }}
   {{- end }}
-  {{- $podlab := merge .Values.controller.labels $podLabelsDict }}
-  {{- $_ := set .Values.controller "labels" (deepCopy $podlab) -}}
+  {{- $tmp := $item.podLabels }}
+  {{- $podlab := merge $tmp $podLabelsDict }}
+  {{- $_ := set $item "podLabels" (deepCopy $podlab) -}}
+  {{- end }}
+  {{- end }}
 {{- end -}}

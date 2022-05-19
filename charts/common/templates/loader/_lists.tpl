@@ -1,7 +1,6 @@
 {{/* load all list to dict injectors */}}
 {{- define "common.loader.lists" -}}
 
-
   {{ include "common.lib.values.controller.label.list" . }}
   {{ include "common.lib.values.controller.annotations.list" . }}
 
@@ -17,7 +16,5 @@
   {{ include "common.lib.values.ingress.list" . }}
   {{ include "common.lib.values.ingress.label.list" . }}
   {{ include "common.lib.values.ingress.annotations.list" . }}
-
-
 
 {{- end -}}

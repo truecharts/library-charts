@@ -115,18 +115,35 @@ pod:
     # Valid options are deployment, daemonset or statefulset
     type: deployment
     # -- Set additional annotations on the deployment/statefulset/daemonset
-    annotationsList: []
+    controllerAnnotationsList: []
     # - name: somename
     #   value: somevalue
     # -- Set  annotations on the deployment/statefulset/daemonset
-    annotations: {}
+    controllerAnnotations: {}
     # -- Set additional labels on the deployment/statefulset/daemonset
-    labelsList: []
+    controllerLabelsList: []
     # - name: somename
     #   value: somevalue
     # -- Set labels on the deployment/statefulset/daemonset
-    labels: {}
+    controllerLabels: {}
     # -- Number of desired pods
+
+    # -- Set annotations on the pod
+    podAnnotations: {}
+
+    # -- Set additional annotations on the pod
+    podAnnotationsList: []
+    # - name: somename
+    #   value: somevalue
+
+    # -- Set additional labels on the pod
+    podLabelsList: []
+    # - name: somename
+    #   value: somevalue
+
+    # -- Set labels on the pod
+    podLabels: {}
+
     replicas: 1
     # -- Set the controller upgrade strategy
     # For Deployments, valid values are Recreate (default) and RollingUpdate.
@@ -166,19 +183,6 @@ portal:
   # host: 192.168.66.6
   # -- Override the auotmatically gathered ingress port
   # ingressPort: 666
-
-# -- Set additional annotations on the pod
-podAnnotationsList: []
-# - name: somename
-#   value: somevalue
-
-# -- Set additional labels on the pod
-podLabelsList: []
-# - name: somename
-#   value: somevalue
-
-# -- Set labels on the pod
-podLabels: {}
 
 # -- Determines whether containers in a pod runs with TTY enabled.
 tty: false
