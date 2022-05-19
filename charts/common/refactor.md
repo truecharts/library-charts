@@ -41,3 +41,11 @@ At the same time persistence, ingress and services will still be at the root lev
 This is primarily because SCALE GUI plays nicer when we sort things per object-type rather than per-pod.
 
 This also happens to be somewhat closer to native k8s, where services and ingresses are not a per-pod thing, but a seperate object linked/bound to a certain pod.
+
+## Controller -> pods
+
+This Refactor moves the `controller` section in `Values.yaml` to the `pod` section. As each "pod" has it's own controller object.
+The consequence of this breaking change is that the actuall new `multi pod` scenario's, do not really cause much more space, as long as we ensure defaults are set class.
+
+As there is quite some inheritence with pods, The spawnflow for the average pod would most likely be:
+loader -> spawner -> class -> pod-lib(s) -> container-lib(s)
