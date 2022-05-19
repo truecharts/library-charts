@@ -34,7 +34,7 @@ Secondary entrypoint and primary loader for the common chart
   {{- /* Build the templates */ -}}
   {{- include "common.spawner.pvc" . }}
 
-  {{- include "common.serviceAccount" . }}
+  {{ include "common.spawner.serviceaccount" . | nindent 0 }}
 
   {{- if .Values.controller.enabled }}
     {{- if eq .Values.controller.type "deployment" }}
@@ -47,8 +47,6 @@ Secondary entrypoint and primary loader for the common chart
       {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) }}
     {{- end -}}
  {{- end -}}
-
-  {{ include "common.spawner.serviceaccount" . | nindent 0 }}
 
   {{ include "common.rbac" . | nindent 0 }}
 
