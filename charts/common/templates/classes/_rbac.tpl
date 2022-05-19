@@ -58,7 +58,6 @@ subjects:
   - kind: ServiceAccount
     name: {{ default (include "common.names.serviceAccountName" .) $values.serviceAccount.name }}
     namespace: {{ .Release.Namespace }}
-  {{- end }}
   {{- with $values.subjects }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
