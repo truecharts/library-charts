@@ -55,10 +55,13 @@ roleRef:
   kind: ClusterRole
   name: {{ $rbacName }}
 subjects:
+  {{- if $values.subjects }}
+  {{- with $values.subjects }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- else }}
   - kind: ServiceAccount
     name: {{ default (include "common.names.serviceAccountName" .) $values.serviceAccount.name }}
     namespace: {{ .Release.Namespace }}
-  {{- with $values.subjects }}
-  {{- toYaml . | nindent 2 }}
   {{- end }}
 {{- end -}}
