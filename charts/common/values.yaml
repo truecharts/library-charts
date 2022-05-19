@@ -229,28 +229,33 @@ serviceAccount:
 # -- Create a ClusterRole and ClusterRoleBinding
 # @default -- See below
 rbac:
-  # -- Enables or disables the ClusterRole and ClusterRoleBinding
-  enabled: false
+  main:
+    # -- Make this the primary rbac (used in probes, notes, etc...).
+    # If there is more than 1 rbac, make sure that only 1 rbac is marked as primary.
+    primary: true
 
-  # -- Set Annotations on the ClusterRole
-  clusterRoleLabels: {}
+    # -- Enables or disables the ClusterRole and ClusterRoleBinding
+    enabled: false
 
-  # -- Set labels on the ClusterRole
-  clusterRoleAnnotations: {}
+    # -- Set Annotations on the ClusterRole
+    clusterRoleLabels: {}
 
-  # -- Set Annotations on the ClusterRoleBinding
+    # -- Set labels on the ClusterRole
+    clusterRoleAnnotations: {}
 
-  clusterRoleBindingLabels: {}
+    # -- Set Annotations on the ClusterRoleBinding
 
-  # -- Set labels on the ClusterRoleBinding
-  clusterRoleBindingAnnotations: {}
+    clusterRoleBindingLabels: {}
 
-  # -- Set Rules on the ClusterRole
-  rules: {}
+    # -- Set labels on the ClusterRoleBinding
+    clusterRoleBindingAnnotations: {}
 
-  # -- Add subjects to the ClusterRoleBinding.
-  # includes the above created serviceaccount
-  subjects: {}
+    # -- Set Rules on the ClusterRole
+    rules: {}
+
+    # -- Add subjects to the ClusterRoleBinding.
+    # includes the above created serviceaccount
+    subjects: {}
 
 # -- Configure networkPolicy for the chart here.
 # @default -- See below
