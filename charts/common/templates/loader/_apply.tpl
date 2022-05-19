@@ -34,7 +34,7 @@ Secondary entrypoint and primary loader for the common chart
   {{- /* Build the templates */ -}}
   {{- include "common.spawner.pvc" . }}
 
-  {{- include "common.serviceAccount" . }}
+  {{ include "common.spawner.serviceaccount" . | nindent 0 }}
 
   {{- if .Values.controller.enabled }}
     {{- if eq .Values.controller.type "deployment" }}
