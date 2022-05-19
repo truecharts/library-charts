@@ -2,6 +2,15 @@
 The pod definition included in the controller.
 */ -}}
 {{- define "common.lib.pod" -}}
+{{- $values := .Values }}
+{{- $releaseName := .Release.Name }}
+{{- $values := .Values.pod -}}
+{{- if hasKey . "ObjectValues" -}}
+  {{- with .ObjectValues.pod -}}
+    {{- $values = . -}}
+  {{- end -}}
+{{ end -}}
+
   {{- with .Values.imagePullSecrets }}
 imagePullSecrets:
     {{- toYaml . | nindent 2 }}

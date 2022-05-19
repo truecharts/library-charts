@@ -65,5 +65,5 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "common.lib.pod" . | nindent 6 }}
+      {{- include "common.lib.pod" $ | nindent 6 }}
 {{- end }}

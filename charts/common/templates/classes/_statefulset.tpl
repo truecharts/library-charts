@@ -47,19 +47,6 @@ spec:
     matchLabels:
       {{- include "common.labels.selectorLabels" . | nindent 6 }}
   serviceName: {{ include "common.names.fullname" . }}
-  template:
-    metadata:
-      {{- with .Values.pod.annotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      labels:
-        {{- include "common.labels.selectorLabels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    spec:
-      {{- include "ccommon.lib.pod" . | nindent 6 }}
   volumeClaimTemplates:
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
     {{- $vctname := $index }}
@@ -76,4 +63,17 @@ spec:
             storage: {{ $vct.size | default "999Gi" | quote }}
         {{ include "common.storage.class" ( dict "persistence" $vct "global" $) }}
     {{- end }}
+  template:
+    metadata:
+      {{- with .Values.pod.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common.labels.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- include "common.lib.pod" $ | nindent 6 }}
 {{- end }}

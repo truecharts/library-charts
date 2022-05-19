@@ -20,15 +20,14 @@ Renders the pod objects required by the chart.
       {{- end }}
 
       {{- if eq $type "deployment" }}
-        {{- include "common.class.deployment" . | nindent 0 }}
+        {{- include "common.class.deployment" $ | nindent 0 }}
       {{ else if eq $type "daemonset" }}
-        {{- include "common.daemonset" . | nindent 0 }}
+        {{- include "common.daemonset" $ | nindent 0 }}
       {{ else if eq $type "statefulset"  }}
-        {{- include "common.class.statefulset" . | nindent 0 }}
+        {{- include "common.class.statefulset" $ | nindent 0 }}
       {{ else }}
         {{- fail (printf "Not a valid controller.type (%s)" $type) }}
       {{- end -}}
-
     {{- end }}
   {{- end }}
 {{- end }}
