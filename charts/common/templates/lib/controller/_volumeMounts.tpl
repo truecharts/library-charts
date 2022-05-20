@@ -32,7 +32,7 @@
     {{- $vctname := $vct.name }}
     {{- end }}
     {{- if not $vct.noMount }}
-- mountPath: {{ tpl $vct.mountPath $ }}
+- mountPath: {{ $vct.mountPath }}
   name: {{ tpl $vctname $ }}
       {{- if $vct.subPath }}
   subPath: {{ tpl $vct.subPath $ }}
