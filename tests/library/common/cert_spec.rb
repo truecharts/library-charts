@@ -19,6 +19,9 @@ class Test < ChartTest
       it 'can be enabled and selected' do
         values = {
             "ixCertificateAuthorities": {},
+            "ixChartContext": {
+              "placeholder": "yes"
+             },
             "ixCertificates": {
               "1": {
                 "CA_type_existing": false,
@@ -96,6 +99,9 @@ class Test < ChartTest
       it 'secret can be used for TLS ingress' do
         values = {
             "ixCertificateAuthorities": {},
+            "ixChartContext": {
+              "placeholder": "yes"
+             },
             "ixCertificates": {
               "1": {
                 "CA_type_existing": false,
@@ -177,6 +183,9 @@ class Test < ChartTest
       it 'multiple tls sections generate multiple secrets' do
         values = {
             "ixCertificateAuthorities": {},
+            "ixChartContext": {
+              "placeholder": "yes"
+             },
             "ixCertificates": {
               "2": {
                 "CA_type_existing": false,
