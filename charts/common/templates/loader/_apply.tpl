@@ -3,7 +3,7 @@ Secondary entrypoint and primary loader for the common chart
 */}}
 {{- define "common.loader.apply" -}}
   {{- /* Render the externalInterfaces */ -}}
-  {{ include "common.SCALE.externalInterfaces" .  | nindent 0 }}
+  {{ include "common.scale.externalInterfaces" .  | nindent 0 }}
 
   {{- /* Enable code-server add-on if required */ -}}
   {{- if .Values.addons.codeserver.enabled }}
