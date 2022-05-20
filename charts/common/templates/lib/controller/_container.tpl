@@ -78,7 +78,7 @@
       value: "all"
    {{- end }}
     - name: TZ
-      value: {{ tpl ( toYaml .Values.TZ | quote }}
+      value: {{ tpl ( toYaml .Values.TZ ) $ | quote }}
   {{- with .Values.env }}
     {{- range $k, $v := . }}
       {{- $name := $k }}
