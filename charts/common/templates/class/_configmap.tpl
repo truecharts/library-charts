@@ -24,11 +24,11 @@ metadata:
   labels:
     {{- include "common.labels" . | nindent 4 }}
     {{- with $values.labels }}
-       {{- toYaml . | nindent 4 }}
+       {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- with $values.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 data:
 {{- with $values.data }}

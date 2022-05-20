@@ -73,13 +73,13 @@ metadata:
   labels:
     {{- include "common.labels" . | nindent 4 }}
     {{- with $values.labels }}
-       {{- toYaml . | nindent 4 }}
+       {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   annotations:
     "traefik.ingress.kubernetes.io/router.entrypoints": {{ $values.entrypoint | default "websecure" }}
     "traefik.ingress.kubernetes.io/router.middlewares": {{ $middlewares | quote }}
   {{- with $values.annotations }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
   {{- if and $isStable $values.ingressClassName }}

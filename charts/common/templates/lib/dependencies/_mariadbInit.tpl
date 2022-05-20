@@ -22,7 +22,7 @@ This template ensures pods with mariadb dependency have a delayed start
         - ALL
   resources:
   {{- with .Values.resources }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   command: ["bash", "-ec"]
   args:
