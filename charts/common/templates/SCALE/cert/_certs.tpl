@@ -1,11 +1,11 @@
 {{/*
 Retrieve true/false if certificate is configured
 */}}
-{{- define "common.SCALE.cert.available" -}}
+{{- define "common.scale.cert.available" -}}
 {{- if .ObjectValues.certHolder.scaleCert -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{- template "common.SCALE.cert_present" $values -}}
+{{- template "common.scale.cert_present" $values -}}
 {{- else -}}
 {{- false -}}
 {{- end -}}
@@ -15,26 +15,26 @@ Retrieve true/false if certificate is configured
 {{/*
 Retrieve public key of certificate
 */}}
-{{- define "common.SCALE.cert.publicKey" -}}
+{{- define "common.scale.cert.publicKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert "publicKey" true) -}}
-{{ include "common.SCALE.cert" $values }}
+{{ include "common.scale.cert" $values }}
 {{- end -}}
 
 
 {{/*
 Retrieve private key of certificate
 */}}
-{{- define "common.SCALE.cert.privateKey" -}}
+{{- define "common.scale.cert.privateKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{ include "common.SCALE.cert" $values }}
+{{ include "common.scale.cert" $values }}
 {{- end -}}
 
 {{/*
 Retrieve true/false if certificate is available in ixCertificates
 */}}
-{{- define "common.SCALE.cert_present" -}}
+{{- define "common.scale.cert_present" -}}
 {{- $values := . -}}
 {{- hasKey $values.Values.ixCertificates ($values.commonCertOptions.certKeyName | toString) -}}
 {{- end -}}
@@ -43,7 +43,7 @@ Retrieve true/false if certificate is available in ixCertificates
 {{/*
 Retrieve certificate from variable name
 */}}
-{{- define "common.SCALE.cert" -}}
+{{- define "common.scale.cert" -}}
 {{- $values := . -}}
 {{- $certKey := ($values.commonCertOptions.certKeyName | toString) -}}
 {{- if hasKey $values.Values.ixCertificates $certKey -}}

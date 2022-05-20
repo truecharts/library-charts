@@ -1,4 +1,4 @@
-{{- define "common.SCALE.cert.secret" -}}
+{{- define "common.scale.cert.secret" -}}
 
 {{- $secretName := include "common.names.fullname" . -}}
 
@@ -13,7 +13,7 @@
   {{- $secretName = ( printf "%v-%v-%v-%v" $secretName "scalecert" "ixcert" .Values.scaleCert ) -}}
 {{ end -}}
 
-{{- if eq (include "common.SCALE.cert.available" $ ) "true" -}}
+{{- if eq (include "common.scale.cert.available" $ ) "true" -}}
 
 
 {{- printf "\n%s\n" "---" }}
@@ -24,7 +24,7 @@ metadata:
   labels: {{ include "common.labels" . | nindent 4 }}
 type: kubernetes.io/tls
 data:
-  tls.crt: {{ (include "common.SCALE.cert.publicKey" $ ) | toString | b64enc | quote }}
-  tls.key: {{ (include "common.SCALE.cert.privateKey" $ ) | toString | b64enc | quote }}
+  tls.crt: {{ (include "common.scale.cert.publicKey" $ ) | toString | b64enc | quote }}
+  tls.key: {{ (include "common.scale.cert.privateKey" $ ) | toString | b64enc | quote }}
 {{- end -}}
 {{- end -}}

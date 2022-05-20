@@ -13,7 +13,7 @@ Renders the configMap objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "configmap" $configmapValues) -}}
-      {{- include "common.classes.configmap" $ }}
+      {{- include "common.class.configmap" $ }}
     {{- end }}
   {{- end }}
 {{- end }}

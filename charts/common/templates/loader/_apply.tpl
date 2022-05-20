@@ -3,7 +3,7 @@ Secondary entrypoint and primary loader for the common chart
 */}}
 {{- define "common.loader.apply" -}}
   {{- /* Render the externalInterfaces */ -}}
-  {{ include "common.SCALE.externalInterfaces" .  | nindent 0 }}
+  {{ include "common.scale.externalInterfaces" .  | nindent 0 }}
 
   {{- /* Enable code-server add-on if required */ -}}
   {{- if .Values.addons.codeserver.enabled }}
@@ -56,7 +56,7 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.spawner.ingress" .  | nindent 0 }}
 
-  {{ include "common.configmap.portal" .  | nindent 0 }}
+  {{ include "common.scale.portal" .  | nindent 0 }}
 
   {{ include "common.spawner.networkpolicy" . | nindent 0 }}
 {{- end -}}

@@ -8,7 +8,7 @@ Renders the configMap objects required by the chart.
       {{- $rbacValues := $rbac -}}
 
       {{/* set the default nameOverride to the rbac name */}}
-      {{- if and (not $rbacValues.nameOverride) (ne $name (include "common.helper.rbac.primary" $)) -}}
+      {{- if and (not $rbacValues.nameOverride) (ne $name (include "common.lib.util.rbac.primary" $)) -}}
         {{- $_ := set $rbacValues "nameOverride" $name -}}
       {{ end -}}
 

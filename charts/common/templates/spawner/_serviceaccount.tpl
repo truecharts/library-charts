@@ -8,12 +8,12 @@ Renders the serviceAccount objects required by the chart.
       {{- $saValues := $serviceAccount -}}
 
       {{/* set the default nameOverride to the serviceAccount name */}}
-      {{- if and (not $saValues.nameOverride) (ne $name (include "common.helper.service.primary" $)) -}}
+      {{- if and (not $saValues.nameOverride) (ne $name (include "common.lib.util.service.primary" $)) -}}
         {{- $_ := set $saValues "nameOverride" $name -}}
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "serviceAccount" $saValues) -}}
-      {{- include "common.classes.serviceAccount" $ }}
+      {{- include "common.class.serviceAccount" $ }}
     {{- end }}
   {{- end }}
 {{- end }}
