@@ -20,7 +20,7 @@ Ports included by the controller.
   {{- if and .targetPort (kindIs "string" .targetPort) }}
   {{- fail (printf "Our charts do not support named ports for targetPort. (port name %s, targetPort %s)" .name .targetPort) }}
   {{- end }}
-  containerPort: {{ tpl ( .targetPort | default .port ) $ }}
+  containerPort: {{ .targetPort | default .port }}
   {{- if .protocol }}
   {{- if or ( eq .protocol "HTTP" ) ( eq .protocol "HTTPS" ) ( eq .protocol "TCP" ) }}
   protocol: TCP
