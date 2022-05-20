@@ -16,7 +16,7 @@
   subPath: {{ tpl . $ }}
       {{- end }}
       {{- with $item.readOnly }}
-  readOnly: {{ tpl . $ }}
+  readOnly: {{ . }}
       {{- end }}
       {{- with $item.mountPropagation }}
   mountPropagation: {{ tpl . $ }}
