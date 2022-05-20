@@ -56,7 +56,7 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "common.spawner.ingress" .  | nindent 0 }}
 
-  {{ include "common.configmap.portal" .  | nindent 0 }}
+  {{ include "common.scale.portal" .  | nindent 0 }}
 
   {{ include "common.spawner.networkpolicy" . | nindent 0 }}
 {{- end -}}
