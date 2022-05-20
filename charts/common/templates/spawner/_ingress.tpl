@@ -14,7 +14,7 @@
       {{- include "common.class.ingress" $ }}
 
       {{- range $index, $tlsValues :=  $ingressValues.tls }}
-        {{- if and ( .scaleCert ) ( .Values.ixChartContext ) }}
+        {{- if and ( .scaleCert ) ( $.Values.ixChartContext ) }}
           {{- $nameOverride := ( printf "%v-%v" "tls" $index ) -}}
           {{- if $ingressValues.nameOverride -}}
           {{- $nameOverride = ( printf "%v-%v-%v" $ingressValues.nameOverride "tls" $index ) -}}
