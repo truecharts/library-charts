@@ -27,8 +27,9 @@ before chart installation.
       /bin/bash <<'EOF'
       echo 'Automatically correcting permissions...'
       {{- if and ( .Values.addons.vpn.configFile.enabled ) ( not ( eq .Values.addons.vpn.type "disabled" )) }}
-      nfs4xdr_getfacl ||
+      echo 'Automatically correcting permissions for vpn config file...'
       if nfs4xdr_getfacl; then
+        echo 'NFSv4 ACL's detected, using nfs4_setfacl to set permissions...'
         nfs4_setfacl -a A::568:RWX /vpn/vpn.conf
         nfs4_setfacl -a A:g:568:RWX /vpn/vpn.conf
       else
@@ -38,7 +39,9 @@ before chart installation.
       fi
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
+      echo 'Automatically correcting permissions for {{ tpl $hpm.mountPath $ | squote }}...'
       if nfs4xdr_getfacl; then
+        echo 'NFSv4 ACL's detected, using nfs4_setfacl to set permissions...'
         nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ tpl $hpm.mountPath $ | squote }}
       else
         echo 'No NFSv4 ACLs detected, trying chown/chmod...'
