@@ -10,16 +10,16 @@
       {{- $mountPath = . -}}
     {{- end }}
     {{- if and $item.enabled (ne $mountPath "-") }}
-- mountPath: {{ $mountPath }}
-  name: {{ $index }}
+- mountPath: {{ tpl $mountPath $ }}
+  name: {{ tpl $index $ }}
       {{- with $item.subPath }}
-  subPath: {{ . }}
+  subPath: {{ tpl . $ }}
       {{- end }}
       {{- with $item.readOnly }}
-  readOnly: {{ . }}
+  readOnly: {{ tpl . $ }}
       {{- end }}
       {{- with $item.mountPropagation }}
-  mountPropagation: {{ . }}
+  mountPropagation: {{ tpl . $ }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -32,14 +32,12 @@
     {{- $vctname := $vct.name }}
     {{- end }}
     {{- if not $vct.noMount }}
-- mountPath: {{ $vct.mountPath }}
-  name: {{ $vctname }}
+- mountPath: {{ tpl $vct.mountPath $ }}
+  name: {{ tpl $vctname $ }}
       {{- if $vct.subPath }}
-  subPath: {{ $vct.subPath }}
+  subPath: {{ tpl $vct.subPath $ }}
       {{- end }}
     {{- end }}
     {{- end }}
   {{- end }}
-
-
 {{- end -}}
