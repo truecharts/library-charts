@@ -23,7 +23,7 @@ before chart installation.
   command:
     - "/bin/sh"
     - "-c"
-    - "echo 'Automatically correcting permissions...';{{ if and ( .Values.addons.vpn.configFile.enabled ) ( not ( eq .Values.addons.vpn.type "disabled" )) }}chown -R 568:568 /vpn/vpn.conf; chmod -R g+w /vpn/vpn.conf || echo 'chmod failed for vpn config, are you running NFSv4 ACLs?';{{ end }}{{ range $_, $hpm := $hostPathMounts }}chown -R :{{ $group }} {{ $hpm.mountPath | squote }}; chmod -R g+w || echo 'chmod failed for {{ $hpm.mountPath }}, are you running NFSv4 ACLs?' {{ $hpm.mountPath | squote }}; {{ end }} ( sysctl -w fs.inotify.max_user_watches=524288 || echo "error setting inotify") && ( sysctl -w fs.inotify.max_user_instances=512 || echo "error setting inotify");"
+    - "echo 'Automatically correcting permissions...';{{ if and ( .Values.addons.vpn.configFile.enabled ) ( not ( eq .Values.addons.vpn.type "disabled" )) }}chown -R 568:568 /vpn/vpn.conf; chmod -R g+w /vpn/vpn.conf || echo 'chmod failed for vpn config, are you running NFSv4 ACLs?';{{ end }}{{ range $_, $hpm := $hostPathMounts }}chown -R :{{ $group }} {{ $hpm.mountPath | squote }}; chmod -R g+w || echo 'chmod failed for {{ $hpm.mountPath }}, are you running NFSv4 ACLs?' {{ $hpm.mountPath | squote }}; {{ end }} ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify');"
   volumeMounts:
     {{- range $name, $hpm := $hostPathMounts }}
     - name: {{ $name }}
