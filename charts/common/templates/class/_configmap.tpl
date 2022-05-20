@@ -2,7 +2,7 @@
 This template serves as a blueprint for all configMap objects that are created
 within the common library.
 */}}
-{{- define "common.classes.configmap" -}}
+{{- define "common.class.configmap" -}}
   {{- $fullName := include "common.names.fullname" . -}}
   {{- $configMapName := $fullName -}}
   {{- $values := .Values.configmap -}}

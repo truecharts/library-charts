@@ -27,7 +27,7 @@ It will include / inject the required templates based on the given values.
     {{- $serviceValues := .Values.addons.codeserver.service -}}
     {{- $_ := set $serviceValues "nameOverride" "codeserver" -}}
     {{- $_ := set $ "ObjectValues" (dict "service" $serviceValues) -}}
-    {{- include "common.classes.service" $ -}}
+    {{- include "common.class.service" $ -}}
     {{- $_ := unset $ "ObjectValues" -}}
   {{- end -}}
 
@@ -43,7 +43,7 @@ It will include / inject the required templates based on the given values.
       {{- $_ := set (index $host.paths 0) "service" (dict "name" $svcName "port" $svcPort) -}}
     {{- end -}}
     {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
-    {{- include "common.classes.ingress" $ -}}
+    {{- include "common.class.ingress" $ -}}
     {{- $_ := unset $ "ObjectValues" -}}
   {{- end -}}
 {{- end -}}

@@ -6,12 +6,12 @@
       {{- $ingressValues := $ingress -}}
 
       {{/* set defaults */}}
-      {{- if and (not $ingressValues.nameOverride) (ne $name (include "common.helper.ingress.primary" $)) -}}
+      {{- if and (not $ingressValues.nameOverride) (ne $name (include "common.lib.util.ingress.primary" $)) -}}
         {{- $_ := set $ingressValues "nameOverride" $name -}}
       {{- end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
-      {{- include "common.classes.ingress" $ }}
+      {{- include "common.class.ingress" $ }}
 
       {{- range $index, $tlsValues :=  $ingressValues.tls }}
         {{- if .scaleCert }}
@@ -21,7 +21,7 @@
           {{- end }}
           {{- $_ := set $tlsValues "nameOverride" $nameOverride -}}
           {{- $_ := set $ "ObjectValues" (dict "certHolder" $tlsValues) -}}
-          {{- include "common.SCALE.cert.secret" $ }}
+          {{- include "common.scale.cert.secret" $ }}
         {{- end }}
       {{- end }}
     {{- end }}
