@@ -131,7 +131,15 @@ class Test < ChartTest
 
       it 'can process default (568:568) permissions for multiple volumes' do
         results= {
-          command: ["/bin/sh", "-c", "echo 'Automatically correcting permissions...';chown -R :568 '/configlist'; chmod -R g+w || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?' '/configlist';chown -R :568 '/data'; chmod -R g+w || echo 'chmod failed for /data, are you running NFSv4 ACLs?' '/data';"]
+          command: ["/bin/sh", "-c", "/bin/bash <<'EOF'
+echo 'Automatically correcting permissions...'
+chown -R :568 '/configlist'
+chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
+chown -R :568 '/data'
+chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+EOF
+"]
         }
         values = {
           persistenceList: [
@@ -161,8 +169,17 @@ class Test < ChartTest
 
       it 'outputs default permissions with irrelevant podSecurityContext' do
         results= {
-          command: ["/bin/sh", "-c", "echo 'Automatically correcting permissions...';chown -R :568 '/configlist'; chmod -R g+w || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?' '/configlist';chown -R :568 '/data'; chmod -R g+w || echo 'chmod failed for /data, are you running NFSv4 ACLs?' '/data';"]
-        }
+          command: ["/bin/sh", "-c", "/bin/bash <<'EOF'
+echo 'Automatically correcting permissions...'
+chown -R :568 '/configlist'
+chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
+chown -R :568 '/data'
+chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+EOF
+"]
+          }
+
         values = {
           podSecurityContext: {
               allowPrivilegeEscalation: false
@@ -192,8 +209,16 @@ class Test < ChartTest
 
       it 'outputs fsgroup permissions for multiple volumes when set' do
         results= {
-          command: ["/bin/sh", "-c", "echo 'Automatically correcting permissions...';chown -R :666 '/configlist'; chmod -R g+w || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?' '/configlist';chown -R :666 '/data'; chmod -R g+w || echo 'chmod failed for /data, are you running NFSv4 ACLs?' '/data';"]
-        }
+          command: ["/bin/sh", "-c", "/bin/bash <<'EOF'
+echo 'Automatically correcting permissions...'
+chown -R :666 '/configlist'
+chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
+chown -R :666 '/data'
+chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+EOF
+"]
+                  }
         values = {
           podSecurityContext: {
             fsGroup: 666
@@ -223,8 +248,16 @@ class Test < ChartTest
 
       it 'outputs runAsUser permissions for multiple volumes when set' do
         results= {
-          command: ["/bin/sh", "-c", "echo 'Automatically correcting permissions...';chown -R :568 '/configlist'; chmod -R g+w || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?' '/configlist';chown -R :568 '/data'; chmod -R g+w || echo 'chmod failed for /data, are you running NFSv4 ACLs?' '/data';"]
-        }
+          command: ["/bin/sh", "-c", "/bin/bash <<'EOF'
+echo 'Automatically correcting permissions...'
+chown -R :568 '/configlist'
+chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
+chown -R :568 '/data'
+chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+EOF
+"]
+                  }
         values = {
           podSecurityContext: {
             runAsUser: 999
@@ -254,7 +287,15 @@ class Test < ChartTest
 
       it 'outputs fsGroup AND runAsUser permissions for multiple volumes when both are set' do
         results= {
-          command: ["/bin/sh", "-c", "echo 'Automatically correcting permissions...';chown -R :666 '/configlist'; chmod -R g+w || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?' '/configlist';chown -R :666 '/data'; chmod -R g+w || echo 'chmod failed for /data, are you running NFSv4 ACLs?' '/data';"]
+          command: ["/bin/sh", "-c", "/bin/bash <<'EOF'
+echo 'Automatically correcting permissions...'
+chown -R :666 '/configlist'
+chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
+chown -R :666 '/data'
+chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+EOF
+"]
         }
         values = {
           podSecurityContext: {
