@@ -49,7 +49,7 @@ Volumes included by the controller.
     {{- end }}
     {{- with $persistence.items }}
     items:
-      {{- tpl( toYaml . ) $ | nindent 6 }}
+      {{- tpl ( toYaml . ) $ | nindent 6 }}
     {{- end }}
   {{- else if eq $persistence.type "hostPath" }}
   hostPath:
