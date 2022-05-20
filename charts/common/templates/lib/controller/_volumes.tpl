@@ -55,7 +55,7 @@ Volumes included by the controller.
   hostPath:
     path: {{ required "hostPath not set" $persistence.hostPath }}
     {{- with $persistence.hostPathType }}
-    type: {{ tpl  . }}
+    type: {{ tpl  . $ }}
     {{- end }}
   {{- else if eq $persistence.type "custom" }}
     {{- tpl ( toYaml $persistence.volumeSpec ) $ | nindent 2 }}
