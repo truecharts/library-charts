@@ -24,7 +24,7 @@ metadata:
   labels:
     {{- include "common.labels" . | nindent 4 }}
   {{- if $values.labels }}
-    {{ toYaml $values.labels | nindent 4 }}
+    {{- tpl ( toYaml $values.labels ) $ | nindent 4 }}
   {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
@@ -34,7 +34,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: {{ include "common.names.fullname" . }}
   {{- end }}
   {{- with $values.annotations }}
-    {{ toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
   {{- if (or (eq $svcType "ClusterIP") (empty $svcType)) }}
@@ -51,15 +51,15 @@ spec:
   {{- if $values.loadBalancerIP }}
   loadBalancerIP: {{ $values.loadBalancerIP }}
   {{- end }}
-  {{- if $values.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
-  {{- end }}
   {{- if $values.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{ toYaml $values.loadBalancerSourceRanges | nindent 4 }}
   {{- end -}}
   {{- else }}
   type: {{ $svcType }}
+  {{- end }}
+  {{- if $values.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
   {{- end }}
   {{- if $values.sessionAffinity }}
   sessionAffinity: {{ $values.sessionAffinity }}

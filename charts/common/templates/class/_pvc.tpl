@@ -29,13 +29,13 @@ metadata:
     "helm.sh/resource-policy": keep
     {{- end }}
     {{- with $values.annotations }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}
   labels:
   {{- include "common.labels" . | nindent 4 }}
   {{- with $values.labels }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
   accessModes:

@@ -16,7 +16,7 @@ Ports included by the controller.
 {{- if $ports -}}
 {{- range $_ := $ports }}
 {{- if .enabled }}
-- name: {{ .name }}
+- name: {{ tpl .name $ }}
   {{- if and .targetPort (kindIs "string" .targetPort) }}
   {{- fail (printf "Our charts do not support named ports for targetPort. (port name %s, targetPort %s)" .name .targetPort) }}
   {{- end }}
@@ -25,7 +25,7 @@ Ports included by the controller.
   {{- if or ( eq .protocol "HTTP" ) ( eq .protocol "HTTPS" ) ( eq .protocol "TCP" ) }}
   protocol: TCP
   {{- else }}
-  protocol: {{ .protocol }}
+  protocol: {{ tpl .protocol $ }}
   {{- end }}
   {{- else }}
   protocol: TCP

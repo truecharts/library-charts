@@ -18,7 +18,7 @@ before chart installation.
     privileged: true
   resources:
   {{- with .Values.resources }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   command:
     - "/bin/sh"
@@ -30,12 +30,14 @@ before chart installation.
       chown -R 568:568 /vpn/vpn.conf; chmod -R g+w /vpn/vpn.conf || echo 'chmod failed for vpn config, are you running NFSv4 ACLs?'
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
-      chown -R :{{ $group }} {{ $hpm.mountPath | squote }}
-      chmod -R g+rwx {{ $hpm.mountPath | squote }} || echo 'chmod failed for {{ $hpm.mountPath }}, are you running NFSv4 ACLs?'
+      chown -R :{{ $group }} {{ tpl $hpm.mountPath $ | squote }}
+      chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }} || echo 'chmod failed for {{ tpl $hpm.mountPath $ }}, are you running NFSv4 ACLs?'
       {{- end }}
+      {{- if .Values.patchInotify }}
+      echo 'increasing inotify limits...'
       ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+      {{- end }}
       EOF
-
 
   volumeMounts:
     {{- range $name, $hpm := $hostPathMounts }}
