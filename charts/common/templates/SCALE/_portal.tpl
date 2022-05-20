@@ -1,5 +1,5 @@
 {{- define "common.scale.portal" -}}
-
+{{- if .Values.ixChartContext }}
 {{- if .Values.portal }}
 {{- if .Values.portal.enabled }}
 {{- $primaryService := get .Values.service (include "common.lib.util.service.primary" .) }}
@@ -89,6 +89,7 @@ data:
   port: {{ $port | quote }}
   path: {{ $path | quote }}
   url: {{ ( printf "%v://%v:%v%v" $protocol $host $port $path ) | quote }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}

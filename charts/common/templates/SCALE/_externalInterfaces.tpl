@@ -3,6 +3,7 @@ This template serves as a blueprint for External Interface objects that are crea
 using the SCALE GUI.
 */}}
 {{- define "common.scale.externalInterfaces" -}}
+{{- if  .Values.ixChartContext }}
 {{- range $index, $iface := .Values.ixExternalInterfacesConfiguration  }}
 ---
 apiVersion: "k8s.cni.cncf.io/v1"
@@ -11,5 +12,6 @@ metadata:
   name: ix-{{ $.Release.Name }}-{{ $index }}
 spec:
   config: '{{ $iface }}'
+{{- end }}
 {{- end }}
 {{- end -}}

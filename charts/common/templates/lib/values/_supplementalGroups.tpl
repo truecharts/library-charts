@@ -13,12 +13,12 @@
   {{- end }}
 
   {{/* Append requered groups to supplementalGroups when deviceList is used */}}
-  {{- if .Values.deviceList}}
+  {{- if and ( .Values.deviceList ) ( .Values.ixChartContext ) }}
   {{- $devGroups = list 5 10 20 24 }}
   {{- end }}
 
   {{/* Append requered groups to supplementalGroups when scaleGPU is used */}}
-  {{- if .Values.scaleGPU }}
+  {{- if and ( .Values.scaleGPU ) ( .Values.ixChartContext ) }}
   {{- $gpuGroups = list 44 107 }}
   {{- end }}
 
