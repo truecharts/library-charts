@@ -527,6 +527,10 @@ service:
     # @default -- See below
     portsList: []
 
+    # -- Specify the externalTrafficPolicy for the service. Options: Cluster, Local
+    # -- [[ref](https://kubernetes.io/docs/tutorials/services/source-ip/)]
+    externalTrafficPolicy:
+
     # -- Specify the ip policy. Options: SingleStack, PreferDualStack, RequireDualStack
     ipFamilyPolicy: SingleStack
 
