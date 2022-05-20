@@ -12,16 +12,16 @@ securityContext:
     {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.priorityClassName }}
-priorityClassName: {{ tpl .  $ }}
+priorityClassName: {{ tpl . $ }}
   {{- end }}
   {{- with .Values.schedulerName }}
-schedulerName: {{ tpl .  $ }}
+schedulerName: {{ tpl . $ }}
   {{- end }}
   {{- with .Values.hostNetwork }}
-hostNetwork: {{ tpl .  $ }}
+hostNetwork: {{ tpl . $ }}
   {{- end }}
   {{- with .Values.hostname }}
-hostname: {{ tpl .  $ }}
+hostname: {{ tpl . $ }}
   {{- end }}
   {{- if .Values.dnsPolicy }}
 dnsPolicy: {{ .Values.dnsPolicy }}
@@ -47,7 +47,7 @@ dnsConfig:
 {{- end }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
   {{- with .Values.termination.gracePeriodSeconds }}
-terminationGracePeriodSeconds: {{ tpl .  $ }}
+terminationGracePeriodSeconds: {{ . }}
   {{- end }}
 initContainers:
   {{-  include "common.controller.prepare" . | nindent 2 }}
