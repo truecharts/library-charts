@@ -30,7 +30,7 @@ before chart installation.
       chown -R 568:568 /vpn/vpn.conf; chmod -R g+w /vpn/vpn.conf || echo 'chmod failed for vpn config, are you running NFSv4 ACLs?'
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
-      chown -R :{{ tpl $group $ }} {{ tpl $hpm.mountPath $ | squote }}
+      chown -R :{{ $group }} {{ tpl $hpm.mountPath $ | squote }}
       chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }} || echo 'chmod failed for {{ tpl $hpm.mountPath $ }}, are you running NFSv4 ACLs?'
       {{- end }}
       echo 'increasing inotify limits...'
