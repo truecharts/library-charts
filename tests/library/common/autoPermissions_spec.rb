@@ -137,6 +137,7 @@ chown -R :568 '/configlist'
 chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
 chown -R :568 '/data'
 chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+echo 'increasing inotify limits...'
 ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
 EOF
 "]
@@ -175,6 +176,7 @@ chown -R :568 '/configlist'
 chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
 chown -R :568 '/data'
 chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+echo 'increasing inotify limits...'
 ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
 EOF
 "]
@@ -215,6 +217,7 @@ chown -R :666 '/configlist'
 chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
 chown -R :666 '/data'
 chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+echo 'increasing inotify limits...'
 ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
 EOF
 "]
@@ -254,6 +257,7 @@ chown -R :568 '/configlist'
 chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
 chown -R :568 '/data'
 chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+echo 'increasing inotify limits...'
 ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
 EOF
 "]
@@ -293,6 +297,7 @@ chown -R :666 '/configlist'
 chmod -R g+rwx '/configlist' || echo 'chmod failed for /configlist, are you running NFSv4 ACLs?'
 chown -R :666 '/data'
 chmod -R g+rwx '/data' || echo 'chmod failed for /data, are you running NFSv4 ACLs?'
+echo 'increasing inotify limits...'
 ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
 EOF
 "]

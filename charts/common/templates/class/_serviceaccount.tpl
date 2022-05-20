@@ -26,6 +26,6 @@ metadata:
     {{- include "common.labels" . | nindent 4 }}
   {{- with $values.serviceAccount.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 {{- end }}
