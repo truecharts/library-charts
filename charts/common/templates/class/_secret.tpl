@@ -2,7 +2,7 @@
 This template serves as a blueprint for all secret objects that are created
 within the common library.
 */}}
-{{- define "common.classes.secret" -}}
+{{- define "common.class.secret" -}}
   {{- $fullName := include "common.names.fullname" . -}}
   {{- $secretName := $fullName -}}
   {{- $values := .Values.secret -}}

@@ -1,7 +1,7 @@
 {{/*
 Return the primary rbac object
 */}}
-{{- define "common.helper.rbac.primary" -}}
+{{- define "common.lib.util.rbac.primary" -}}
   {{- $enabledrbacs := dict -}}
   {{- range $name, $rbac := .Values.rbac -}}
     {{- if $rbac.enabled -}}

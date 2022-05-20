@@ -1,7 +1,7 @@
 {{/*
 Return the primary serviceAccount object
 */}}
-{{- define "common.helper.serviceaccount.primary" -}}
+{{- define "common.lib.util.serviceaccount.primary" -}}
   {{- $enabledServiceaccounts := dict -}}
   {{- range $name, $serviceAccount := .Values.serviceAccount -}}
     {{- if $serviceAccount.enabled -}}

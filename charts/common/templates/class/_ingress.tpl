@@ -2,7 +2,7 @@
 This template serves as a blueprint for all Ingress objects that are created
 within the common library.
 */}}
-{{- define "common.classes.ingress" -}}
+{{- define "common.class.ingress" -}}
   {{- $fullName := include "common.names.fullname" . -}}
   {{- $ingressName := $fullName -}}
   {{- $values := .Values.ingress -}}
@@ -17,13 +17,13 @@ within the common library.
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
   {{- end -}}
 
-  {{- $primaryService := get .Values.service (include "common.helper.service.primary" .) -}}
-  {{- $autoLinkService := get .Values.service (include "common.helper.service.primary" .) -}}
+  {{- $primaryService := get .Values.service (include "common.lib.util.service.primary" .) -}}
+  {{- $autoLinkService := get .Values.service (include "common.lib.util.service.primary" .) -}}
   {{- $defaultServiceName := $fullName -}}
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
     {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
   {{- end -}}
-  {{- $defaultServicePort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
+  {{- $defaultServicePort := get $primaryService.ports (include "common.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
 
   {{- if and (hasKey $values "nameOverride") ( $values.nameOverride ) ( $values.autoLink ) -}}
     {{- $autoLinkService = get .Values.service $values.nameOverride -}}

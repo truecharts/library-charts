@@ -1,7 +1,7 @@
 {{/*
 Return the primary port for a given Service object.
 */}}
-{{- define "common.classes.service.ports.primary" -}}
+{{- define "common.lib.util.service.ports.primary" -}}
   {{- $enabledPorts := dict -}}
   {{- range $name, $port := .values.ports -}}
     {{- if $port.enabled -}}

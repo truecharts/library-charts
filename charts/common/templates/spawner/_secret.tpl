@@ -13,7 +13,7 @@ Renders the Secret objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
-      {{- include "common.classes.secret" $ }}
+      {{- include "common.class.secret" $ }}
     {{- end }}
   {{- end }}
 {{- end }}

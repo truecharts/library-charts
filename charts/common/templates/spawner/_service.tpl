@@ -8,12 +8,12 @@ Renders the Service objects required by the chart.
       {{- $serviceValues := $service -}}
 
       {{/* set the default nameOverride to the service name */}}
-      {{- if and (not $serviceValues.nameOverride) (ne $name (include "common.helper.service.primary" $)) -}}
+      {{- if and (not $serviceValues.nameOverride) (ne $name (include "common.lib.util.service.primary" $)) -}}
         {{- $_ := set $serviceValues "nameOverride" $name -}}
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "service" $serviceValues) -}}
-      {{- include "common.classes.service" $ }}
+      {{- include "common.class.service" $ }}
     {{- end }}
   {{- end }}
 {{- end }}
