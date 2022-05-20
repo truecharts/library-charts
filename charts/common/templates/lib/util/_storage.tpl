@@ -5,37 +5,16 @@ Return  the proper Storage Class
 */}}
 {{- define "common.storage.class" -}}
 
-{{- $storageClass :=  .persistence.storageClass  -}}
-{{- $output := "" -}}
-
-{{- if ( hasKey .persistence "storageClass" ) -}}
-  {{- if $storageClass -}}
-    {{- if (eq "-" $storageClass) -}}
-      {{- $output = "\"\"" -}}
-    {{- else if (eq "SCALE-ZFS" $storageClass ) }}
-      {{- $output = ( printf "ix-storage-class-%s"  .global.Release.Name ) -}}
-    {{- else }}
-      {{- $output = $storageClass -}}
-    {{- end -}}
-    {{- printf "storageClassName: %s" $output -}}
+{{- if .persistence.storageClass -}}
+  {{- if (eq "-" .persistence.storageClass) -}}
+    {{- printf "storageClassName: \"\"" -}}
+  {{- else if and (eq "SCALE-ZFS" .persistence.storageClass ) -}}
+    {{- printf "storageClassName: %s" .global.Values.global.ixChartContext.storageClassName -}}
   {{- else -}}
-    {{- printf "%s" "storageClassName: " -}}
+    {{- printf "storageClassName: %s" .persistence.storageClass -}}
   {{- end -}}
-{{- else if .global }}
-  {{- if .global.Values.storageClass -}}
-    {{- $output = .global.Values.storageClass -}}
-  {{- else if .global.Values.ixChartContext }}
-    {{- $output = ( printf "ix-storage-class-%s"  .global.Release.Name ) -}}
-  {{- else if .global.Values.global  -}}
-    {{- if .global.Values.global.storageClass -}}
-      {{- $output = .global.Values.global.storageClass -}}
-    {{- end -}}
-    {{- if or ( .global.Values.global.ixChartContext ) ( .global.Values.global.isSCALE ) -}}
-      {{- $output = ( printf "ix-storage-class-%s"  .global.Release.Name ) -}}
-    {{- end }}
-  {{- end -}}
-  {{- if $output -}}
-    {{- printf "storageClassName: %s" $output -}}
-  {{- end -}}
+{{- else if .global.Values.global.ixChartContext -}}
+  {{- printf "storageClassName: %s" .global.Values.global.ixChartContext.storageClassName -}}
 {{- end -}}
+
 {{- end -}}
