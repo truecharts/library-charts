@@ -57,6 +57,10 @@ Volumes included by the controller.
     {{- with $persistence.hostPathType }}
     type: {{ tpl  . $ }}
     {{- end }}
+  {{- else if eq $persistence.type "nfs" }}
+  nfs:
+    server: {{ required "server not set" $persistence.server }}
+    path: {{ required "path not set" $persistence.path }}
   {{- else if eq $persistence.type "custom" }}
     {{- tpl ( toYaml $persistence.volumeSpec ) $ | nindent 2 }}
   {{- else }}
