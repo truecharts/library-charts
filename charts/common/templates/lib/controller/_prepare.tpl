@@ -31,7 +31,7 @@ before chart installation.
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
       chown -R :{{ $group }} {{ $hpm.mountPath | squote }}
-      chmod -R g+w || echo 'chmod failed for {{ $hpm.mountPath }}, are you running NFSv4 ACLs?' {{ $hpm.mountPath | squote }}
+      chmod -R g+rwx {{ $hpm.mountPath | squote }} || echo 'chmod failed for {{ $hpm.mountPath }}, are you running NFSv4 ACLs?'
       {{- end }}
       ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
       EOF
