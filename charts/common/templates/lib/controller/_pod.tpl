@@ -4,24 +4,24 @@ The pod definition included in the controller.
 {{- define "common.controller.pod" -}}
   {{- with .Values.imagePullSecrets }}
 imagePullSecrets:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
 serviceAccountName: {{ include "common.names.serviceAccountName" . }}
   {{- with .Values.podSecurityContext }}
 securityContext:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.priorityClassName }}
-priorityClassName: {{ . }}
+priorityClassName: {{ tpl .  $ }}
   {{- end }}
   {{- with .Values.schedulerName }}
-schedulerName: {{ . }}
+schedulerName: {{ tpl .  $ }}
   {{- end }}
   {{- with .Values.hostNetwork }}
-hostNetwork: {{ . }}
+hostNetwork: {{ tpl .  $ }}
   {{- end }}
   {{- with .Values.hostname }}
-hostname: {{ . }}
+hostname: {{ tpl .  $ }}
   {{- end }}
   {{- if .Values.dnsPolicy }}
 dnsPolicy: {{ .Values.dnsPolicy }}
@@ -34,20 +34,20 @@ dnsPolicy: ClusterFirst
 dnsConfig:
   {{- with .Values.dnsConfig.options }}
   options:
-    {{- toYaml . | nindent 4 }}
+    {{ tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   {{- with .Values.dnsConfig.nameservers }}
   nameservers: []
-    {{- toYaml . | nindent 4 }}
+    {{ tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   {{- with .Values.dnsConfig.searches }}
   searches: []
-    {{- toYaml . | nindent 4 }}
+    {{ tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 {{- end }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
   {{- with .Values.termination.gracePeriodSeconds }}
-terminationGracePeriodSeconds: {{ . }}
+terminationGracePeriodSeconds: {{ tpl .  $ }}
   {{- end }}
 initContainers:
   {{-  include "common.controller.prepare" . | nindent 2 }}
@@ -109,22 +109,22 @@ volumes:
   {{- end }}
   {{- with .Values.hostAliases }}
 hostAliases:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.nodeSelector }}
 nodeSelector:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.affinity }}
 affinity:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
   {{- with .Values.tolerations }}
 tolerations:
-    {{- toYaml . | nindent 2 }}
+    {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
 {{- end -}}
