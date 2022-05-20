@@ -33,8 +33,10 @@ before chart installation.
       chown -R :{{ $group }} {{ tpl $hpm.mountPath $ | squote }}
       chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }} || echo 'chmod failed for {{ tpl $hpm.mountPath $ }}, are you running NFSv4 ACLs?'
       {{- end }}
+      {{- if .Values.patchInotify }}
       echo 'increasing inotify limits...'
       ( sysctl -w fs.inotify.max_user_watches=524288 || echo 'error setting inotify') && ( sysctl -w fs.inotify.max_user_instances=512 || echo 'error setting inotify')
+      {{- end }}
       EOF
 
   volumeMounts:

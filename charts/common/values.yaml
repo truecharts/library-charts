@@ -155,6 +155,8 @@ extraArgs: []
 # -- Set Container Timezone
 TZ: UTC
 
+patchInotify: true
+
 # -- Set the primary portal for TrueNAS SCALE
 portal:
   # -- enable generation of the portal configmap
