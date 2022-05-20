@@ -18,7 +18,7 @@ priorityClassName: {{ tpl . $ }}
 schedulerName: {{ tpl . $ }}
   {{- end }}
   {{- with .Values.hostNetwork }}
-hostNetwork: {{ tpl . $ }}
+hostNetwork: {{ . }}
   {{- end }}
   {{- with .Values.hostname }}
 hostname: {{ tpl . $ }}
