@@ -27,11 +27,24 @@ before chart installation.
       /bin/bash <<'EOF'
       echo 'Automatically correcting permissions...'
       {{- if and ( .Values.addons.vpn.configFile.enabled ) ( not ( eq .Values.addons.vpn.type "disabled" )) }}
-      chown -R 568:568 /vpn/vpn.conf; chmod -R g+w /vpn/vpn.conf || echo 'chmod failed for vpn config, are you running NFSv4 ACLs?'
+      nfs4xdr_getfacl ||
+      if nfs4xdr_getfacl; then
+        nfs4_setfacl -a A::568:RWX /vpn/vpn.conf
+        nfs4_setfacl -a A:g:568:RWX /vpn/vpn.conf
+      else
+        echo 'No NFSv4 ACLs detected, trying chown/chmod...'
+        chown -R 568:568 /vpn/vpn.conf
+        chmod -R g+w /vpn/vpn.conf
+      fi
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
-      chown -R :{{ $group }} {{ tpl $hpm.mountPath $ | squote }}
-      chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }} || echo 'chmod failed for {{ tpl $hpm.mountPath $ }}, are you running NFSv4 ACLs?'
+      if nfs4xdr_getfacl; then
+        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ tpl $hpm.mountPath $ | squote }}
+      else
+        echo 'No NFSv4 ACLs detected, trying chown/chmod...'
+        chown -R :{{ $group }}
+        chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }}
+      fi
       {{- end }}
       {{- if .Values.patchInotify }}
       echo 'increasing inotify limits...'
