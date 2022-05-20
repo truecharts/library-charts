@@ -13,6 +13,9 @@ class Test < ChartTest
 
       it 'creates configmap when enabled' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           }
@@ -24,6 +27,9 @@ class Test < ChartTest
 
       it 'is named "portal"' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           }
@@ -35,6 +41,9 @@ class Test < ChartTest
 
       it 'uses "$node_ip" by default' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -51,6 +60,9 @@ class Test < ChartTest
 
       it 'uses port "443" by default' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -67,6 +79,9 @@ class Test < ChartTest
 
       it 'uses protocol "http" by default' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -83,6 +98,9 @@ class Test < ChartTest
 
       it 'uses path "/" by default' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -101,6 +119,9 @@ class Test < ChartTest
     describe 'portal::configmap::overrides' do
       it 'ingressPort can be overridden' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true,
             ingressPort: "666"
@@ -118,6 +139,9 @@ class Test < ChartTest
 
       it 'nodePort Host can be overridden' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true,
             host: "test.host"
@@ -135,6 +159,9 @@ class Test < ChartTest
 
       it 'path  can be overridden' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true,
             path: "/path"
@@ -154,6 +181,9 @@ class Test < ChartTest
     describe 'portal::configmap::nodeport' do
       it 'nodePort host defaults to "$node_ip"' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -180,6 +210,9 @@ class Test < ChartTest
 
       it 'nodePort port defaults to the nodePort' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -203,6 +236,9 @@ class Test < ChartTest
 
       it 'uses nodeport port protocol as protocol (HTTPS)' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -227,6 +263,9 @@ class Test < ChartTest
 
       it 'uses nodeport port protocol as protocol (HTTP)' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -252,6 +291,9 @@ class Test < ChartTest
     describe 'portal::configmap::ingress' do
       it 'uses ingress host' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
@@ -281,6 +323,9 @@ class Test < ChartTest
 
       it 'uses ingress path' do
         values = {
+          ixChartContext: {
+            placeholder: true,
+          },
           portal: {
             enabled: true
           },
