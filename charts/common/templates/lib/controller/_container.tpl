@@ -6,7 +6,7 @@
   {{- with .Values.command }}
   command:
     {{- if kindIs "string" . }}
-    - {{ . }}
+    - {{ tpl . $ }}
     {{- else }}
       {{ toYaml . | nindent 4 }}
     {{- end }}
@@ -15,53 +15,57 @@
   args:
   {{- with .Values.args }}
     {{- if kindIs "string" . }}
-    - {{ . }}
+    - {{ tpl . $ }}
     {{- else }}
-    {{ toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}
   {{- with .Values.extraArgs }}
     {{- if kindIs "string" . }}
-    - {{ . }}
+    - {{ tpl . $ }}
     {{- else }}
-    {{ toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}
   {{- end }}
-  tty: {{ .Values.tty }}
-  stdin: {{ .Values.stdin }}
+  {{- with .Values.tty }}
+  tty: {{ tpl . $ }}
+  {{- end }}
+  {{- with .Values.stdin }}
+  stdin: {{ tpl . $ }}
+  {{- end }}
   {{- with .Values.securityContext }}
   securityContext:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   {{- with .Values.lifecycle }}
   lifecycle:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   {{- with .Values.termination.messagePath }}
-  terminationMessagePath: {{ . }}
+  terminationMessagePath: {{ tpl . $ }}
   {{- end }}
   {{- with .Values.termination.messagePolicy }}
-  terminationMessagePolicy: {{ . }}
+  terminationMessagePolicy: {{ tpl . $ }}
   {{- end }}
 
   env:
     - name: PUID
-      value: {{ .Values.security.PUID | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
     - name: USER_ID
-      value: {{ .Values.security.PUID | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
     - name: UID
-      value: {{ .Values.security.PUID | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
     - name: UMASK
-      value: {{ .Values.security.UMASK | quote }}
+      value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
     - name: UMASK_SET
-      value: {{ .Values.security.UMASK | quote }}
+      value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
     - name: PGID
-      value: {{ .Values.podSecurityContext.fsGroup | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
     - name: GROUP_ID
-      value: {{ .Values.podSecurityContext.fsGroup | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
     - name: GID
-      value: {{ .Values.podSecurityContext.fsGroup | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
    {{- if or ( .Values.securityContext.readOnlyRootFilesystem ) ( .Values.securityContext.runAsNonRoot ) }}
     - name: S6_READ_ONLY_ROOT
       value: "1"
@@ -74,7 +78,7 @@
       value: "all"
    {{- end }}
     - name: TZ
-      value: {{ .Values.TZ | quote }}
+      value: {{ tpl ( toYaml .Values.TZ | quote }}
   {{- with .Values.env }}
     {{- range $k, $v := . }}
       {{- $name := $k }}
