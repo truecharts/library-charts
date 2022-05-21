@@ -42,10 +42,10 @@ before chart installation.
       echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
       if nfs4xdr_getfacl && nfs4xdr_getfacl | grep -qv "Failed to get NFSv4 ACL"; then
         echo "NFSv4 ACLs detected, using nfs4_setfacl to set permissions..."
-        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ $hpm.mountPath | squote }}
+        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ tpl $hpm.mountPath $ | squote }}
       else
         echo "No NFSv4 ACLs detected, trying chown/chmod..."
-        chown -R :{{ $group }}
+        chown -R :{{ $group }} {{ tpl $hpm.mountPath $ | squote }}
         chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }}
       fi
       {{- end }}
