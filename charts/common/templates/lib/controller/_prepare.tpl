@@ -4,7 +4,6 @@ before chart installation.
 */}}
 {{- define "common.controller.prepare" -}}
 {{- $group := .Values.podSecurityContext.fsGroup -}}
-{{- $user := .Values.podSecurityContext.runAsUser -}}
 {{- $hostPathMounts := dict -}}
 {{- range $name, $mount := .Values.persistence -}}
   {{- if and $mount.enabled $mount.setPermissions -}}
@@ -43,13 +42,11 @@ before chart installation.
       echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
       if nfs4xdr_getfacl && nfs4xdr_getfacl | grep -qv "Failed to get NFSv4 ACL"; then
         echo "NFSv4 ACLs detected, using nfs4_setfacl to set permissions..."
-        nfs4_setfacl -R -a A::{{ $user }}:RWX {{ $hpm.mountPath | squote }}
         nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ $hpm.mountPath | squote }}
       else
         echo "No NFSv4 ACLs detected, trying chown/chmod..."
-        chown -R {{ $user }}:{{ $group }}
+        chown -R :{{ $group }}
         chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }}
-        chmod -R u+rwx {{ tpl $hpm.mountPath $ | squote }}
       fi
       {{- end }}
       {{- if .Values.patchInotify }}
