@@ -34,7 +34,7 @@ before chart installation.
         chown -R 568:568 /vpn/vpn.conf
         chmod -R g+w /vpn/vpn.conf
       else
-        echo "NFSv4 ACL"s detected, using nfs4_setfacl to set permissions..."
+        echo "NFSv4 ACLs detected, using nfs4_setfacl to set permissions..."
         nfs4_setfacl -a A::568:RWX /vpn/vpn.conf
         nfs4_setfacl -a A:g:568:RWX /vpn/vpn.conf
       fi
