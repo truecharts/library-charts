@@ -47,9 +47,9 @@ before chart installation.
         chmod -R g+rwx {{ tpl $hpm.mountPath $ | squote }}
         chmod -R u+rwx {{ tpl $hpm.mountPath $ | squote }}
       else
-        echo "NFSv4 ACL"s detected, using nfs4_setfacl to set permissions..."
-        nfs4_setfacl -R -a A::{{ $user }}:RWX {{ $hpm.mountPath | quote }}
-        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ $hpm.mountPath | quote }}
+        echo "NFSv4 ACLs detected, using nfs4_setfacl to set permissions..."
+        nfs4_setfacl -R -a A::{{ $user }}:RWX {{ $hpm.mountPath | squote }}
+        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ $hpm.mountPath | squote }}
       fi
       {{- end }}
       {{- if .Values.patchInotify }}
