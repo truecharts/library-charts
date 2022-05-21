@@ -40,7 +40,7 @@ before chart installation.
       fi
       {{- end }}
       {{- range $_, $hpm := $hostPathMounts }}
-      echo 'Automatically correcting permissions for {{ tpl $hpm.mountPath $ | squote }}...'
+      echo 'Automatically correcting permissions for {{ $hpm.mountPath | squote }}...'
       if nfs4xdr_getfacl | grep -q 'Failed to get NFSv4 ACL'; then
         echo 'No NFSv4 ACLs detected, trying chown/chmod...'
         chown -R {{ $user }}:{{ $group }}
@@ -48,8 +48,8 @@ before chart installation.
         chmod -R u+rwx {{ tpl $hpm.mountPath $ | squote }}
       else
         echo 'NFSv4 ACL's detected, using nfs4_setfacl to set permissions...'
-        nfs4_setfacl -R -a A::{{ $user }}:RWX {{ tpl $hpm.mountPath $ | squote }}
-        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ tpl $hpm.mountPath $ | squote }}
+        nfs4_setfacl -R -a A::{{ $user }}:RWX {{ $hpm.mountPath | squote }}
+        nfs4_setfacl -R -a A:g:{{ $group }}:RWX {{ $hpm.mountPath | squote }}
       fi
       {{- end }}
       {{- if .Values.patchInotify }}
