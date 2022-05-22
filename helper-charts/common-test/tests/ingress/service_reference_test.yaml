@@ -14,7 +14,7 @@ tests:
           path: spec.rules[0].http.paths[0].backend
           value:
             serviceName: RELEASE-NAME-common-test
-            servicePort: null
+            servicePort: 8080
 
   - it: custom service reference should pass
     set:

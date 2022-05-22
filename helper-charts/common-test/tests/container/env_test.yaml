@@ -9,7 +9,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         isNull:
-          path: spec.template.spec.containers[0].env
+          path: spec.template.spec.containers[0].env[11]
 
   - it: KeyValue string should pass
     set:
@@ -21,7 +21,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: string
             value: value_of_env
@@ -36,7 +36,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: string
             value: "4.2"
@@ -51,7 +51,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: string
             value: "1"
@@ -66,7 +66,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: string
             value: "4.2"
@@ -82,7 +82,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: STATIC_ENV_FROM_LIST
             value: STATIC_ENV_VALUE_FROM_LIST
@@ -100,7 +100,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: DYNAMIC_ENV_FROM_LIST
             valueFrom:
@@ -119,7 +119,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: DYNAMIC_ENV
             valueFrom:
@@ -136,7 +136,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: DYNAMIC_ENV
             value: RELEASE-NAME-admin
@@ -155,7 +155,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[0]
+          path: spec.template.spec.containers[0].env[11]
           value:
             name: DYNAMIC_ENV
             valueFrom:
@@ -163,7 +163,7 @@ tests:
                 fieldPath: spec.nodeName
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].env[1]
+          path: spec.template.spec.containers[0].env[12]
           value:
             name: STATIC_ENV
             value: static

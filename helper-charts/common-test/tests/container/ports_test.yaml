@@ -80,7 +80,7 @@ tests:
       service:
         main:
           ports:
-            http:
+            main:
               protocol: UDP
     asserts:
       - documentIndex: 0
