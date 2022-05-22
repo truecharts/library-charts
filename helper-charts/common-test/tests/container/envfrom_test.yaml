@@ -32,7 +32,7 @@ tests:
       secretEnv:
         STATIC_SECRET: value_of_secret
     asserts:
-      - documentIndex: &DeploymentDoc 2
+      - documentIndex: &DeploymentDoc 0
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDoc
