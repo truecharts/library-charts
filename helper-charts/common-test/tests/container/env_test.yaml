@@ -8,8 +8,31 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDoc
-        isNull:
-          path: spec.template.spec.containers[0].env[11]
+        equal:
+          path: spec.template.spec.containers[0].env
+          value:
+            - name: PUID
+              value: "568"
+            - name: USER_ID
+              value: "568"
+            - name: UID
+              value: "568"
+            - name: UMASK
+              value: "2"
+            - name: UMASK_SET
+              value: "2"
+            - name: PGID
+              value: "568"
+            - name: GROUP_ID
+              value: "568"
+            - name: GID
+              value: "568"
+            - name: S6_READ_ONLY_ROOT
+              value: "1"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: void
+            - name: TZ
+              value: UTC
 
   - it: KeyValue string should pass
     set:
