@@ -18,32 +18,11 @@ tests:
           path: spec.template.spec.containers[0].name
           value: vpn
 
-  - it: addon enabled should pass
-    set:
-      addons:
-        vpn:
-          type: openvpn
-    asserts:
-      - hasDocuments:
-          count: 2
-      - documentIndex: &DeploymentDocument 0
-        isKind:
-          of: Deployment
-      - documentIndex: 1
-        isKind:
-          of: Service
-      - documentIndex: *DeploymentDocument
-        equal:
-          path: spec.template.spec.containers[1].name
-          value: openvpn
-
   - it: addon enabled with configFile should pass
     set:
       addons:
         vpn:
           type: openvpn
-          configFile:
-            enabled: true
     asserts:
       - hasDocuments:
           count: 3
@@ -70,6 +49,41 @@ tests:
                 - key: vpnConfigfile
                   path: vpnConfigfile
               secretName: RELEASE-NAME-common-test-vpnconfig
+      - documentIndex: *AddonVPNConfigSecretDocument
+        equal:
+          path: metadata.name
+          value: RELEASE-NAME-common-test-vpnconfig
+
+  - it: addon enabled with configFile should pass
+    set:
+      addons:
+        vpn:
+          type: openvpn
+          configFile:
+            enabled: true
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: &AddonVPNConfigSecretDocument 0
+        isKind:
+          of: Secret
+      - documentIndex: &DeploymentDocument 1
+        isKind:
+          of: Deployment
+      - documentIndex: *DeploymentDocument
+        contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            mountPath: /vpn/vpn.conf
+            name: vpnconfig
+      - documentIndex: *DeploymentDocument
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: vpnconfig
+            hostPath:
+              path: /vpn/vpn.conf
+              type: File
       - documentIndex: *AddonVPNConfigSecretDocument
         equal:
           path: metadata.name
