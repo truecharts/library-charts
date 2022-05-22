@@ -21,12 +21,10 @@ apiVersion: v1
 kind: secret
 metadata:
   name: {{ $secretName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
-       {{- tpl ( toYaml . ) $ | nindent 4 }}
-    {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  labels: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
   annotations:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}

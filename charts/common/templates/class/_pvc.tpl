@@ -28,7 +28,7 @@ metadata:
     {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
-    {{- with $values.annotations }}
+    {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}

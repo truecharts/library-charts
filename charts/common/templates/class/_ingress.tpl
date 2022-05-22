@@ -70,15 +70,13 @@ apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
-       {{- tpl ( toYaml . ) $ | nindent 4 }}
-    {{- end }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  labels: {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
     "traefik.ingress.kubernetes.io/router.entrypoints": {{ $values.entrypoint | default "websecure" }}
     "traefik.ingress.kubernetes.io/router.middlewares": {{ $middlewares | quote }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:

@@ -8,15 +8,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with .Values.controller.labels }}
-      {{- tpl ( toYaml . ) $ | nindent 4 }}
-    {{- end }}
-  annotations:
-  {{- include "common.annotations.workload" . | nindent 4 }}
-  {{- with .Values.controller.annotations }}
-    {{- tpl ( toYaml . ) $ | nindent 4 }}
+  {{- with (merge (.Values.controller.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
+  {{- end }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "common.annotations.workload" $ | fromYaml)) }}
+  annotations: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
