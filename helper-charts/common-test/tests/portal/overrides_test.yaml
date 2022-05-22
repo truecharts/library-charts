@@ -1,0 +1,60 @@
+suite: portal overrides
+templates:
+  - common.yaml
+tests:
+  - it: ingressPort can be overridden
+    set:
+      portal:
+        enabled: true
+        ingressPort: 666
+      ingress:
+        main:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: 0
+        isKind:
+          of: ConfigMap
+      - documentIndex: 0
+        equal:
+          path: data.path
+          value: 666
+
+  - it: nodePort Host can be overridden
+    set:
+      portal:
+        enabled: true
+        host: "test.host"
+      ingress:
+        main:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: 0
+        isKind:
+          of: ConfigMap
+      - documentIndex: 0
+        equal:
+          path: data.host
+          value: test.host
+
+  - it: path can be overridden
+    set:
+      portal:
+        enabled: true
+        path: "/path"
+      ingress:
+        main:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: 0
+        isKind:
+          of: ConfigMap
+      - documentIndex: 0
+        equal:
+          path: data.path
+          value: /path

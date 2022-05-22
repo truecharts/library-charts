@@ -1,0 +1,24 @@
+suite: portal overrides
+templates:
+  - common.yaml
+tests:
+  - it: nodePort host defaults to "$node_ip
+      set:
+      portal:
+        enabled: true
+      ingress:
+        main:
+          enabled: false
+      service:
+        main:
+          nodeport: 666
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: 0
+        isKind:
+          of: ConfigMap
+      - documentIndex: 0
+        equal:
+          path: data.host
+          value: $node_ip
