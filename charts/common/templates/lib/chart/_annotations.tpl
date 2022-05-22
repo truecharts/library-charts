@@ -13,13 +13,11 @@
 {{- define "common.annotations.workload.spec" -}}
 rollme: {{ randAlphaNum 5 | quote }}
 {{- if .Values.ixExternalInterfacesConfigurationNames }}
-(include "common.annotations" $ | fromYaml))
 k8s.v1.cni.cncf.io/networks: {{ join ", " .Values.ixExternalInterfacesConfigurationNames }}
 {{- end }}
 {{- end -}}
 
 {{/* Annotations on all workload objects */}}
 {{- define "common.annotations.workload" -}}
-(include "common.annotations" $ | fromYaml))
 rollme: {{ randAlphaNum 5 | quote }}
 {{- end -}}

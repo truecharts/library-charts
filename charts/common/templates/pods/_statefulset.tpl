@@ -13,7 +13,7 @@ metadata:
   {{- with (merge (.Values.controller.labels | default dict) (include "common.labels" $ | fromYaml)) }}
   labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
-  {{- with (merge (.Values.controller.annotations | default dict) (include "common.annotations.workload" $ | fromYaml)) }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "common.annotations" $ | fromYaml) (include "common.annotations.workload" $ | fromYaml)) }}
   annotations: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
