@@ -16,7 +16,7 @@ tests:
 
   - it: explicit TCP should pass
     set:
-      service.main.ports.http.protocol: TCP
+      service.main.ports.main.protocol: TCP
     asserts:
       - documentIndex: &ServiceDocument 1
         isKind:
@@ -28,7 +28,7 @@ tests:
 
   - it: explicit UDP should pass
     set:
-      service.main.ports.http.protocol: UDP
+      service.main.ports.main.protocol: UDP
     asserts:
       - documentIndex: &ServiceDocument 1
         isKind:
@@ -40,7 +40,7 @@ tests:
 
   - it: explicit HTTP should pass
     set:
-      service.main.ports.http.protocol: HTTP
+      service.main.ports.main.protocol: HTTP
     asserts:
       - documentIndex: &ServiceDocument 1
         isKind:
@@ -55,7 +55,7 @@ tests:
 
   - it: explicit HTTPS should pass
     set:
-      service.main.ports.http.protocol: HTTPS
+      service.main.ports.main.protocol: HTTPS
     asserts:
       - documentIndex: &ServiceDocument 1
         isKind:
