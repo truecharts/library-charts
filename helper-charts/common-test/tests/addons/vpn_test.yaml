@@ -34,12 +34,10 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDocument
         contains:
-          path: spec.template.spec.containers[1].volumeMounts
+          path: spec.template.spec.containers[1].volumeMounts[1]
           content:
-            - mountPath: /shared
-              name: shared
-            - mountPath: /vpn/vpn.conf
-              name: vpnconfig
+            mountPath: /vpn/vpn.conf
+            name: vpnconfig
       - documentIndex: *AddonVPNConfigSecretDocument
         equal:
           path: metadata.name
