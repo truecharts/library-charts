@@ -42,7 +42,7 @@ tests:
       service:
         main:
           ports:
-            http:
+            main:
               protocol: HTTP
     asserts:
       - documentIndex: 0
@@ -52,8 +52,8 @@ tests:
         equal:
           path: spec.template.spec.containers[0].ports[0]
           value:
-            containerPort: null
-            name: http
+            containerPort: 8080
+            name: main
             protocol: TCP
 
   - it: HTTPS protocol should pass
@@ -61,7 +61,7 @@ tests:
       service:
         main:
           ports:
-            http:
+            main:
               protocol: HTTPS
     asserts:
       - documentIndex: 0
@@ -71,8 +71,8 @@ tests:
         equal:
           path: spec.template.spec.containers[0].ports[0]
           value:
-            containerPort: null
-            name: http
+            containerPort: 8080
+            name: main
             protocol: TCP
 
   - it: UDP protocol should pass
@@ -90,6 +90,6 @@ tests:
         equal:
           path: spec.template.spec.containers[0].ports[0]
           value:
-            containerPort: null
-            name: http
+            containerPort: 8080
+            name: main
             protocol: UDP
