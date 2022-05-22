@@ -306,7 +306,7 @@ externalInterfaces: []
 # -- Use this to populate a secret with the values you specify.
 # Be aware that these values are not encrypted by default, and could therefore visible
 # to anybody with access to the values.yaml file.
-secret: {}
+secretEnv: {}
   # PASSWORD: my-password
 
 # -- Main environment variables. Template enabled.
@@ -330,6 +330,16 @@ envFrom: []
 #     name: config-map-name
 # - secretRef:
 #     name: secret-name
+
+# -- Create secret objects directly from dict.
+secret:
+  # -- Secret Name
+  example-secret:
+    # -- Enable or Disable the secret from being created
+    enabled: false
+    # -- The actual data to be loaded into the secret as stringData
+    # Can contain tpl templating
+    data: {}
 
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical

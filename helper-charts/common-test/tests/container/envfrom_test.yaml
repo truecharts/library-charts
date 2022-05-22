@@ -27,9 +27,9 @@ tests:
             secretRef:
               name: myCustomSecret
 
-  - it: from secret should pass
+  - it: from secretEnv should pass
     set:
-      secret:
+      secretEnv:
         STATIC_SECRET: value_of_secret
     asserts:
       - documentIndex: &DeploymentDoc 0

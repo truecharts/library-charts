@@ -2,6 +2,14 @@
 Renders the Secret objects required by the chart.
 */}}
 {{- define "common.spawner.secret" -}}
+  {{- if .Values.secretEnv }}
+      {{- $secretValues := .Values.secretEnv -}}
+
+      {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
+      {{- include "common.class.secret" $ }}
+    {{- end }}
+  {{- end }}
+
   {{- /* Generate named secrets as required */ -}}
   {{- range $name, $secret := .Values.secret }}
     {{- if $secret.enabled -}}
