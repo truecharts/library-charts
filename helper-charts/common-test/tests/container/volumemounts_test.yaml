@@ -8,8 +8,15 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDoc
-        isNull:
+        equal:
           path: spec.template.spec.containers[0].volumeMounts
+          value:
+            - mountPath: /shared
+              name: shared
+            - mountPath: /tmp
+              name: temp
+            - mountPath: /var/logs
+              name: varlogs
 
   - it: default should pass
     set:
@@ -22,7 +29,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: config
             mountPath: /config
@@ -39,7 +46,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: cache
             mountPath: /cache
@@ -58,7 +65,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: config
             mountPath: /custom
@@ -76,7 +83,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: config
             mountPath: /config
@@ -96,7 +103,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: config
             mountPath: /data
@@ -115,7 +122,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[0]
+          path: spec.template.spec.containers[0].volumeMounts[4]
           value:
             name: config
             mountPath: /dev
