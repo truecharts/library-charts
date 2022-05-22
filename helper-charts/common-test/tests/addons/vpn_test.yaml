@@ -23,31 +23,6 @@ tests:
       addons:
         vpn:
           type: openvpn
-    asserts:
-      - hasDocuments:
-          count: 3
-      - documentIndex: &AddonVPNConfigSecretDocument 0
-        isKind:
-          of: Secret
-      - documentIndex: &DeploymentDocument 1
-        isKind:
-          of: Deployment
-      - documentIndex: *DeploymentDocument
-        contains:
-          path: spec.template.spec.containers[1].volumeMounts[1]
-          content:
-            mountPath: /vpn/vpn.conf
-            name: vpnconfig
-      - documentIndex: *AddonVPNConfigSecretDocument
-        equal:
-          path: metadata.name
-          value: RELEASE-NAME-common-test-openvpn
-
-  - it: addon enabled with configFile should pass
-    set:
-      addons:
-        vpn:
-          type: openvpn
           configFile:
             enabled: true
     asserts:
@@ -61,7 +36,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDocument
         contains:
-          path: spec.template.spec.containers[1].volumeMounts[1]
+          path: spec.template.spec.containers[1].volumeMounts
           content:
             mountPath: /vpn/vpn.conf
             name: vpnconfig

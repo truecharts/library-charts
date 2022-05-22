@@ -8,3 +8,8 @@ service:
     ports:
       main:
         port: 8080
+addons:
+  vpn:
+    type: openvpn
+    configFile:
+      enabled: true
