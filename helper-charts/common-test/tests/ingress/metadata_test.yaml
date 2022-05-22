@@ -10,8 +10,11 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *IngressDocument
-        isNull:
           path: metadata.annotations
+          value:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: default-chain-basic@kubernetescrd
+
       - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
@@ -38,6 +41,8 @@ tests:
           path: metadata.annotations
           value:
             test_annotation: test
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: default-chain-basic@kubernetescrd
       - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
@@ -71,6 +76,8 @@ tests:
           value:
             global_annotation: test
             test_annotation: test
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: default-chain-basic@kubernetescrd
       - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
