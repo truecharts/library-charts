@@ -33,7 +33,7 @@
     {{- end }}
     {{- if not $vct.noMount }}
 - mountPath: {{ $vct.mountPath }}
-  name: {{ ( tpl $vctname $ ) | quote }}
+  name: {{ ( tpl $vctname $ ) | toString }}
       {{- if $vct.subPath }}
   subPath: {{ tpl $vct.subPath $ }}
       {{- end }}
