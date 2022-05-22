@@ -48,12 +48,8 @@ spec:
       {{- include "common.controller.pod" . | nindent 6 }}
   volumeClaimTemplates:
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
-    {{- $vctname := $index }}
-    {{- if $vct.name }}
-    {{- $vctname := $vct.name }}
-    {{- end }}
     - metadata:
-        name: {{ tpl $vctname $ }}
+        name: {{ $vct.name }}
       spec:
         accessModes:
           - {{ tpl ( $vct.accessMode | default "ReadWriteOnce" ) $ | quote }}
