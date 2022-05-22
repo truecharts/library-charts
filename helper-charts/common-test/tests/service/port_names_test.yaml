@@ -14,7 +14,7 @@ tests:
           path: spec.ports[0]
           value:
             name: main
-            port: null
+            port: 8080
             protocol: TCP
             targetPort: main
 
@@ -58,6 +58,6 @@ tests:
           path: spec.ports[0]
           value:
             name: main
-            port: null
+            port: 8080
             protocol: TCP
             targetPort: 80
