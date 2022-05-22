@@ -1,5 +1,5 @@
 {{/* merge persistenceList with Persitence */}}
-{{- define "common.lib.values.persistence.list" -}}
+{{- define "tc.common.lib.values.persistence.list" -}}
   {{- $perDict := dict }}
   {{- range $index, $item := .Values.persistenceList -}}
     {{- $name := ( printf "list-%s" ( $index | toString ) ) }}

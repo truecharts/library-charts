@@ -1,5 +1,5 @@
 {{/* merge persistenceLabelsList with persistenceLabels */}}
-{{- define "common.lib.values.persistence.label.list" -}}
+{{- define "tc.common.lib.values.persistence.label.list" -}}
   {{- range $index, $item := .Values.persistence }}
   {{- if $item.enabled }}
   {{- $persistenceLabelsDict := dict }}

@@ -1,7 +1,14 @@
 {{/*
 Renders the Secret objects required by the chart.
 */}}
-{{- define "common.spawner.secret" -}}
+{{- define "tc.common.spawner.secret" -}}
+  {{- if .Values.secretEnv }}
+      {{- $secretValues := .Values.secretEnv -}}
+
+      {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
+      {{- include "tc.common.class.secret" $ }}
+  {{- end }}
+
   {{- /* Generate named secrets as required */ -}}
   {{- range $name, $secret := .Values.secret }}
     {{- if $secret.enabled -}}
@@ -13,7 +20,7 @@ Renders the Secret objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
-      {{- include "common.class.secret" $ }}
+      {{- include "tc.common.class.secret" $ }}
     {{- end }}
   {{- end }}
 {{- end }}

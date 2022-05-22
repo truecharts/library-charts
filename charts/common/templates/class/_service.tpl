@@ -2,7 +2,7 @@
 This template serves as a blueprint for all Service objects that are created
 within the common library.
 */}}
-{{- define "common.class.service" -}}
+{{- define "tc.common.class.service" -}}
 {{- $values := .Values.service -}}
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.service -}}
@@ -10,30 +10,28 @@ within the common library.
   {{- end -}}
 {{ end -}}
 
-{{- $serviceName := include "common.names.fullname" . -}}
+{{- $serviceName := include "tc.common.names.fullname" . -}}
 {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
   {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
 {{ end -}}
 {{- $svcType := $values.type | default "" -}}
-{{- $primaryPort := get $values.ports (include "common.lib.util.service.ports.primary" (dict "values" $values)) }}
+{{- $primaryPort := get $values.ports (include "tc.common.lib.util.service.ports.primary" (dict "values" $values)) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-  {{- if $values.labels }}
-    {{- tpl ( toYaml $values.labels ) $ | nindent 4 }}
+  {{- with (merge ($values.labels | default dict) (include "tc.common.labels" $ | fromYaml)) }}
+  labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
   {{- end }}
   {{- if eq ( $svcType | default "" ) "LoadBalancer" }}
-    metallb.universe.tf/allow-shared-ip: {{ include "common.names.fullname" . }}
+    metallb.universe.tf/allow-shared-ip: {{ include "tc.common.names.fullname" . }}
   {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
@@ -109,7 +107,7 @@ spec:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
   {{- else }}
-    {{- include "common.labels.selectorLabels" . | nindent 4 }}
+    {{- include "tc.common.labels.selectorLabels" . | nindent 4 }}
   {{- end }}
   {{- end }}
 {{- if eq $svcType "ExternalIP" }}
@@ -119,7 +117,7 @@ kind: Endpoints
 metadata:
   name: {{ $serviceName }}
   labels:
-    {{- include "common.labels" $ | nindent 4 }}
+    {{- include "tc.common.labels" $ | nindent 4 }}
 subsets:
   - addresses:
       - ip: {{ $values.externalIP }}

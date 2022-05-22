@@ -1,5 +1,5 @@
 {{/* Allow some extra "fake" VolumeClaimTemplate options for SCALE GUI simplification */}}
-{{- define "common.lib.values.volumeClaimTemplates.simple" -}}
+{{- define "tc.common.lib.values.volumeClaimTemplates.simple" -}}
   {{- range .Values.volumeClaimTemplates }}
   {{- if .type }}
   {{- if eq .type "simplePVC" }}

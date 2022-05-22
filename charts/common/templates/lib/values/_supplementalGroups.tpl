@@ -1,5 +1,5 @@
 {{/* Append default supplementalGroups to user defined groups */}}
-{{- define "common.lib.values.supplementalGroups" -}}
+{{- define "tc.common.lib.values.supplementalGroups" -}}
 
   {{/* save supplementalGroups to placeholder variables */}}
   {{- $fixedGroups := list 568 }}

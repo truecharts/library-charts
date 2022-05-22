@@ -1,7 +1,7 @@
 {{/*
 Ports included by the controller.
 */}}
-{{- define "common.controller.ports" -}}
+{{- define "tc.common.controller.ports" -}}
   {{- $ports := list -}}
   {{- range .Values.service -}}
     {{- if .enabled -}}

@@ -1,7 +1,7 @@
 {{/*
 Renders the networkPolicy objects required by the chart.
 */}}
-{{- define "common.spawner.networkpolicy" -}}
+{{- define "tc.common.spawner.networkpolicy" -}}
   {{- /* Generate named networkpolicy as required */ -}}
   {{- range $name, $networkPolicy := .Values.networkPolicy }}
     {{- if $networkPolicy.enabled -}}
@@ -13,7 +13,7 @@ Renders the networkPolicy objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "networkPolicy" $networkPolicyValues) -}}
-      {{- include "common.class.networkpolicy" $ }}
+      {{- include "tc.common.class.networkpolicy" $ }}
     {{- end }}
   {{- end }}
 {{- end }}

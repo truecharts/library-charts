@@ -1,5 +1,5 @@
 {{/* merge controllerAnnotationsList with controllerAnnotations */}}
-{{- define "common.lib.values.controller.annotations.list" -}}
+{{- define "tc.common.lib.values.controller.annotations.list" -}}
   {{- $controllerAnnotationsDict := dict }}
   {{- range .Values.controller.annotationsList }}
   {{- $_ := set $controllerAnnotationsDict .name .value }}

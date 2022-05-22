@@ -2,14 +2,14 @@
 This template serves as a blueprint for all PersistentVolumeClaim objects that are created
 within the common library.
 */}}
-{{- define "common.class.pvc" -}}
+{{- define "tc.common.class.pvc" -}}
 {{- $values := .Values.persistence -}}
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.persistence -}}
     {{- $values = . -}}
   {{- end -}}
 {{ end -}}
-{{- $pvcName := include "common.names.fullname" . -}}
+{{- $pvcName := include "tc.common.names.fullname" . -}}
 {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
   {{- if not (eq $values.nameOverride "-") -}}
     {{- $pvcName = printf "%v-%v" $pvcName $values.nameOverride -}}
@@ -28,12 +28,12 @@ metadata:
     {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
-    {{- with $values.annotations }}
+    {{- with (merge ($values.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}
   labels:
-  {{- include "common.labels" . | nindent 4 }}
+  {{- include "tc.common.labels" . | nindent 4 }}
   {{- with $values.labels }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
@@ -43,8 +43,12 @@ spec:
   resources:
     requests:
       storage: {{ $values.size | default "999Gi" | quote }}
-  {{ include "common.storage.class" ( dict "persistence" $values "global" $ ) }}
+  {{- with $values.spec }}
+  {{ tpl ( toYaml . ) $ | indent 2 }}
+  {{- end }}
+  {{ include "tc.common.storage.class" ( dict "persistence" $values "global" $ ) }}
   {{- if $values.volumeName }}
   volumeName: {{ $values.volumeName | quote }}
   {{- end }}
+
 {{- end -}}

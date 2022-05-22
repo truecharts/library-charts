@@ -1,5 +1,5 @@
 {{/* merge ingressAnnotationsList with ingressAnnotations */}}
-{{- define "common.lib.values.ingress.annotations.list" -}}
+{{- define "tc.common.lib.values.ingress.annotations.list" -}}
  {{- range $index, $item := .Values.ingress }}
  {{- if $item.enabled }}
  {{- $ingressAnnotationsDict := dict }}

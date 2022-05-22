@@ -1,7 +1,7 @@
 {{- /* The main container included in the controller */ -}}
-{{- define "common.controller.mainContainer" -}}
-- name: {{ include "common.names.fullname" . }}
-  image: {{ include "common.images.selector" . }}
+{{- define "tc.common.controller.mainContainer" -}}
+- name: {{ include "tc.common.names.fullname" . }}
+  image: {{ include "tc.common.images.selector" . }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- with .Values.command }}
   command:
@@ -138,13 +138,17 @@
   {{- else }}
   {{- end }}
   {{- end }}
+  {{- if .Values.secretEnv }}
+  - secretRef:
+      name: {{ include "tc.common.names.fullname" . }}
+  {{- end }}
   ports:
-  {{- include "common.controller.ports" . | trim | nindent 4 }}
-  {{- with (include "common.controller.volumeMounts" . | trim) }}
+  {{- include "tc.common.controller.ports" . | trim | nindent 4 }}
+  {{- with (include "tc.common.controller.volumeMounts" . | trim) }}
   volumeMounts:
     {{ nindent 4 . }}
   {{- end }}
-  {{- include "common.controller.probes" . | trim | nindent 2 }}
+  {{- include "tc.common.controller.probes" . | trim | nindent 2 }}
   {{/*
   Merges the TrueNAS SCALE generated GPU info with the .Values.resources dict
   */}}
