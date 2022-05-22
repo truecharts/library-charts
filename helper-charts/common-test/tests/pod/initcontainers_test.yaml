@@ -41,5 +41,5 @@ tests:
           of: Deployment
       - documentIndex: 0
         equal:
-          path: spec.template.spec.initContainers[1.name
+          path: spec.template.spec.initContainers[1].name
           value: RELEASE-NAME-container
