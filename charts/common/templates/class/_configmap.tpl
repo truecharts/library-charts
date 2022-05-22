@@ -22,7 +22,7 @@ kind: ConfigMap
 metadata:
   name: {{ $configMapName }}
   {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
-  labels: {{- toYaml . | nindent 4 }}
+  labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
   annotations:
