@@ -10,14 +10,11 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "common.names.fullname" . }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with .Values.controller.labels }}
-      {{- tpl ( toYaml . ) $ | nindent 4 }}
-    {{- end }}
-  {{- with .Values.controller.annotations }}
-  annotations:
-    {{- tpl ( toYaml . ) $ | nindent 4 }}
+  {{- with (merge (.Values.controller.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
+  {{- end }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "common.annotations" $ | fromYaml) (include "common.annotations.workload" $ | fromYaml)) }}
+  annotations: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
@@ -51,12 +48,8 @@ spec:
       {{- include "common.controller.pod" . | nindent 6 }}
   volumeClaimTemplates:
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
-    {{- $vctname := $index }}
-    {{- if $vct.name }}
-    {{- $vctname := $vct.name }}
-    {{- end }}
     - metadata:
-        name: {{ tpl $vctname $ }}
+        name: {{ $vct.name }}
       spec:
         accessModes:
           - {{ tpl ( $vct.accessMode | default "ReadWriteOnce" ) $ | quote }}

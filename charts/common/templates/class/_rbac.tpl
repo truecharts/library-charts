@@ -28,7 +28,7 @@ metadata:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   annotations:
-    {{- with $values.annotations }}
+    {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
 {{- with $values.rules }}
@@ -47,7 +47,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    {{- with $values.annotations }}
+    {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 roleRef:

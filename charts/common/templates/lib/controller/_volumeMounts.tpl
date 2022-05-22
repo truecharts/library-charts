@@ -27,17 +27,11 @@
 
   {{- if eq .Values.controller.type "statefulset" }}
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
-    {{- $vctname := $index }}
-    {{- if $vct.name }}
-    {{- $vctname := $vct.name }}
-    {{- end }}
-    {{- if not $vct.noMount }}
 - mountPath: {{ $vct.mountPath }}
-  name: {{ tpl $vctname $ }}
+  name: {{ $vct.name }}
       {{- if $vct.subPath }}
-  subPath: {{ tpl $vct.subPath $ }}
+  subPath: {{ $vct.subPath }}
       {{- end }}
-    {{- end }}
     {{- end }}
   {{- end }}
 {{- end -}}

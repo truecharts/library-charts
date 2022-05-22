@@ -138,6 +138,10 @@
   {{- else }}
   {{- end }}
   {{- end }}
+  {{- if .Values.secretEnv }}
+  - secretRef:
+      name: {{ include "common.names.fullname" . }}
+  {{- end }}
   ports:
   {{- include "common.controller.ports" . | trim | nindent 4 }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}

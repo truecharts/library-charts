@@ -21,10 +21,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-  {{- if $values.labels }}
-    {{- tpl ( toYaml $values.labels ) $ | nindent 4 }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
@@ -33,7 +31,7 @@ metadata:
   {{- if eq ( $svcType | default "" ) "LoadBalancer" }}
     metallb.universe.tf/allow-shared-ip: {{ include "common.names.fullname" . }}
   {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
