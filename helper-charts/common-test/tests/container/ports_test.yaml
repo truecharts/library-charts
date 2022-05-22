@@ -11,8 +11,8 @@ tests:
         equal:
           path: spec.template.spec.containers[0].ports[0]
           value:
-            containerPort: null
-            name: http
+            containerPort: 8080
+            name: main
             protocol: TCP
 
   - it: custom port should pass
@@ -20,11 +20,11 @@ tests:
       service:
         main:
           ports:
-            http:
+            main:
               enabled: false
             server:
               enabled: true
-              port: 8080
+              port: 8081
     asserts:
       - documentIndex: 0
         isKind:
@@ -33,7 +33,7 @@ tests:
         equal:
           path: spec.template.spec.containers[0].ports[0]
           value:
-            containerPort: 8080
+            containerPort: 8081
             name: server
             protocol: TCP
 
