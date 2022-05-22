@@ -314,16 +314,20 @@ secretEnv: {}
 # A) TZ: UTC
 # B) PASSWD: '{{ .Release.Name }}'
 # C) PASSWD:
-#      envFrom:
-#        ...
+#      configMapKeyRef:
+#        name: config-map-name
+#        key: key-name
+# D) PASSWD:
+#      valueFrom:
+#        secretKeyRef:
+#          name: secret-name
+#          key: key-name
+#      ...
+# E) - name: TZ
+#      value: UTC
+# F) - name: TZ
+#      value: '{{ .Release.Name }}'
 env: {}
-
-## Variables with values from (for example) the Downward API
-## See https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/
-envValueFrom: {}
-  # NODE_NAME:
-  #   fieldRef:
-  #     fieldPath: spec.nodeName
 
 envFrom: []
 # - configMapRef:
@@ -348,6 +352,7 @@ priorityClassName:  # system-node-critical
 schedulerName:  # awkward-dangerous-scheduler
 
 # -- Allows specifying explicit hostname setting
+# please be aware this breaks some guides that assume default k8s hostnames...
 hostname:
 
 # -- When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet`
@@ -357,6 +362,7 @@ hostNetwork: false
 dnsPolicy:  # ClusterFirst
 
 # -- Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups.
+# By default we already specify " ndots=1 ", due to some reoccuring issues on SCALE.
 dnsConfig:
   options:
     - name: ndots
@@ -970,6 +976,9 @@ resources:
   requests:
     cpu: 10m
     memory: 50Mi
+
+# -- used to add SCALE GPU configuration
+scaleGPU:
 
 # -- The common chart supports several add-ons. These can be configured under this key.
 # @default -- See below

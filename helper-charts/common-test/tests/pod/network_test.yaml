@@ -15,7 +15,7 @@ tests:
           path: spec.template.spec.dnsPolicy
           value: ClusterFirst
 
-  - it: hostNetwork disabled should pass
+  - it: hostNetwork disabled should pass and set dnspolicy
     set:
       hostNetwork: false
     asserts:
@@ -30,7 +30,7 @@ tests:
           path: spec.template.spec.dnsPolicy
           value: ClusterFirst
 
-  - it: hostNetwork enabled should pass
+  - it: hostNetwork enabled should pass and set dnspolicy
     set:
       hostNetwork: true
     asserts:
