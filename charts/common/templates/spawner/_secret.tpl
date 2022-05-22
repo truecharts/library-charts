@@ -7,7 +7,6 @@ Renders the Secret objects required by the chart.
 
       {{- $_ := set $ "ObjectValues" (dict "secret" $secretValues) -}}
       {{- include "common.class.secret" $ }}
-    {{- end }}
   {{- end }}
 
   {{- /* Generate named secrets as required */ -}}
