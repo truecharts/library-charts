@@ -2,9 +2,6 @@
 {{- define "common.labels" -}}
 helm.sh/chart: {{ include "common.names.chart" . }}
 {{ include "common.labels.selectorLabels" . }}
-  {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-  {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
