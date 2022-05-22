@@ -42,7 +42,7 @@ tests:
       addons:
         vpn:
           type: openvpn
-          configFile: 
+          configFile:
             enabled: true
     asserts:
       - hasDocuments:
