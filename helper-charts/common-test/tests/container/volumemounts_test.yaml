@@ -29,7 +29,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: config
             mountPath: /config
@@ -46,7 +46,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: cache
             mountPath: /cache
@@ -65,7 +65,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: config
             mountPath: /custom
@@ -83,7 +83,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: config
             mountPath: /config
@@ -103,7 +103,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: config
             mountPath: /data
@@ -122,7 +122,7 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDoc
         equal:
-          path: spec.template.spec.containers[0].volumeMounts[4]
+          path: spec.template.spec.containers[0].volumeMounts[0]
           value:
             name: config
             mountPath: /dev

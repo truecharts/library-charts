@@ -22,7 +22,7 @@ tests:
     set:
       addons:
         vpn:
-          enabled: true
+          type: openvpn
     asserts:
       - hasDocuments:
           count: 2
@@ -79,7 +79,7 @@ tests:
     set:
       addons:
         vpn:
-          enabled: true
+          type: openvpn
           openvpn:
             username: something
             password: something

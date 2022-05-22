@@ -10,6 +10,7 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *IngressDocument
+        equal:
           path: metadata.annotations
           value:
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
