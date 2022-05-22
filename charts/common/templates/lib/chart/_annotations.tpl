@@ -11,7 +11,6 @@
 
 {{/* Annotations on all workload spec objects */}}
 {{- define "common.annotations.workload.spec" -}}
-rollme: {{ randAlphaNum 5 | quote }}
 {{- if .Values.ixExternalInterfacesConfigurationNames }}
 k8s.v1.cni.cncf.io/networks: {{ join ", " .Values.ixExternalInterfacesConfigurationNames }}
 {{- end }}
@@ -19,5 +18,4 @@ k8s.v1.cni.cncf.io/networks: {{ join ", " .Values.ixExternalInterfacesConfigurat
 
 {{/* Annotations on all workload objects */}}
 {{- define "common.annotations.workload" -}}
-rollme: {{ randAlphaNum 5 | quote }}
 {{- end -}}
