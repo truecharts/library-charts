@@ -11,7 +11,7 @@ tests:
     asserts:
       - hasDocuments:
           count: 3
-      - documentIndex: &ConfigmapDocument 1
+      - documentIndex: &ConfigmapDocument 2
         isKind:
           of: ConfigMap
       - documentIndex: *ConfigmapDocument
