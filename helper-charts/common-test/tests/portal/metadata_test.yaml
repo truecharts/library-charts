@@ -9,6 +9,8 @@ tests:
       ixChartContext:
         placeholder: true
     asserts:
+      - hasDocuments:
+          count: 3
       - documentIndex: &ConfigmapDocument 3
         isKind:
           of: ConfigMap
@@ -23,23 +25,11 @@ tests:
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: common-test
             helm.sh/chart: common-test-4.0.0
-
-  - it: default name should pass
-    set:
-      portal:
-        enabled: true
-      ixChartContext:
-        placeholder: true
-    asserts:
-      - hasDocuments:
-          count: 3
-      - documentIndex: 3
-        isKind:
-          of: ConfigMap
       - documentIndex: 3
         equal:
           path: metadata.name
           value: portal
+
 
 ## TODO: allow label and annotation changes for the portal
 #  - it: custom metadata should pass

@@ -74,11 +74,11 @@ tests:
           enabled: true
     asserts:
       - hasDocuments:
-          count: 3
-      - documentIndex: 3
+          count: 4
+      - documentIndex: 4
         isKind:
           of: ConfigMap
-      - documentIndex: 3
+      - documentIndex: 4
         equal:
           path: data.path
           value: /
