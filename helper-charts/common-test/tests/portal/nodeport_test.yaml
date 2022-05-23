@@ -6,6 +6,8 @@ tests:
       set:
       portal:
         enabled: true
+      ixChartContext:
+        placeholder: true
       ingress:
         main:
           enabled: false

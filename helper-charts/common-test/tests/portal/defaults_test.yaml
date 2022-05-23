@@ -9,6 +9,8 @@ tests:
       ingress:
         main:
           enabled: false
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3
@@ -24,6 +26,8 @@ tests:
     set:
       portal:
         enabled: true
+      ixChartContext:
+        placeholder: true
       ingress:
         main:
           enabled: false
@@ -45,6 +49,8 @@ tests:
       ingress:
         main:
           enabled: false
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3
@@ -61,7 +67,8 @@ tests:
     set:
       portal:
         enabled: true
-
+      ixChartContext:
+        placeholder: true
       ingress:
         main:
           enabled: true

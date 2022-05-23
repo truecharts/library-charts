@@ -10,6 +10,8 @@ tests:
       ingress:
         main:
           enabled: true
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3
@@ -29,6 +31,8 @@ tests:
       ingress:
         main:
           enabled: false
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3
@@ -48,6 +52,8 @@ tests:
       ingress:
         main:
           enabled: false
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3

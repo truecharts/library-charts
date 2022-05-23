@@ -6,6 +6,8 @@ tests:
     set:
       portal:
         enabled: true
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 2
@@ -22,6 +24,8 @@ tests:
     set:
       portal:
         enabled: true
+      ixChartContext:
+        placeholder: true
     asserts:
       - documentIndex: &ConfigmapDocument 0
         isKind:
@@ -42,6 +46,8 @@ tests:
     set:
       portal:
         enabled: true
+      ixChartContext:
+        placeholder: true
     asserts:
       - hasDocuments:
           count: 3
