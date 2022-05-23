@@ -15,10 +15,10 @@ tests:
     asserts:
       - hasDocuments:
           count: 4
-      - documentIndex: 4
+      - documentIndex: 3
         isKind:
           of: ConfigMap
-      - documentIndex: 4
+      - documentIndex: 3
         equal:
           path: data.path
           value: 666
@@ -36,10 +36,10 @@ tests:
     asserts:
       - hasDocuments:
           count: 3
-      - documentIndex: 3
+      - documentIndex: 2
         isKind:
           of: ConfigMap
-      - documentIndex: 3
+      - documentIndex: 2
         equal:
           path: data.host
           value: test.host
@@ -57,10 +57,10 @@ tests:
     asserts:
       - hasDocuments:
           count: 3
-      - documentIndex: 3
+      - documentIndex: 2
         isKind:
           of: ConfigMap
-      - documentIndex: 3
+      - documentIndex: 2
         equal:
           path: data.path
           value: /path
