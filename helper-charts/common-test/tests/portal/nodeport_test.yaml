@@ -2,7 +2,7 @@ suite: portal overrides
 templates:
   - common.yaml
 tests:
-  - it: nodePort host defaults to "$node_ip
+  - it: nodePort host defaults to $node_ip
       set:
         portal:
           enabled: true

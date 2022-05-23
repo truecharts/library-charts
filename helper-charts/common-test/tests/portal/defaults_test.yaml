@@ -40,7 +40,7 @@ tests:
       - documentIndex: 2
         equal:
           path: data.port
-          value: 443
+          value: "443"
 
   - it: uses protocol "http" by default
     set:
