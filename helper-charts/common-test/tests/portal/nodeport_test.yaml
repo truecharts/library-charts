@@ -17,10 +17,10 @@ tests:
     asserts:
       - hasDocuments:
           count: 3
-      - documentIndex: 0
+      - documentIndex: 3
         isKind:
           of: ConfigMap
-      - documentIndex: 0
+      - documentIndex: 3
         equal:
           path: data.host
           value: $node_ip
