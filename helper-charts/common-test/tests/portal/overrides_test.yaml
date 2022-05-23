@@ -20,7 +20,7 @@ tests:
           of: ConfigMap
       - documentIndex: 3
         equal:
-          path: data.path
+          path: data.port
           value: 666
 
   - it: nodePort Host can be overridden
