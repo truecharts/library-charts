@@ -7,6 +7,8 @@ tests:
       upgradeContainers:
         upgrade1:
           name: template-test
+      test:
+        upgrade: true
     asserts:
       - documentIndex: 0
         isKind:
@@ -21,6 +23,8 @@ tests:
       upgradeContainers:
         upgrade1:
           image: template-test
+      test:
+        upgrade: true
     asserts:
       - documentIndex: 0
         isKind:
@@ -35,6 +39,8 @@ tests:
       upgradeContainers:
         aupgrade1:
           name: "{{ .Release.Name }}-container"
+      test:
+        upgrade: true
     asserts:
       - documentIndex: 0
         isKind:
