@@ -4,16 +4,16 @@ templates:
 tests:
   - it: nodePort host defaults to "$node_ip
       set:
-      portal:
-        enabled: true
-      ixChartContext:
-        placeholder: true
-      ingress:
-        main:
-          enabled: false
-      service:
-        main:
-          nodeport: 666
+        portal:
+          enabled: true
+        ixChartContext:
+          placeholder: true
+        ingress:
+          main:
+            enabled: false
+        service:
+          main:
+            nodeport: 666
     asserts:
       - hasDocuments:
           count: 3
