@@ -980,6 +980,13 @@ resources:
 # -- used to add SCALE GPU configuration
 scaleGPU:
 
+# -- used to fake certain states for tests
+test:
+  # -- fake install for install initContainers
+  install: false
+  # -- fake upgrade for upgrade initContainers
+  upgrade: false
+
 # -- The common chart supports several add-ons. These can be configured under this key.
 # @default -- See below
 addons:
