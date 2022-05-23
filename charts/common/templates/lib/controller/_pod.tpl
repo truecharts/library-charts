@@ -54,8 +54,7 @@ initContainers:
   {{-  include "common.dependencies.postgresql.init" . | nindent 2 }}
   {{-  include "common.dependencies.mariadb.init" . | nindent 2 }}
   {{-  include "common.dependencies.mongodb.init" . | nindent 2 }}
-  {{- if .Release.IsInstall }}
-  {{- if .Values.installContainers }}
+  {{- if and ( or ( .Release.IsInstall ) ( .Values.test.install ) ) ( .Values.installContainers )}}
     {{- $installContainers := list }}
     {{- range $index, $key := (keys .Values.installContainers | uniq | sortAlpha) }}
       {{- $container := get $.Values.installContainers $key }}
@@ -66,9 +65,7 @@ initContainers:
     {{- end }}
     {{- tpl (toYaml $installContainers) $ | nindent 2 }}
   {{- end }}
-  {{- end }}
-  {{- if .Release.IsUpgrade }}
-  {{- if .Values.upgradeContainers }}
+  {{- if and ( or ( .Release.IsUpgrade ) ( .Values.test.upgrade ) ) ( .Values.upgradeContainers )}}
     {{- $upgradeContainers := list }}
     {{- range $index, $key := (keys .Values.upgradeContainers | uniq | sortAlpha) }}
       {{- $container := get $.Values.upgradeContainers $key }}
@@ -78,7 +75,6 @@ initContainers:
       {{- $upgradeContainers = append $upgradeContainers $container }}
     {{- end }}
     {{- tpl (toYaml $upgradeContainers) $ | nindent 2 }}
-  {{- end }}
   {{- end }}
   {{- if .Values.initContainers }}
     {{- $initContainers := list }}
