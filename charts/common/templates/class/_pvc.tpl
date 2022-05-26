@@ -47,5 +47,8 @@ spec:
   {{ tpl ( toYaml . ) $ | indent 2 }}
   {{- end }}
   {{ include "tc.common.storage.class" ( dict "persistence" $values "global" $ ) }}
-  volumeName: {{ $values.volumeName | default $pvcName | quote }}
+  {{- if $values.volumeName }}
+  volumeName: {{ $values.volumeName | quote }}
+  {{- end }}
+
 {{- end -}}
