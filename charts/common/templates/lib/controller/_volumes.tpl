@@ -1,12 +1,12 @@
 {{/*
 Volumes included by the controller.
 */}}
-{{- define "common.controller.volumes" -}}
+{{- define "tc.common.controller.volumes" -}}
 {{- range $index, $persistence := .Values.persistence }}
 {{- if $persistence.enabled }}
 - name: {{ tpl  $index $ }}
   {{- if eq (default "pvc" $persistence.type) "pvc" }}
-    {{- $pvcName := (include "common.names.fullname" $) -}}
+    {{- $pvcName := (include "tc.common.names.fullname" $) -}}
     {{- if $persistence.existingClaim }}
       {{- /* Always prefer an existingClaim if that is set */}}
       {{- $pvcName = $persistence.existingClaim -}}
@@ -14,10 +14,10 @@ Volumes included by the controller.
       {{- /* Otherwise refer to the PVC name */}}
       {{- if $persistence.nameOverride -}}
         {{- if not (eq $persistence.nameOverride "-") -}}
-          {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameOverride) -}}
+          {{- $pvcName = (printf "%s-%s" (include "tc.common.names.fullname" $) $persistence.nameOverride) -}}
         {{- end -}}
       {{- else -}}
-        {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $index) -}}
+        {{- $pvcName = (printf "%s-%s" (include "tc.common.names.fullname" $) $index) -}}
       {{- end -}}
       {{- if $persistence.forceName -}}
         {{- $pvcName = $persistence.forceName -}}

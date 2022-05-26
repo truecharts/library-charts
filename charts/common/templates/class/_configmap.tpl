@@ -2,8 +2,8 @@
 This template serves as a blueprint for all configMap objects that are created
 within the common library.
 */}}
-{{- define "common.class.configmap" -}}
-  {{- $fullName := include "common.names.fullname" . -}}
+{{- define "tc.common.class.configmap" -}}
+  {{- $fullName := include "tc.common.names.fullname" . -}}
   {{- $configMapName := $fullName -}}
   {{- $values := .Values.configmap -}}
 
@@ -21,10 +21,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $configMapName }}
-  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "tc.common.labels" $ | fromYaml)) }}
   labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
-  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
+  {{- with (merge ($values.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
   annotations:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}

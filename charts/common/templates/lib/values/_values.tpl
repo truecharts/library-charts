@@ -1,5 +1,5 @@
 {{/* Merge the local chart values and the common chart defaults */}}
-{{- define "common.values.init" -}}
+{{- define "tc.common.values.init" -}}
   {{- if .Values.common -}}
     {{- $defaultValues := deepCopy .Values.common -}}
     {{- $userValues := deepCopy (omit .Values "common") -}}

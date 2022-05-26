@@ -2,7 +2,7 @@
 This template serves as a blueprint for External Interface objects that are created
 using the SCALE GUI.
 */}}
-{{- define "common.scale.externalInterfaces" -}}
+{{- define "tc.common.scale.externalInterfaces" -}}
 {{- if  .Values.global.ixChartContext }}
 {{- range $index, $iface := .Values.ixExternalInterfacesConfiguration  }}
 ---
