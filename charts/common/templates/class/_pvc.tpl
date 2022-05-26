@@ -43,8 +43,11 @@ spec:
   resources:
     requests:
       storage: {{ $values.size | default "999Gi" | quote }}
+  {{- with $values.spec }}
+  {{ tpl ( toYaml . ) $ | indent 2 }}
+  {{- end }}
   {{ include "common.storage.class" ( dict "persistence" $values "global" $ ) }}
   {{- if $values.volumeName }}
-  volumeName: {{ $values.volumeName | quote }}
+  volumeName: {{ $values.volumeName | default $pvcName | quote }}
   {{- end }}
 {{- end -}}

@@ -753,8 +753,13 @@ persistence:
     # -- The amount of storage that is requested for the persistent volume.
     size: 999Gi
 
-    # - Set to true to retain the PVC upon `helm uninstall`
+    # -- Set to true to retain the PVC upon `helm uninstall`
     retain: false
+
+    # -- Add additional custom spec parameters
+    # Used, for example, by openEBS to set dataset parameters
+    # Be sure not to add duplicates of the above variables
+    spec: {}
 
   # -- Create an emptyDir volume to share between all containers
   # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
