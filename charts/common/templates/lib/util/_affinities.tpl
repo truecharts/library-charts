@@ -2,9 +2,9 @@
 
 {{/*
 Return a soft nodeAffinity definition
-{{ include "tc.common.v10.affinities.nodes.soft" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "tc.common.affinities.nodes.soft" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "tc.common.v10.affinities.nodes.soft" -}}
+{{- define "tc.common.affinities.nodes.soft" -}}
 preferredDuringSchedulingIgnoredDuringExecution:
   - preference:
       matchExpressions:
@@ -19,9 +19,9 @@ preferredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a hard nodeAffinity definition
-{{ include "tc.common.v10.affinities.nodes.hard" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "tc.common.affinities.nodes.hard" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "tc.common.v10.affinities.nodes.hard" -}}
+{{- define "tc.common.affinities.nodes.hard" -}}
 requiredDuringSchedulingIgnoredDuringExecution:
   nodeSelectorTerms:
     - matchExpressions:
@@ -35,27 +35,27 @@ requiredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a nodeAffinity definition
-{{ include "tc.common.v10.affinities.nodes" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "tc.common.affinities.nodes" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "tc.common.v10.affinities.nodes" -}}
+{{- define "tc.common.affinities.nodes" -}}
   {{- if eq .type "soft" }}
-    {{- include "tc.common.v10.affinities.nodes.soft" . -}}
+    {{- include "tc.common.affinities.nodes.soft" . -}}
   {{- else if eq .type "hard" }}
-    {{- include "tc.common.v10.affinities.nodes.hard" . -}}
+    {{- include "tc.common.affinities.nodes.hard" . -}}
   {{- end -}}
 {{- end -}}
 
 {{/*
 Return a soft podAffinity/podAntiAffinity definition
-{{ include "tc.common.v10.affinities.pods.soft" (dict "component" "FOO" "extraMatchLabels" .Values.extraMatchLabels "context" $) -}}
+{{ include "tc.common.affinities.pods.soft" (dict "component" "FOO" "extraMatchLabels" .Values.extraMatchLabels "context" $) -}}
 */}}
-{{- define "tc.common.v10.affinities.pods.soft" -}}
+{{- define "tc.common.affinities.pods.soft" -}}
 {{- $component := default "" .component -}}
 {{- $extraMatchLabels := default (dict) .extraMatchLabels -}}
 preferredDuringSchedulingIgnoredDuringExecution:
   - podAffinityTerm:
       labelSelector:
-        matchLabels: {{- (include "tc.common.v10.labels.matchLabels" .context) | nindent 10 }}
+        matchLabels: {{- (include "tc.common.labels.matchLabels" .context) | nindent 10 }}
           {{- if not (empty $component) }}
           {{ printf "app.kubernetes.io/component: %s" $component }}
           {{- end }}
@@ -70,14 +70,14 @@ preferredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a hard podAffinity/podAntiAffinity definition
-{{ include "tc.common.v10.affinities.pods.hard" (dict "component" "FOO" "extraMatchLabels" .Values.extraMatchLabels "context" $) -}}
+{{ include "tc.common.affinities.pods.hard" (dict "component" "FOO" "extraMatchLabels" .Values.extraMatchLabels "context" $) -}}
 */}}
-{{- define "tc.common.v10.affinities.pods.hard" -}}
+{{- define "tc.common.affinities.pods.hard" -}}
 {{- $component := default "" .component -}}
 {{- $extraMatchLabels := default (dict) .extraMatchLabels -}}
 requiredDuringSchedulingIgnoredDuringExecution:
   - labelSelector:
-      matchLabels: {{- (include "tc.common.v10.labels.matchLabels" .context) | nindent 8 }}
+      matchLabels: {{- (include "tc.common.labels.matchLabels" .context) | nindent 8 }}
         {{- if not (empty $component) }}
         {{ printf "app.kubernetes.io/component: %s" $component }}
         {{- end }}
@@ -91,12 +91,12 @@ requiredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a podAffinity/podAntiAffinity definition
-{{ include "tc.common.v10.affinities.pods" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "tc.common.affinities.pods" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "tc.common.v10.affinities.pods" -}}
+{{- define "tc.common.affinities.pods" -}}
   {{- if eq .type "soft" }}
-    {{- include "tc.common.v10.affinities.pods.soft" . -}}
+    {{- include "tc.common.affinities.pods.soft" . -}}
   {{- else if eq .type "hard" }}
-    {{- include "tc.common.v10.affinities.pods.hard" . -}}
+    {{- include "tc.common.affinities.pods.hard" . -}}
   {{- end -}}
 {{- end -}}

@@ -1,11 +1,11 @@
 {{/*
 Retrieve true/false if certificate is configured
 */}}
-{{- define "tc.common.v10.scale.cert.available" -}}
+{{- define "tc.common.scale.cert.available" -}}
 {{- if .ObjectValues.certHolder.scaleCert -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{- template "tc.common.v10.scale.cert_present" $values -}}
+{{- template "tc.common.scale.cert_present" $values -}}
 {{- else -}}
 {{- false -}}
 {{- end -}}
@@ -15,26 +15,26 @@ Retrieve true/false if certificate is configured
 {{/*
 Retrieve public key of certificate
 */}}
-{{- define "tc.common.v10.scale.cert.publicKey" -}}
+{{- define "tc.common.scale.cert.publicKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert "publicKey" true) -}}
-{{ include "tc.common.v10.scale.cert" $values }}
+{{ include "tc.common.scale.cert" $values }}
 {{- end -}}
 
 
 {{/*
 Retrieve private key of certificate
 */}}
-{{- define "tc.common.v10.scale.cert.privateKey" -}}
+{{- define "tc.common.scale.cert.privateKey" -}}
 {{- $values := (. | mustDeepCopy) -}}
 {{- $_ := set $values "commonCertOptions" (dict "certKeyName" $values.ObjectValues.certHolder.scaleCert) -}}
-{{ include "tc.common.v10.scale.cert" $values }}
+{{ include "tc.common.scale.cert" $values }}
 {{- end -}}
 
 {{/*
 Retrieve true/false if certificate is available in ixCertificates
 */}}
-{{- define "tc.common.v10.scale.cert_present" -}}
+{{- define "tc.common.scale.cert_present" -}}
 {{- $values := . -}}
 {{- hasKey $values.Values.ixCertificates ($values.commonCertOptions.certKeyName | toString) -}}
 {{- end -}}
@@ -43,7 +43,7 @@ Retrieve true/false if certificate is available in ixCertificates
 {{/*
 Retrieve certificate from variable name
 */}}
-{{- define "tc.common.v10.scale.cert" -}}
+{{- define "tc.common.scale.cert" -}}
 {{- $values := . -}}
 {{- $certKey := ($values.commonCertOptions.certKeyName | toString) -}}
 {{- if hasKey $values.Values.ixCertificates $certKey -}}

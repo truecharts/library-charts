@@ -1,9 +1,9 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Return  the proper Storage Class
-{{ include "tc.common.v10.storage.class" ( dict "persistence" .Values.path.to.the.persistence "global" $ ) }}
+{{ include "tc.common.storage.class" ( dict "persistence" .Values.path.to.the.persistence "global" $ ) }}
 */}}
-{{- define "tc.common.v10.storage.class" -}}
+{{- define "tc.common.storage.class" -}}
 
 {{- if .persistence.storageClass -}}
   {{- if (eq "-" .persistence.storageClass) -}}

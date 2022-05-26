@@ -1,5 +1,5 @@
 {{/* Expand the name of the chart */}}
-{{- define "tc.common.v10.names.name" -}}
+{{- define "tc.common.names.name" -}}
   {{- $globalNameOverride := "" -}}
   {{- if hasKey .Values "global" -}}
     {{- $globalNameOverride = (default $globalNameOverride .Values.global.nameOverride) -}}
@@ -12,8 +12,8 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "tc.common.v10.names.fullname" -}}
-  {{- $name := include "tc.common.v10.names.name" . -}}
+{{- define "tc.common.names.fullname" -}}
+  {{- $name := include "tc.common.names.name" . -}}
   {{- $globalFullNameOverride := "" -}}
   {{- if hasKey .Values "global" -}}
     {{- $globalFullNameOverride = (default $globalFullNameOverride .Values.global.fullnameOverride) -}}
@@ -31,21 +31,21 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/* Create chart name and version as used by the chart label */}}
-{{- define "tc.common.v10.names.chart" -}}
+{{- define "tc.common.names.chart" -}}
   {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Create the name of the ServiceAccount to use */}}
-{{- define "tc.common.v10.names.serviceAccountName" -}}
+{{- define "tc.common.names.serviceAccountName" -}}
   {{- if .Values.serviceAccount.create -}}
-    {{- default (include "tc.common.v10.names.fullname" .) .Values.serviceAccount.name -}}
+    {{- default (include "tc.common.names.fullname" .) .Values.serviceAccount.name -}}
   {{- else -}}
     {{- default "default" .Values.serviceAccount.name -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Return the properly cased version of the controller type */}}
-{{- define "tc.common.v10.names.controllerType" -}}
+{{- define "tc.common.names.controllerType" -}}
   {{- if eq .Values.controller.type "deployment" -}}
     {{- print "Deployment" -}}
   {{- else if eq .Values.controller.type "daemonset" -}}
@@ -60,6 +60,6 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create the "name" + "." + "namespace" fqdn
 */}}
-{{- define "tc.common.v10.names.fqdn" -}}
-{{- printf "%s.%s" (include "tc.common.v10.names.fullname" .) .Release.Namespace | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "tc.common.names.fqdn" -}}
+{{- printf "%s.%s" (include "tc.common.names.fullname" .) .Release.Namespace | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

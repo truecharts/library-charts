@@ -1,7 +1,7 @@
 {{/*
 Return the primary rbac object
 */}}
-{{- define "tc.common.v10.lib.util.rbac.primary" -}}
+{{- define "tc.common.lib.util.rbac.primary" -}}
   {{- $enabledrbacs := dict -}}
   {{- range $name, $rbac := .Values.rbac -}}
     {{- if $rbac.enabled -}}

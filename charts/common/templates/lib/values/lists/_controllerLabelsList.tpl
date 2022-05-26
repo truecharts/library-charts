@@ -1,5 +1,5 @@
 {{/* merge controllerLabelsList with controllerLabels */}}
-{{- define "tc.common.v10.lib.values.controller.label.list" -}}
+{{- define "tc.common.lib.values.controller.label.list" -}}
   {{- $controllerLabelsDict := dict }}
   {{- range .Values.controller.labelsList }}
   {{- $_ := set $controllerLabelsDict .name .value }}

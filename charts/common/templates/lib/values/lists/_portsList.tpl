@@ -1,5 +1,5 @@
 {{/* merge portsList with ports */}}
-{{- define "tc.common.v10.lib.values.ports.list" -}}
+{{- define "tc.common.lib.values.ports.list" -}}
   {{- range $index, $item := .Values.service -}}
   {{- if $item.enabled }}
   {{- $portsDict := dict }}

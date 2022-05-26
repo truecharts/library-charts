@@ -1,5 +1,5 @@
 {{/* Volumes included by the controller */}}
-{{- define "tc.common.v10.controller.volumeMounts" -}}
+{{- define "tc.common.controller.volumeMounts" -}}
   {{- range $index, $item := .Values.persistence }}
   {{- if not $item.noMount }}
     {{- $mountPath := (printf "/%v" $index) -}}

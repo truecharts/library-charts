@@ -1,12 +1,12 @@
 {{- /*
 The pod definition included in the controller.
 */ -}}
-{{- define "tc.common.v10.controller.pod" -}}
+{{- define "tc.common.controller.pod" -}}
   {{- with .Values.imagePullSecrets }}
 imagePullSecrets:
     {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
-serviceAccountName: {{ include "tc.common.v10.names.serviceAccountName" . }}
+serviceAccountName: {{ include "tc.common.names.serviceAccountName" . }}
   {{- with .Values.podSecurityContext }}
 securityContext:
     {{ tpl ( toYaml . ) $ | nindent 2 }}
@@ -50,10 +50,10 @@ enableServiceLinks: {{ .Values.enableServiceLinks }}
 terminationGracePeriodSeconds: {{ . }}
   {{- end }}
 initContainers:
-  {{-  include "tc.common.v10.controller.prepare" . | nindent 2 }}
-  {{-  include "tc.common.v10.dependencies.postgresql.init" . | nindent 2 }}
-  {{-  include "tc.common.v10.dependencies.mariadb.init" . | nindent 2 }}
-  {{-  include "tc.common.v10.dependencies.mongodb.init" . | nindent 2 }}
+  {{-  include "tc.common.controller.prepare" . | nindent 2 }}
+  {{-  include "tc.common.dependencies.postgresql.init" . | nindent 2 }}
+  {{-  include "tc.common.dependencies.mariadb.init" . | nindent 2 }}
+  {{-  include "tc.common.dependencies.mongodb.init" . | nindent 2 }}
   {{- if and ( or ( .Release.IsInstall ) ( .Values.test.install ) ) ( .Values.installContainers )}}
     {{- $installContainers := list }}
     {{- range $index, $key := (keys .Values.installContainers | uniq | sortAlpha) }}
@@ -88,7 +88,7 @@ initContainers:
     {{- tpl (toYaml $initContainers) $ | nindent 2 }}
   {{- end }}
 containers:
-  {{- include "tc.common.v10.controller.mainContainer" . | nindent 2 }}
+  {{- include "tc.common.controller.mainContainer" . | nindent 2 }}
   {{- with .Values.additionalContainers }}
     {{- $additionalContainers := list }}
     {{- range $name, $container := . }}
@@ -99,7 +99,7 @@ containers:
     {{- end }}
     {{- tpl (toYaml $additionalContainers) $ | nindent 2 }}
   {{- end }}
-  {{- with (include "tc.common.v10.controller.volumes" . | trim) }}
+  {{- with (include "tc.common.controller.volumes" . | trim) }}
 volumes:
     {{- nindent 2 . }}
   {{- end }}

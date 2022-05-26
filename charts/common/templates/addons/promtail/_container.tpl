@@ -1,7 +1,7 @@
 {{/*
 The promtail sidecar container to be inserted.
 */}}
-{{- define "tc.common.v10.addon.promtail.container" -}}
+{{- define "tc.common.addon.promtail.container" -}}
 name: promtail
 image: "{{ .Values.promtailImage.repository }}:{{ .Values.promtailImage.tag }}"
 imagePullPolicy: {{ .Values.promtailImage.pullPolicy }}
@@ -35,7 +35,7 @@ volumeMounts:
     mountPath: /etc/promtail/promtail.yaml
     subPath: promtail.yaml
     readOnly: true
-{{- with (include "tc.common.v10.controller.volumeMounts" . | trim) }}
+{{- with (include "tc.common.controller.volumeMounts" . | trim) }}
   {{ nindent 2 . }}
 {{- end }}
 {{- with .Values.addons.promtail.resources }}

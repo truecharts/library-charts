@@ -1,7 +1,7 @@
 {{/* Common labels shared across objects */}}
-{{- define "tc.common.v10.labels" -}}
-helm.sh/chart: {{ include "tc.common.v10.names.chart" . }}
-{{ include "tc.common.v10.labels.selectorLabels" . }}
+{{- define "tc.common.labels" -}}
+helm.sh/chart: {{ include "tc.common.names.chart" . }}
+{{ include "tc.common.labels.selectorLabels" . }}
   {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
   {{- end }}
@@ -16,7 +16,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/* Selector labels shared across objects */}}
-{{- define "tc.common.v10.labels.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "tc.common.v10.names.name" . }}
+{{- define "tc.common.labels.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "tc.common.names.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}

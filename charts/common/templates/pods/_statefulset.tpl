@@ -2,18 +2,18 @@
 This template serves as the blueprint for the StatefulSet objects that are created
 within the common library.
 */}}
-{{- define "tc.common.v10.statefulset" }}
+{{- define "tc.common.statefulset" }}
 {{- $values := .Values }}
 {{- $releaseName := .Release.Name }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "tc.common.v10.names.fullname" . }}
-  {{- with (merge (.Values.controller.labels | default dict) (include "tc.common.v10.labels" $ | fromYaml)) }}
+  name: {{ include "tc.common.names.fullname" . }}
+  {{- with (merge (.Values.controller.labels | default dict) (include "tc.common.labels" $ | fromYaml)) }}
   labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
-  {{- with (merge (.Values.controller.annotations | default dict) (include "tc.common.v10.annotations" $ | fromYaml) (include "tc.common.v10.annotations.workload" $ | fromYaml)) }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "tc.common.annotations" $ | fromYaml) (include "tc.common.annotations.workload" $ | fromYaml)) }}
   annotations: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
@@ -31,8 +31,8 @@ spec:
     {{- end }}
   selector:
     matchLabels:
-      {{- include "tc.common.v10.labels.selectorLabels" . | nindent 6 }}
-  serviceName: {{ include "tc.common.v10.names.fullname" . }}
+      {{- include "tc.common.labels.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "tc.common.names.fullname" . }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -40,12 +40,12 @@ spec:
         {{- tpl ( toYaml . ) $ | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tc.common.v10.labels.selectorLabels" . | nindent 8 }}
+        {{- include "tc.common.labels.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- tpl ( toYaml . ) $ | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "tc.common.v10.controller.pod" . | nindent 6 }}
+      {{- include "tc.common.controller.pod" . | nindent 6 }}
   volumeClaimTemplates:
     {{- range $index, $vct := .Values.volumeClaimTemplates }}
     - metadata:
@@ -56,6 +56,6 @@ spec:
         resources:
           requests:
             storage: {{ tpl ( $vct.size | default "999Gi" ) $ | quote }}
-        {{ include "tc.common.v10.storage.class" ( dict "persistence" $vct "global" $) }}
+        {{ include "tc.common.storage.class" ( dict "persistence" $vct "global" $) }}
     {{- end }}
 {{- end }}

@@ -1,7 +1,7 @@
 {{/*
 Return the primary serviceAccount object
 */}}
-{{- define "tc.common.v10.lib.util.serviceaccount.primary" -}}
+{{- define "tc.common.lib.util.serviceaccount.primary" -}}
   {{- $enabledServiceaccounts := dict -}}
   {{- range $name, $serviceAccount := .Values.serviceAccount -}}
     {{- if $serviceAccount.enabled -}}

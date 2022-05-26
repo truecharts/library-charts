@@ -2,9 +2,9 @@
 This template serves as a blueprint for horizontal pod autoscaler objects that are created
 using the common library.
 */}}
-{{- define "tc.common.v10.class.hpa" -}}
-  {{- $targetName := include "tc.common.v10.names.fullname" . }}
-  {{- $fullName := include "tc.common.v10.names.fullname" . -}}
+{{- define "tc.common.class.hpa" -}}
+  {{- $targetName := include "tc.common.names.fullname" . }}
+  {{- $fullName := include "tc.common.names.fullname" . -}}
   {{- $hpaName := $fullName -}}
   {{- $values := .Values.hpa -}}
 
@@ -23,11 +23,11 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $hpaName }}
   labels:
-    {{- include "tc.common.v10.labels" . | nindent 4 }}
+    {{- include "tc.common.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: {{ $values.targetKind | default ( include "tc.common.v10.names.controllerType" . ) }}
+    kind: {{ $values.targetKind | default ( include "tc.common.names.controllerType" . ) }}
     name: {{ $values.target | default $targetName }}
   minReplicas: {{ $values.minReplicas | default 1 }}
   maxReplicas: {{ $values.maxReplicas | default 3 }}

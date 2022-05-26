@@ -1,5 +1,5 @@
 {{/* merge ingressList with ingress */}}
-{{- define "tc.common.v10.lib.values.ingress.list" -}}
+{{- define "tc.common.lib.values.ingress.list" -}}
   {{- $ingDict := dict }}
   {{- range $index, $item := .Values.ingressList -}}
     {{- $name := ( printf "list-%s" ( $index | toString ) ) }}

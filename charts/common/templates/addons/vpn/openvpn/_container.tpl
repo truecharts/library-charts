@@ -1,7 +1,7 @@
 {{/*
 The OpenVPN sidecar container to be inserted.
 */}}
-{{- define "tc.common.v10.addon.openvpn.container" -}}
+{{- define "tc.common.addon.openvpn.container" -}}
 name: openvpn
 image: "{{ .Values.openvpnImage.repository }}:{{ .Values.openvpnImage.tag }}"
 imagePullPolicy: {{ .Values.openvpnImage.pullPolicy }}
@@ -52,7 +52,7 @@ env:
 {{- if or ( .Values.addons.vpn.openvpn.username ) ( .Values.addons.vpn.openvpn.password ) }}
 envFrom:
   - secretRef:
-      name: {{ include "tc.common.v10.names.fullname" . }}-openvpn
+      name: {{ include "tc.common.names.fullname" . }}-openvpn
 {{- end }}
 volumeMounts:
   - mountPath: {{ .Values.persistence.shared.mountPath }}

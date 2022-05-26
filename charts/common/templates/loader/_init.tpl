@@ -1,30 +1,30 @@
-{{- define "tc.common.v10.loader.init" -}}
+{{- define "tc.common.loader.init" -}}
   {{- /* Merge the local chart values and the common chart defaults */ -}}
-  {{- include "tc.common.v10.values.init" . }}
+  {{- include "tc.common.values.init" . }}
 
-  {{- include "tc.common.v10.loader.lists" . }}
+  {{- include "tc.common.loader.lists" . }}
 
-  {{- include "tc.common.v10.lib.values.persistence.simple" . }}
+  {{- include "tc.common.lib.values.persistence.simple" . }}
 
-  {{- include "tc.common.v10.lib.values.volumeClaimTemplates.simple" . }}
+  {{- include "tc.common.lib.values.volumeClaimTemplates.simple" . }}
 
-  {{- include "tc.common.v10.lib.values.service.simple" . }}
+  {{- include "tc.common.lib.values.service.simple" . }}
 
-  {{- include "tc.common.v10.lib.values.capabilities" . }}
+  {{- include "tc.common.lib.values.capabilities" . }}
 
-  {{- include "tc.common.v10.lib.values.supplementalGroups" . }}
+  {{- include "tc.common.lib.values.supplementalGroups" . }}
 
-  {{- include "tc.common.v10.lib.values.securityContext.privileged" . }}
+  {{- include "tc.common.lib.values.securityContext.privileged" . }}
 
   {{- /* Autogenerate postgresql passwords if needed */ -}}
-  {{- include "tc.common.v10.dependencies.postgresql.injector" . }}
+  {{- include "tc.common.dependencies.postgresql.injector" . }}
 
   {{- /* Autogenerate redis passwords if needed */ -}}
-  {{- include "tc.common.v10.dependencies.redis.injector" . }}
+  {{- include "tc.common.dependencies.redis.injector" . }}
 
   {{- /* Autogenerate mariadb passwords if needed */ -}}
-  {{- include "tc.common.v10.dependencies.mariadb.injector" . }}
+  {{- include "tc.common.dependencies.mariadb.injector" . }}
 
   {{- /* Autogenerate mongodb passwords if needed */ -}}
-  {{- include "tc.common.v10.dependencies.mongodb.injector" . }}
+  {{- include "tc.common.dependencies.mongodb.injector" . }}
 {{- end -}}

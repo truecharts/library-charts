@@ -1,9 +1,9 @@
-{{- define "tc.common.v10.scale.portal" -}}
+{{- define "tc.common.scale.portal" -}}
 {{- if .Values.ixChartContext }}
 {{- if .Values.portal }}
 {{- if .Values.portal.enabled }}
-{{- $primaryService := get .Values.service (include "tc.common.v10.lib.util.service.primary" .) }}
-{{- $primaryPort := get $primaryService.ports (include "tc.common.v10.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
+{{- $primaryService := get .Values.service (include "tc.common.lib.util.service.primary" .) }}
+{{- $primaryPort := get $primaryService.ports (include "tc.common.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
 {{- $ingr := index .Values.ingress (keys .Values.ingress | first) -}}
 {{- $host := "$node_ip" }}
 {{- $port := 443 }}
@@ -80,7 +80,7 @@ kind: ConfigMap
 metadata:
   name: portal
   labels:
-  {{ include "tc.common.v10.labels" . | nindent 4 }}
+  {{ include "tc.common.labels" . | nindent 4 }}
 data:
   protocol: {{ $protocol }}
   host: {{ $host | quote }}

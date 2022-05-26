@@ -1,11 +1,11 @@
 {{/*
 Main entrypoint for the common library chart. It will render all underlying templates based on the provided values.
 */}}
-{{- define "tc.common.v10.loader.all" -}}
+{{- define "tc.common.loader.all" -}}
   {{- /* Generate chart and dependency values */ -}}
-  {{- include "tc.common.v10.loader.init" . }}
+  {{- include "tc.common.loader.init" . }}
 
   {{- /* Generate remaining objects */ -}}
-  {{- include "tc.common.v10.loader.apply" . }}
+  {{- include "tc.common.loader.apply" . }}
 
 {{- end -}}

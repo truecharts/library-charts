@@ -1,5 +1,5 @@
 {{/* merge persistenceAnnotationsList with persistenceAnnotations */}}
-{{- define "tc.common.v10.lib.values.persistence.annotations.list" -}}
+{{- define "tc.common.lib.values.persistence.annotations.list" -}}
   {{- range $index, $item := .Values.persistence }}
   {{- if $item.enabled }}
   {{- $persistenceAnnotationsDict := dict }}

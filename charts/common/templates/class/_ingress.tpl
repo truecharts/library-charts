@@ -2,8 +2,8 @@
 This template serves as a blueprint for all Ingress objects that are created
 within the common library.
 */}}
-{{- define "tc.common.v10.class.ingress" -}}
-  {{- $fullName := include "tc.common.v10.names.fullname" . -}}
+{{- define "tc.common.class.ingress" -}}
+  {{- $fullName := include "tc.common.names.fullname" . -}}
   {{- $ingressName := $fullName -}}
   {{- $values := .Values.ingress -}}
 
@@ -17,13 +17,13 @@ within the common library.
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
   {{- end -}}
 
-  {{- $primaryService := get .Values.service (include "tc.common.v10.lib.util.service.primary" .) -}}
-  {{- $autoLinkService := get .Values.service (include "tc.common.v10.lib.util.service.primary" .) -}}
+  {{- $primaryService := get .Values.service (include "tc.common.lib.util.service.primary" .) -}}
+  {{- $autoLinkService := get .Values.service (include "tc.common.lib.util.service.primary" .) -}}
   {{- $defaultServiceName := $fullName -}}
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
     {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
   {{- end -}}
-  {{- $defaultServicePort := get $primaryService.ports (include "tc.common.v10.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
+  {{- $defaultServicePort := get $primaryService.ports (include "tc.common.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
 
   {{- if and (hasKey $values "nameOverride") ( $values.nameOverride ) ( $values.autoLink ) -}}
     {{- $autoLinkService = get .Values.service $values.nameOverride -}}
@@ -32,7 +32,7 @@ within the common library.
   {{- end -}}
 
 
-  {{- $isStable := include "tc.common.v10.capabilities.ingress.isStable" . }}
+  {{- $isStable := include "tc.common.capabilities.ingress.isStable" . }}
 
   {{- $mddwrNamespace := "default" }}
   {{- if $values.ingressClassName }}
@@ -66,17 +66,17 @@ within the common library.
   {{ end }}
 
 ---
-apiVersion: {{ include "tc.common.v10.capabilities.ingress.apiVersion" . }}
+apiVersion: {{ include "tc.common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
-  {{- with (merge ($values.labels | default dict) (include "tc.common.v10.labels" $ | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "tc.common.labels" $ | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
   annotations:
     "traefik.ingress.kubernetes.io/router.entrypoints": {{ $values.entrypoint | default "websecure" }}
     "traefik.ingress.kubernetes.io/router.middlewares": {{ $middlewares | quote }}
-  {{- with (merge ($values.annotations | default dict) (include "tc.common.v10.annotations" $ | fromYaml)) }}
+  {{- with (merge ($values.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:

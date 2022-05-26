@@ -1,7 +1,7 @@
 {{/*
 Renders the configMap objects required by the chart.
 */}}
-{{- define "tc.common.v10.spawner.hpa" -}}
+{{- define "tc.common.spawner.hpa" -}}
   {{- /* Generate named configMaps as required */ -}}
   {{- range $name, $hpa := .Values.horizontalPodAutoscaler }}
     {{- if $hpa.enabled -}}
@@ -13,7 +13,7 @@ Renders the configMap objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "hpa" $hpaValues) -}}
-      {{- include "tc.common.v10.class.hpa" $ }}
+      {{- include "tc.common.class.hpa" $ }}
     {{- end }}
   {{- end }}
 {{- end }}

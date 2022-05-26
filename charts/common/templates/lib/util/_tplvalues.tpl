@@ -2,9 +2,9 @@
 {{/*
 Renders a value that contains template.
 Usage:
-{{ include "tc.common.v10.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
+{{ include "tc.common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
 */}}
-{{- define "tc.common.v10.tplvalues.render" -}}
+{{- define "tc.common.tplvalues.render" -}}
     {{- if typeIs "string" .value }}
         {{- tpl .value .context }}
     {{- else }}

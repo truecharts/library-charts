@@ -1,15 +1,15 @@
 {{/*
 The promtail config to be included.
 */}}
-{{- define "tc.common.v10.addon.promtail.configmap" -}}
+{{- define "tc.common.addon.promtail.configmap" -}}
 {{- if .Values.addons.promtail.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "tc.common.v10.names.fullname" . }}-promtail
+  name: {{ include "tc.common.names.fullname" . }}-promtail
   labels:
-  {{- include "tc.common.v10.labels" . | nindent 4 }}
+  {{- include "tc.common.labels" . | nindent 4 }}
 data:
   promtail.yaml: |
     server:

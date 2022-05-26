@@ -2,14 +2,14 @@
 This template serves as a blueprint for all PersistentVolumeClaim objects that are created
 within the common library.
 */}}
-{{- define "tc.common.v10.class.pvc" -}}
+{{- define "tc.common.class.pvc" -}}
 {{- $values := .Values.persistence -}}
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.persistence -}}
     {{- $values = . -}}
   {{- end -}}
 {{ end -}}
-{{- $pvcName := include "tc.common.v10.names.fullname" . -}}
+{{- $pvcName := include "tc.common.names.fullname" . -}}
 {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
   {{- if not (eq $values.nameOverride "-") -}}
     {{- $pvcName = printf "%v-%v" $pvcName $values.nameOverride -}}
@@ -28,12 +28,12 @@ metadata:
     {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
-    {{- with (merge ($values.annotations | default dict) (include "tc.common.v10.annotations" $ | fromYaml)) }}
+    {{- with (merge ($values.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
     {{- end }}
   {{- end }}
   labels:
-  {{- include "tc.common.v10.labels" . | nindent 4 }}
+  {{- include "tc.common.labels" . | nindent 4 }}
   {{- with $values.labels }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
@@ -46,6 +46,6 @@ spec:
   {{- with $values.spec }}
   {{ tpl ( toYaml . ) $ | indent 2 }}
   {{- end }}
-  {{ include "tc.common.v10.storage.class" ( dict "persistence" $values "global" $ ) }}
+  {{ include "tc.common.storage.class" ( dict "persistence" $values "global" $ ) }}
   volumeName: {{ $values.volumeName | default $pvcName | quote }}
 {{- end -}}

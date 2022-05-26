@@ -1,5 +1,5 @@
 {{/* automatically set CAP_NET_BIND_SERVICE */}}
-{{- define "tc.common.v10.lib.values.capabilities" -}}
+{{- define "tc.common.lib.values.capabilities" -}}
   {{- $fixedCapAdd := list }}
   {{- $customCapAdd := list }}
   {{- $valueCapAdd := list }}

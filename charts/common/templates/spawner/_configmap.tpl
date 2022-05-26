@@ -1,7 +1,7 @@
 {{/*
 Renders the configMap objects required by the chart.
 */}}
-{{- define "tc.common.v10.spawner.configmap" -}}
+{{- define "tc.common.spawner.configmap" -}}
   {{- /* Generate named configMaps as required */ -}}
   {{- range $name, $configmap := .Values.configmap }}
     {{- if $configmap.enabled -}}
@@ -13,7 +13,7 @@ Renders the configMap objects required by the chart.
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "configmap" $configmapValues) -}}
-      {{- include "tc.common.v10.class.configmap" $ }}
+      {{- include "tc.common.class.configmap" $ }}
     {{- end }}
   {{- end }}
 {{- end }}
