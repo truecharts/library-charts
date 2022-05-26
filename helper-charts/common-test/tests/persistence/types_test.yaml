@@ -54,7 +54,7 @@ tests:
         configmap:
           enabled: true
           type: configMap
-          objectName: "{{ include \"common.names.fullname\" $ }}-config"
+          objectName: "{{ include \"tc.common.names.fullname\" $ }}-config"
     asserts:
       - documentIndex: 0
         isKind:
