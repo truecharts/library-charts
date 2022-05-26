@@ -2,7 +2,7 @@
 This template serves as the blueprint for the mountPermissions job that is run
 before chart installation.
 */}}
-{{- define "common.controller.prepare" -}}
+{{- define "tc.common.v10.controller.prepare" -}}
 {{- $group := .Values.podSecurityContext.fsGroup -}}
 {{- $hostPathMounts := dict -}}
 {{- range $name, $mount := .Values.persistence -}}

@@ -1,9 +1,9 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Return the proper image name
-{{ include "common.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
+{{ include "tc.common.v10.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
 */}}
-{{- define "common.images.image" -}}
+{{- define "tc.common.v10.images.image" -}}
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $tag := .imageRoot.tag | toString -}}
 {{- printf "%s:%s" $repositoryName $tag -}}
@@ -11,9 +11,9 @@ Return the proper image name
 
 {{/*
 Return the image name using the selector
-{{ include "common.images.selector" . }}
+{{ include "tc.common.v10.images.selector" . }}
 */}}
-{{- define "common.images.selector" -}}
+{{- define "tc.common.v10.images.selector" -}}
 {{- $imageDict := get .Values "image" }}
 {{- $selected := .Values.imageSelector }}
 {{- if hasKey .Values $selected }}
@@ -25,15 +25,15 @@ Return the image name using the selector
 {{- end -}}
 
 {{/*
-Return the proper Docker Image Registry Secret Names (deprecated: use common.images.renderPullSecrets instead)
-{{ include "common.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
+Return the proper Docker Image Registry Secret Names (deprecated: use tc.common.v10.images.renderPullSecrets instead)
+{{ include "tc.common.v10.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
 */}}
-{{- define "common.images.pullSecrets" -}}
+{{- define "tc.common.v10.images.pullSecrets" -}}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names evaluating values as templates
-{{ include "common.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
+{{ include "tc.common.v10.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
 */}}
-{{- define "common.images.renderPullSecrets" -}}
+{{- define "tc.common.v10.images.renderPullSecrets" -}}
 {{- end -}}

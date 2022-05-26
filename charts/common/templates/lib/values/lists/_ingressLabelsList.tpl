@@ -1,5 +1,5 @@
 {{/* merge ingressLabelsList with ingressLabels */}}
-{{- define "common.lib.values.ingress.label.list" -}}
+{{- define "tc.common.v10.lib.values.ingress.label.list" -}}
   {{- range $index, $item := .Values.ingress }}
   {{- if $item.enabled }}
   {{- $ingressLabelsDict := dict }}

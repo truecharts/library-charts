@@ -1,8 +1,8 @@
 {{/*
 Blueprint for the NetworkPolicy object that can be included in the addon.
 */}}
-{{- define "common.class.networkpolicy" -}}
-  {{- $fullName := include "common.names.fullname" . -}}
+{{- define "tc.common.v10.class.networkpolicy" -}}
+  {{- $fullName := include "tc.common.v10.names.fullname" . -}}
   {{- $networkPolicyName := $fullName -}}
   {{- $values := .Values.networkPolicy -}}
 
@@ -20,10 +20,10 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: {{ $networkPolicyName }}
-  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "tc.common.v10.labels" $ | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
+  {{- with (merge ($values.annotations | default dict) (include "tc.common.v10.annotations" $ | fromYaml)) }}
   annotations:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
@@ -35,7 +35,7 @@ spec:
   {{- end -}}
   {{- else }}
     matchLabels:
-    {{- include "common.labels.selectorLabels" . | nindent 6 }}
+    {{- include "tc.common.v10.labels.selectorLabels" . | nindent 6 }}
   {{- end }}
 
   {{- if $values.policyType }}

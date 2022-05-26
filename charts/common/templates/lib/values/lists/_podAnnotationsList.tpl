@@ -1,5 +1,5 @@
 {{/* merge podAnnotationsList with podAnnotations */}}
-{{- define "common.lib.values.pod.annotations.list" -}}
+{{- define "tc.common.v10.lib.values.pod.annotations.list" -}}
   {{- $podAnnotationsDict := dict }}
   {{- range .Values.podAnnotationsList }}
   {{- $_ := set $podAnnotationsDict .name .value }}

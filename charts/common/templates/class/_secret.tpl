@@ -2,8 +2,8 @@
 This template serves as a blueprint for all secret objects that are created
 within the common library.
 */}}
-{{- define "common.class.secret" -}}
-  {{- $fullName := include "common.names.fullname" . -}}
+{{- define "tc.common.v10.class.secret" -}}
+  {{- $fullName := include "tc.common.v10.names.fullname" . -}}
   {{- $secretName := $fullName -}}
   {{- $values := .Values.secret -}}
 
@@ -21,10 +21,10 @@ apiVersion: v1
 kind: secret
 metadata:
   name: {{ $secretName }}
-  {{- with (merge ($values.labels | default dict) (include "common.labels" $ | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "tc.common.v10.labels" $ | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (merge ($values.annotations | default dict) (include "common.annotations" $ | fromYaml)) }}
+  {{- with (merge ($values.annotations | default dict) (include "tc.common.v10.annotations" $ | fromYaml)) }}
   annotations:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}

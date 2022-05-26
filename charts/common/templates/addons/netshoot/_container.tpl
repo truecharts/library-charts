@@ -1,7 +1,7 @@
 {{/*
 The netshoot sidecar container to be inserted.
 */}}
-{{- define "common.addon.netshoot.container" -}}
+{{- define "tc.common.v10.addon.netshoot.container" -}}
 name: netshoot
 image: "{{ .Values.netshootImage.repository }}:{{ .Values.netshootImage.tag }}"
 imagePullPolicy: {{ .Values.netshootImage.pullPolicy }}

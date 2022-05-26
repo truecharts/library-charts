@@ -1,17 +1,17 @@
 {{/* Renders the Ingress objects required by the chart */}}
-{{- define "common.spawner.ingress" -}}
+{{- define "tc.common.v10.spawner.ingress" -}}
   {{- /* Generate named ingresses as required */ -}}
   {{- range $name, $ingress := .Values.ingress }}
     {{- if $ingress.enabled -}}
       {{- $ingressValues := $ingress -}}
 
       {{/* set defaults */}}
-      {{- if and (not $ingressValues.nameOverride) (ne $name (include "common.lib.util.ingress.primary" $)) -}}
+      {{- if and (not $ingressValues.nameOverride) (ne $name (include "tc.common.v10.lib.util.ingress.primary" $)) -}}
         {{- $_ := set $ingressValues "nameOverride" $name -}}
       {{- end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
-      {{- include "common.class.ingress" $ }}
+      {{- include "tc.common.v10.class.ingress" $ }}
 
       {{- range $index, $tlsValues :=  $ingressValues.tls }}
         {{- if and ( .scaleCert ) ( $.Values.global.ixChartContext ) }}
@@ -21,7 +21,7 @@
           {{- end }}
           {{- $_ := set $tlsValues "nameOverride" $nameOverride -}}
           {{- $_ := set $ "ObjectValues" (dict "certHolder" $tlsValues) -}}
-          {{- include "common.scale.cert.secret" $ }}
+          {{- include "tc.common.v10.scale.cert.secret" $ }}
         {{- end }}
       {{- end }}
     {{- end }}

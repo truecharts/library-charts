@@ -1,7 +1,7 @@
 {{/*
 This template ensures pods with mongodb dependency have a delayed start
 */}}
-{{- define "common.dependencies.mongodb.init" -}}
+{{- define "tc.common.v10.dependencies.mongodb.init" -}}
 {{- if .Values.mongodb.enabled }}
 - name: mongodb-init
   image: "{{ .Values.mongodbImage.repository}}:{{ .Values.mongodbImage.tag }}"

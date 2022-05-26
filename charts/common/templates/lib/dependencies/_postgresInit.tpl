@@ -1,7 +1,7 @@
 {{/*
 This template ensures pods with postgresql dependency have a delayed start
 */}}
-{{- define "common.dependencies.postgresql.init" -}}
+{{- define "tc.common.v10.dependencies.postgresql.init" -}}
 {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
 {{- if .Values.postgresql.enabled }}
 - name: postgresql-init

@@ -1,5 +1,5 @@
 {{/* Allow some extra "fake" persistence options for SCALE GUI simplification */}}
-{{- define "common.lib.values.persistence.simple" -}}
+{{- define "tc.common.v10.lib.values.persistence.simple" -}}
   {{- range .Values.persistence }}
   {{- if .type }}
   {{- if eq .type "simplePVC" }}

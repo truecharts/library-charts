@@ -1,5 +1,5 @@
 {{/* merge podLabelsList with podLabels */}}
-{{- define "common.lib.values.pod.label.list" -}}
+{{- define "tc.common.v10.lib.values.pod.label.list" -}}
   {{- $podLabelsDict := dict }}
   {{- range .Values.controller.labelsList }}
   {{- $_ := set $podLabelsDict .name .value }}

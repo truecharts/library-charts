@@ -2,9 +2,9 @@
 This template serves as a blueprint for ServiceAccount objects that are created
 using the common library.
 */}}
-{{- define "common.class.serviceaccount" -}}
-  {{- $targetName := include "common.names.fullname" . }}
-  {{- $fullName := include "common.names.fullname" . -}}
+{{- define "tc.common.v10.class.serviceaccount" -}}
+  {{- $targetName := include "tc.common.v10.names.fullname" . }}
+  {{- $fullName := include "tc.common.v10.names.fullname" . -}}
   {{- $saName := $fullName -}}
   {{- $values := .Values.serviceAccount -}}
 
@@ -23,7 +23,7 @@ kind: ServiceAccount
 metadata:
   name: {{ $saName }}
   labels:
-    {{- include "common.labels" . | nindent 4 }}
+    {{- include "tc.common.v10.labels" . | nindent 4 }}
   {{- with $values.serviceAccount.annotations }}
   annotations:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
