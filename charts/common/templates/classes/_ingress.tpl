@@ -65,6 +65,18 @@ within the common library.
       {{ $middlewares = ( printf "%s" $fixedMiddlewares ) }}
   {{ end }}
 
+  {{- if .Values.addons.themePark.enabled }}
+    {{/* append the middlewareReference to any additional middleware */}}
+    {{- $middlewareReference := .Values.addons.themePark.middlewareReference -}}
+    {{- if $middlewares }}
+      {{ $middlewares = printf "%s, %s" $middlewares $middlewareReference }}
+    {{- else }}
+      {{ $middlewares = printf "%s" $middlewareReference }}
+    {{- end }}
+    {{/* include theme.park middleware generation */}}
+    {{ ( include "common.classes.themePark" . ) | nindent 0 }}
+  {{- end }}
+
 ---
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress

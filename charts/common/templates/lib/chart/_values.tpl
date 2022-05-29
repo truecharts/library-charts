@@ -280,4 +280,13 @@
   {{- end }}
   {{- end }}
   {{- end }}
+
+  {{/* add reference for theme.park middleware if theme.park addon is enabled */}}
+  {{- if .Values.addons.themePark }}
+    {{- if .Values.addons.themePark.enabled }}
+      {{- $_ := set .Values.addons.themePark "middlewareReference" ( printf "%s-theme@kubernetescrd" .Release.Namespace ) }}
+    {{- end -}}
+  {{- else -}}
+    {{- $_ := dict "enabled" false | set .Values.addons "themePark" -}}
+  {{- end -}}
 {{- end -}}
