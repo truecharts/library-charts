@@ -7,7 +7,7 @@ tests:
       controller:
         type: statefulset
       volumeClaimTemplates:
-        - name: "storage-testchange"
+        - name: "storage"
           accessMode: "ReadWriteOnce"
           size: "10Gi"
           storageClass: "storage"
