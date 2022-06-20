@@ -44,7 +44,7 @@ This template ensures pods with redis dependency have a delayed start
       else
         echo "$response"
         echo "Redis not respoding... Sleeping for 2 sec..."
-        sleep 2
+        sleep 10
       fi
     done
   imagePullPolicy: IfNotPresent
