@@ -43,7 +43,7 @@ This template ensures pods with redis dependency have a delayed start
         echo "Redis Responded, ending initcontainer and starting main container(s)..."
       else
         echo "$response"
-        echo "Redis not respoding... Sleeping for 2 sec..."
+        echo "Redis not respoding... Sleeping for 10 sec..."
         sleep 10
       fi
     done
