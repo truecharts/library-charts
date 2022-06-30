@@ -73,7 +73,7 @@ spec:
   {{- if $values.publishNotReadyAddresses }}
   publishNotReadyAddresses: {{ $values.publishNotReadyAddresses }}
   {{- end }}
-  {{- if $values.ipFamilyPolicy }}
+  {{- if (and ($values.ipFamilyPolicy) (ne $svcType "ExternalName")) }}
   ipFamilyPolicy: {{ $values.ipFamilyPolicy }}
   {{- end }}
   {{- with $values.ipFamilies }}
