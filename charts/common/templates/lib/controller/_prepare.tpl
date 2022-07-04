@@ -90,6 +90,7 @@ before chart installation.
       ( sysctl -w fs.inotify.max_user_watches=524288 || echo "error setting inotify") && ( sysctl -w fs.inotify.max_user_instances=512 || echo "error setting inotify")
       {{- end }}
       {{- if .Values.postgresql.enabled }}
+      {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
       until
         pg_isready -U {{ .Values.postgresql.postgresqlUsername }} -h {{ $pghost }}
         do sleep 2
