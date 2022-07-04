@@ -1,6 +1,5 @@
 {{/*
 This template ensures pods with clickhouse dependency have a delayed start
-TODO: implement health check with /ping endpoint
 */}}
 {{- define "tc.common.dependencies.clickhouse.init" -}}
 {{- $clickhouseHost := printf "%v-%v" .Release.Name "clickhouse" }}
@@ -18,7 +17,7 @@ TODO: implement health check with /ping endpoint
   command: [sh]
   args:
     - -c
-    - sleep 30
+    - until wget --quiet --tries=1 --spider {{ .Values.clickhouse.url.ping }}; do sleep 2; done
   imagePullPolicy: IfNotPresent
 {{- end }}
 {{- end -}}

@@ -13,10 +13,11 @@
   {{- $dbPass = randAlphaNum 50 }}
 {{- end }}
 
-{{- $host     := printf              "%v-clickhouse"         .Release.Name }}
-{{- $portHost := printf              "%v-clickhouse:8123"    .Release.Name }}
-{{- $url      := printf "http://%v:%v@%v-clickhouse:8123/%v" .Values.clickhouse.clickhouseUsername $dbPass .Release.Name .Values.clickhouse.clickhouseDatabase }}
-{{- $jdbc     := printf    "jdbc:ch://%v-clickhouse:8123/%v" .Release.Name }}
+{{- $host     := printf              "%v-clickhouse"           .Release.Name }}
+{{- $portHost := printf              "%v-clickhouse:8123"      .Release.Name }}
+{{- $ping     := printf       "http://%v-clickhouse:8123/ping" .Release.Name }}
+{{- $url      := printf "http://%v:%v@%v-clickhouse:8123/%v"   .Values.clickhouse.clickhouseUsername $dbPass .Release.Name .Values.clickhouse.clickhouseDatabase }}
+{{- $jdbc     := printf    "jdbc:ch://%v-clickhouse:8123/%v"   .Release.Name }}
 ---
 apiVersion: v1
 kind: Secret
@@ -28,6 +29,7 @@ stringData:
   clickhouse-password: {{ $dbPass | quote }}
   plainhost:           {{ $host | quote }}
   plainporthost:       {{ $portHost | quote }}
+  ping:                {{ $ping | quote }}
   url:                 {{ $url | quote }}
   jdbc:                {{ $jdbc | quote }}
 
@@ -36,6 +38,7 @@ stringData:
 {{- $_ := set .Values.clickhouse.url "plainhost"          ($host | quote) }}
 {{- $_ := set .Values.clickhouse.url "plainport"          ($portHost | quote) }}
 {{- $_ := set .Values.clickhouse.url "plainporthost"      ($portHost  | quote) }}
+{{- $_ := set .Values.clickhouse.url "ping"               ($ping  | quote) }}
 {{- $_ := set .Values.clickhouse.url "complete"           ($url | quote) }}
 {{- $_ := set .Values.clickhouse.url "jdbc"               ($jdbc | quote) }}
 
