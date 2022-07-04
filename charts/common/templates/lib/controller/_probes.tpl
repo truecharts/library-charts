@@ -22,7 +22,7 @@ Probes selection logic.
             {{- if eq $probe.type "AUTO" -}}
               {{- $probeType = $primaryPort.protocol -}}
             {{- else -}}
-              {{- $probeType := $probe.type -}}
+              {{- $probeType = $probe.type -}}
             {{- end }}
           {{- end }}
 
