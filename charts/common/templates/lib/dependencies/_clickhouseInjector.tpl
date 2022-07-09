@@ -25,22 +25,22 @@ metadata:
   labels:
     {{- include "tc.common.labels" . | nindent 4 }}
   name: {{ $secretName }}
-stringData:
-  clickhouse-password: {{ $dbPass | quote }}
-  plainhost:           {{ $host | quote }}
-  plainporthost:       {{ $portHost | quote }}
-  ping:                {{ $ping | quote }}
-  url:                 {{ $url | quote }}
-  jdbc:                {{ $jdbc | quote }}
+data:
+  clickhouse-password: {{ $dbPass | b64enc | quote }}
+  plainhost:           {{ $host | b64enc | quote }}
+  plainporthost:       {{ $portHost | b64enc | quote }}
+  ping:                {{ $ping | b64enc | quote }}
+  url:                 {{ $url | b64enc | quote }}
+  jdbc:                {{ $jdbc | b64enc | quote }}
 
-{{- $_ := set .Values.clickhouse     "clickhousePassword" ($dbPass | quote) }}
-{{- $_ := set .Values.clickhouse.url "plain"              ($host | quote) }}
-{{- $_ := set .Values.clickhouse.url "plainhost"          ($host | quote) }}
-{{- $_ := set .Values.clickhouse.url "plainport"          ($portHost | quote) }}
-{{- $_ := set .Values.clickhouse.url "plainporthost"      ($portHost  | quote) }}
-{{- $_ := set .Values.clickhouse.url "ping"               ($ping  | quote) }}
-{{- $_ := set .Values.clickhouse.url "complete"           ($url | quote) }}
-{{- $_ := set .Values.clickhouse.url "jdbc"               ($jdbc | quote) }}
+{{- $_ := set .Values.clickhouse     "clickhousePassword" ($dbPass | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "plain"              ($host | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "plainhost"          ($host | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "plainport"          ($portHost | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "plainporthost"      ($portHost  | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "ping"               ($ping  | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "complete"           ($url | b64enc | quote) }}
+{{- $_ := set .Values.clickhouse.url "jdbc"               ($jdbc | b64enc | quote) }}
 
 {{- end }}
 {{- end -}}
