@@ -168,12 +168,12 @@ before chart installation.
       if [ "$SOLR_ENABLE_AUTHENTICATION" == "yes" ]; then
         until curl --fail --user "${SOLR_ADMIN_USERNAME}":"${SOLR_ADMIN_PASSWORD}" "${SOLR_HOST}":8983/solr/"${SOLR_CORES}"/admin/ping; do
           echo "Solr is not responding... Sleeping 2 seconds..."
-          sleep 2;
+          sleep 2
         done
       else
         until curl --fail "${SOLR_HOST}":8983/solr/"${SOLR_CORES}"/admin/ping; do
           echo "Solr is not responding... Sleeping 2 seconds..."
-          sleep 2;
+          sleep 2
         done
       fi;
       {{- end }}
