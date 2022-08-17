@@ -1009,6 +1009,7 @@ addons:
       accept_dns: false
       routes: ""
       dest_ip: ""
+      sock5_server: ""
       extra_args: ""
 
     killSwitch: true

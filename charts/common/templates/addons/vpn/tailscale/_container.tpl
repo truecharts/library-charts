@@ -54,6 +54,10 @@ env:
   - name: TS_DEST_IP
     value: {{ . }}
     {{- end }}
+    {{- with .Values.addons.vpn.tailscale.sock5_server }}
+  - name: TS_SOCKS5_SERVER
+    value: {{ . }}
+    {{- end }}
     {{- with .Values.addons.vpn.tailscale.extra_args }}
   - name: TS_EXTRA_ARGS
     value: {{ . | quote }}
