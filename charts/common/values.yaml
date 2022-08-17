@@ -1001,6 +1001,8 @@ addons:
 
     # -- Tailscale specific configuration
     # @default -- See below
+    # See more info for the configuration
+    # https://github.com/tailscale/tailscale/blob/main/docs/k8s/run.sh
     tailscale:
       # -- Auth key to connect to the VPN Service
       authkey: ""
