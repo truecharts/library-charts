@@ -12,6 +12,10 @@ It will include / inject the required templates based on the given values.
     {{- include "tc.common.addon.wireguard" . }}
   {{- end -}}
 
+  {{- if eq "tailscale" .Values.addons.vpn.type -}}
+    {{- include "tc.common.addon.tailscale" . }}
+  {{- end -}}
+
 
   {{- $_ := set .Values.persistence "vpnconfig" .Values.addons.vpn.configFile -}}
 
