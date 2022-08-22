@@ -40,7 +40,6 @@ rbac:
           - "get"
           - "update"
 
-
 envFrom:
   - secretRef:
       name: {{ $secretName }}
