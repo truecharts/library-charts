@@ -1,6 +1,7 @@
 {{/*
 The Tailscale sidecar container to be inserted.
 */}}
+{{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
 {{- define "tc.common.addon.tailscale.container" -}}
 name: tailscale
 image: "{{ .Values.tailscaleImage.repository }}:{{ .Values.tailscaleImage.tag }}"
@@ -34,12 +35,11 @@ rbac:
         resources:
           - "secrets"
         resourceNames:
-          - '{{ printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}'
+          - '{{ $secretName }}'
         verbs:
           - "get"
           - "update"
 
-{{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
 
 envFrom:
   - secretRef:
