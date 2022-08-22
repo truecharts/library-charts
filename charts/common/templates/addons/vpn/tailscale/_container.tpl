@@ -15,6 +15,9 @@ tty: true
 securityContext:
   runAsUser: 1000
   runAsGroup: 1000
+  capabilities:
+    add:
+      - NET_ADMIN
 
 serviceAccount:
   main:
