@@ -1,8 +1,8 @@
 {{/*
 The Tailscale sidecar container to be inserted.
 */}}
-{{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
 {{- define "tc.common.addon.tailscale.container" -}}
+{{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
 name: tailscale
 image: "{{ .Values.tailscaleImage.repository }}:{{ .Values.tailscaleImage.tag }}"
 imagePullPolicy: {{ .Values.tailscaleImage.pullPolicy }}
