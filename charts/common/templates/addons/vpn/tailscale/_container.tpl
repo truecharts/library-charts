@@ -10,9 +10,10 @@ command: ["ash", "/tailscale/run.sh"]
 
 tty: true
 
+# It should run rootless. But needs test
 securityContext:
-  runAsUser: 568
-  runAsGroup: 568
+  runAsUser: 1000
+  runAsGroup: 1000
 
 serviceAccount:
   main:
@@ -38,10 +39,15 @@ rbac:
           - "get"
           - "update"
 
+{{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
+
+envFrom:
+  - secretRef:
+      name: {{ $secretName }}
+
 env:
-    {{- $secretName := printf "%s-tailscale-secret" (include "tc.common.names.fullname" .) }}
   - name: TS_KUBE_SECRET
-    value: {{ $secretName | squote }}
+    value: {{ $secretName }}
   - name: TS_USERSPACE
     value: {{ .Values.addons.vpn.tailscale.userspace | quote }}
   - name: TS_ACCEPT_DNS
@@ -60,6 +66,10 @@ env:
     {{- end }}
     {{- with .Values.addons.vpn.tailscale.extra_args }}
   - name: TS_EXTRA_ARGS
+    value: {{ . | quote }}
+    {{- end }}
+    {{- with .Values.addons.vpn.tailscale.daemon_extra_args }}
+  - name: TS_TAILSCALED_EXTRA_ARGS
     value: {{ . | quote }}
     {{- end }}
 
