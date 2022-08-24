@@ -187,7 +187,7 @@ before chart installation.
       subPath: {{ $hpm.subPath }}
       {{- end }}
     {{- end }}
-    {{- if and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailsacale" ) ) }}
+    {{- if and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailsacale" ) }}
     - name: vpnconfig
       mountPath: /vpn/vpn.conf
     {{- end }}
