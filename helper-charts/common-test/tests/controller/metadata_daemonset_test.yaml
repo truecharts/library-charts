@@ -81,3 +81,12 @@ tests:
             global_label: test
             helm.sh/chart: common-test-4.0.0
             test_label: test
+
+  - it: contains a random alphanumeric string on rollme key
+    set:
+      controller.type: daemonset
+    asserts:
+      - documentIndex: *ControllerDoc
+        matchRegex:
+          path: metadata.annotations.rollme
+          pattern: ^[a-zA-Z0-9]{5}$
