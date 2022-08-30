@@ -10,8 +10,9 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *ControllerDoc
-        isNull:
-          path: metadata.annotations
+        matchRegex:
+          path: metadata.annotations.rollme
+          pattern: ^[a-zA-Z0-9]{5}$
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
