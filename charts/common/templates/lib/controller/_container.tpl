@@ -71,7 +71,6 @@
       value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
     - name: GID
       value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
-    {{- end }}
    {{- end }}
    {{- if or ( .Values.securityContext.readOnlyRootFilesystem ) ( .Values.securityContext.runAsNonRoot ) }}
     - name: S6_READ_ONLY_ROOT
