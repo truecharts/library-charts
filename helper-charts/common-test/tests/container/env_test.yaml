@@ -21,6 +21,22 @@ tests:
               value: void
             - name: TZ
               value: UTC
+      - documentIndex: *DeploymentDoc
+        notEqual:
+          path: spec.template.spec.containers[0].env
+          value:
+            - name: PUID
+              value: "568"
+            - name: USER_ID
+              value: "568"
+            - name: UID
+              value: "568"
+            - name: PGID
+              value: "568"
+            - name: GROUP_ID
+              value: "568"
+            - name: GID
+              value: "568"
 
   - it: KeyValue string should pass
     set:
