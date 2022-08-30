@@ -10,9 +10,9 @@ tests:
         isKind:
           of: StatefulSet
       - documentIndex: *ControllerDoc
-        equal:
+        matchRegex:
           path: metadata.annotations
-          value:
+          pattern:
             rollme: ^.*{5}$
       - documentIndex: *ControllerDoc
         equal:
