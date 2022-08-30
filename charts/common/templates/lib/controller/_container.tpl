@@ -50,8 +50,7 @@
   {{- end }}
 
   env:
-   {{- if not .Values.podSecurityContext.runAsUser }}
-    {{- if .Values.security.PUID }}
+   {{- if and ( not .Values.podSecurityContext.runAsUser) ( .Values.security.PUID ) }}
     - name: PUID
       value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
     - name: USER_ID
