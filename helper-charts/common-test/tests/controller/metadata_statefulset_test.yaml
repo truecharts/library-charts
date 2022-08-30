@@ -10,10 +10,10 @@ tests:
         isKind:
           of: StatefulSet
       - documentIndex: *ControllerDoc
-        matchRegex:
+        contains:
           path: metadata.annotations
-          pattern:
-            rollme: ^.*{5}$
+          content:
+            rollme: random
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
