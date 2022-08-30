@@ -8,7 +8,7 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDoc
-        equal:
+      - equal:
           path: spec.template.spec.containers[0].env
           value:
             - name: UMASK
@@ -21,10 +21,10 @@ tests:
               value: void
             - name: TZ
               value: UTC
-      - documentIndex: *DeploymentDoc
-        notContains:
+      - equal:
           path: spec.template.spec.containers[0].env
-          content:
+          not: true
+          value:
             - name: PUID
               value: "568"
             - name: USER_ID
