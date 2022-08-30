@@ -22,9 +22,9 @@ tests:
             - name: TZ
               value: UTC
       - documentIndex: *DeploymentDoc
-        notEqual:
+        notContains:
           path: spec.template.spec.containers[0].env
-          value:
+          content:
             - name: PUID
               value: "568"
             - name: USER_ID
