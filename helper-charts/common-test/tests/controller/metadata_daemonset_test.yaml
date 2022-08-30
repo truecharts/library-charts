@@ -13,7 +13,7 @@ tests:
         equal:
           path: metadata.annotations
           value:
-            rollme: ^.*{5}$
+            rollme: xxxx
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
