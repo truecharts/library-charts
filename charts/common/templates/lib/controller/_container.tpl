@@ -62,8 +62,7 @@
       value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
     - name: UMASK_SET
       value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
-   {{- if not .Values.podSecurityContext.runAsGroup }}
-    {{- if .Values.security.PUID }}
+   {{- if and ( not .Values.podSecurityContext.runAsUser) ( .Values.security.PUID ) }}
     - name: PGID
       value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
     - name: GROUP_ID
