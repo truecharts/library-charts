@@ -10,8 +10,10 @@ tests:
         isKind:
           of: StatefulSet
       - documentIndex: *ControllerDoc
-        isNull:
+        equal:
           path: metadata.annotations
+          value:
+            rollme: ^.*{5}$
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels

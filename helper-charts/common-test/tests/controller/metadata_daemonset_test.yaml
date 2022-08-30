@@ -10,10 +10,8 @@ tests:
         isKind:
           of: DaemonSet
       - documentIndex: *ControllerDoc
-        equal:
+        isNull:
           path: metadata.annotations
-          value:
-            rollme: xxxx
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
