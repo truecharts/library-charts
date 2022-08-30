@@ -57,7 +57,6 @@
       value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
     - name: UID
       value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
-    {{- end }}
    {{- end }}
     - name: UMASK
       value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
