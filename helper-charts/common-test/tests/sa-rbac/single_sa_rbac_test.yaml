@@ -20,5 +20,5 @@ tests:
           value: RELEASE-NAME-common-test
       - documentIndex: 0
         equal:
-          path: subjects[0].name
+          path: subjects.name
           value: RELEASE-NAME-common-test
