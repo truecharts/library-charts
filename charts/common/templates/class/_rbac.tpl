@@ -4,14 +4,9 @@ using the common library.
 */}}
 {{- define "tc.common.class.rbac" -}}
   {{- $fullName := include "tc.common.names.fullname" . -}}
+  {{- $saName := include "tc.common.names.serviceAccountName" . -}}
   {{- $rbacName := $fullName -}}
   {{- $values := .Values.rbac -}}
-  {{- $saValues := .Values.serviceAccount }}
-  {{- $saName := $fullName }}
-
-  {{- if and (hasKey $values "nameOverride") $saValues.nameOverride -}}
-    {{- $saName = printf "%v-%v" $saName $saValues.nameOverride -}}
-  {{- end }}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.rbac -}}

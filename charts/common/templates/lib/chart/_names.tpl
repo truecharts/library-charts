@@ -37,8 +37,12 @@ If release name contains chart name it will be used as a full name.
 
 {{/* Create the name of the ServiceAccount to use */}}
 {{- define "tc.common.names.serviceAccountName" -}}
-  {{- if .Values.serviceAccount.create -}}
-    {{- default (include "tc.common.names.fullname" .) .Values.serviceAccount.name -}}
+  {{- if .Values.serviceAccount.enabled -}}
+  {{- $saName := (include "tc.common.names.fullname" .) -}}
+    {{- if and (hasKey .Values.serviceAccount "nameOverride") .Values.serviceAccount.nameOverride -}}
+      {{- $saName = printf "%v-%v" $saName .Values.serviceAccount.nameOverride -}}
+    {{- end -}}
+    {{- default $saName .Values.serviceAccount.name -}}
   {{- else -}}
     {{- default "default" .Values.serviceAccount.name -}}
   {{- end -}}
