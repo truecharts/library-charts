@@ -4,14 +4,18 @@ using the common library.
 */}}
 {{- define "tc.common.class.serviceAccount" -}}
   {{- $fullName := include "tc.common.names.fullname" . -}}
-  {{- $saName := include "tc.common.names.serviceAccountName" . -}}
+  {{- $saName := $fullName -}}
   {{- $values := .Values.serviceAccount -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.serviceAccount -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
+
+  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+    {{- $saName = printf "%v-%v" $saName $values.nameOverride -}}
+  {{- end }}
 
 ---
 apiVersion: v1
