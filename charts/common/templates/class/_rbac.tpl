@@ -6,6 +6,12 @@ using the common library.
   {{- $fullName := include "tc.common.names.fullname" . -}}
   {{- $rbacName := $fullName -}}
   {{- $values := .Values.rbac -}}
+  {{- $saValues := .Values.serviceAccount }}
+  {{- $saName := $fullName }}
+
+  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+    {{- $saName = printf "%v-%v" $saName $values.nameOverride -}}
+  {{- end }}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.rbac -}}
@@ -55,7 +61,7 @@ roleRef:
   name: {{ $rbacName }}
 subjects:
   - kind: ServiceAccount
-    name: {{ default (include "tc.common.names.serviceAccountName" .) $values.serviceAccountName }}
+    name: {{ $saName }}
     namespace: {{ .Release.Namespace }}
   {{- with $values.subjects }}
   {{- toYaml . | nindent 2 }}
