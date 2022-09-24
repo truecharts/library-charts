@@ -7,7 +7,6 @@ using the common library.
   {{- $saName := $fullName -}}
   {{- $rbacName := $fullName -}}
   {{- $values := .Values.rbac -}}
-  {{- $saValues := .Values.serviceAccount -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.rbac -}}
@@ -15,8 +14,8 @@ using the common library.
     {{- end -}}
   {{ end -}}
 
-  {{- if and (hasKey $values "nameOverride") $saValues.nameOverride -}}
-    {{- $saName = printf "%v-%v" $saName $saValues.nameOverride -}}
+  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+    {{- $saName = printf "%v-%v" $saName $values.nameOverride -}}
   {{- end }}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
