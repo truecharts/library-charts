@@ -9,8 +9,8 @@ using the common library.
   {{- $saValues := .Values.serviceAccount }}
   {{- $saName := $fullName }}
 
-  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
-    {{- $saName = printf "%v-%v" $saName $values.nameOverride -}}
+  {{- if and (hasKey $values "nameOverride") $saValues.nameOverride -}}
+    {{- $saName = printf "%v-%v" $saName $saValues.nameOverride -}}
   {{- end }}
 
   {{- if hasKey . "ObjectValues" -}}
