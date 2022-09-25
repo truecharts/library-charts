@@ -7,12 +7,10 @@ imagePullSecrets:
     {{ tpl ( toYaml . ) $ | nindent 2 }}
   {{- end }}
 
-{{- if .Values.serviceAccount.main.enabled }}
-  {{- $saName := include "tc.common.names.fullname" . -}}
-{{- else }}
+{{- $saName := include "tc.common.names.fullname" . -}}
+{{- if not .Values.serviceAccount.main.enabled }}
   {{ $saName = "default" }}
 {{- end }}
-
 serviceAccountName: {{ $saName }}
   {{- with .Values.podSecurityContext }}
 securityContext:
