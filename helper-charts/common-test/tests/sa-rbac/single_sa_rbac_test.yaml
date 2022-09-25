@@ -11,7 +11,7 @@ tests:
         main:
           enabled: true
     asserts:
-      - documentIndex: &DeploymentDoc 2
+      - documentIndex: &DeploymentDoc 1
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDoc
