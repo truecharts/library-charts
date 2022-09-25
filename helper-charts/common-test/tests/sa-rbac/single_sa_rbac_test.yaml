@@ -11,6 +11,14 @@ tests:
         main:
           enabled: true
     asserts:
+      - documentIndex: &DeploymentDoc 2
+        isKind:
+          of: Deployment
+      - documentIndex: *DeploymentDoc
+        equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-common-test
+
       - documentIndex: &ServiceAccountDoc 0
         isKind:
           of: ServiceAccount
