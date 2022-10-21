@@ -81,7 +81,7 @@ kubectlImage:
   # -- Specify the multi-init image
   repository: bitnami/kubectl
   # -- Specify the redis image tag
-  tag: "1.23.5"
+  tag: "1.25.3"
   # -- Specify the redis image pull policy
   pullPolicy: IfNotPresent
 
