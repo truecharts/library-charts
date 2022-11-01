@@ -4,7 +4,21 @@
 {{- if .Values.portal.enabled }}
 {{- $primaryService := get .Values.service (include "tc.common.lib.util.service.primary" .) }}
 {{- $primaryPort := get $primaryService.ports (include "tc.common.lib.util.service.ports.primary" (dict "values" $primaryService)) -}}
-{{- $ingr := index .Values.ingress (keys .Values.ingress | first) -}}
+{{- $ingr := dict -}}
+{{- $found := false -}}
+{{- range $name, $ingress := .Values.ingress -}}
+  {{- if not $found -}}
+    {{- if and $ingress.enabled -}}
+      {{- if eq $name "main" -}}
+        {{- $ingr = $ingress -}}
+        {{- $found = true -}}
+      {{- else -}}
+        {{- $ingr = $ingress -}}
+        {{- $found = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 {{- $host := "$node_ip" }}
 {{- $port := 443 }}
 {{- $protocol := "https" }}
