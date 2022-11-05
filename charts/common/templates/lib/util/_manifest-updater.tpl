@@ -1,9 +1,10 @@
 {{- define "tc.common.lib.util.manifest.update" -}}
+{{- if .Values.manifests.enabled }}
 {{- $fullName := include "tc.common.names.fullname" . -}}
 
 {{- $manifestprevious := lookup "v1" "ConfigMap" "tc-system" "manifestVersion" }}
 {{- $manifestVersionOld := 0 }}
-{{- $manifestVersion := .Values.manifestVersion }}
+{{- $manifestVersion := .Values.manifests.version }}
 {{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
@@ -32,7 +33,7 @@ data:
       namespace: tc-system
       name: manifestVersion
     data:
-      manifestVersion: {{ .Values.manifestVersion }}
+      manifestVersion: {{ .Values.manifests.version }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -107,5 +108,6 @@ metadata:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-7"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+{{- end }}
 {{- end }}
 {{- end -}}

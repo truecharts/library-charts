@@ -67,7 +67,9 @@ ubuntuImage:
   pullPolicy: IfNotPresent
 
 # -- Used to inject our own operator manifests into SCALE
-manifestVersion: 1
+manifests:
+  enabled: true
+  version: 1
 
 global:
   # -- Set an override for the prefix of the fullname
