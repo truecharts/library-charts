@@ -3,7 +3,7 @@
 
 {{- $manifestprevious := lookup "v1" "ConfigMap" "tc-system" "manifestVersion" }}
 {{- $manifestVersionOld := 0 }}
-{{- $manifestVersion := .values.manifestVersion }}
+{{- $manifestVersion := .Values.manifestVersion }}
 {{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
@@ -32,7 +32,7 @@ data:
       namespace: tc-system
       name: manifestVersion
     data:
-      manifestVersion: {{ .values.manifestVersion }}
+      manifestVersion: {{ .Values.manifestVersion }}
 ---
 apiVersion: batch/v1
 kind: Job
