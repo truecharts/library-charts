@@ -8,7 +8,7 @@
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
 
-{{- if gt $manifestVersion $manifestVersionOld }}
+{{- if gt ( int $manifestVersion ) ( int $manifestVersionOld ) }}
 ---
 apiVersion: v1
 kind: ConfigMap
