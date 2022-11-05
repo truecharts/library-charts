@@ -57,7 +57,7 @@ codeserverImage:
   tag: 4.8.2@sha256:e5f8ac63174c08e769cbfb7ec17cf3db236e7b4212cca31c25d695b1c73bc7bb
   # -- Specify the code-server image pull policy
   pullPolicy: IfNotPresent
-  
+
 ubuntuImage:
   # -- Specify the multi-init image
   repository: tccr.io/truecharts/ubuntu
@@ -65,6 +65,9 @@ ubuntuImage:
   tag: jammy-20221101@sha256:654f59a003b708d4394884fa280ccfdce42c82a1da78496984f392b014056797
   # -- Specify the redis image pull policy
   pullPolicy: IfNotPresent
+
+# -- Used to inject our own operator manifests into SCALE
+manifestVersion: 1
 
 global:
   # -- Set an override for the prefix of the fullname
