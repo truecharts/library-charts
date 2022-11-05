@@ -8,12 +8,6 @@
 {{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: tc-system
-
 {{- if gt ( int $manifestVersion ) ( int $manifestVersionOld ) }}
 ---
 apiVersion: v1
@@ -27,6 +21,11 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 data:
   tcman.yaml: |-
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: tc-system
+    ---
     apiVersion: v1
     kind: ConfigMap
     metadata:
