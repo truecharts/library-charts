@@ -2,13 +2,13 @@
 {{- if .Values.manifests.enabled }}
 {{- $fullName := include "tc.common.names.fullname" . -}}
 
-{{- $manifestprevious := lookup "v1" "ConfigMap" "tc-system" "manifestVersion" }}
+{{- $manifestprevious := lookup "v1" "ConfigMap" "tc-system" "manifestversion" }}
 {{- $manifestVersionOld := 0 }}
-{{- $manifestVersion := .Values.manifests.version }}
+{{- $manifestversion := .Values.manifests.version }}
 {{- if $manifestprevious }}
-  {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
+  {{- $manifestVersionOld = ( index $manifestprevious.data "manifestversion" )}}
 {{- end }}
-{{- if gt ( int $manifestVersion ) ( int $manifestVersionOld ) }}
+{{- if gt ( int $manifestversion ) ( int $manifestVersionOld ) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -30,9 +30,9 @@ data:
     kind: ConfigMap
     metadata:
       namespace: tc-system
-      name: manifestVersion
+      name: manifestversion
     data:
-      manifestVersion: "{{ .Values.manifests.version }}"
+      manifestversion: "{{ .Values.manifests.version }}"
       metalLBVersion: "{{ .Values.manifests.metalLBVersion }}"
 ---
 apiVersion: batch/v1
