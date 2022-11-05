@@ -70,6 +70,7 @@ spec:
         - name: {{ $fullName }}-manifests
           configMap:
             name: {{ $fullName }}-manifests
+      restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
