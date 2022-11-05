@@ -33,8 +33,8 @@ data:
       namespace: tc-system
       name: manifestVersion
     data:
-      manifestVersion: {{ .Values.manifests.version }}
-      metalLBVersion: {{ .Values.manifests.metalLBVersion }}
+      manifestVersion: "{{ .Values.manifests.version }}"
+      metalLBVersion: "{{ .Values.manifests.metalLBVersion }}"
 ---
 apiVersion: batch/v1
 kind: Job
