@@ -54,7 +54,14 @@ spec:
             - name: {{ $fullName }}-manifests
               mountPath: /etc/manifests
               readOnly: true
-          command: ["kubectl", "apply", "-f", "/etc/manifests"]
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              /bin/bash <<'EOF'
+              kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+              kubectl apply -f /etc/manifests
+              EOF
       volumes:
         - name: {{ $fullName }}-manifests
           configMap:
