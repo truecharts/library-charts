@@ -24,7 +24,7 @@ tailscaleImage:
   # -- Specify the Tailscale image
   repository: tailscale/tailscale
   # -- Specify the Tailscale image tag
-  tag: v1.33.61@sha256:97d440aa0b0daf1187b32a7660663de204a1de0308f61fd3aaff515c18ed8d51
+  tag: v1.33.141@sha256:726ff19a7be12e9b88fd582edea075020833ebe707751194ee5dc82583a330e6
   # -- Specify the Tailscale image pull policy
   pullPolicy: IfNotPresent
 
@@ -44,7 +44,7 @@ netshootImage:
   # -- Specify the netshoot image
   repository: tccr.io/truecharts/netshoot
   # -- Specify the netshoot image tag
-  tag: latest@sha256:e7315c07de7319a22cf81cf7a32d081411cbdb8df181a3a01227839b14331151
+  tag: latest@sha256:93965d478e69df0e706cb0a384210ff490330d192f5e4e8d39ce7b7b3d4a198d
   # -- Specify the netshoot image pull policy
   pullPolicy: Always
 
@@ -54,7 +54,7 @@ codeserverImage:
   # -- Specify the code-server image
   repository: tccr.io/truecharts/code-server
   # -- Specify the code-server image tag
-  tag: 4.7.1@sha256:8f618e268b747a06219cbc91b5b0858b33712975109cdc34436194de2be9c23f
+  tag: 4.8.2@sha256:e5f8ac63174c08e769cbfb7ec17cf3db236e7b4212cca31c25d695b1c73bc7bb
   # -- Specify the code-server image pull policy
   pullPolicy: IfNotPresent
 
@@ -72,7 +72,7 @@ multiinitImage:
   # -- Specify the multi-init image
   repository: tccr.io/truecharts/multi-init
   # -- Specify the redis image tag
-  tag: 1.0.0@sha256:122039a163f8791d409f55f8af5100928241c1c4bc3d55f6c9cbd58a9ef5049b
+  tag: 1.1.0@sha256:4337af9c2b79b8d571e4ada3c76de55aff8302632cce91b52af860d4a6607742
   # -- Specify the redis image pull policy
   pullPolicy: IfNotPresent
 
