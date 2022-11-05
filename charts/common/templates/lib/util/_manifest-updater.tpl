@@ -8,6 +8,11 @@
 {{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tc-system
 
 {{- if gt ( int $manifestVersion ) ( int $manifestVersionOld ) }}
 ---
@@ -21,12 +26,7 @@ metadata:
     "helm.sh/hook-weight": "-7"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 data:
-  tc-ns.yaml: |-
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: tc-system
-  tc-manver.yaml: |-
+  tcman.yaml: |-
     apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -34,6 +34,7 @@ data:
       name: manifestVersion
     data:
       manifestVersion: {{ .Values.manifests.version }}
+      metalLBVersion: {{ .Values.manifests.metalLBVersion }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -78,9 +79,9 @@ metadata:
     "helm.sh/hook-weight": "-7"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 rules:
-  - apiGroups: ["apiextensions.k8s.io"]
-    resources: ["customresourcedefinitions"]
-    verbs: ["create", "get", "list", "watch", "patch"]
+  - apiGroups:  ["*"]
+    resources:  ["*"]
+    verbs:  ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
