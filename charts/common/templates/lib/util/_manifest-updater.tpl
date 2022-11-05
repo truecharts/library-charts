@@ -61,14 +61,15 @@ spec:
             - "-c"
             - |
               /bin/bash <<'EOF'
+              echo "installing metallb backend..."
               kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion}}/config/manifests/metallb-native.yaml
+              echo "installing other manifests..."
               kubectl apply -f /etc/manifests
               EOF
       volumes:
         - name: {{ $fullName }}-manifests
           configMap:
             name: {{ $fullName }}-manifests
-      restartPolicy: OnFailure
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
