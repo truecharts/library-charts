@@ -60,7 +60,7 @@ spec:
             - "-c"
             - |
               /bin/bash <<'EOF'
-              kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+              kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion}}/config/manifests/metallb-native.yaml
               kubectl apply -f /etc/manifests
               EOF
       volumes:
