@@ -4,7 +4,7 @@
 {{- $manifestprevious := lookup "v1" "ConfigMap" "tc-system" "manifestVersion" }}
 {{- $manifestVersionOld := 0 }}
 {{- $manifestVersion := .values.manifestVersion }}
-{{- if $dbprevious }}
+{{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestVersion" )}}
 {{- end }}
 
