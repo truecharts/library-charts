@@ -8,7 +8,7 @@
 {{- if $manifestprevious }}
   {{- $manifestVersionOld = ( index $manifestprevious.data "manifestversion" )}}
 {{- end }}
-{{- if gt ( int $manifestversion ) ( int $manifestVersionOld ) }}
+{{- if ge ( int $manifestversion ) ( int $manifestVersionOld ) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -29,7 +29,8 @@ data:
     data:
       manifestversion: "{{ .Values.manifests.version }}"
       metalLBVersion: "{{ .Values.manifests.metalLBVersion }}"
-      prometheusVersion: "{{ .Values.manifests.prometheusVersion}}"
+      prometheusVersion: "{{ .Values.manifests.prometheusVersion }}"
+      traefikCRDVersion: "{{ .Values.manifests.traefikCRDVersion }}"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -81,13 +82,15 @@ spec:
             - |
               /bin/bash <<'EOF'
               echo "installing namespaces..."
-              kubectl apply -f /etc/nsmanifests || echo "Failed applying namespaces..."
+              kubectl apply --server-side --force-conflicts -f /etc/nsmanifests || echo "Failed applying namespaces..."
               echo "installing prometheus operator"
-              kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion}}/bundle.yaml --force-conflicts=true --server-side -n prometheus-operator
+              kubectl apply --server-side --force-conflicts -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion }}/bundle.yaml -n prometheus-operator
               echo "installing metallb backend..."
-              kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion}}/config/manifests/metallb-native.yaml || echo "Failed applying metallb manifest..."
+              kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion }}/config/manifests/metallb-native.yaml || echo "Failed applying metallb manifest..."
+              echo "installing traefik CRDs clusterwide..."
+              kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/tree/v{{ .Values.manifests.traefikCRDVersion }}/traefik/crds
               echo "installing other manifests..."
-              kubectl apply -f /etc/manifests || echo "Failed applying other manifests..."
+              kubectl apply -f /etc/manifests --server-side  --force-conflicts=true  || echo "Failed applying other manifests..."
               EOF
       volumes:
         - name: {{ $fullName }}-manifests
