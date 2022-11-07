@@ -16,6 +16,7 @@ args:
 manifests:
   enabled: true
   nonBlocking: false
+  staging: false
 
 ingress:
   main:
