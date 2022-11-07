@@ -26,7 +26,6 @@ spec:
               echo "installing manifests..."
               kubectl apply --server-side --force-conflicts -k https://github.com/truecharts/manifests/manifests || echo "Manifest application failed..."
               EOF
-      volumes:
       restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
