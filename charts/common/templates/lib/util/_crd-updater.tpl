@@ -31,17 +31,23 @@ spec:
       serviceAccountName: {{ $fullName }}-crds
       containers:
         - name: {{ $fullName }}-crds
-          image: {{ .Values.multiinitImage.repository }}:{{ .Values.multiinitImage.tag }}
+          image: {{ .Values.ubuntuImage.repository }}:{{ .Values.ubuntuImage.tag }}
           volumeMounts:
             - name: {{ $fullName }}-crds
               mountPath: /etc/crds
               readOnly: true
-          command: ["kubectl", "apply", "-f", "/etc/crds"]
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              /bin/bash <<'EOF'
+              kubectl apply -f /etc/crds || echo "failed applying CRDs..."
+              EOF
       volumes:
         - name: {{ $fullName }}-crds
           configMap:
             name: {{ $fullName }}-crds
-      restartPolicy: OnFailure
+      restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
