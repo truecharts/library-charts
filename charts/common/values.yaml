@@ -69,8 +69,9 @@ ubuntuImage:
 # -- Used to inject our own operator manifests into SCALE
 manifests:
   enabled: true
-  version: 1
+  version: 2
   metalLBVersion: "0.13.7"
+  prometheusVersion: "0.60.1"
 
 global:
   # -- Set an override for the prefix of the fullname

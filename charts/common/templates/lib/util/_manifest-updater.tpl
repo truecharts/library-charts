@@ -29,6 +29,7 @@ data:
     data:
       manifestversion: "{{ .Values.manifests.version }}"
       metalLBVersion: "{{ .Values.manifests.metalLBVersion }}"
+      prometheusVersion: "{{ .Values.manifests.prometheusVersion}}"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -82,7 +83,7 @@ spec:
               echo "installing namespaces..."
               kubectl apply -f /etc/nsmanifests || echo "Failed applying namespaces..."
               echo "installing prometheus operator"
-              kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.60.1/bundle.yaml --force-conflicts=true --server-side -n prometheus-operator
+              kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion}}/bundle.yaml --force-conflicts=true --server-side -n prometheus-operator
               echo "installing metallb backend..."
               kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion}}/config/manifests/metallb-native.yaml || echo "Failed applying metallb manifest..."
               echo "installing other manifests..."
