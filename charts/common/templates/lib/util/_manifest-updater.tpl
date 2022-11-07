@@ -99,7 +99,7 @@ spec:
               echo "installing namespaces..."
               kubectl apply --server-side --force-conflicts -f /etc/nsmanifests || failed=true && echo "Failed applying namespaces..."
               echo "installing prometheus operator"
-              kubectl apply --server-side --force-conflicts -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion }}/bundle.yaml -n prometheus-operator || failed=true && echo " "Failed applying prometheus operator manifest..."
+              kubectl apply --server-side --force-conflicts -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion }}/bundle.yaml -n prometheus-operator || failed=true && echo "Failed applying prometheus operator manifest..."
               echo "installing metallb backend..."
               kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion }}/config/manifests/metallb-native.yaml || failed=true && echo "Failed applying metallb manifest..."
               echo "installing traefik CRDs clusterwide..."
