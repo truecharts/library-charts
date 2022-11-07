@@ -1,5 +1,11 @@
 # Changelog<br>
 
+<a name="common-10.8.2"></a>
+### [common-10.8.2](https://github.com/truecharts/apps/compare/common-10.8.1...common-10.8.2) (2022-11-07)
+
+#### Feat
+
+* Re-add addon.vpn.additionalVolumeMounts
 
 <a name="common-9.1.14"></a>
 ### [common-9.1.14](https://github.com/truecharts/apps/compare/common-9.1.13...common-9.1.14) (2022-03-26)

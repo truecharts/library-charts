@@ -87,6 +87,9 @@ volumeMounts:
     name: shared
   - mountPath: /var/lib/tailscale
     name: {{ printf "%v-%v" .Release.Name "tailscale" }}
+{{- if .Values.addons.vpn.additionalVolumeMounts }}
+  {{- toYaml .Values.addons.vpn.additionalVolumeMounts | nindent 2 }}
+{{- end }}
 {{- with .Values.addons.vpn.livenessProbe }}
 livenessProbe:
   {{- toYaml . | nindent 2 }}

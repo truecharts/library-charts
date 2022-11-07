@@ -1065,6 +1065,9 @@ addons:
       # See Kubernetes documentation for options.
       hostPathType: "File"
 
+    # -- Additional volume mounts.
+    additionalVolumeMounts: []
+
   # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
   # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server)
   # @default -- See values.yaml

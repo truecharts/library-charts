@@ -59,6 +59,9 @@ volumeMounts:
   - name: vpnconfig
     mountPath: /etc/wireguard/wg0.conf
 {{- end }}
+{{- if .Values.addons.vpn.additionalVolumeMounts }}
+  {{- toYaml .Values.addons.vpn.additionalVolumeMounts | nindent 2 }}
+{{- end }}
 {{- with .Values.addons.vpn.livenessProbe }}
 livenessProbe:
   {{- toYaml . | nindent 2 }}
