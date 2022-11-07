@@ -19,6 +19,17 @@ metadata:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-7"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+data: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ $fullName }}-versions
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-7"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 data:
   tcman.yaml: |-
     apiVersion: v1
@@ -76,21 +87,29 @@ spec:
             - name: {{ $fullName }}-ns-manifests
               mountPath: /etc/nsmanifests
               readOnly: true
+            - name: {{ $fullName }}-versions
+              mountPath: /etc/manifestversions
+              readOnly: true
           command:
             - "/bin/sh"
             - "-c"
             - |
               /bin/bash <<'EOF'
+              failed=false
               echo "installing namespaces..."
-              kubectl apply --server-side --force-conflicts -f /etc/nsmanifests || echo "Failed applying namespaces..."
+              kubectl apply --server-side --force-conflicts -f /etc/nsmanifests || failed=true && echo "Failed applying namespaces..."
               echo "installing prometheus operator"
-              kubectl apply --server-side --force-conflicts -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion }}/bundle.yaml -n prometheus-operator
+              kubectl apply --server-side --force-conflicts -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v{{ .Values.manifests.prometheusVersion }}/bundle.yaml -n prometheus-operator || failed=true && echo " "Failed applying prometheus operator manifest..."
               echo "installing metallb backend..."
-              kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion }}/config/manifests/metallb-native.yaml || echo "Failed applying metallb manifest..."
+              kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion }}/config/manifests/metallb-native.yaml || failed=true && echo "Failed applying metallb manifest..."
               echo "installing traefik CRDs clusterwide..."
-              kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/tree/v{{ .Values.manifests.traefikCRDVersion }}/traefik/crds
+              kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/tree/v{{ .Values.manifests.traefikCRDVersion }}/traefik/crds || failed=true && echo "Failed applying traefik crd manifests..."
               echo "installing other manifests..."
-              kubectl apply -f /etc/manifests --server-side  --force-conflicts=true  || echo "Failed applying other manifests..."
+              kubectl apply -f /etc/manifests --server-side  --force-conflicts=true  || failed=true && echo "Failed applying other manifests..."
+              if [ "$failed" = false ] ; then
+                echo "registering manifest versions..."
+                kubectl apply -f /etc/manifestversions --server-side  --force-conflicts=true  || echo "Failed registering manifest versions..."
+              fi
               EOF
       volumes:
         - name: {{ $fullName }}-manifests
@@ -99,6 +118,9 @@ spec:
         - name: {{ $fullName }}-ns-manifests
           configMap:
             name: {{ $fullName }}-ns-manifests
+        - name: {{ $fullName }}-versions
+          configMap:
+            name: {{ $fullName }}-versions
       restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
