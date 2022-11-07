@@ -24,7 +24,7 @@ spec:
             - |
               /bin/bash <<'EOF'
               echo "installing manifests..."
-              kubectl apply --server-side --force-conflicts -k https://github.com/truecharts/manifests/manifests || echo "Manifest application failed..."
+              kubectl apply --server-side --force-conflicts -k https://github.com/truecharts/manifests/manifests {{ if .Values.manifests.nonBlocking }}|| echo "Manifest application failed..." {{ end }}
               EOF
       restartPolicy: Never
 ---

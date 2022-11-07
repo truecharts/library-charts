@@ -17,6 +17,10 @@ ingress:
   main:
     enabled: true
 
+manifests:
+  enabled: true
+  nonBlocking: true
+
 probes:
   liveness:
     enabled: true

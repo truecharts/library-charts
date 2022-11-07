@@ -69,6 +69,7 @@ ubuntuImage:
 # -- Used to inject our own operator manifests into SCALE
 manifests:
   enabled: true
+  nonBlocking: true
   version: 1
   metalLBVersion: "0.13.7"
 
