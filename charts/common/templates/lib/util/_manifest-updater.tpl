@@ -22,11 +22,6 @@ metadata:
 data:
   tcman.yaml: |-
     apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: tc-system
-    ---
-    apiVersion: v1
     kind: ConfigMap
     metadata:
       namespace: tc-system
@@ -34,6 +29,27 @@ data:
     data:
       manifestversion: "{{ .Values.manifests.version }}"
       metalLBVersion: "{{ .Values.manifests.metalLBVersion }}"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ $fullName }}-ns-manifests
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-7"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+data:
+  tcsys.yaml: |-
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: tc-system
+  promop.yaml: |-
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: prometheus-operator
 ---
 apiVersion: batch/v1
 kind: Job
@@ -55,11 +71,18 @@ spec:
             - name: {{ $fullName }}-manifests
               mountPath: /etc/manifests
               readOnly: true
+            - name: {{ $fullName }}-ns-manifests
+              mountPath: /etc/nsmanifests
+              readOnly: true
           command:
             - "/bin/sh"
             - "-c"
             - |
               /bin/bash <<'EOF'
+              echo "installing namespaces..."
+              kubectl apply -f /etc/nsmanifests || echo "Failed applying namespaces..."
+              echo "installing prometheus operator"
+              kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.60.1/bundle.yaml --force-conflicts=true --server-side -n prometheus-operator
               echo "installing metallb backend..."
               kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ .Values.manifests.metalLBVersion}}/config/manifests/metallb-native.yaml || echo "Failed applying metallb manifest..."
               echo "installing other manifests..."
@@ -69,6 +92,9 @@ spec:
         - name: {{ $fullName }}-manifests
           configMap:
             name: {{ $fullName }}-manifests
+        - name: {{ $fullName }}-ns-manifests
+          configMap:
+            name: {{ $fullName }}-ns-manifests
       restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
