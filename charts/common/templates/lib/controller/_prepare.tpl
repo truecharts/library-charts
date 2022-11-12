@@ -109,6 +109,21 @@ before chart installation.
         do sleep 2;
       done
       {{- end }}
+      {{- range $name $value := .Values.cnpg }}
+      {{- if .enabled }}
+      {{- $pghost := printf "pooler-%s-rw" $name }}
+      until
+        pg_isready -U {{ .user }} -h {{ $pghost }}
+        do sleep 2
+      done
+      {{- end }}
+      {{- if .Values.mongodb.enabled }}
+      until
+        echo "db.runCommand(\"ping\")" | mongosh --host ${MONGODB_HOST} --port 27017 ${MONGODB_DATABASE} --quiet;
+        do sleep 2;
+      done
+      {{- end }}
+      {{- end }}
       {{- if .Values.mariadb.enabled }}
       until
         mysqladmin -uroot -h"${MARIADB_HOST}" -p"${MARIADB_ROOT_PASSWORD}" ping \

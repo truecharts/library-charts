@@ -8,9 +8,7 @@ Renders the cnpg objects required by the chart.
       {{- $cnpgValues := $cnpg -}}
 
       {{/* set the default nameOverride to the cnpg name */}}
-      {{- if and (not $cnpgValues.nameOverride) (ne $name (include "tc.common.lib.util.cnpg.primary" $)) -}}
-        {{- $_ := set $cnpgValues "nameOverride" $name -}}
-      {{ end -}}
+      {{- $_ := set $cnpgValues "nameOverride" $name -}}
 
       {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) -}}
       {{- include "tc.common.class.cnpg" $ }}
