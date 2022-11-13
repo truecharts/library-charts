@@ -1139,6 +1139,7 @@ cnpg:
     primaryUpdateStrategy: unsupervised
     storage:
       size: "256Gi"
+      walsize: "256Gi"
     monitoring:
       enablePodMonitor: true
 

@@ -44,7 +44,7 @@ spec:
 
   storage:
     pvcTemplate:
-      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $vct "global" $) }}
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $values.storage.pvcTemplate "global" $) }}
       accessModes:
         - ReadWriteOnce
       resources:
@@ -52,7 +52,7 @@ spec:
           storage: {{ $values.storage.size | default "256Gi" | quote }}
   walStorage:
     pvcTemplate:
-      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $vct "global" $) }}
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $values.storage.pvcTemplate "global" $) }}
       accessModes:
         - ReadWriteOnce
       resources:
