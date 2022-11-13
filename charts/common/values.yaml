@@ -1130,6 +1130,19 @@ postgresql:
   manifests:
     enabled: false
 
+cnpg:
+  main:
+    enabled: false
+    instances: 2
+    database: "app"
+    user: "app"
+    primaryUpdateStrategy: unsupervised
+    storage:
+      size: "256Gi"
+    monitoring:
+      enablePodMonitor: true
+
+
 # -- Redis dependency configuration
 # @default -- See below
 redis:
