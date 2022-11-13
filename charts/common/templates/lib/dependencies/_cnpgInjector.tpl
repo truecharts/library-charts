@@ -3,7 +3,7 @@ This template serves as a blueprint for all cnpg objects that are created
 within the common library.
 */}}
 {{- define "tc.common.dependencies.cnpg.main" -}}
-
+{{- if .Values.cnpg.enabled -}}
 {{- $cnpgName := include "tc.common.names.fullname" . -}}
 {{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" -}}
 ---
