@@ -145,16 +145,16 @@ data:
 
   std: {{ $std }}
   nossl: {{ $nossl }}
-  porthost: {{  }}
-  host: {{ $porthost }}
+  porthost: {{ $porthost }}
+  host: {{ $host }}
   jdbc: {{ $jdbc }}
 type: Opaque
 {{- $_ := set .Values.postgresql "postgresqlPassword" ( $dbPass | quote ) }}
 {{- $_ := set .Values.postgresql "postgrespassword" ( $pgPass | quote ) }}
 {{- $_ := set .Values.postgresql.url "std" $std }}
 {{- $_ := set .Values.postgresql.url "nossl" $nossl }}
-{{- $_ := set .Values.postgresql.url "porthost"  }}
-{{- $_ := set .Values.postgresql.url "host" $porthost }}
+{{- $_ := set .Values.postgresql.url "porthost" $porthost }}
+{{- $_ := set .Values.postgresql.url "host" $host }}
 {{- $_ := set .Values.postgresql.url "jdbc" $jdbc }}
 ---
 apiVersion: v1
