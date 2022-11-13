@@ -27,12 +27,12 @@ metadata:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
-  instances: {{ $values.instances }}
+  instances: {{ $values.instances | default 2  }}
 
   bootstrap:
     initdb:
-      database: {{ $values.database }}
-      owner: {{ $values.user }}
+      database: {{ $values.database | default "app" }}
+      owner: {{ $values.user | default "app" }}
 
 
   # Example of rolling update strategy:
@@ -40,14 +40,14 @@ spec:
   #                 replicas have been upgraded (default)
   # - supervised: requires manual supervision to perform
   #               the switchover of the primary
-  primaryUpdateStrategy: {{ $values.primaryUpdateStrategy }}
+  primaryUpdateStrategy: {{ $values.primaryUpdateStrategy | default "unsupervised" }}
 
-  # Require 1Gi of space
   storage:
-    size: {{ $values.storage.size }}
+    {{ include "tc.common.storage.storageClass" ( dict "persistence" $values.storage "global" $ ) }}
+    size: {{ $values.storage.size | default "256Gi" }}
 
   monitoring:
-    enablePodMonitor: {{ $values.monitoring.enablePodMonitor }}
+    enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
@@ -57,14 +57,14 @@ spec:
   cluster:
     name: {{ $cnpgName }}
 
-  instances: 3
+  instances: {{ $values.instances | default 2 }}
   type: rw
   pgbouncer:
     poolMode: session
     parameters:
       max_client_conn: "1000"
       default_pool_size: "10"
-{{- if $values.monitoring.enablePodMonitor }}
+{{- if ( $values.monitoring.enablePodMonitor | default true ) }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
