@@ -36,7 +36,7 @@ spec:
 
   storage:
     pvcTemplate:
-      {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage.pvcTemplate "global" $) }}
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage "global" $) }}
       accessModes:
         - ReadWriteOnce
       resources:
@@ -44,7 +44,7 @@ spec:
           storage: {{ .Values.cnpg.storage.size | default "256Gi" | quote }}
   walStorage:
     pvcTemplate:
-      {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage.pvcTemplate "global" $) }}
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage "global" $) }}
       accessModes:
         - ReadWriteOnce
       resources:
