@@ -115,6 +115,7 @@ spec:
   podMetricsEndpoints:
   - port: metrics
 {{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Secret

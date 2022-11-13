@@ -1138,6 +1138,7 @@ cnpg:
   # password:
   # superUserPassword:
   primaryUpdateStrategy: unsupervised
+  acceptRO: false
   storage:
     size: "256Gi"
     walsize: "256Gi"
