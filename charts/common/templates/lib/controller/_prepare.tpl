@@ -109,14 +109,14 @@ before chart installation.
         do sleep 2;
       done
       {{- end }}
-      {{- range $name, $value := .Values.cnpg }}
-      {{- if .enabled }}
-      {{- $pghost := printf "pooler-%s-rw" $name }}
+      {{- if .Values.cnpg.enabled }}
+      {{- $cnpgName := include "tc.common.names.fullname" . -}}
+      {{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" -}}
+      {{- $pghost := printf "pooler-%s-rw" $cnpgName }}
       until
         pg_isready -U {{ .user }} -h {{ $pghost }}
         do sleep 2
       done
-      {{- end }}
       {{- end }}
       {{- if .Values.mariadb.enabled }}
       until
