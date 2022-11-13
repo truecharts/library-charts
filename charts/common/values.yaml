@@ -1131,17 +1131,18 @@ postgresql:
     enabled: false
 
 cnpg:
-  main:
-    enabled: false
-    instances: 2
-    database: "app"
-    user: "app"
-    primaryUpdateStrategy: unsupervised
-    storage:
-      size: "256Gi"
-      walsize: "256Gi"
-    monitoring:
-      enablePodMonitor: true
+  enabled: false
+  instances: 2
+  database: "app"
+  user: "app"
+  # password:
+  # superUserPassword:
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: "256Gi"
+    walsize: "256Gi"
+  monitoring:
+    enablePodMonitor: true
 
 
 # -- Redis dependency configuration

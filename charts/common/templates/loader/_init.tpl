@@ -16,6 +16,9 @@
 
   {{- include "tc.common.lib.values.securityContext.privileged" . }}
 
+  {{- /* Autogenerate cnpg passwords if needed */ -}}
+  {{- include "tc.common.dependencies.cnpg.main" . }}
+
   {{- /* Autogenerate postgresql passwords if needed */ -}}
   {{- include "tc.common.dependencies.postgresql.injector" . }}
 
