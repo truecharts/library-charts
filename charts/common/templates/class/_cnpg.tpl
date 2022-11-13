@@ -43,11 +43,27 @@ spec:
   primaryUpdateStrategy: {{ $values.primaryUpdateStrategy | default "unsupervised" }}
 
   storage:
-    {{ include "tc.common.storage.storageClass" ( dict "persistence" $values.storage "global" $ ) }}
-    size: {{ $values.storage.size | default "256Gi" }}
+    pvcTemplate:
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $vct "global" $) }}
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ $values.storage.size | default "256Gi" | quote }}
+  walStorage:
+    pvcTemplate:
+      {{ include "tc.common.storage.storageClassName" ( dict "persistence" $vct "global" $) }}
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ $values.storage.walsize | default "256Gi" | quote }}
 
   monitoring:
     enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
+
+  NodeMaintenanceWindow:
+    reusePVC: true
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
@@ -76,5 +92,36 @@ spec:
       cnpg.io/poolerName: {{ $cnpgName }}-rw
   podMetricsEndpoints:
   - port: metrics
+{{- end }}
+{{- if ( $values.acceptRO | default true ) }}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: pooler-{{ $cnpgName }}-ro
+spec:
+  cluster:
+    name: {{ $cnpgName }}
+
+  instances: {{ $values.instances | default 2 }}
+  type: ro
+  pgbouncer:
+    poolMode: session
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "10"
+{{- if ( $values.monitoring.enablePodMonitor | default true ) }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ $cnpgName }}-ro
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/poolerName: {{ $cnpgName }}-ro
+  podMetricsEndpoints:
+  - port: metrics
+{{- end }}
 {{- end }}
 {{- end }}
