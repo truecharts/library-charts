@@ -109,7 +109,7 @@ before chart installation.
         do sleep 2;
       done
       {{- end }}
-      {{- range $name $value := .Values.cnpg }}
+      {{- range $name, $value := .Values.cnpg }}
       {{- if .enabled }}
       {{- $pghost := printf "pooler-%s-rw" $name }}
       until
