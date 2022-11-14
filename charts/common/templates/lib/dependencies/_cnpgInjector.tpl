@@ -154,8 +154,8 @@ type: Opaque
 ---
 apiVersion: v1
 data:
-  username: postgres
-  password: {{ $pgPass }}
+  username: {{ "postgres" | b64enc | quote  }}
+  password: {{ $pgPass | b64enc | quote }}
 kind: Secret
 metadata:
   name: cnpg-superuser
@@ -163,8 +163,8 @@ type: kubernetes.io/basic-auth
 ---
 apiVersion: v1
 data:
-  username: {{ .Values.cnpg.user }}
-  password: {{ $dbPass }}
+  username: {{ .Values.cnpg.user | b64enc | quote }}
+  password: {{ $dbPass | b64enc | quote }}
 kind: Secret
 metadata:
   name: cnpg-user
