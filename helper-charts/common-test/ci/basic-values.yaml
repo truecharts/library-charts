@@ -25,6 +25,11 @@ probes:
   startup:
     enabled: true
 
+manifests:
+  enabled: true
+  nonBlocking: true
+  staging: false
+
 "ixCertificateAuthorities": {}
 "ixCertificates":
   "1":
