@@ -15,10 +15,10 @@ spec:
   template:
     spec:
       serviceAccountName: {{ $fullName }}-manifests
-      tolerations:
+{{/*      tolerations:
         - key: "ix-svc-start"
           operator: "Exists"
-          effect: "NoExecute"
+          effect: "NoExecute"*/}}
       containers:
         - name: {{ $fullName }}-manifests
           image: {{ .Values.ubuntuImage.repository }}:{{ .Values.ubuntuImage.tag }}
