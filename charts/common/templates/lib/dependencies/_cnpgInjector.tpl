@@ -48,7 +48,7 @@ spec:
   monitoring:
     enablePodMonitor: {{ .Values.cnpg.monitoring.enablePodMonitor | default true }}
 
-  NodeMaintenanceWindow:
+  nodeMaintenanceWindow:
     reusePVC: on
 ---
 apiVersion: postgresql.cnpg.io/v1
