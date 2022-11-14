@@ -128,15 +128,15 @@ metadata:
 {{- $pgPass := "" }}
 data:
 {{- if $dbprevious }}
-  {{- $dbPass = ( index $dbprevious.data "postgresql-password" ) | b64dec  }}
-  {{- $pgPass = ( index $dbprevious.data "postgresql-postgres-password" ) | b64dec  }}
-  postgresql-password: {{ ( index $dbprevious.data "postgresql-password" ) }}
-  postgresql-postgres-password: {{ ( index $dbprevious.data "postgresql-postgres-password" ) }}
+  {{- $dbPass = ( index $dbprevious.data "user-password" ) | b64dec  }}
+  {{- $pgPass = ( index $dbprevious.data "superuser-password" ) | b64dec  }}
+  user-password: {{ ( index $dbprevious.data "user-password" ) }}
+  superuser-password: {{ ( index $dbprevious.data "superuser-password" ) }}
 {{- else }}
-  {{- $dbPass = .values.cnpg.password | default ( randAlphaNum 62 ) }}
-  {{- $pgPass = .values.cnpg.superUserPassword | default ( randAlphaNum 62 ) }}
-  postgresql-password: {{ $dbPass | b64enc | quote }}
-  postgresql-postgres-password: {{ $pgPass | b64enc | quote }}
+  {{- $dbPass = .Values.cnpg.password | default ( randAlphaNum 62 ) }}
+  {{- $pgPass = .Values.cnpg.superUserPassword | default ( randAlphaNum 62 ) }}
+  user-password: {{ $dbPass | b64enc | quote }}
+  superuser-password: {{ $pgPass | b64enc | quote }}
 {{- end }}
   {{- $std := ( ( printf "postgresql://%v:%v@%v-postgresql:5432/%v" .Values.postgresql.postgresqlUsername $dbPass .Release.Name .Values.postgresql.postgresqlDatabase  ) | b64enc | quote ) }}
   {{- $nossl := ( ( printf "postgresql://%v:%v@%v-postgresql:5432/%v?sslmode=disable" .Values.postgresql.postgresqlUsername $dbPass .Release.Name .Values.postgresql.postgresqlDatabase  ) | b64enc | quote ) }}
@@ -150,13 +150,13 @@ data:
   host: {{ $host }}
   jdbc: {{ $jdbc }}
 type: Opaque
-{{- $_ := set .Values.postgresql "postgresqlPassword" ( $dbPass | quote ) }}
-{{- $_ := set .Values.postgresql "postgrespassword" ( $pgPass | quote ) }}
-{{- $_ := set .Values.postgresql.url "std" $std }}
-{{- $_ := set .Values.postgresql.url "nossl" $nossl }}
-{{- $_ := set .Values.postgresql.url "porthost" $porthost }}
-{{- $_ := set .Values.postgresql.url "host" $host }}
-{{- $_ := set .Values.postgresql.url "jdbc" $jdbc }}
+{{- $_ := set .Values.cnpg.creds "password" ( $dbPass | quote ) }}
+{{- $_ := set .Values.cnpg.creds "superUserPassword" ( $pgPass | quote ) }}
+{{- $_ := set .Values.cnpg.url "std" $std }}
+{{- $_ := set .Values.cnpg.url "nossl" $nossl }}
+{{- $_ := set .Values.cnpg.url "porthost" $porthost }}
+{{- $_ := set .Values.cnpg.url "host" $host }}
+{{- $_ := set .Values.cnpg.url "jdbc" $jdbc }}
 ---
 apiVersion: v1
 data:
