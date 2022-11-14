@@ -15,14 +15,6 @@ spec:
   template:
     spec:
       serviceAccountName: {{ $fullName }}-manifests
-      {{- if hasKey (.Values.global) "isScale" }}
-      {{- if .Values.global.isScale }}
-      tolerations:
-        - key: "ix-svc-start"
-          operator: "Exists"
-          effect: "NoExecute"
-      {{- end }}
-      {{- end }}
       containers:
         - name: {{ $fullName }}-manifests
           image: {{ .Values.ubuntuImage.repository }}:{{ .Values.ubuntuImage.tag }}
