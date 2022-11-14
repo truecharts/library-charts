@@ -26,12 +26,6 @@ spec:
       database: {{ .Values.cnpg.database | default "app" }}
       owner: {{ .Values.cnpg.user | default "app" }}
 
-
-  # Example of rolling update strategy:
-  # - unsupervised: automated update of the primary once all
-  #                 replicas have been upgraded (default)
-  # - supervised: requires manual supervision to perform
-  #               the switchover of the primary
   primaryUpdateStrategy: {{ .Values.cnpg.primaryUpdateStrategy | default "unsupervised" }}
 
   storage:
