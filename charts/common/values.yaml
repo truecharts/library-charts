@@ -49,7 +49,7 @@ ubuntuImage:
 # -- Used to inject our own operator manifests into SCALE
 manifests:
   enabled: true
-  nonBlocking: true
+  nonBlocking: false
   staging: false
 
 global:
