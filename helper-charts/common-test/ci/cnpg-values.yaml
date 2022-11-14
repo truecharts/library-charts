@@ -28,6 +28,8 @@ probes:
 cnpg:
   enabled: true
 
+manifests:
+  enabled: true
 
 "ixCertificateAuthorities": {}
 "ixCertificates":
