@@ -36,6 +36,7 @@ spec:
       resources:
         requests:
           storage: {{ .Values.cnpg.storage.size | default "256Gi" | quote }}
+
   walStorage:
     pvcTemplate:
       {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage "global" $) }}
