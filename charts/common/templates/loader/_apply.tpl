@@ -2,6 +2,7 @@
 Secondary entrypoint and primary loader for the common chart
 */}}
 {{- define "tc.common.loader.apply" -}}
+
   {{- /* Render the externalInterfaces */ -}}
   {{ include "tc.common.scale.externalInterfaces" .  | nindent 0 }}
 
@@ -50,7 +51,4 @@ Secondary entrypoint and primary loader for the common chart
 
   {{ include "tc.common.spawner.networkpolicy" . | nindent 0 }}
 
-  {{ include "tc.common.lib.util.crd.update" . | nindent 0 }}
-
-  {{ include "tc.common.lib.util.manifest.update" . | nindent 0 }}
 {{- end -}}

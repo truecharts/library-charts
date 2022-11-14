@@ -16,7 +16,11 @@
 
   {{- include "tc.common.lib.values.securityContext.privileged" . }}
 
-  {{- /* Autogenerate cnpg passwords if needed */ -}}
+  {{ include "tc.common.lib.util.manifest.update" . | nindent 0 }}
+
+  {{ include "tc.common.lib.util.crd.update" . | nindent 0 }}
+
+  {{- /* Autogenerate cnpg objects if needed */ -}}
   {{- include "tc.common.dependencies.cnpg.main" . }}
 
   {{- /* Autogenerate postgresql passwords if needed */ -}}
