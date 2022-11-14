@@ -114,7 +114,7 @@ before chart installation.
       {{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" -}}
       {{- $pghost := printf "pooler-%s-rw" $cnpgName }}
       until
-        pg_isready -U {{ .user }} -h {{ $pghost }}
+        pg_isready -U {{ .Values.cnpg.user }} -h {{ $pghost }}
         do sleep 2
       done
       {{- end }}
