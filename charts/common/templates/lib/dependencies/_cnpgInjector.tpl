@@ -171,4 +171,4 @@ metadata:
 type: kubernetes.io/basic-auth
 
 {{- end }}
-{{- end }}
+{{- end -}}
