@@ -36,6 +36,7 @@ spec:
       resources:
         requests:
           storage: {{ .Values.cnpg.storage.size | default "256Gi" | quote }}
+
   walStorage:
     pvcTemplate:
       {{ include "tc.common.storage.storageClassName" ( dict "persistence" .Values.cnpg.storage "global" $) }}
@@ -48,8 +49,9 @@ spec:
   monitoring:
     enablePodMonitor: {{ .Values.cnpg.monitoring.enablePodMonitor | default true }}
 
-  NodeMaintenanceWindow:
-    reusePVC: true
+  nodeMaintenanceWindow:
+    inProgress: false
+    reusePVC: on
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
