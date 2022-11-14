@@ -26,7 +26,7 @@ probes:
     enabled: true
 
 cnpg:
-  enabled: true
+  enabled: false
 
 manifests:
   enabled: true
