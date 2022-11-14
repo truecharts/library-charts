@@ -49,7 +49,7 @@ spec:
     enablePodMonitor: {{ .Values.cnpg.monitoring.enablePodMonitor | default true }}
 
   NodeMaintenanceWindow:
-    reusePVC: true
+    reusePVC: on
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
