@@ -3,9 +3,9 @@ This template serves as a blueprint for all cnpg objects that are created
 within the common library.
 */}}
 {{- define "tc.common.dependencies.cnpg.main" -}}
-{{- if .Values.cnpg.enabled -}}
-{{- $cnpgName := include "tc.common.names.fullname" . -}}
-{{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" -}}
+{{- if .Values.cnpg.enabled }}
+{{- $cnpgName := include "tc.common.names.fullname" . }}
+{{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -170,5 +170,5 @@ metadata:
   name: cnpg-user
 type: kubernetes.io/basic-auth
 
-{{- end }}
+{{- end -}}
 {{- end }}
