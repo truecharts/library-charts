@@ -1132,18 +1132,25 @@ postgresql:
 
 cnpg:
   enabled: false
+  # -- number of instances for both postgres and pgbouncer
   instances: 2
   database: "app"
   user: "app"
   # password:
   # superUserPassword:
+  # -- change to supervised to disable unsupervised updates
   primaryUpdateStrategy: unsupervised
+  # -- enable to create extra pgbouncer for readonly access
   acceptRO: false
+  # -- storage size for the two pvc's per instance
   storage:
     size: "256Gi"
     walsize: "256Gi"
+  # -- set to enable prometheus metrics
   monitoring:
     enablePodMonitor: true
+  # -- contains credentials and urls output by generator
+  creds: {}
 
 
 # -- Redis dependency configuration

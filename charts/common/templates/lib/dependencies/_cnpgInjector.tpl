@@ -152,11 +152,11 @@ data:
 type: Opaque
 {{- $_ := set .Values.cnpg.creds "password" ( $dbPass | quote ) }}
 {{- $_ := set .Values.cnpg.creds "superUserPassword" ( $pgPass | quote ) }}
-{{- $_ := set .Values.cnpg.url "std" $std }}
-{{- $_ := set .Values.cnpg.url "nossl" $nossl }}
-{{- $_ := set .Values.cnpg.url "porthost" $porthost }}
-{{- $_ := set .Values.cnpg.url "host" $host }}
-{{- $_ := set .Values.cnpg.url "jdbc" $jdbc }}
+{{- $_ := set .Values.cnpg.creds "std" $std }}
+{{- $_ := set .Values.cnpg.creds "nossl" $nossl }}
+{{- $_ := set .Values.cnpg.creds "porthost" $porthost }}
+{{- $_ := set .Values.cnpg.creds "host" $host }}
+{{- $_ := set .Values.cnpg.creds "jdbc" $jdbc }}
 ---
 apiVersion: v1
 data:
