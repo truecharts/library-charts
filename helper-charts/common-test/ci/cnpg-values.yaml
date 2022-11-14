@@ -31,4 +31,4 @@ cnpg:
 manifests:
   enabled: true
   nonBlocking: false
-  staging: true
+  staging: false
