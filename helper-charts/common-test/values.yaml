@@ -10,8 +10,5 @@ service:
         port: 8080
 
 manifests:
-  enabled: true
+  enabled: false
   nonBlocking: false
-
-cnpg:
-  enabled: true
