@@ -170,5 +170,5 @@ metadata:
   name: cnpg-user
 type: kubernetes.io/basic-auth
 
-{{- end -}}
+{{- end }}
 {{- end }}
