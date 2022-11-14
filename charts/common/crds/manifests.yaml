@@ -55,5 +55,3 @@ kind: ServiceAccount
 metadata:
   name: force-manifests
   namespace: tc-system
-{{- end }}
-{{- end -}}
