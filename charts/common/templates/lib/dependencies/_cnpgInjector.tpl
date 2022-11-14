@@ -66,7 +66,7 @@ spec:
     parameters:
       max_client_conn: "1000"
       default_pool_size: "10"
-{{- if ( .Values.cnpg.monitoring.enablePodMonitor | default true ) }}
+{{ if ( .Values.cnpg.monitoring.enablePodMonitor | default true ) }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
@@ -78,8 +78,8 @@ spec:
       cnpg.io/poolerName: {{ $cnpgName }}-rw
   podMetricsEndpoints:
   - port: metrics
-{{- end }}
-{{- if ( .Values.cnpg.acceptRO | default true ) }}
+{{ end }}
+{{ if ( .Values.cnpg.acceptRO | default true ) }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
@@ -96,7 +96,7 @@ spec:
     parameters:
       max_client_conn: "1000"
       default_pool_size: "10"
-{{- if ( .Values.cnpg.monitoring.enablePodMonitor | default true ) }}
+{{ if ( .Values.cnpg.monitoring.enablePodMonitor | default true ) }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
@@ -108,8 +108,8 @@ spec:
       cnpg.io/poolerName: {{ $cnpgName }}-ro
   podMetricsEndpoints:
   - port: metrics
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 ---
 apiVersion: v1
 kind: Secret
