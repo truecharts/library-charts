@@ -78,7 +78,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      cnpg.io/poolerName: {{ $cnpgName }}-rw
+      cnpg.io/poolerName: {{ $poolerrwname }}
   podMetricsEndpoints:
   - port: metrics
 {{ end }}
@@ -88,7 +88,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
 metadata:
   {{ $poolerroname := printf "pooler-%s-ro" $cnpgName }}
-  name: { $$poolerroname }}
+  name: {{ $poolerroname }}
 spec:
   cluster:
     name: {{ $cnpgName }}
@@ -109,7 +109,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      cnpg.io/poolerName: {{ $cnpgName }}-ro
+      cnpg.io/poolerName: {{ $poolerroname }}
   podMetricsEndpoints:
   - port: metrics
 {{ end }}
