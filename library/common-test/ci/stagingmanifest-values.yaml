@@ -1,22 +1,21 @@
 image:
-  repository: traefik/whoami
+  repository: ghcr.io/truecharts/whoami
   pullPolicy: IfNotPresent
-  tag: latest
+  tag: 1.8.7@sha256:8c61f0ca92fd806fcb4ed1465cb793c05443f37951554b105b0f2dc686a95772
 
 service:
   main:
     ports:
       main:
-        protocol: HTTP
         port: 8080
-
-manifests:
-  enabled: false
-  staging: false
 
 args:
   - --port
-  - "8080"
+  - '8080'
+
+manifests:
+  enabled: true
+  staging: true
 
 probes:
   liveness:
