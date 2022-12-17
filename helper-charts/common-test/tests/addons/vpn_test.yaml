@@ -126,6 +126,6 @@ tests:
               value: "true"
             - name: TS_ACCEPT_DNS
               value: "false"
-      - documentIndex: &ServiceDocument 3
+      - documentIndex: &ServiceDocument 2
         isKind:
           of: Service
