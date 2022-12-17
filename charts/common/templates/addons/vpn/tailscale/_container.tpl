@@ -31,6 +31,8 @@ envFrom:
       name: {{ $secretName }}
 
 env:
+  - name: TS_KUBE_SECRET
+    value: ""
   - name: TS_SOCKET
     value: /var/run/tailscale/tailscaled.sock
   - name: TS_STATE_DIR
