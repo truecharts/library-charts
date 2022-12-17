@@ -31,6 +31,13 @@ envFrom:
       name: {{ $secretName }}
 
 env:
+    {{/*
+    Set this to "" to force tailscale
+    to use the filesystem for state tracking.
+    With secret for state tracking you can't always
+    know if the app that uses this sidecard will
+    use a custom ServiceAccount and will lead to falure.
+    */}}
   - name: TS_KUBE_SECRET
     value: ""
   - name: TS_SOCKET

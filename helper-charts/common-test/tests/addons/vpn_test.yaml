@@ -125,12 +125,18 @@ tests:
         equal:
           path: spec.template.spec.containers[1].env
           value:
-            TS_KUBE_SECRET: ""
-            TS_SOCKET: /var/run/tailscale/tailscaled.sock
-            TS_STATE_DIR: /var/lib/tailscale
-            TS_AUTH_ONCE: true
-            TS_USERSPACE: true
-            TS_ACCEPT_DNS: false
+            - name: TS_KUBE_SECRET
+              value: ""
+            - name: TS_SOCKET
+              value: /var/run/tailscale/tailscaled.sock
+            - name: TS_STATE_DIR
+              value: /var/lib/tailscale
+            - name: TS_AUTH_ONCE
+              value: "true"
+            - name: TS_USERSPACE
+              value: "true"
+            - name: TS_ACCEPT_DNS
+              value: "false"
       - documentIndex: &ServiceDocument 3
         isKind:
           of: Service
