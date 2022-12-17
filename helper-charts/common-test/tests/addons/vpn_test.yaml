@@ -114,8 +114,7 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDocument
-        not: true
-        equal:
+        notEqual:
           path: spec.template.spec.containers[0].name
           value: tailscale
       - documentIndex: *DeploymentDocument
@@ -124,8 +123,14 @@ tests:
           value: tailscale
       - documentIndex: *DeploymentDocument
         equal:
-          path: spec.template.spec.containers[1].env[0].value
-          value: /var/run/tailscale/tailscaled.sock
+          path: spec.template.spec.containers[1].env
+          value:
+            TS_KUBE_SECRET: ""
+            TS_SOCKET: /var/run/tailscale/tailscaled.sock
+            TS_STATE_DIR: /var/lib/tailscale
+            TS_AUTH_ONCE: true
+            TS_USERSPACE: true
+            TS_ACCEPT_DNS: false
       - documentIndex: &ServiceDocument 3
         isKind:
           of: Service
