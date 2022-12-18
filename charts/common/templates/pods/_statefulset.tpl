@@ -13,7 +13,7 @@ metadata:
   {{- with (merge (.Values.controller.labels | default dict) (include "tc.common.labels" $ | fromYaml)) }}
   labels: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
-  {{- with (merge (.Values.controller.annotations | default dict) (include "tc.common.annotations" $ | fromYaml) (include "tc.common.annotations.workload" $ | fromYaml)) }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "tc.common.annotations" $ | fromYaml)) }}
   annotations: {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
@@ -35,8 +35,9 @@ spec:
   serviceName: {{ include "tc.common.names.fullname" . }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+      {{- include "tc.common.annotations.workload" $ | nindent 8 }}
+      {{- with .Values.podAnnotations }}
         {{- tpl ( toYaml . ) $ | nindent 8 }}
       {{- end }}
       labels:

@@ -10,8 +10,11 @@ tests:
         isKind:
           of: Deployment
       - documentIndex: *ControllerDoc
-        matchRegex:
+        isNull:
           path: metadata.annotations.rollme
+      - documentIndex: *ControllerDoc
+        matchRegex:
+          path: spec.templates.spec.annotations.rollme
           pattern: ^[a-zA-Z0-9]{5}$
       - documentIndex: *ControllerDoc
         equal:
