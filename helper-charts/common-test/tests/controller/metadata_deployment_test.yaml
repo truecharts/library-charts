@@ -14,7 +14,7 @@ tests:
           path: metadata.annotations
       - documentIndex: *ControllerDoc
         matchRegex:
-          path: spec.templates.metadata.annotations.rollme
+          path: spec.template.metadata.annotations.rollme
           pattern: ^[a-zA-Z0-9]{5}$
       - documentIndex: *ControllerDoc
         equal:
