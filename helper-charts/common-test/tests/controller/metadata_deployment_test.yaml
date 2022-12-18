@@ -11,7 +11,7 @@ tests:
           of: Deployment
       - documentIndex: *ControllerDoc
         isNull:
-          path: metadata.annotations.rollme
+          path: metadata.annotations
       - documentIndex: *ControllerDoc
         matchRegex:
           path: spec.templates.spec.annotations.rollme

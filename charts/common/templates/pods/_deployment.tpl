@@ -40,8 +40,8 @@ spec:
   template:
     metadata:
       annotations:
+      {{- include "tc.common.annotations.workload" . | nindent 8 }}
       {{- include "tc.common.annotations.workload.spec" . | nindent 8 }}
-      {{- include "tc.common.annotations.workload" $ | nindent 8 }}
       {{- with .Values.podAnnotations }}
         {{- tpl ( toYaml . ) $ | nindent 8 }}
       {{- end }}
