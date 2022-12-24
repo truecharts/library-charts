@@ -26,7 +26,7 @@ before chart installation.
     - "/bin/sh"
     - "-c"
     - |
-      /bin/bash <<'EOF'
+      /bin/sh <<'EOF'
       echo "Automatically correcting permissions..."
       {{- if and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) }}
       echo "Automatically correcting permissions for vpn config file..."
