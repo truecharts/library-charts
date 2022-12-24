@@ -35,6 +35,10 @@ spec:
             - name: temp
               mountPath: /tmp
       restartPolicy: Never
+      {{- with (include "tc.common.controller.volumes" . | trim) }}
+      volumes:
+        {{- nindent 8 . }}
+      {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
