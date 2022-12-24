@@ -18,6 +18,11 @@ spec:
       containers:
         - name: {{ $fullName }}-manifests
           image: {{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           command:
             - "/bin/sh"
             - "-c"

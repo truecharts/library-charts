@@ -57,7 +57,8 @@ before chart installation.
   securityContext:
     runAsUser: 568
     runAsGroup: 568
-    fsGroup: 568
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
   resources:
   {{- with .Values.resources }}
     {{- tpl ( toYaml . ) $ | nindent 4 }}
