@@ -31,6 +31,9 @@ spec:
               echo "installing manifests..."
               kubectl apply --server-side --force-conflicts  -k https://github.com/truecharts/manifests/{{ if .Values.manifests.staging }}staging{{ else }}manifests{{ end }} {{ if .Values.manifests.nonBlocking }} || echo "Manifest application failed..."{{ end }}
               EOF
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
       restartPolicy: Never
 ---
 apiVersion: rbac.authorization.k8s.io/v1
