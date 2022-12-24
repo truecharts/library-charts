@@ -47,6 +47,14 @@ ubuntuImage:
   # -- Specify the redis image pull policy
   pullPolicy: IfNotPresent
 
+alpineImage:
+  # -- Specify the multi-init image
+  repository: tccr.io/truecharts/alpine
+  # -- Specify the redis image tag
+  tag: v3.17.0@sha256:f8607e14a5e456c1b8fe50b7f0c9371b4aae543d23080f5e2fe0bdbb06d2413b
+  # -- Specify the redis image pull policy
+  pullPolicy: IfNotPresent
+
 # -- Used to inject our own operator manifests into SCALE
 manifests:
   enabled: true
