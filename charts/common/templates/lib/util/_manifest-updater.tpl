@@ -22,7 +22,7 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              /bin/bash <<'EOF'
+              /bin/sh <<'EOF'
               echo "installing manifests..."
               kubectl apply --server-side --force-conflicts  -k https://github.com/truecharts/manifests/{{ if .Values.manifests.staging }}staging{{ else }}manifests{{ end }} {{ if .Values.manifests.nonBlocking }} || echo "Manifest application failed..."{{ end }}
               EOF
