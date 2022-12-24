@@ -17,7 +17,7 @@ spec:
       serviceAccountName: {{ $fullName }}-manifests
       containers:
         - name: {{ $fullName }}-manifests
-          image: {{ .Values.ubuntuImage.repository }}:{{ .Values.ubuntuImage.tag }}
+          image: {{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}
           command:
             - "/bin/sh"
             - "-c"

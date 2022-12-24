@@ -55,6 +55,14 @@ alpineImage:
   # -- Specify the redis image pull policy
   pullPolicy: IfNotPresent
 
+kubectlImage:
+  # -- Specify the multi-init image
+  repository: tccr.io/truecharts/kubectl
+  # -- Specify the redis image tag
+  tag: v1.26.0@sha256:c860034eb9a01953cf2056b4035fb6da372c8cac5fa5379ace83e9439cf0e92a
+  # -- Specify the redis image pull policy
+  pullPolicy: IfNotPresent
+
 # -- Used to inject our own operator manifests into SCALE
 manifests:
   enabled: true
