@@ -1,6 +1,6 @@
 {{- define "tc.common.lib.util.manifest.update" -}}
 {{- if .Values.manifests.enabled }}
-{{- $fullName := include "tc.common.names.fullname" . -}}
+{{- $fullName := include "tc.common.names.fullname" . }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -29,7 +29,7 @@ spec:
             - |
               /bin/sh <<'EOF'
               echo "installing manifests..."
-              kubectl apply --server-side --force-conflicts  -k https://github.com/truecharts/manifests/{{ if .Values.manifests.staging }}staging{{ else }}manifests{{ end }} {{ if .Values.manifests.nonBlocking }} || echo "Manifest application failed..."{{ end }}
+              kubectl apply --server-side --force-conflicts -k https://github.com/truecharts/manifests/{{ if .Values.manifests.staging }}staging{{ else }}manifests{{ end }} {{ if .Values.manifests.nonBlocking }} || echo "Manifest application failed..."{{ end }}
               EOF
           volumeMounts:
             - name: {{ $fullName }}-manifests-temp
