@@ -57,7 +57,7 @@ before chart installation.
   securityContext:
     runAsUser: 568
     runAsGroup: 568
-    readOnlyRootFilesystem: true
+    readOnlyRootFilesystem: false
     runAsNonRoot: true
   resources:
   {{- with .Values.resources }}
@@ -97,7 +97,7 @@ before chart installation.
           name: mongodbcreds
           key: plainhost
     - name: MONGODB_DATABASE
-      value: "{{ .Values.mongodb.mongoDatabase }}"
+      value: "{{ .Values.mongodb.mongodbDatabase }}"
     {{- end }}
     {{- if .Values.clickhouse.enabled }}
     - name: CLICKHOUSE_PING
