@@ -1124,6 +1124,9 @@ addons:
               pathType: Prefix
       tls: []
 
+# -- A list of Apps/Namespace names allowed to communicate with this App/Chart
+allowedCon: []
+
 ##
 # This section contains some-preconfig for frequently used dependencies
 ##
