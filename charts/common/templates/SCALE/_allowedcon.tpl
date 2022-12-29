@@ -12,6 +12,7 @@ metadata:
     {{- tpl ( toYaml . ) $ | nindent 4 }}
   {{- end }}
 spec:
+  podSelector: {}
   policyTypes: ["Ingress"]
   ingress:
   - from:
