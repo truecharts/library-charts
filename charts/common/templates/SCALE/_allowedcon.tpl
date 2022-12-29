@@ -13,13 +13,14 @@ metadata:
   {{- end }}
 spec:
   policyTypes: ["Ingress"]
-{{- if .Values.allowedCon }}
   ingress:
   - from:
+    - namespaceSelector:
+         matchLabels:
+          kubernetes.io/metadata.name: metallb-system
     {{- range .Values.allowedCon }}
     - namespaceSelector:
          matchLabels:
           kubernetes.io/metadata.name: {{ . }}
     {{- end -}}
-{{- end }}
 {{- end -}}
