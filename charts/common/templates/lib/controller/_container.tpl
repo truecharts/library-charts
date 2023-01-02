@@ -52,23 +52,23 @@
   env:
    {{- if and ( not .Values.podSecurityContext.runAsUser) ( .Values.security.PUID ) }}
     - name: PUID
-      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ }}
     - name: USER_ID
-      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ }}
     - name: UID
-      value: {{ tpl ( toYaml .Values.security.PUID ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.security.PUID ) $ }}
    {{- end }}
     - name: UMASK
-      value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.security.UMASK ) $ }}
     - name: UMASK_SET
-      value: {{ tpl ( toYaml .Values.security.UMASK ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.security.UMASK ) $ }}
    {{- if and ( not .Values.podSecurityContext.runAsUser) ( .Values.security.PUID ) }}
     - name: PGID
-      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ }}
     - name: GROUP_ID
-      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ }}
     - name: GID
-      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.podSecurityContext.fsGroup ) $ }}
    {{- end }}
    {{- if or ( .Values.securityContext.readOnlyRootFilesystem ) ( .Values.securityContext.runAsNonRoot ) }}
     - name: S6_READ_ONLY_ROOT
@@ -82,7 +82,7 @@
       value: "all"
    {{- end }}
     - name: TZ
-      value: {{ tpl ( toYaml .Values.TZ ) $ | quote }}
+      value: {{ tpl ( toYaml .Values.TZ ) $ }}
   {{- with .Values.env }}
     {{- range $k, $v := . }}
       {{- $name := $k }}
