@@ -12,9 +12,9 @@ tests:
           path: spec.template.spec.containers[0].env
           value:
             - name: UMASK
-              value: "2"
+              value: "002"
             - name: UMASK_SET
-              value: "2"
+              value: "002"
             - name: S6_READ_ONLY_ROOT
               value: "1"
             - name: NVIDIA_VISIBLE_DEVICES

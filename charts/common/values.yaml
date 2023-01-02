@@ -354,7 +354,7 @@ enableServiceLinks: false
 # -- Set the Process User ID (PUID) env-var seperately
 security:
   PUID: 568
-  UMASK: 002
+  UMASK: "002"
 
 # -- Can be used to set securityContext.capabilities outside of the GUI on TrueNAS SCALE
 customCapabilities:
