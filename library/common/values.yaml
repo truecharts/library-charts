@@ -790,6 +790,34 @@ ingress:
     #    hosts:
     #      - chart-example.local
 
+metrics:
+  main:
+    enabled: false
+    # options: servicemonitor, podmonitor
+    type: "servicemonitor"
+    # defaults to selectorLabels
+    matchLabels: ""
+    endpoints:
+      port: ""
+      interval: ""
+      scrapeTimeout: ""
+      path: ""
+      honorLabels: ""
+    prometheusRule:
+      enabled: false
+      groups: {}
+        # somegroup:
+        #   # list of rules
+        #   rules: []
+        #   # list to support adding rules via the SCALE GUI without overwrithing the rules
+        #   additionalrules: []
+      # List to support adding groups using the SCALE GUI
+      additionalgroups:
+        #-  name: "somegroup"
+        #   # list of rules
+        #   rules: []
+        #   # list to support adding rules via the SCALE GUI without overwrithing the rules
+        #   additionalrules: []
 
 # -- The common chart supports several add-ons. These can be configured under this key.
 # @default -- See below

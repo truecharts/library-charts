@@ -12,6 +12,9 @@ within the common library.
       {{- $values = . -}}
     {{- end -}}
   {{ end -}}
+  {{- $ingressLabels := .labels -}}
+  {{- $ingressAnnotations := .annotations -}}
+
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
@@ -68,21 +71,24 @@ within the common library.
   {{ end }}
 
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: {{ include "tc.v1.common.capabilities.ingress.apiVersion" $ }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
-  {{- with (merge ($values.labels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) }}
-  labels: {{- toYaml . | nindent 4 }}
-  {{- end }}
+  {{- $labels := (mustMerge ($ingressLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
+  labels:
+    {{- . | nindent 4 }}
+  {{- end -}}
+  {{- $annotations := (mustMerge ($ingressAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
   annotations:
   {{- with $values.certificateIssuer }}
     cert-manager.io/cluster-issuer: {{ tpl ( toYaml . ) $ }}
   {{- end }}
     "traefik.ingress.kubernetes.io/router.entrypoints": {{ $values.entrypoint | default "websecure" }}
     "traefik.ingress.kubernetes.io/router.middlewares": {{ $middlewares | quote }}
-  {{- with (merge ($values.annotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) }}
-    {{- tpl ( toYaml . ) $ | nindent 4 }}
+  {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
+    {{- . | nindent 4 }}
   {{- end }}
 spec:
   {{- if $values.ingressClassName }}

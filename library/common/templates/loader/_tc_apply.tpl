@@ -5,5 +5,8 @@
 
   {{- include "tc.v1.common.spawner.networkpolicy" . | nindent 0 -}}
 
+  {{- include "tc.v1.common.spawner.metrics" . | nindent 0 -}}
+
   {{- include "tc.v1.common.lib.util.manifest.manage" . | nindent 0 -}}
+
 {{- end -}}

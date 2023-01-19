@@ -11,22 +11,27 @@ Blueprint for the NetworkPolicy object
       {{- $values = . -}}
     {{- end -}}
   {{ end -}}
+  {{- $networkpolicyLabels := .labels -}}
+  {{- $networkpolicyAnnotations := .annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $networkPolicyName = printf "%v-%v" $networkPolicyName $values.nameOverride -}}
   {{- end }}
 ---
 kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
+apiVersion: {{ include "tc.v1.common.capabilities.networkpolicy.apiVersion" $ }}
 metadata:
   name: {{ $networkPolicyName }}
-  {{- with (merge ($values.labels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) }}
-  labels: {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- with (merge ($values.annotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) }}
+  {{- $labels := (mustMerge ($networkpolicyLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
+  labels:
+    {{- . | nindent 4 }}
+  {{- end -}}
+  {{- $annotations := (mustMerge ($networkpolicyAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
-    {{- tpl ( toYaml . ) $ | nindent 4 }}
-  {{- end }}
+    {{- . | nindent 4 }}
+  {{- end -}}
 spec:
   podSelector:
   {{- if $values.podSelector }}

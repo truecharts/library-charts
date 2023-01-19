@@ -115,6 +115,7 @@ jobs:
           - ingress-values.yaml
           - networkPolicy-values.yaml
           - codeserver-values.yaml
+          - metrics-values.yaml
           - manifest-values.yaml
           - stagingmanifest-values.yaml
 
