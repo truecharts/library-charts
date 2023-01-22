@@ -4,7 +4,7 @@ Template to render Tailscale addon. It will add the container to the list of add
 
 {{- define "tc.v1.common.addon.tailscale" -}}
   {{/* Append the Tailscale container to the additionalContainers */}}
-  {{- $container := fromYaml (include "tc.v1.common.addon.tailscale.container" .) -}}
+  {{- $container := (include "tc.v1.common.addon.tailscale.container" . | fromYaml) -}}
   {{- if $container -}}
     {{- $_ := set .Values.additionalContainers "tailscale" $container -}}
     {{- include "tailscale.secret" . -}}

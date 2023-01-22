@@ -10,19 +10,17 @@ securityContext:
   runAsNonRoot: false
   readOnlyRootFilesystem: false
 env:
-{{- range $envList := .Values.addons.codeserver.envList }}
+{{- range $envList := .Values.addons.codeserver.envList -}}
   {{- if and $envList.name $envList.value }}
-  { $envList.name }}:
-    value: {{ $envList.value | quote }}
+  {{ $envList.name }}: {{ $envList.value | quote }}
   {{- else }}
-  {{- fail "Please specify name/value for codeserver environment variable" }}
-  {{- end }}
-{{- end}}
-{{- with .Values.addons.codeserver.env }}
+    {{- fail "Please specify name/value for codeserver environment variable" -}}
+  {{- end -}}
+{{- end -}}
+{{- with .Values.addons.codeserver.env -}}
 {{- range $k, $v := . }}
-  {{ $k }}:
-    value: {{ $v | quote }}
-{{- end }}
+  {{ $k }}: {{ $v | quote }}
+{{- end -}}
 {{- end }}
 ports:
 - name: codeserver

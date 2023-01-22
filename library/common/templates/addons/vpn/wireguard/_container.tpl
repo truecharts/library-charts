@@ -2,7 +2,7 @@
 The Wireguard sidecar container to be inserted.
 */}}
 {{- define "tc.v1.common.addon.wireguard.container" -}}
-image: "{{ .Values.wireguardImage.repository }}:{{ .Values.wireguardImage.tag }}"
+imageSelector: wireguardImage
 imagePullPolicy: {{ .Values.wireguardImage.pullPolicy }}
 securityContext:
   runAsUser: 568
@@ -12,43 +12,36 @@ securityContext:
       - NET_ADMIN
       - SYS_MODULE
 env:
-  SEPARATOR:
-    value: ";"
-  IPTABLES_BACKEND:
-    value: "nft"
-{{- range $envList := .Values.addons.vpn.envList }}
+  SEPARATOR: ";"
+  IPTABLES_BACKEND: "nft"
+{{- range $envList := .Values.addons.vpn.envList -}}
   {{- if and $envList.name $envList.value }}
-  {{ $envList.name }}:
-    value: {{ $envList.value | quote }}
-  {{- else }}
-  {{- fail "Please specify name/value for VPN environment variable" }}
-  {{- end }}
-{{- end}}
+  {{ $envList.name }}: {{ $envList.value | quote }}
+  {{- else -}}
+    {{- fail "Please specify name/value for VPN environment variable" -}}
+  {{- end -}}
+{{- end -}}
 
-{{- with .Values.addons.vpn.env }}
+{{- with .Values.addons.vpn.env -}}
 {{- range $k, $v := . }}
-  {{ $k }}:
-    value: {{ $v | quote }}
-{{- end }}
-{{- end }}
+  {{ $k }}: {{ $v | quote }}
+{{- end -}}
+{{- end -}}
 
 {{- if .Values.addons.vpn.killSwitch }}
-  KILLSWITCH:
-    value: "true"
-  {{- $excludednetworksv4 := "172.16.0.0/12"}}
+  KILLSWITCH: "true"
+  {{- $excludednetworksv4 := "172.16.0.0/12" -}}
+  {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
+    {{- $excludednetworksv4 = (printf "%v;%v" $excludednetworksv4 .) -}}
+  {{- end }}
+  KILLSWITCH_EXCLUDEDNETWORKS_IPV4: {{ $excludednetworksv4 | quote }}
+{{- if .Values.addons.vpn.excludedNetworks_IPv6 -}}
+  {{- $excludednetworksv6 := "" -}}
   {{- range .Values.addons.vpn.excludedNetworks_IPv4 }}
-    {{- $excludednetworksv4 =  ( printf "%v;%v" $excludednetworksv4 . ) }}
-  {{- end}}
-  KILLSWITCH_EXCLUDEDNETWORKS_IPV4:
-    value: {{ $excludednetworksv4 | quote }}
-{{- if .Values.addons.vpn.excludedNetworks_IPv6 }}
-  {{- $excludednetworksv6 := ""}}
-  {{- range .Values.addons.vpn.excludedNetworks_IPv4 }}
-    {{- $excludednetworksv6 =  ( printf "%v;%v" $excludednetworksv6 . ) }}
-  {{- end}}
-  KILLSWITCH_EXCLUDEDNETWORKS_IPV6:
-    value: {{ .Values.addons.vpn.excludedNetworks_IPv6 | quote }}
-{{- end }}
+    {{- $excludednetworksv6 =  (printf "%v;%v" $excludednetworksv6 .) -}}
+  {{- end }}
+  KILLSWITCH_EXCLUDEDNETWORKS_IPV6: {{ .Values.addons.vpn.excludedNetworks_IPv6 | quote }}
+{{- end -}}
 {{- end }}
 
 volumeMounts:
@@ -65,5 +58,5 @@ livenessProbe:
 {{- with .Values.addons.vpn.resources }}
 resources:
   inherit: true
-{{- end }}
+{{- end -}}
 {{- end -}}

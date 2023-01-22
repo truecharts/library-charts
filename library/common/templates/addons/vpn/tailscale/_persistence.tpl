@@ -1,6 +1,6 @@
 {{- define "tailscale.addon.persistence" -}}
 enabled: true
 mountPath: /var/lib/tailscale
-size: 1Gi
+type: emptyDir
 noMount: true
 {{- end -}}
