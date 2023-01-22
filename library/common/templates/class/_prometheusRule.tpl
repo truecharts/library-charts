@@ -7,13 +7,13 @@
     {{- with .ObjectValues.prometheusrule -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $prometheusruleLabels := .labels -}}
   {{- $prometheusruleAnnotations := .annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $prometheusruleName = printf "%v-%v" $prometheusruleName $values.nameOverride -}}
-  {{- end -}}
+  {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.prometheusrule.apiVersion" $ }}
 kind: PrometheusRule
@@ -35,20 +35,20 @@ spec:
     - name: {{ $prometheusruleName }}-{{ $name }}
       rules:
         {{- with $groupValues.rules }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+          {{- toYaml . | nindent 8 }}
+        {{- end -}}
         {{- with $groupValues.additionalrules }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    {{- end }}
+          {{- toYaml . | nindent 8 }}
+        {{- end -}}
+    {{- end -}}
     {{- range $id, $groupValues := .additionalgroups }}
     - name: {{ $prometheusruleName }}-{{ if $groupValues.name }}{{ $groupValues.name }}{{ else }}{{ $id }}{{ end }}
       rules:
         {{- with $groupValues.rules }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+          {{- toYaml . | nindent 8 }}
+        {{- end -}}
         {{- with $groupValues.additionalrules }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    {{- end }}
+          {{- toYaml . | nindent 8 }}
+        {{- end -}}
+    {{- end -}}
 {{- end -}}

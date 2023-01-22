@@ -3,7 +3,7 @@ This template serves as a blueprint for horizontal pod autoscaler objects that a
 using the common library.
 */}}
 {{- define "tc.v1.common.class.hpa" -}}
-  {{- $targetName := include "ix.v1.common.names.fullname" . }}
+  {{- $targetName := include "ix.v1.common.names.fullname" . -}}
   {{- $fullName := include "ix.v1.common.names.fullname" . -}}
   {{- $hpaName := $fullName -}}
   {{- $values := .Values.hpa -}}
@@ -12,7 +12,7 @@ using the common library.
     {{- with .ObjectValues.hpa -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $hpaLabels := .labels -}}
   {{- $hpaAnnotations := .annotations -}}
 
@@ -47,11 +47,11 @@ spec:
       resource:
         name: cpu
         targetAverageUtilization: {{ $values.targetCPUUtilizationPercentage }}
-    {{- end }}
+    {{- end -}}
     {{- if $values.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         targetAverageUtilization: {{ $values.targetMemoryUtilizationPercentage }}
-    {{- end }}
+    {{- end -}}
 {{- end -}}

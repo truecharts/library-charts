@@ -7,13 +7,13 @@
     {{- with .ObjectValues.servicemonitor -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $servicemonitorLabels := .labels -}}
   {{- $servicemonitorAnnotations := .annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $servicemonitorName = printf "%v-%v" $servicemonitorName $values.nameOverride -}}
-  {{- end -}}
+  {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.servicemonitor.apiVersion" $ }}
 kind: PodMonitor
@@ -33,24 +33,24 @@ spec:
   jobLabel: app.kubernetes.io/name
   selector:
     {{- if $values.matchLabels }}
-    {{- tpl (toYaml $values.matchLabels) $ | nindent 4 }}
-    {{- else }}
-    {{- include "ix.v1.common.labels.selectorLabels" . | nindent 4 }}
-    {{- end }}
+      {{- tpl (toYaml $values.matchLabels) $ | nindent 4 }}
+    {{- else -}}
+      {{- include "ix.v1.common.labels.selectorLabels" . | nindent 4 -}}
+    {{- end -}}
   endpoints:
     {{- range $values.endpoints }}
     - port: {{ .port }}
       {{- with .interval }}
       interval: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .path }}
       path: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .honorLabels }}
       honorLabels: {{ . }}
-      {{- end }}
-    {{- end }}
+      {{- end -}}
+    {{- end -}}
 {{- end -}}

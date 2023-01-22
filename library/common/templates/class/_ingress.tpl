@@ -11,15 +11,13 @@ within the common library.
     {{- with .ObjectValues.ingress -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $ingressLabels := .labels -}}
   {{- $ingressAnnotations := .annotations -}}
-
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
   {{- end -}}
-
 
   {{/* Get the name of the primary service, if any */}}
   {{- $primarySeriviceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
@@ -39,37 +37,36 @@ within the common library.
     {{- $defaultServicePort = get $autoLinkService.ports $values.nameOverride -}}
   {{- end -}}
 
-  {{- $mddwrNamespace := "default" }}
-  {{- if $values.ingressClassName }}
-  {{- $mddwrNamespace = ( printf "ix-%s" $values.ingressClassName ) }}
+  {{- $mddwrNamespace := "default" -}}
+  {{- if $values.ingressClassName -}}
+    {{- $mddwrNamespace = ( printf "ix-%s" $values.ingressClassName ) -}}
+  {{- end -}}
+
+  {{- $fixedMiddlewares := "" -}}
+  {{- if $values.enableFixedMiddlewares -}}
+  {{- range $index, $fixedMiddleware := $values.fixedMiddlewares -}}
+      {{- if $index -}}
+        {{- $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+      {{- else -}}
+        {{- $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+      {{- end -}}
+  {{- end -}}
+  {{- end -}}
+
+  {{- $middlewares := "" -}}
+  {{- range $index, $middleware := $values.middlewares -}}
+      {{- if $index -}}
+        {{- $middlewares = ( printf "%v, %v-%v@%v" $middlewares $mddwrNamespace $middleware "kubernetescrd" ) -}}
+      {{- else -}}
+        {{- $middlewares = ( printf "%v-%v@%v" $mddwrNamespace $middleware "kubernetescrd" ) -}}
+      {{- end -}}
+  {{ end }}
+
+  {{- if and ( $fixedMiddlewares ) ( $middlewares ) -}}
+    {{- $middlewares = ( printf "%v, %v" $fixedMiddlewares $middlewares ) -}}
+  {{- else if $fixedMiddlewares -}}
+    {{- $middlewares = ( printf "%s" $fixedMiddlewares ) -}}
   {{- end }}
-
-  {{- $fixedMiddlewares := "" }}
-  {{- if $values.enableFixedMiddlewares }}
-  {{ range $index, $fixedMiddleware := $values.fixedMiddlewares }}
-      {{- if $index }}
-      {{ $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) }}
-      {{- else }}
-      {{ $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) }}
-      {{- end }}
-  {{ end }}
-  {{- end }}
-
-  {{- $middlewares := "" }}
-  {{ range $index, $middleware := $values.middlewares }}
-      {{- if $index }}
-      {{ $middlewares = ( printf "%v, %v-%v@%v" $middlewares $mddwrNamespace $middleware "kubernetescrd" ) }}
-      {{- else }}
-      {{ $middlewares = ( printf "%v-%v@%v" $mddwrNamespace $middleware "kubernetescrd" ) }}
-      {{- end }}
-  {{ end }}
-
-  {{- if and ( $fixedMiddlewares ) ( $middlewares ) }}
-    {{ $middlewares = ( printf "%v, %v" $fixedMiddlewares $middlewares ) }}
-  {{- else if $fixedMiddlewares }}
-      {{ $middlewares = ( printf "%s" $fixedMiddlewares ) }}
-  {{ end }}
-
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.ingress.apiVersion" $ }}
 kind: Ingress
@@ -93,42 +90,42 @@ metadata:
 spec:
   {{- if $values.ingressClassName }}
   ingressClassName: {{ $values.ingressClassName }}
-  {{- end }}
+  {{- end -}}
   {{- if $values.certificateIssuer }}
   tls:
-  {{- range $index, $hostsValues := $values.hosts }}
+    {{- range $index, $hostsValues := $values.hosts }}
     - hosts:
       - {{ tpl $hostsValues.host $ | quote }}
       secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
-  {{- end }}
+    {{- end -}}
   {{- else if $values.tls }}
   tls:
     {{- range $index, $tlsValues :=  $values.tls }}
     - hosts:
         {{- range $tlsValues.hosts }}
         - {{ tpl . $ | quote }}
-        {{- end }}
+        {{- end -}}
       {{- if $tlsValues.certificateIssuer }}
       secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
       {{- else if $tlsValues.scaleCert }}
       secretName: {{ ( printf "%v-%v-%v-%v-%v-%v" $ingressName "tls" $index "ixcert" $tlsValues.scaleCert $.Release.Revision ) }}
       {{- else if .secretName }}
       secretName: {{ tpl .secretName $ | quote}}
-      {{- end }}
-    {{- end }}
+      {{- end -}}
+    {{- end -}}
   {{- end }}
   rules:
   {{- range $values.hosts }}
     - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          {{- range .paths }}
-          {{- $service := $defaultServiceName -}}
-          {{- $port := $defaultServicePort.port -}}
-          {{- if .service -}}
-            {{- $service = default $service .service.name -}}
-            {{- $port = default $port .service.port -}}
-          {{- end }}
+          {{- range .paths -}}
+            {{- $service := $defaultServiceName -}}
+            {{- $port := $defaultServicePort.port -}}
+            {{- if .service -}}
+              {{- $service = default $service .service.name -}}
+              {{- $port = default $port .service.port -}}
+            {{- end }}
           - path: {{ tpl .path $ | quote }}
             pathType: {{ default "Prefix" .pathType }}
             backend:
@@ -136,12 +133,12 @@ spec:
                 name: {{ $service }}
                 port:
                   number: {{ $port }}
-          {{- end }}
-  {{- end }}
+          {{- end -}}
+  {{- end -}}
 
 
-{{- if and $values.tls ( not $values.certificateIssuer ) }}
-{{- range $index, $tlsValues :=  $values.tls }}
+{{- if and $values.tls ( not $values.certificateIssuer ) -}}
+{{- range $index, $tlsValues :=  $values.tls -}}
 
 {{- if $tlsValues.certificateIssuer }}
 ---
@@ -162,9 +159,9 @@ spec:
     name: {{ tpl $tlsValues.certificateIssuer $ | quote }}
     kind: ClusterIssuer
     group: cert-manager.io
-{{- end }}
-{{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 
-{{- end }}
+{{- end -}}

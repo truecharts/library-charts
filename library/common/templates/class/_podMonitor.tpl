@@ -7,15 +7,13 @@
     {{- with .ObjectValues.podmonitor -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $podmonitorLabels := .labels -}}
   {{- $podmonitorAnnotations := .annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $podmonitorName = printf "%v-%v" $podmonitorName $values.nameOverride -}}
-  {{- end -}}
-
-
+  {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.podmonitor.apiVersion" $ }}
 kind: PodMonitor
@@ -35,24 +33,24 @@ spec:
   jobLabel: app.kubernetes.io/name
   selector:
     {{- if $values.matchLabels }}
-    {{- tpl (toYaml $values.matchLabels) $ | nindent 4 }}
+      {{- tpl (toYaml $values.matchLabels) $ | nindent 4 }}
     {{- else }}
-    {{- include "ix.v1.common.labels.selectorLabels" . | nindent 4 }}
+      {{- include "ix.v1.common.labels.selectorLabels" . | nindent 4 }}
     {{- end }}
   podMetricsEndpoints:
     {{- range $values.endpoints }}
     - port: {{ .port }}
       {{- with .interval }}
       interval: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .path }}
       path: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- with .honorLabels }}
       honorLabels: {{ . }}
-      {{- end }}
-    {{- end }}
+      {{- end -}}
+    {{- end -}}
 {{- end -}}

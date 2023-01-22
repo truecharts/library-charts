@@ -10,7 +10,7 @@ Blueprint for the NetworkPolicy object
     {{- with .ObjectValues.networkPolicy -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
   {{- $networkpolicyLabels := .labels -}}
   {{- $networkpolicyAnnotations := .annotations -}}
 
@@ -41,7 +41,7 @@ spec:
   {{- else }}
     matchLabels:
     {{- include "ix.v1.common.labels.selectorLabels" . | nindent 6 }}
-  {{- end }}
+  {{- end -}}
 
   {{- if $values.policyType }}
   {{- if eq $values.policyType "ingress" }}
@@ -58,11 +58,11 @@ spec:
   egress:
   {{- range $values.egress }}
   - to:
-    {{- range .to }}
-    {{- $nss := false }}
-    {{- $ipb := false }}
-      {{- if .ipBlock }}
-      {{- if .ipBlock.cidr }}
+    {{- range .to -}}
+    {{- $nss := false -}}
+    {{- $ipb := false -}}
+      {{- if .ipBlock -}}
+      {{- if .ipBlock.cidr -}}
       {{- $ipb = true }}
     - ipBlock:
         cidr: {{ .ipBlock.cidr }}
@@ -70,41 +70,41 @@ spec:
         except:
         {{- range .ipBlock.except }}
         - {{ . }}
-        {{- end }}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
       {{- end -}}
 
-      {{- if and ( .namespaceSelector ) ( not $ipb ) }}
+      {{- if and ( .namespaceSelector ) ( not $ipb ) -}}
       {{- if or ( .namespaceSelector.matchLabels ) ( .namespaceSelector.matchExpressions ) -}}
       {{- $nss = true }}
     - namespaceSelector:
-       {{- if .namespaceSelector.matchLabels }}
+        {{- if .namespaceSelector.matchLabels }}
          matchLabels:
           {{- .namespaceSelector.matchLabels | toYaml | nindent 12 }}
-       {{- end -}}
-       {{- if .namespaceSelector.matchExpressions }}
+        {{- end -}}
+        {{- if .namespaceSelector.matchExpressions }}
          matchExpressions:
           {{- .namespaceSelector.matchExpressions | toYaml | nindent 12 }}
-       {{- end -}}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
 
-      {{- if and ( .podSelector ) ( not $ipb ) }}
-      {{- if or ( .podSelector.matchLabels ) ( .podSelector.matchExpressions ) }}
+      {{- if and ( .podSelector ) ( not $ipb ) -}}
+      {{- if or ( .podSelector.matchLabels ) ( .podSelector.matchExpressions ) -}}
       {{- if $nss }}
       podSelector:
       {{- else }}
     - podSelector:
-      {{- end }}
-       {{- if .podSelector.matchLabels }}
+      {{- end -}}
+        {{- if .podSelector.matchLabels }}
          matchLabels:
           {{- .podSelector.matchLabels | toYaml | nindent 12 }}
-       {{- end -}}
-       {{- if .podSelector.matchExpressions }}
+        {{- end -}}
+        {{- if .podSelector.matchExpressions }}
          matchExpressions:
           {{- .podSelector.matchExpressions | toYaml | nindent 12 }}
-       {{- end -}}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
     {{- end -}}
@@ -121,11 +121,11 @@ spec:
   ingress:
   {{- range $values.ingress }}
   - from:
-    {{- range .from }}
-    {{- $nss := false }}
-    {{- $ipb := false }}
-      {{- if .ipBlock }}
-      {{- if .ipBlock.cidr }}
+    {{- range .from -}}
+    {{- $nss := false -}}
+    {{- $ipb := false -}}
+      {{- if .ipBlock -}}
+      {{- if .ipBlock.cidr -}}
       {{- $ipb = true }}
     - ipBlock:
         cidr: {{ .ipBlock.cidr }}
@@ -133,41 +133,41 @@ spec:
         except:
         {{- range .ipBlock.except }}
         - {{ . }}
-        {{- end }}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
       {{- end -}}
 
-      {{- if and ( .namespaceSelector ) ( not $ipb ) }}
+      {{- if and ( .namespaceSelector ) ( not $ipb ) -}}
       {{- if or ( .namespaceSelector.matchLabels ) ( .namespaceSelector.matchExpressions ) -}}
       {{- $nss = true }}
     - namespaceSelector:
-       {{- if .namespaceSelector.matchLabels }}
+        {{- if .namespaceSelector.matchLabels }}
          matchLabels:
           {{- .namespaceSelector.matchLabels | toYaml | nindent 12 }}
-       {{- end -}}
-       {{- if .namespaceSelector.matchExpressions }}
+        {{- end -}}
+        {{- if .namespaceSelector.matchExpressions }}
          matchExpressions:
           {{- .namespaceSelector.matchExpressions | toYaml | nindent 12 }}
-       {{- end -}}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
 
-      {{- if and ( .podSelector ) ( not $ipb ) }}
-      {{- if or ( .podSelector.matchLabels ) ( .podSelector.matchExpressions ) }}
+      {{- if and ( .podSelector ) ( not $ipb ) -}}
+      {{- if or ( .podSelector.matchLabels ) ( .podSelector.matchExpressions ) -}}
       {{- if $nss }}
       podSelector:
       {{- else }}
     - podSelector:
       {{- end }}
-       {{- if .podSelector.matchLabels }}
+        {{- if .podSelector.matchLabels }}
          matchLabels:
           {{- .podSelector.matchLabels | toYaml | nindent 12 }}
-       {{- end -}}
-       {{- if .podSelector.matchExpressions }}
+        {{- end -}}
+        {{- if .podSelector.matchExpressions }}
          matchExpressions:
           {{- .podSelector.matchExpressions | toYaml | nindent 12 }}
-       {{- end -}}
+        {{- end -}}
       {{- end -}}
       {{- end -}}
     {{- end -}}
