@@ -77,7 +77,7 @@ metadata:
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge ($ingressAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- $annotations := (mustMerge ($ingressAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) }}
   annotations:
   {{- with $values.certificateIssuer }}
     cert-manager.io/cluster-issuer: {{ tpl ( toYaml . ) $ }}
