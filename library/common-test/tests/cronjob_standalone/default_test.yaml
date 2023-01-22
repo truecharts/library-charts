@@ -143,6 +143,9 @@ tests:
               name: tmp
             - mountPath: /var/logs
               name: varlogs
+            - name: shm
+              emptyDir:
+                medium: Memory
       - equal:
           path: spec.jobTemplate.spec.template.spec.volumes
           value:
@@ -152,3 +155,6 @@ tests:
               emptyDir: {}
             - name: varlogs
               emptyDir: {}
+            - name: shm
+              emptyDir:
+                medium: Memory
