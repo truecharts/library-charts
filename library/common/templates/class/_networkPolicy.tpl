@@ -31,7 +31,7 @@ metadata:
   {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
-  {{- end -}}
+  {{- end }}
 spec:
   podSelector:
   {{- if $values.podSelector }}
@@ -108,7 +108,6 @@ spec:
       {{- end -}}
       {{- end -}}
     {{- end -}}
-
 
   {{- with .ports }}
     ports:
