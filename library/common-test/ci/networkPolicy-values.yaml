@@ -25,7 +25,6 @@ probes:
   startup:
     enabled: true
 
-
 networkPolicy:
   main:
     enabled: true
