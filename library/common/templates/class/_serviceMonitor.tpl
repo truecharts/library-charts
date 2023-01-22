@@ -8,8 +8,8 @@
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $servicemonitorLabels := .labels -}}
-  {{- $servicemonitorAnnotations := .annotations -}}
+  {{- $servicemonitorLabels := $values.labels -}}
+  {{- $servicemonitorAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $servicemonitorName = printf "%v-%v" $servicemonitorName $values.nameOverride -}}

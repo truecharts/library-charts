@@ -29,12 +29,13 @@ tests:
 
   - it: custom metadata should pass
     set:
-      ingress.main:
-        enabled: true
-        annotations:
-          test_annotation: test
-        labels:
-          test_label: test
+      ingress:
+        main:
+          enabled: true
+          annotations:
+            test_annotation: test
+          labels:
+            test_label: test
     asserts:
       - documentIndex: &ingressDocument 3
         isKind:
@@ -65,12 +66,13 @@ tests:
           global_label: test
         annotations:
           global_annotation: test
-      ingress.main:
-        enabled: true
-        annotations:
-          test_annotation: test
-        labels:
-          test_label: test
+      ingress:
+        main:
+          enabled: true
+          annotations:
+            test_annotation: test
+          labels:
+            test_label: test
     asserts:
       - documentIndex: &ingressDocument 3
         isKind:

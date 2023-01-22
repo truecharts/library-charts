@@ -8,8 +8,8 @@
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $prometheusruleLabels := .labels -}}
-  {{- $prometheusruleAnnotations := .annotations -}}
+  {{- $prometheusruleLabels := $values.labels -}}
+  {{- $prometheusruleAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $prometheusruleName = printf "%v-%v" $prometheusruleName $values.nameOverride -}}

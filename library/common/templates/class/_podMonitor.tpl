@@ -8,8 +8,8 @@
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $podmonitorLabels := .labels -}}
-  {{- $podmonitorAnnotations := .annotations -}}
+  {{- $podmonitorLabels := $values.labels -}}
+  {{- $podmonitorAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $podmonitorName = printf "%v-%v" $podmonitorName $values.nameOverride -}}

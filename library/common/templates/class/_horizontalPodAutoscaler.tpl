@@ -13,8 +13,8 @@ using the common library.
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $hpaLabels := .labels -}}
-  {{- $hpaAnnotations := .annotations -}}
+  {{- $hpaLabels := $values.labels -}}
+  {{- $hpaAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $hpaName = printf "%v-%v" $hpaName $values.nameOverride -}}

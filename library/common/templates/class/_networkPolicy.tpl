@@ -11,8 +11,8 @@ Blueprint for the NetworkPolicy object
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $networkpolicyLabels := .labels -}}
-  {{- $networkpolicyAnnotations := .annotations -}}
+  {{- $networkpolicyLabels := $values.labels -}}
+  {{- $networkpolicyAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $networkPolicyName = printf "%v-%v" $networkPolicyName $values.nameOverride -}}

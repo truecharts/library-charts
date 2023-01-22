@@ -12,8 +12,8 @@ within the common library.
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $ingressLabels := .labels -}}
-  {{- $ingressAnnotations := .annotations -}}
+  {{- $ingressLabels := $values.labels -}}
+  {{- $ingressAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
