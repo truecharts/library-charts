@@ -139,21 +139,21 @@ tests:
           value:
             - mountPath: /shared
               name: shared
+            - mountPath: /dev/shm
+              name: shm
             - mountPath: /tmp
               name: tmp
             - mountPath: /var/logs
               name: varlogs
-            - mountPath: /dev/shm
-              name: shm
       - equal:
           path: spec.jobTemplate.spec.template.spec.volumes
           value:
             - name: shared
               emptyDir: {}
+            - name: shm
+              emptyDir:
+                medium: Memory
             - name: tmp
               emptyDir: {}
             - name: varlogs
               emptyDir: {}
-            - name: shm
-              emptyDir:
-                medium: Memory
