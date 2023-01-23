@@ -1,7 +1,7 @@
 {{/*
 This template serves as a blueprint for all cnpg objects that are created
 within the common library.
-*/}}
+
 {{- define "tc.v1.common.dependencies.cnpg.main" -}}
 {{- if .Values.cnpg.enabled }}
 {{- $cnpgName := include "tc.common.names.fullname" . }}
@@ -181,3 +181,4 @@ type: kubernetes.io/basic-auth
 
 {{- end }}
 {{- end -}}
+*/}}
