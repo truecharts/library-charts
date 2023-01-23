@@ -821,16 +821,17 @@ ingress:
 metrics:
   main:
     enabled: false
+    primary: true
     # options: servicemonitor, podmonitor
     type: "servicemonitor"
     # defaults to selectorLabels
-    matchLabels: ""
+    selector: {}
     endpoints:
-      port: ""
-      interval: ""
-      scrapeTimeout: ""
-      path: ""
-      honorLabels: ""
+     - port: 3000
+       interval: 5
+       scrapeTimeout: 5
+       path: /
+       honorLabels: false
     prometheusRule:
       enabled: false
       groups: {}
