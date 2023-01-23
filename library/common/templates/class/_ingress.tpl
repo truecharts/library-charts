@@ -107,7 +107,7 @@ spec:
         {{- end -}}
       {{- if $tlsValues.certificateIssuer }}
       secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
-      {{- else if $tlsValues.scaleCert -}}
+      {{- else if  and ($tlsValues.scaleCert) ($.Values.global.ixChartContext) -}}
         {{- $cert := dict -}}
         {{- $_ := set $cert "id" $tlsValues.scaleCert -}}
         {{- $certNameOverride := (printf "%v-%v" "tls" $index) -}}

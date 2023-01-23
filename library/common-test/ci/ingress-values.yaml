@@ -52,7 +52,6 @@ ingress:
               port:
     tls: []
 
-# TODO: Enable when SCALE Certs are readded
   scalecert:
     enabled: true
     hosts:
