@@ -3,6 +3,10 @@ image:
   pullPolicy: IfNotPresent
   tag: 1.8.7@sha256:8c61f0ca92fd806fcb4ed1465cb793c05443f37951554b105b0f2dc686a95772
 
+global:
+  ixChartContext:
+    something: something
+
 service:
   main:
     ports:
@@ -49,20 +53,20 @@ ingress:
     tls: []
 
 # TODO: Enable when SCALE Certs are readded
-#  scalecert:
-#    enabled: true
-#    hosts:
-#      - host: scalecert.chart-example.local
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            service:
-#              name:
-#              port:
-#    tls:
-#     - scaleCert: "1"
-#       hosts:
-#         - scalecert.chart-example.local
+  scalecert:
+    enabled: true
+    hosts:
+      - host: scalecert.chart-example.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name:
+              port:
+    tls:
+    - scaleCert: "1"
+      hosts:
+        - scalecert.chart-example.local
 
   label:
     enabled: true

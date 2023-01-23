@@ -107,10 +107,18 @@ spec:
         {{- end -}}
       {{- if $tlsValues.certificateIssuer }}
       secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
-      {{- else if $tlsValues.scaleCert }}
-      secretName: {{ ( printf "%v-%v-%v-%v-%v-%v" $ingressName "tls" $index "ixcert" $tlsValues.scaleCert $.Release.Revision ) }}
+      {{- else if $tlsValues.scaleCert -}}
+        {{- $cert := dict -}}
+        {{- $_ := set $cert "id" $tlsValues.scaleCert -}}
+        {{- $certNameOverride := (printf "%v-%v" "tls" $index) -}}
+        {{- if $values.nameOverride -}}
+          {{- $_ := set $cert "nameOverride" (printf "%v-%v-%v" $values.nameOverride "tls" $index) -}}
+        {{- else -}}
+          {{- $_ := set $cert "nameOverride" $certNameOverride -}}
+        {{- end }}
+      secretName: {{ include "ix.v1.common.names.certificateSecret" (dict "root" $ "certValues" $cert "certName" $cert.nameOverride "certID" $cert.id) }}
       {{- else if .secretName }}
-      secretName: {{ tpl .secretName $ | quote}}
+      secretName: {{ tpl .secretName $ | quote }}
       {{- end -}}
     {{- end -}}
   {{- end }}

@@ -14,17 +14,17 @@
       {{- include "tc.v1.common.class.ingress" $ -}}
       {{- if and ( $ingressValues.tls ) ( not $ingressValues.clusterIssuer ) -}}
       {{- range $index, $tlsValues :=  $ingressValues.tls -}}
-        {{- if and ( .scaleCert ) ( $.Values.global.ixChartContext ) -}}
+        {{- if and ( $tlsValues.scaleCert ) ( $.Values.global.ixChartContext ) -}}
           {{- $nameOverride := ( printf "%v-%v" "tls" $index ) -}}
 
           {{- if $ingressValues.nameOverride -}}
             {{- $nameOverride = ( printf "%v-%v-%v" $ingressValues.nameOverride "tls" $index ) -}}
           {{- end -}}
 
-          {{- $_ := set $tlsValues "nameOverride" $nameOverride -}}
-          {{- $_ := set $ "ObjectValues" (dict "certHolder" $tlsValues) -}}
-
-          {{- include "ix.v1.common.scale.cert.secret" $ -}}
+          {{- $cert := dict -}}
+          {{- $_ := set $cert "nameOverride" $nameOverride -}}
+          {{- $_ := set $cert "id" .scaleCert -}}
+          {{- include "ix.v1.common.certificate.secret" (dict "root" $ "cert" $cert "name" $cert.nameOverride) -}}
         {{- end -}}
       {{- end -}}
       {{- end -}}
