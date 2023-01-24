@@ -115,6 +115,9 @@ hostAliases: []
 # Binds to host network
 hostNetwork: false
 
+notes: |
+  This Chart/App does not have any additional Notes
+
 # Creates a service account
 serviceAccount:
   main:
