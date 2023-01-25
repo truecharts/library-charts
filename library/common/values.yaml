@@ -168,8 +168,16 @@ probes:
   startup:
     enabled: true
 
-portal:
-  enabled: true
+portalGenerator:
+  main:
+    enabled: true
+    # linkedService: ""
+    # linkedPort: ""
+    # linkedIngress: ""
+    # protocol: ""
+    # host: ""
+    # port: 80
+    # path: ""
 
 # Used for SCALE / GUI Focused
 externalInterfaces: []
