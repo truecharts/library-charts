@@ -36,7 +36,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
+  name: pooler-{{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
 spec:
   selector:
     matchLabels:
