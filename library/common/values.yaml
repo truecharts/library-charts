@@ -159,6 +159,9 @@ scaleCerts: {}
 # Used for SCALE / GUI Focused
 scaleCertsList: []
 
+# Used to generate custom cert-manager certificates
+certificates: {}
+
 # Defines the probes
 probes:
   liveness:

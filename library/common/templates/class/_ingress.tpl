@@ -15,9 +15,8 @@ within the common library.
   {{- $ingressLabels := $values.labels -}}
   {{- $ingressAnnotations := $values.annotations -}}
 
-  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
-    {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
-  {{- end -}}
+  {{- $ingressName = $values.name -}}
+
 
   {{/* Get the name of the primary service, if any */}}
   {{- $primarySeriviceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
@@ -101,21 +100,17 @@ spec:
   {{- else if $values.tls }}
   tls:
     {{- range $index, $tlsValues :=  $values.tls }}
+    {{- $tlsName := ( printf "%v-%v" "tls" $index ) }}
     - hosts:
         {{- range $tlsValues.hosts }}
         - {{ tpl . $ | quote }}
         {{- end -}}
       {{- if $tlsValues.certificateIssuer }}
-      secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
+      secretName: {{ printf "%v-%v" $ingressName $tlsName }}
       {{- else if  and ($tlsValues.scaleCert) ($.Values.global.ixChartContext) -}}
-        {{- $cert := dict -}}
-        {{- $_ := set $cert "id" $tlsValues.scaleCert -}}
-        {{- $certNameOverride := (printf "%v-%v" "tls" $index) -}}
-        {{- if $values.nameOverride -}}
-          {{- $_ := set $cert "nameOverride" (printf "%v-%v-%v" $values.nameOverride "tls" $index) -}}
-        {{- else -}}
-          {{- $_ := set $cert "nameOverride" $certNameOverride -}}
-        {{- end }}
+        {{- $cert := dict }}
+        {{- $_ := set $cert "id" $tlsValues.scaleCert }}
+        {{- $_ := set $cert "nameOverride" $tlsName }}
       secretName: {{ include "ix.v1.common.names.certificateSecret" (dict "root" $ "certValues" $cert "certName" $cert.nameOverride "certID" $cert.id) }}
       {{- else if .secretName }}
       secretName: {{ tpl .secretName $ | quote }}
@@ -143,33 +138,6 @@ spec:
                   number: {{ $port }}
           {{- end -}}
   {{- end -}}
-
-
-{{- if and $values.tls ( not $values.certificateIssuer ) -}}
-{{- range $index, $tlsValues :=  $values.tls -}}
-
-{{- if $tlsValues.certificateIssuer }}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
-spec:
-  secretName: {{ ( printf "%v-%v-%v" $ingressName "tls" $index ) }}
-  dnsNames:
-  {{- range $tlsValues.hosts }}
-  - {{ tpl . $ | quote }}
-  {{- end }}
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  issuerRef:
-    name: {{ tpl $tlsValues.certificateIssuer $ | quote }}
-    kind: ClusterIssuer
-    group: cert-manager.io
-{{- end -}}
-{{- end -}}
-{{- end -}}
 
 
 {{- end -}}
