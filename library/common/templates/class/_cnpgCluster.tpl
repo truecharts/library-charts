@@ -32,10 +32,15 @@ metadata:
 spec:
   instances: {{ $values.instances | default 2  }}
 
+  superuserSecret:
+    name: {{ $cnpgClusterName }}-cnpg-superuser
+
   bootstrap:
     initdb:
       database: {{ $values.database | default "app" }}
       owner: {{ $values.user | default "app" }}
+      secret:
+        name: {{ $cnpgClusterName }}-cnpg-user
 
   primaryUpdateStrategy: {{ $values.primaryUpdateStrategy | default "unsupervised" }}
 
