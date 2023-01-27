@@ -1,9 +1,9 @@
 {{/* Return the name of the primary cnpg object */}}
 {{- define "tc.v1.common.lib.util.cnpg.primary" -}}
-  {{- $cnpges := .cnpges -}}
+  {{- $cnpgs := .Values.cnpg -}}
 
   {{- $enabledcnpges := dict -}}
-  {{- range $name, $cnpg := $cnpges -}}
+  {{- range $name, $cnpg := $cnpgs -}}
     {{- if $cnpg.enabled -}}
       {{- $_ := set $enabledcnpges $name . -}}
     {{- end -}}

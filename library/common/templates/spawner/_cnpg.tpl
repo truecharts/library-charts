@@ -15,9 +15,13 @@
         {{- $cnpgName = printf "%v-%v" $cnpgName $cnpgValues.nameOverride -}}
       {{- end -}}
 
+      {{- $cnpgPoolerName := printf "cnpg-pooler-%v" $cnpgName -}}
+      {{- $cnpgName = printf "cnpg-%v" $cnpgName -}}
+
       {{- $_ := set $cnpgValues "name" $cnpgName -}}
 
       {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) -}}
+      {{- $_ := set $cnpgValues "poolerName" $cnpgPoolerName -}}
       {{- include "tc.v1.common.class.cnpg.cluster" $ -}}
 
       {{- $_ := set $cnpgValues.pooler "type" "rw" -}}

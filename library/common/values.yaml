@@ -668,20 +668,20 @@ systemContainers:
         {{- $cnpgName := include "ix.v1.common.names.fullname" $ -}}
         {{- $nameOverride := $cnpg.nameOverride -}}
 
-        {{- if and (not $nameOverride) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) -}}
-          {{- $_ := set $nameOverride $name -}}
+        {{- if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) -}}
+          {{- $_ := set $cnpg.nameOverride $name -}}
         {{- end -}}
 
-        {{- if $nameOverride -}}
+        {{- if $cnpg.nameOverride -}}
           {{- $cnpgName = printf "%v-%v" $cnpgName $nameOverride -}}
         {{- end -}}
 
         until
-          pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
+          pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-rw
           do sleep 2
         done
         until
-          pg_isready -U {{ .user }} -h pooler-{{ $cnpgName }}-rw
+          pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-rw
           do sleep 2
         done
         {{- end }}

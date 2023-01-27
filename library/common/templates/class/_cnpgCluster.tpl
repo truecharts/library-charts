@@ -1,6 +1,4 @@
 {{- define "tc.v1.common.class.cnpg.cluster" -}}
-  {{- $fullName := include "ix.v1.common.names.fullname" . -}}
-  {{- $cnpgClusterName := $fullName -}}
   {{- $values := .Values.cnpg -}}
 
   {{- if hasKey . "ObjectValues" -}}
@@ -8,12 +6,10 @@
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
+  {{- $cnpgClusterName := $values.name -}}
   {{- $cnpgClusterLabels := $values.labels -}}
-  {{- $cnpgClusterAnnotations := $values.annotations -}}
+  {{- $cnpgClusterAnnotations := $values.annotations }}
 
-  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
-    {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $values.nameOverride -}}
-  {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
 kind: Cluster
