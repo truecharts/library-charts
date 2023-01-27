@@ -16,7 +16,7 @@
   {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
-kind:
+kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
   {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
@@ -41,7 +41,7 @@ spec:
 
   storage:
     pvcTemplate:
-      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values "root" $)) | trim }}
+      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values.storage "root" . )) | trim }}
       storageClassName: {{ . }}
       {{- end }}
       accessModes:
@@ -52,7 +52,7 @@ spec:
 
   walStorage:
     pvcTemplate:
-      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values "root" $)) | trim }}
+      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values.storage "root" $ )) | trim }}
       storageClassName: {{ . }}
       {{- end }}
       accessModes:
