@@ -638,7 +638,7 @@ systemContainers:
       - "/bin/sh"
       - "-c"
       - |
-        /bin/bash <<'EOF'
+        /bin/sh <<'EOF'
         echo "Executing DB waits..."
         {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
         until
@@ -661,7 +661,7 @@ systemContainers:
       - "/bin/sh"
       - "-c"
       - |
-        /bin/bash <<'EOF'
+        /bin/sh <<'EOF'
         {{- range $name, $cnpg := .Values.cnpg -}}
         {{- if $cnpg.enabled -}}
         echo "Executing DB waits..."
