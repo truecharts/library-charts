@@ -2,6 +2,7 @@
   {{- $data := dict -}}
   {{- $root := . -}}
   {{- $fullName := include "ix.v1.common.names.fullname" . -}}
+  {{- $ingress := dict }}
 
   {{/* Get the name of the primary service, if any */}}
   {{- $primaryServiceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" $root)) -}}
@@ -17,10 +18,7 @@
       {{- $port := get $svc.ports $portName -}}
       {{- $ingressName := $portal.linkedIngress | default $primaryIngressName -}}
       {{- if $ingressName }}
-      {{- $ingress := get $root.Values.ingress $ingressName -}}
-        {{- if not $ingress.enabled -}}
-          {{- $ingress = dict }}
-        {{- end -}}
+        {{- $ingress = get $root.Values.ingress $ingressName -}}
       {{- end -}}
 
       {{- $portalPath := $portal.path | default "/" -}}
