@@ -684,8 +684,19 @@ systemContainers:
           pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-rw
           do sleep 2
         done
-        {{- end }}
-        {{- end }}
+        {{ if $cnpg.acceptRO }}
+        until
+          pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-ro
+          do sleep 2
+        done
+        until
+          pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-ro
+          do sleep 2
+        done
+        {{ end }}
+
+        {{ end }}
+        {{ end }}
         EOF
 
 initContainers: {}
