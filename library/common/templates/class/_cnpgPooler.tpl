@@ -30,5 +30,19 @@ spec:
     parameters:
       max_client_conn: "1000"
       default_pool_size: "10"
-
+{{- if $values.monitoring }}
+{{- if $values.monitoring.enablePodMonitor }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/poolerName: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
+  podMetricsEndpoints:
+  - port: metrics
+{{- end }}
+{{- end }}
 {{- end -}}
