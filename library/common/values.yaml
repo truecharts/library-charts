@@ -50,7 +50,7 @@ wgetImage:
   pullPolicy: IfNotPresent
 
 postgresClientImage:
-  repository: tccr.io/truecharts/db-wait-postgresql
+  repository: tccr.io/truecharts/db-wait-postgres
   tag: v0.0.1
   pullPolicy: IfNotPresent
 
