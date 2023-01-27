@@ -681,7 +681,7 @@ systemContainers:
           do sleep 2
         done
         until
-          pg_isready -U {{ .user }} -h pooler-{{ $cnpgName }}-rw
+          pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
           do sleep 2
         done
         {{- end }}
