@@ -662,19 +662,19 @@ systemContainers:
       - "-c"
       - |
         /bin/sh <<'EOF'
-        {{- range $name, $cnpg := .Values.cnpg -}}
-        {{- if $cnpg.enabled -}}
+        {{ range $name, $cnpg := .Values.cnpg }}
+        {{ if $cnpg.enabled }}
         echo "Executing DB waits..."
-        {{- $cnpgName := include "ix.v1.common.names.fullname" $ -}}
-        {{- $nameOverride := $cnpg.nameOverride -}}
+        {{ $cnpgName := include "ix.v1.common.names.fullname" $ }}
+        {{ $nameOverride := $cnpg.nameOverride }}
 
-        {{- if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) -}}
-          {{- $_ := set $cnpg.nameOverride $name -}}
-        {{- end -}}
+        {{ if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) }}
+          {{ $_ := set $cnpg.nameOverride $name }}
+        {{ end }}
 
-        {{- if $cnpg.nameOverride -}}
-          {{- $cnpgName = printf "%v-%v" $cnpgName $nameOverride -}}
-        {{- end -}}
+        {{ if $cnpg.nameOverride }}
+          {{ $cnpgName = printf "%v-%v" $cnpgName $nameOverride }}
+        {{ end }}
 
         until
           pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-rw
