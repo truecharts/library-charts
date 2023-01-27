@@ -16,9 +16,11 @@
       {{- $portName := $portal.linkedPort | default (include "ix.v1.common.lib.util.service.ports.primary" (dict "svcValues" $svc "svcName" $svcName )) -}}
       {{- $port := get $svc.ports $portName -}}
       {{- $ingressName := $portal.linkedIngress | default $primaryIngressName -}}
+      {{- if $ingressName }}
       {{- $ingress := get $root.Values.ingress $ingressName -}}
-      {{- if not $ingress.enabled -}}
-        {{- $ingress = dict }}
+        {{- if not $ingress.enabled -}}
+          {{- $ingress = dict }}
+        {{- end -}}
       {{- end -}}
 
       {{- $portalPath := $portal.path | default "/" -}}
