@@ -648,7 +648,7 @@ systemContainers:
         EOF
 
   cnpg-wait:
-    enabled: "{{ if .Values.cnpg.enabled }}true{{ else }}false{{end}}"
+    enabled: '{{ $result := false }}{{ range .Values.cnpg }}{{ if .enabled }}{{ $result = true }}{{ end }}{{ end }}{{ $result }}'
     imageSelector: postgresClientImage
     securityContext:
       runAsUser: 568
@@ -662,18 +662,30 @@ systemContainers:
       - "-c"
       - |
         /bin/bash <<'EOF'
+        {{- range $name, $cnpg := .Values.cnpg -}}
+        {{- if $cnpg.enabled -}}
         echo "Executing DB waits..."
-        {{- $cnpgName := include "ix.v1.common.names.fullname" . -}}
-        {{- $cnpgName = printf "%v-%v" $cnpgName "cnpg" -}}
-        {{- $pghost := printf "%s-rw" $cnpgName }}
+        {{- $cnpgName := include "ix.v1.common.names.fullname" $ -}}
+        {{- $nameOverride := $cnpg.nameOverride -}}
+
+        {{- if and (not $nameOverride) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) -}}
+          {{- $_ := set $nameOverride $name -}}
+        {{- end -}}
+
+        {{- if $nameOverride -}}
+          {{- $cnpgName = printf "%v-%v" $cnpgName $nameOverride -}}
+        {{- end -}}
+
         until
-          pg_isready -U {{ .Values.cnpg.user }} -h {{ $pghost }}
+          pg_isready -U {{ .user }} -h {{ $cnpgName }}
           do sleep 2
         done
         until
-          pg_isready -U {{ .Values.cnpg.user }} -h pooler-{{ $pghost }}
+          pg_isready -U {{ .user }} -h pooler-{{ $cnpgName }}-rw
           do sleep 2
         done
+        {{- end }}
+        {{- end }}
         EOF
 
 initContainers: {}
