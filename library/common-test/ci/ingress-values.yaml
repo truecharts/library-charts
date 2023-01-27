@@ -67,6 +67,36 @@ ingress:
       hosts:
         - scalecert.chart-example.local
 
+  certificateissuer:
+    enabled: true
+    certificateIssuer: someissuer
+    hosts:
+      - host: ci.chart-example.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name:
+              port:
+    tls:
+    - hosts:
+        - ci.chart-example.local
+
+  tlscertificateissuer:
+    enabled: true
+    hosts:
+      - host: citls.chart-example.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name:
+              port:
+    tls:
+    - certificateIssuer: sometlsissuer
+      hosts:
+        - citls.chart-example.local
+
   label:
     enabled: true
     fixedMiddlewares:

@@ -15,7 +15,7 @@
         {{- $certName = printf "%v-%v" $certName $certValues.nameOverride -}}
       {{- end -}}
 
-      {{- include "tc.v1.common.class.certificate" (dict "name" $certName "certificateIssuer" $cert.certificateIssuer "hosts" $cert.hosts ) -}}
+      {{- include "tc.v1.common.class.certificate" (dict "root" $ "name" $certName "certificateIssuer" $cert.certificateIssuer "hosts" $cert.hosts ) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

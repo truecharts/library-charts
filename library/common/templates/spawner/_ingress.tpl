@@ -23,7 +23,7 @@
       {{- range $index, $tlsValues :=  $ingressValues.tls -}}
         {{- $tlsName := ( printf "%v-%v" "tls" $index ) -}}
         {{- if $tlsValues.certificateIssuer -}}
-          {{- include "tc.v1.common.class.certificate" (dict "name" ( printf "%v-%v" $ingressName $tlsName ) "certificateIssuer" $tlsValues.certificateIssuer "hosts" $tlsValues.hosts ) -}}
+          {{- include "tc.v1.common.class.certificate" (dict "root" $ "name" ( printf "%v-%v" $ingressName $tlsName ) "certificateIssuer" $tlsValues.certificateIssuer "hosts" $tlsValues.hosts ) -}}
         {{- else if and ( $tlsValues.scaleCert ) ( $.Values.global.ixChartContext ) -}}
           {{- $cert := dict -}}
           {{- $_ := set $cert "nameOverride" $tlsName -}}
