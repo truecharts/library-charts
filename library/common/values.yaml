@@ -677,7 +677,7 @@ systemContainers:
         {{- end -}}
 
         until
-          pg_isready -U {{ .user }} -h [cluster name]-rw
+          pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
           do sleep 2
         done
         until
