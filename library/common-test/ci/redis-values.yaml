@@ -28,9 +28,13 @@ probes:
 # -- Redis dependency configuration
 # @default -- See below
 redis:
-  enabled: false
-  existingSecret: "rediscreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
+  main:
+    enabled: true
+    # -- can be used to make an easy accessable note which URLS to use to access the DB.
+    url: {}
+    redis:
+      replicas: 2
+    sentinel:
+      replicas: 3
+    auth:
+      enabled: false

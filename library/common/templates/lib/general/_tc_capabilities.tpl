@@ -33,12 +33,17 @@
   {{- print "cert-manager.io/v1" -}}
 {{- end -}}
 
-{{/* Return the appropriate apiVersion for Cert-Manager certificates */}}
+{{/* Return the appropriate apiVersion forcnpg clusters */}}
 {{- define "tc.v1.common.capabilities.cnpg.cluster.apiVersion" -}}
   {{- print "postgresql.cnpg.io/v1" -}}
 {{- end -}}
 
-{{/* Return the appropriate apiVersion for Cert-Manager certificates */}}
+{{/* Return the appropriate apiVersion for cnpg poolers */}}
 {{- define "tc.v1.common.capabilities.cnpg.pooler.apiVersion" -}}
   {{- print "postgresql.cnpg.io/v1" -}}
+{{- end -}}
+
+{{/* Return the appropriate apiVersion for redis failover objects */}}
+{{- define "tc.v1.common.capabilities.redis.failover.apiVersion" -}}
+  {{- print "databases.spotahome.com/v1" -}}
 {{- end -}}
