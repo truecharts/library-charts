@@ -10,42 +10,44 @@ service:
         protocol: HTTP
         port: 8080
 
-args:
-  - --port
-  - "8080"
+workload:
+  main:
+    pod:
+      containers:
+        main:
+          args:
+            - --port
+            - "8080"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
 
-probes:
-  liveness:
-    enabled: true
-  readiness:
-    enabled: true
-  startup:
-    enabled: true
+key1: value1
+key2: 80
+key3: pair
+key4: value2
+key5: 81
+key6: false
 
-k1: value1
-k2: 80
-k3: pair
-k4: value2
-k5: 81
-k6: false
 configmap:
-  envparsetest:
+  kv-test:
     enabled: true
-    parseAsEnv: true
-    content:
-      key1: 123
-      key2: value2
-  kvtest:
-    enabled: true
-    content:
-      key: "{{ .Values.k6 }}"
+    data:
+      key: "{{ .Values.key1 }}"
+      key1: "{{ .Values.key4 }}"
+      key2: "{{ .Values.key5 }}"
+      key3: "{{ .Values.key6 }}"
 
-  filetest:
+  file-test:
     enabled: true
-    content:
+    data:
       nginx.conf2: |
-        alias {{ .Values.k4 }}
-        listen {{ .Values.k5 }}
+        alias {{ .Values.key3 }}
+        listen {{ .Values.key2 }}
         function {
           # some json
           "key": {

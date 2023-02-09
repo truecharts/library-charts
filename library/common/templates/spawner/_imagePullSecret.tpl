@@ -1,46 +1,39 @@
+{{/* Image Pull Secrets Spawner */}}
+{{/* Call this template:
+{{ include "ix.v1.common.spawner.imagePullSecret" $ -}}
+*/}}
+
 {{- define "ix.v1.common.spawner.imagePullSecret" -}}
-  {{- $root := . -}}
-  {{- range $idx, $imgPullCreds := .Values.imagePullCredentials -}}
-    {{- if $imgPullCreds.enabled -}}
 
-      {{- if not $imgPullCreds.name -}}
-        {{- fail "<name> is required for Image Pull Secrets Credentials" -}}
-      {{- end -}}
+  {{- range $name, $imgPullSecret := .Values.imagePullSecret -}}
 
-      {{- if not (mustRegexMatch "^[a-zA-Z0-9-]*$" $imgPullCreds.name) -}}
-        {{- fail (printf "<name> (%s) can only container this alphanumerical characters (- a-z A-Z 0-9)" $imgPullCreds.name) -}}
-      {{- end -}}
+    {{- if $imgPullSecret.enabled -}}
 
-      {{- $secretName := include "ix.v1.common.names.imagePullSecret" (dict "root" $root "imgPullCredsName" $imgPullCreds.name) -}}
-      {{- $registrySecret := dict -}}
+      {{/* Create a copy of the configmap */}}
+      {{- $objectData := (mustDeepCopy $imgPullSecret) -}}
 
-      {{- if not $imgPullCreds.content -}}
-        {{- fail (printf "<content> is not defined in Image Pull Secrets Credential (%s)" $imgPullCreds.name) -}}
-      {{- end -}}
+      {{- $objectName := (printf "%s-%s" (include "ix.v1.common.lib.chart.names.fullname" $) $name) -}}
 
-      {{- with $imgPullCreds.content -}}
-        {{- if not .username -}}
-          {{- fail (printf "<username> is not defined in Image Pull Secrets Credential (%s)" $imgPullCreds.name) -}}
-        {{- end -}}
-        {{- if not .password -}}
-          {{- fail (printf "<password> is not defined in Image Pull Secrets Credential (%s)" $imgPullCreds.name) -}}
-        {{- end -}}
-        {{- if not .registry -}}
-          {{- fail (printf "<registry> is not defined in Image Pull Secrets Credential (%s)" $imgPullCreds.name) -}}
-        {{- end -}}
-        {{- if not .email -}}
-          {{- fail (printf "<email> is not defined in Image Pull Secrets Credential (%s)" $imgPullCreds.name) -}}
-        {{- end -}}
+      {{/* Perform validations */}}
+      {{- include "ix.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
+      {{- include "ix.v1.common.lib.imagePullSecret.validation" (dict "objectData" $objectData) -}}
+      {{- $data := include "ix.v1.common.lib.imagePullSecret.createData" (dict "rootCtx" $ "objectData" $objectData) -}}
 
-        {{/* Auth is b64encoded and then the whole secret is b64encoded */}}
-        {{- $auth := printf "%s:%s" .username .password | b64enc -}}
-        {{- $registry := (dict "username" .username "password" .password "email" .email "auth" $auth) -}}
+      {{/* Update the data */}}
+      {{- $_ := set $objectData "data" $data -}}
 
-        {{- $_ := set $registrySecret "auths" dict -}}
-        {{- $_ := set $registrySecret.auths (printf "%s" .registry) $registry -}}
+      {{/* Set the type to Image Pull Secret */}}
+      {{- $_ := set $objectData "type" "imagePullSecret" -}}
 
-        {{- include "ix.v1.common.class.secret" (dict "root" $root "secretName" $secretName "data" $registrySecret "contentType" "pullSecret") -}}
-      {{- end -}}
+      {{/* Set the name of the image pull secret */}}
+      {{- $_ := set $objectData "name" $objectName -}}
+      {{- $_ := set $objectData "shortName" $name -}}
+
+      {{/* Call class to create the object */}}
+      {{- include "ix.v1.common.class.secret" (dict "rootCtx" $ "objectData" $objectData) -}}
+
     {{- end -}}
+
   {{- end -}}
+
 {{- end -}}

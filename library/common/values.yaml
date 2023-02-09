@@ -1,1121 +1,624 @@
-# This file only includes the default values that are applied.
-# All values can be overridden per chart, in their values.yaml
-# For Examples and Explanation view the "Values.yaml Explained" markdown file
+# -- Global values
+global:
+  # -- Set additional global labels
+  labels: {}
+  # -- Set additional global annotations
+  annotations: {}
+  # -- Adds metalLB annotations to services
+  addMetalLBAnnotations: false
+  # -- Adds traefik annotations to services
+  addTraefikAnnotations: false
+  # -- Minimum nodePort value
+  minNodePort: 9000
 
-# Defines image info
-image:
-  repository: repo
-  tag: tag
-  pullPolicy: IfNotPresent
+# TODO:
+fallbackDefaults:
+  # -- Define a storageClassName that will be used for all PVCs
+  # Can be overruled per PVC
+  storageClass:
+  # -- Default Service Protocol
+  serviceProtocol: TCP
+  # -- Default Service Type
+  serviceType: ClusterIP
+  # -- Default persistence type
+  persistenceType: pvc
+  # -- Default Retain PVC
+  pvcRetain: false
+  # -- Default PVC Size
+  pvcSize: 1Gi
+  # -- Default PVC Access Modes
+  pvcAccessModes:
+    - ReadWriteOnce
 
-openvpnImage:
-  repository: tccr.io/truecharts/openvpn-client
-  tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
-  pullPolicy: IfNotPresent
-
-wireguardImage:
-  repository: tccr.io/truecharts/wireguard
-  tag: v1.0.20210914@sha256:9f56e5660e8df8d4d38521ed73a4cc29fa24bf578007bfbe633e00184e2ebfbc
-  pullPolicy: IfNotPresent
-
-tailscaleImage:
-  repository: tailscale/tailscale
-  # TODO: Switch to stable once a v1.33.x is released
-  tag: v1.34.1@sha256:69bec9fdea25765e1b9dd129ccaeaf1e160f1132bb390535772fa939f0bf620b
-  pullPolicy: IfNotPresent
-
-codeserverImage:
-  repository: tccr.io/truecharts/code-server
-  tag: 4.9.1@sha256:b339bd8f6da4c73c0259d6951991278aa1595a6be570a207ce635c75aac9893d
-  pullPolicy: IfNotPresent
-
-alpineImage:
-  repository: tccr.io/truecharts/alpine
-  tag: v3.17.0@sha256:f8607e14a5e456c1b8fe50b7f0c9371b4aae543d23080f5e2fe0bdbb06d2413b
-  pullPolicy: IfNotPresent
-
-scratchImage:
-  repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:b4289ea433ec1308f6f2e8bff3f23bcd52b751ccb691284210ed826385ba9317
-  pullPolicy: IfNotPresent
-
-kubectlImage:
-  repository: tccr.io/truecharts/kubectl
-  tag: v1.26.0@sha256:e56d1c8dd3ba85bb8410cc9f5c04f03f814e4b76ffcc7f12730868faba5b9c52
-  pullPolicy: IfNotPresent
-
-wgetImage:
-  repository: tccr.io/truecharts/wget
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-postgresClientImage:
-  repository: tccr.io/truecharts/db-wait-postgres
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-mariadbClientImage:
-  repository: tccr.io/truecharts/db-wait-mariadb
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-redisClientImage:
-  repository: tccr.io/truecharts/db-wait-redis
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-mongodbClientImage:
-  repository: tccr.io/truecharts/db-wait-mongodb
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-# Defines the image that will be used
-imageSelector: ""
-
-# Defines the imagePullSecrets
-imagePullCredentials: []
-
-# Defines environment variables
-env: {}
-
-# SCALE / GUI Focused
-envList: []
-
-# Defines the environment variables from a secret or configmap
-envFrom: []
-
-# Defines the timezone for the container
-TZ: UTC
-
-# Default Security values for main container
-security:
-  PUID: 568
-  UMASK: "002"
-
-# Nvidia Caps will be assigned via environment variable
-# If empty, global defaults will be used
-nvidiaCaps: []
-
-stdin: false
-
-tty: false
-
-# Overrides the default entrypoint
-command: []
-
-# Overrides the default args
-args: []
-
-# Appends to args
-extraArgs: []
-
-# Adds hosts to /etc/hosts
-hostAliases: []
-
-# Binds to host network
-hostNetwork: false
-
-notes: |
-  This Chart/App does not have any additional Notes
-
-# Creates a service account
-serviceAccount:
-  main:
-    enabled: false
-    primary: true
-    automountServiceAccountToken: true
-
-# Creates Role and RoleBinding
-# (or ClusterRole and ClusterRoleBinding if clusterWide is true)
-rbac:
-  main:
-    enabled: false
-    primary: true
-    clusterWide: false
-
-# Creates a configmap
-configmap: {}
-
-# Creates a secret
-secret: {}
-
-# Defines lifecycle hooks
-lifecycle: {}
-
-# Used for SCALE / GUI Focused
-scaleGPU: {}
-
-# Adds annotations to the pod
-podAnnotations: {}
-
-# Adds annotations to the service
-addAnnotations:
-  traefik: true
-  metallb: true
-
-# Used for SCALE
-scaleCerts: {}
-
-# Used for SCALE / GUI Focused
-scaleCertsList: []
-
-# Used to generate custom cert-manager certificates
-certificates: {}
-
-# Defines the probes
-probes:
-  liveness:
-    enabled: true
-  readiness:
-    enabled: true
-  startup:
-    enabled: true
-
-portalGenerator:
-  main:
-    enabled: true
-    # linkedService: ""
-    # linkedPort: ""
-    # linkedIngress: ""
-    # protocol: ""
-    # host: ""
-    # port: 80
-    # path: ""
-
-# Used for SCALE / GUI Focused
-externalInterfaces: []
-
-# Injected from middleware
+# -- Injected from SCALE middleware
+# Only for reference here
 ixExternalInterfacesConfiguration: []
-# Injected from middleware
+# -- Injected from SCALE middleware
+# Only for reference here
 ixExternalInterfacesConfigurationNames: []
-
-# - Everything bellow needs documentation
-hostname: ""
-
-# Injected from middleware
+# -- Injected from SCALE middleware
+# Only for reference here
 ixCertificates: []
-# Injected from middleware
+# -- Injected from SCALE middleware
+# Only for reference here
 ixVolumes: []
 
-global:
-  nameOverride: ""
-  fullnameOverride: ""
-  annotations: {}
-  labels: {}
-  defaults:
-    # If not defined on per pod or in ixChartContext, assume this.
-    # Empty means NO runtimeClassName
-    runtimeClassName: ""
-    # If not defined on the the cert item, assume this
-    useRevokedCerts: false
-    # If not defined on the the cert item, assume this
-    useExpiredCerts: false
-    # If not defined on the pod, assume this
-    dnsPolicy: ClusterFirst
-    # If no restart Policy is defined, assume this
-    restartPolicy: Always
-    # If no restart Policy for job is defined, assume this
-    jobRestartPolicy: Never
-    # If no port Protocol is defined, assume this
-    portProtocol: TCP
-    # Define the minimum NodePort
-    minimumNodePort: 9000
-    # If no service Type is defined, assume this
-    serviceType: ClusterIP
-    # If no PVC Size is defined, assume this
-    PVCSize: 1Gi
-    # If no VCT Size is defined, assume this
-    VCTSize: 999Gi
-    # If no PVC type is defined, assume this
-    persistenceType: pvc
-    # If no validateHostPath key exists in the persistence item, assume this
-    validateHostPath: false
-    # If no PVC accessMode is defined, assume this
-    accessMode: ReadWriteOnce
-    # If no PVC retain key is defined, assume this
-    # Note, that this adds an annotation for helm whether to delete
-    # the resource on uninstall, manually deleting the namespace it will delete
-    # the resource no matter what this is set.
-    PVCRetain: false
-    # Define a storageClassName that will be used for all PVCs by default
-    # Leave empty to rely on the node's default storageClass
-    storageClass:
-    # When SCALE-ZFS is set for storageClass, return this name
-    scaleZFSStorageClass: '{{ printf "ix-storage-class-%v" .Release.Name}}'
-    # Default security context used for all
-    # init/install/upgrade/additional
-    # and main containers if not specified
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      privileged: false
-      capabilities:
-        add: []
-        drop:
-          - ALL
-    # Default podSecurityContext, used if
-    # no other is specified
-    podSecurityContext:
-      fsGroup: 568
-      supplementalGroups: []
-      fsGroupChangePolicy: OnRootMismatch
-    # Default Security values, if no others
-    # are specified
-    security:
-      PUID: 568
-      UMASK: "002"
-    # Whether to inject fixedEnvs on containers
-    # Can be overruled per container
-    injectFixedEnvs: true
-    # Default nvidia Caps will be assigned via
-    # environment variable (requires injectFixedEnvs)
-    nvidiaCaps:
-      - all
-    # Default Resources values, if no others
-    # are specified, use those
-    resources:
-      limits:
-        cpu: 4000m
-        memory: 8Gi
-      requests:
-        cpu: 10m
-        memory: 50Mi
-    # If no probe Type is defined, assume this
-    probeType: auto
-    # If no probe Path is defined, assume this
-    probePath: /
-    # Default probe timeouts, if no others
-    # are specified, use those
-    probes:
-      liveness:
-        spec:
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
-      readiness:
-        spec:
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
-      startup:
-        spec:
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 2
-          failureThreshold: 60
-    # Default job/cronjob values
-    job:
-      cron:
-        concurrencyPolicy: Forbid
-        failedJobsHistoryLimit: 1
-        successfulJobsHistoryLimit: 3
-      backoffLimit: 6
-      completionMode: NonIndexed
+# -- Image values
+image:
+  # -- Image repository
+  repository: traefik/whoami
+  # -- Image tag
+  tag: latest
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
 
-
-# - Bellow values are needed (in addition to the default global)
-# as those are being referenced on other values in values.yaml sometimes
-
-# Default podSecurityContext for main pod
-podSecurityContext:
-  fsGroup: 568
-  supplementalGroups: []
-  fsGroupChangePolicy: OnRootMismatch
-
-# Default securityContext for main container
+# -- Security Context
 securityContext:
-  runAsNonRoot: true
-  runAsUser: 568
-  runAsGroup: 568
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-  privileged: false
-  capabilities:
-    add: []
-    drop:
-      - ALL
-# Default resources for main container
-resources:
-  limits:
-    cpu: 4000m
-    memory: 8Gi
-  requests:
-    cpu: 10m
-    memory: 50Mi
+  # -- Container security context for all containers
+  # Can be overruled per container
+  container:
+    runAsNonRoot: true
+    runAsUser: 568
+    runAsGroup: 568
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
+  # -- Pod security context for all pods
+  # Can be overruled per pod
+  pod:
+    fsGroup: 568
+    fsGroupChangePolicy: OnRootMismatch
+    supplementalGroups: []
+    sysctls: []
 
-# -- Used to inject our own operator manifests into SCALE
-manifests:
-  enabled: true
-  staging: false
+TZ: UTC
 
-nameOverride: ""
+containerOptions:
+  # -- Resources
+  # Can be overruled per container
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+    requests:
+      cpu: 10m
+      memory: 50Mi
+  # -- PUID for all containers
+  # Can be overruled per container
+  PUID: 568
+  # -- UMASK for all containers
+  # Can be overruled per container
+  UMASK: "002"
+  NVIDIA_CAPS:
+    - all
 
-fullnameOverride: ""
+# -- Options for all pods
+# Can be overruled per pod
+podOptions:
+  enableServiceLinks: false
+  hostNetwork: false
+  restartPolicy: Always
+  dnsPolicy: ClusterFirst
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "2"
+  hostAliases: []
+  nodeSelector: {}
+  tolerations: []
+  schedulerName: ""
+  priorityClassName: ""
+  runtimeClassName: ""
+  automountServiceAccountToken: false
+  terminationGracePeriodSeconds: 120
+  # TODO: Add affinity
+  # TODO: Add topologySpreadConstraints
 
-podLabels: {}
-
-enableServiceLinks: false
-
-schedulerName: ""
-
-priorityClassName: ""
-
-dnsPolicy: ""
-
-dnsConfig: {}
-
-nodeSelector: {}
-
-runtimeClassName: ""
-
-tolerations: []
-
-termination:
-  messagePath: ""
-  messagePolicy: ""
-  gracePeriodSeconds: 10
-
-controller:
-  # -- Enable the controller.
-  enabled: true
-  # -- Set the controller type.
-  # Valid options are: deployment | daemonset | statefulset
-  type: Deployment
-  # -- Set labels on the deployment/statefulset/daemonset. Helm templates can be used.
-  labels: {}
-  # -- Set  annotations on the deployment/statefulset/daemonset. Helm templates can be used.
-  annotations: {}
-  # -- Revision history limit
-  revisionHistoryLimit: 3
-  # -- Number of desired pods
-  replicas: 1
-  # -- Set the controller upgrade strategy
-  # For Deployments, valid values are Recreate (default) and RollingUpdate.
-  # For StatefulSets, valid values are OnDelete and RollingUpdate (default).
-  # DaemonSets ignore this.
-  strategy: ""
-  # -- Set rollingUpdate strategies
-  rollingUpdate:
-    # -- Set deployment RollingUpdate max unavailable
-    unavailable:
-    # -- Set deployment RollingUpdate max surge
-    surge:
-    # -- Set statefulset RollingUpdate partition
-    partition:
-
-additionalContainers: {}
-
-systemContainers:
-  auto-permissions:
-    enabled: '{{ if or ( eq ( include "tc.v1.common.lib.util.autoperms.detect" $ ) "true" ) ( and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) ) }}true{{ else }}false{{ end }}'
-    imageSelector: alpineImage
-    securityContext:
-      runAsUser: 0
-      runAsNonRoot: false
-    resources:
-      inherit: true
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/sh <<'EOF'
-        echo "Automatically correcting permissions..."
-        {{- $hostPathMounts := dict -}}
-        {{- range $name, $mount := .Values.persistence -}}
-          {{- if and $mount.enabled $mount.setPermissions -}}
-            {{- $name = default ( $name| toString ) $mount.name -}}
-            {{- $_ := set $hostPathMounts $name $mount -}}
-          {{- end -}}
-        {{- end }}
-        {{- if and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) }}
-        echo "Automatically correcting permissions for vpn config file..."
-        /usr/sbin/nfs4xdr_winacl -a chown -O 568 -G 568 -c /vpn/vpn.conf -p /vpn/vpn.conf || echo "Failed setting permissions..."
-        {{- end }}
-        {{- range $_, $hpm := $hostPathMounts }}
-        echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
-        /usr/sbin/nfs4xdr_winacl -a chown -G {{ $.Values.podSecurityContext.fsGroup | default $.Values.global.defaults.podSecurityContext.fsGroup }} -r -c {{ tpl $hpm.mountPath $ | squote }} -p {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions..."
-        {{- end }}
-        EOF
-    volumeMounts:
-      - inherit: "setPermissions"
-  redis-wait:
-    enabled: "{{ if .Values.redis.enabled }}true{{ else }}false{{ end }}"
-    imageSelector: redisClientImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    env:
-      REDIS_HOST:
-        secretKeyRef:
-          name: rediscreds
-          key: plainhost
-      REDIS_PASSWORD:
-        secretKeyRef:
-          name: rediscreds
-          key: redis-password
-      REDIS_PORT:
-        value: "6379"
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/bash <<'EOF'
-        echo "Executing DB waits..."
-        [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD";
-        export LIVE=false;
-        until "$LIVE";
-        do
-          response=$(
-              timeout -s 3 2 \
-              redis-cli \
-                -h "$REDIS_HOST" \
-                -p "$REDIS_PORT" \
-                ping
-            )
-          if [ "$response" == "PONG" ] || [ "$response" == "LOADING Redis is loading the dataset in memory" ]; then
-            LIVE=true
-            echo "$response"
-            echo "Redis Responded, ending initcontainer and starting main container(s)..."
-          else
-            echo "$response"
-            echo "Redis not responding... Sleeping for 10 sec..."
-            sleep 10
-          fi;
-        done
-        EOF
-  mariadb-wait:
-    enabled: "{{ if .Values.mariadb.enabled  }}true{{ else }}false{{end}}"
-    imageSelector: mariadbClientImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    env:
-      MARIADB_HOST:
-        secretKeyRef:
-          name: mariadbcreds
-          key: plainhost
-      MARIADB_ROOT_PASSWORD:
-        secretKeyRef:
-          name: mariadbcreds
-          key: mariadb-root-password
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/bash <<'EOF'
-        echo "Executing DB waits..."
-        until
-          mysqladmin -uroot -h"${MARIADB_HOST}" -p"${MARIADB_ROOT_PASSWORD}" ping \
-          && mysqladmin -uroot -h"${MARIADB_HOST}" -p"${MARIADB_ROOT_PASSWORD}" status;
-          do sleep 2;
-        done
-        EOF
-  mongodb-wait:
-    enabled: "{{ if .Values.mongodb.enabled }}true{{ else }}false{{end}}"
-    imageSelector: mongodbClientImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    env:
-      MONGODB_HOST:
-        secretKeyRef:
-          name: mongodbcreds
-          key: plainhost
-      MONGODB_DATABASE:
-        value: "{{ .Values.mongodb.mongodbDatabase }}"
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/bash <<'EOF'
-        echo "Executing DB waits..."
-        until
-          HOME=/config && echo "db.runCommand(\"ping\")" | mongosh --host ${MONGODB_HOST} --port 27017 ${MONGODB_DATABASE} --quiet;
-          do sleep 2;
-        done
-        EOF
-
-  clickhouse-wait:
-    enabled: "{{ if .Values.clickhouse.enabled }}true{{ else }}false{{end}}"
-    imageSelector: alpineImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    env:
-      CLICKHOUSE_PING:
-        secretKeyRef:
-          name: clickhousecreds
-          key: ping
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/bash <<'EOF'
-        echo "Executing DB waits..."
-        until wget --quiet --tries=1 --spider "${CLICKHOUSE_PING}"; do
-          echo "ClickHouse - no response. Sleeping 2 seconds..."
-          sleep 2
-        done
-        echo "ClickHouse - accepting connections"
-        EOF
-  solr-wait:
-    enabled: "{{ if .Values.solr.enabled }}true{{ else }}false{{end}}"
-    imageSelector: wgetImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    env:
-      SOLR_HOST:
-        secretKeyRef:
-          name: solrcreds
-          key: plainhost
-      SOLR_CORES:
-        value: "{{ .Values.solr.solrCores }}"
-      SOLR_ENABLE_AUTHENTICATION:
-        value: "{{ .Values.solr.solrEnableAuthentication }}"
-      SOLR_ADMIN_USERNAME:
-        value: "{{ .Values.solr.solrUsername }}"
-      SOLR_ADMIN_PASSWORD:
-        secretKeyRef:
-          name: solrcreds
-          key: solr-password
-
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/bash <<'EOF'
-        echo "Executing DB waits..."
-        if [ "$SOLR_ENABLE_AUTHENTICATION" == "yes" ]; then
-          until curl --fail --user "${SOLR_ADMIN_USERNAME}":"${SOLR_ADMIN_PASSWORD}" "${SOLR_HOST}":8983/solr/"${SOLR_CORES}"/admin/ping; do
-            echo "Solr is not responding... Sleeping 2 seconds..."
-            sleep 2
-          done
-        else
-          until curl --fail "${SOLR_HOST}":8983/solr/"${SOLR_CORES}"/admin/ping; do
-            echo "Solr is not responding... Sleeping 2 seconds..."
-            sleep 2
-          done
-        fi;
-        EOF
-  postgresql-wait:
-    enabled: "{{ if .Values.postgresql.enabled }}true{{ else }}false{{end}}"
-    imageSelector: postgresClientImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/sh <<'EOF'
-        echo "Executing DB waits..."
-        {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
-        until
-          pg_isready -U {{ .Values.postgresql.postgresqlUsername }} -h {{ $pghost }}
-          do sleep 2
-        done
-        EOF
-
-  cnpg-wait:
-    enabled: '{{ $result := false }}{{ range .Values.cnpg }}{{ if .enabled }}{{ $result = true }}{{ end }}{{ end }}{{ $result }}'
-    imageSelector: postgresClientImage
-    securityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-    resources:
-      inherit: true
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        /bin/sh <<'EOF'
-        {{ range $name, $cnpg := .Values.cnpg }}
-        {{ if $cnpg.enabled }}
-        echo "Executing DB waits..."
-        {{ $cnpgName := include "ix.v1.common.names.fullname" $ }}
-        {{ $nameOverride := $cnpg.nameOverride }}
-
-        {{ if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) }}
-          {{ $_ := set $cnpg.nameOverride $name }}
-        {{ end }}
-
-        {{ if $cnpg.nameOverride }}
-          {{ $cnpgName = printf "%v-%v" $cnpgName $nameOverride }}
-        {{ end }}
-
-        until
-          pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-rw
-          do sleep 2
-        done
-        until
-          pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-rw
-          do sleep 2
-        done
-        {{ if $cnpg.acceptRO }}
-        until
-          pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-ro
-          do sleep 2
-        done
-        until
-          pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-ro
-          do sleep 2
-        done
-        {{ end }}
-
-        {{ end }}
-        {{ end }}
-        EOF
-
-initContainers: {}
-
-# -- Configure the services for the chart here.
-# Additional services can be added by adding a dictionary key similar to the 'main' service.
-# @default -- See below
-service:
-  main:
-    # -- Enables or disables the service
-    enabled: true
-    # enabled: false
-    # -- Configure the Service port information here.
-    # Additional ports can be added by adding a dictionary key similar to the 'main' port.
-    # @default -- See below
-    primary: true
-    ports:
-      main:
-        # -- Enables or disables the port
-        enabled: true
-        # enabled: false
-        # -- Make this the primary port (used in probes, notes, etc...)
-        # If there is more than 1 service, make sure that only 1 port is marked as primary.
-        primary: true
-        # -- The port number (Default port is required if enabled: true)
-        port:
-        # -- Port protocol.
-        # Support values are `HTTP`, `HTTPS`, `TCP` and `UDP`.
-        # HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
-        protocol: HTTP
-        # -- Specify a service targetPort if you wish to differ the service port from the application port.
-        # If `targetPort` is specified, this port number is used in the container definition instead of
-        # the `port` value. Therefore named ports are not supported for this field.
-        targetPort:
-        # -- Specify the nodePort value NodePort service types.
-        # [[ref]](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
-        nodePort:
-
-
+# -- Persistence
 persistence:
-  # -- Create an emptyDir volume dedicated to be shared between all containers
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
   shared:
     enabled: true
     type: emptyDir
     mountPath: /shared
-
-  # -- Create an emptyDir volume to share between all containers
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
+    targetSelectAll: true
   varlogs:
     enabled: true
     type: emptyDir
     mountPath: /var/logs
-
-  # -- Create an emptyDir volume (shared between all containers) for temporary storage
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
+    targetSelectAll: true
   tmp:
     enabled: true
     type: emptyDir
     mountPath: /tmp
-
-  # -- Create an emptyDir volume to for /dev/shm
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
-  # @default -- See below
-  shm:
-    enabled: true
+    targetSelectAll: true
+  devshm:
+    # TODO: Enable by default?
+    enabled: false
     type: emptyDir
     mountPath: /dev/shm
-    medium: Memory
+    targetSelectAll: true
 
-# -- Used in conjunction with `controller.type: StatefulSet` to create individual disks for each instance.
-volumeClaimTemplates: {}
-# data:
-#   mountPath: /data
-#   accessMode: "ReadWriteOnce"
-#   size: 1Gi
+  # # -- Volume name
+  # vol-name:
+  #   # -- Enables the volume
+  #   enabled: false
+  #   # -- Type of volume
+  #   type: type
+  #   # -- Volume Options
 
+  #   # -  ConfigMap, Secret
+  #   # Default Mode (ConfigMap, Secret)
+  #   defaultMode: "0600"
+  #   # Items (ConfigMap, Secret)
+  #   items:
+  #     - key: key
+  #       path: path
 
-# -- Configure the ingresses for the chart here.
-# Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress.
-# @default -- See below
-ingress:
+  #   # - EmptyDir
+  #   # Medium
+  #   medium: Memory
+  #   # SizeLimit
+  #   size: 1Gi
+
+  #   # - HostPath
+  #   # Host Path
+  #   hostPath: /path/to/host
+  #   # Host Path Type
+  #   hostPathType: DirectoryOrCreate
+
+  #   # - NFS
+  #   # Server
+  #   server: nfs-server
+  #   # Path
+  #   path: /path/to/nfs
+
+  #   # - ixVolumes
+  #   # datasetName
+  #   datasetName: dataset-name
+  #   # Host Path Type
+  #   # hostPathType: DirectoryOrCreate
+
+  #   # - PVC
+  #   # labels (Only for PVC type)
+  #   labels: {}
+  #   # annotations (Only for PVC type)
+  #   annotations: {}
+  #   # Size
+  #   # size: 1Gi
+  #   # Retain
+  #   retain: false
+  #   # Storage Class
+  #   storageClassName: ""
+  #   # Existing Claim
+  #   existingClaim: ""
+  #   # VolumeName
+  #   volumeName: ""
+  #   # Access Modes
+  #   accessModes:
+  #     - ReadWriteOnce
+  #   # -- Options that apply to all volumeMounts
+  #   # Can be overruled per volumeMount under targetSelector
+  #   mountPath: /shared
+  #   readOnly: False
+  #   subPath: ""
+  #   mountPropagation: ""
+  #   # Where to define the volume and mount the volume
+  #   # targetSelector: all
+  #   targetSelector:
+  #     pod-name:
+  #       container-name:
+  #         mountPath: /shared
+  #         readOnly: False
+  #         subPath: ""
+  #         mountPropagation: ""
+
+# -- Service
+service:
+  # -- Service name
   main:
-    # -- Enables or disables the ingress
-    enabled: false
-
-    # -- Make this the primary ingress (used in probes, notes, etc...).
-    # If there is more than 1 ingress, make sure that only 1 ingress is marked as primary.
+    # -- Enables the service
+    enabled: true
+    # -- Primary service
     primary: true
-
-    # -- Override the name suffix that is used for this ingress.
-    nameOverride:
-
-    # -- Autolink the ingress to a service and port, both with the same name as the ingress.
-    autoLink: false
-
-    # -- disable to ignore any default middlwares
-    enableFixedMiddlewares: true
-
-    # -- set the Cert-Manager clusterissuer for this ingress
-    clusterIssuer: ""
-
-    # -- List of middlewares in the traefikmiddlewares k8s namespace to add automatically
-    # Creates an annotation with the middlewares and appends k8s and traefik namespaces to the middleware names
-    # Primarily used for TrueNAS SCALE to add additional (seperate) middlewares without exposing them to the end-user
-    fixedMiddlewares:
-      - chain-basic
-
-    # -- Additional List of middlewares in the traefikmiddlewares k8s namespace to add automatically
-    # Creates an annotation with the middlewares and appends k8s and traefik namespaces to the middleware names
-    middlewares: []
-    annotationsList: []
-    # - name: somename
-    #   value: somevalue
-    # -- Provide additional annotations which may be required.
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-
-    labelsList: []
-    # - name: somename
-    #   value: somevalue
-    # -- Set labels on the deployment/statefulset/daemonset
-    # -- Provide additional labels which may be required.
-    # -- Provide additional labels which may be required.
+    # -- Service labels
     labels: {}
+    # -- Service annotations
+    annotations: {}
+    # -- Pod to connect
+    # targetSelector: main
+    # -- Ports
+    ports:
+      main:
+        # -- Enable the port
+        enabled: true
+        # -- Primary port
+        primary: true
+        # -- Port
+        port:
+        # -- Protocol
+        protocol: HTTP
+        # -- Target port
+        targetPort:
+        # -- Node port
+        nodePort:
+        # -- Container to assign the port
+        targetSelector: container-name
 
-    # -- Set the ingressClass that is used for this ingress.
-    # Requires Kubernetes >=1.19
-    ingressClassName:  # "nginx"
+# -- VolumeClaimTemplates (StatefulSet only)
+volumeClaimTemplates:
+  # -- VolumeClaimTemplate name
+  vct-name:
+    # -- Enables the VolumeClaimTemplate
+    enabled: true
+    # -- VolumeClaimTemplate labels
+    labels: {}
+    # -- VolumeClaimTemplate annotations
+    annotations: {}
+    # -- VolumeClaimTemplate access modes
+    accessModes:
+      - ReadWriteOnce
+    # -- VolumeClaimTemplate storage class
+    storageClassName: ""
+    # -- VolumeClaimTemplate size
+    size: 1Gi
+    # -- Options that apply to all volumeMounts
+    # Can be overruled per volumeMount under targetSelector
+    # -- VolumeClaimTemplate mount path
+    mountPath: /data
+    readOnly: false
+    subPath: ""
+    mountPropagation: ""
+    targetSelector:
+      pod-name:
+        container-name:
+          mountPath: /data
+          readOnly: False
+          subPath: ""
+          mountPropagation: ""
 
-    ## Configure the hosts for the ingress
-    hosts:
-      -  # -- Host address. Helm template can be passed.
-        host: chart-example.local
-        ## Configure the paths for the host
-        paths:
-          -  # -- Path.  Helm template can be passed.
-            path: /
-            # -- Ignored if not kubeVersion >= 1.14-0
-            pathType: Prefix
-            service:
-              # -- Overrides the service name reference for this path
-              name:
-              # -- Overrides the service port reference for this path
-              port:
+# -- SCALE GPU
+scaleGPU:
+  - gpu:
+      key: value
+    # Without targetSelector, the gpu will
+    # be applied to primary pods
+    targetSelector:
+      pod-name:
+        - container-name
 
-    # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
-    # Gets ignored when clusterIssuer is filled
-    tls: []
-    #  - secretName: chart-example-tls
-    #    # Cannot be combined with scaleCert
-    #    clusterIssuer: ""
-    #    # Cannot be combined with clusterIssuer
-    #    scaleCert: ""
-    #    hosts:
-    #      - chart-example.local
+# -- SCALE External Interfaces
+scaleExternalInterfaces:
+  - hostInterface: ""
+    ipam:
+      type: ""
+    staticRoutes: []
+    staticIPConfigurations: []
+    # targetSelector: all
+    targetSelector:
+      - pod-name
 
-metrics:
+# -- SCALE Certificates
+scaleCerts:
+  # -- Certificate name
+  cert-name:
+    # -- Enables the certificate
+    enabled: false
+    # -- Certificate ID (Comes from SCALE)
+    id: 1
+    # -- Default Paths that will be used on all defined containers
+    # Can be overruled per container under targetSelector
+    certPath: ""
+    keyPath: ""
+    # -- Defining a selector is only needed
+    # if you want to mount the certificate file(s)
+    # It will be mounted as readOnly
+    targetSelector:
+      pod-name:
+        container-name:
+          certPath: ""
+          keyPath: ""
+
+# -- Devices
+devices:
+  # -- Device name
+  device-name:
+    # -- Enables the device
+    enabled: false
+    # -- Device host path
+    hostPath: /host/device/path
+    # -- Options that apply to all volumeMounts
+    # Can be overruled per volumeMount under targetSelector
+    mountPath: /shared
+    readOnly: False
+    subPath: ""
+    mountPropagation: ""
+    # Where to define the volume and mount the volume
+    # targetSelector: all
+    targetSelector:
+      pod-name:
+        container-name:
+          mountPath: /shared
+          readOnly: False
+          subPath: ""
+          mountPropagation: ""
+
+notes:
+  header: |
+    # Welcome to SCALE
+    Thank you for installing <{{ .Chart.Name }}>.
+  # custom: "{{ toYaml $.Values }}"
+  custom: ""
+  footer: |
+    # Documentation
+    # Bug reports
+
+# -- workload
+workload:
+  # -- Workload name
   main:
-    enabled: false
+    # -- Enables the workload
+    enabled: true
+    # -- Primary workload
     primary: true
-    # options: servicemonitor, podmonitor
-    type: "servicemonitor"
-    # defaults to selectorLabels
-    selector: {}
-    endpoints:
-     - port: 3000
-       interval: 5
-       scrapeTimeout: 5
-       path: /
-       honorLabels: false
-    prometheusRule:
-      enabled: false
-      groups: {}
-        # somegroup:
-        #   # list of rules
-        #   rules: []
-        #   # list to support adding rules via the SCALE GUI without overwrithing the rules
-        #   additionalrules: []
-      # List to support adding groups using the SCALE GUI
-      additionalgroups:
-        #-  name: "somegroup"
-        #   # list of rules
-        #   rules: []
-        #   # list to support adding rules via the SCALE GUI without overwrithing the rules
-        #   additionalrules: []
+    # -- Workload type
+    type: Deployment
+    # -- Workload labels
+    # labels: {}
+    # # -- Workload annotations
+    # annotations: {}
+    # # -- Workload replicas (Deployment and StatefulSet only)
+    # replicas: 1
+    # # -- Workload revision history limit
+    # revisionHistoryLimit: 3
+    # # Strategy
+    # # -- Workload strategy type
+    # strategy: Recreate
+    # # -- Workload strategy rolling update
+    # rollingUpdate:
+    #   # -- Workload strategy rolling update max unavailable
+    #   maxUnavailable: 1
+    #   # -- Workload strategy rolling update max surge
+    #   maxSurge: 1
+    #   # -- Workload strategy rolling update partition (StatefulSet only)
+    #   partition: 0
 
-# -- The common chart supports several add-ons. These can be configured under this key.
-# @default -- See below
-addons:
-  # -- The common chart supports adding a VPN add-on. It can be configured under this key.
-  # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#wireguard-vpn)
-  # @default -- See values.yaml
-  vpn:
-    # -- Specify the VPN type. Valid options are disabled, openvpn, wireguard or tailscale
-    type: disabled
+    # # -- CronJob
+    # # - CronJob schedule
+    # schedule: "5"
+    # # - CronJob concurrency policy
+    # concurrencyPolicy: ""
+    # # - CronJob timezone
+    # timezone: ""
+    # # - CronJob failed jobs history limit
+    # failedJobsHistoryLimit: 1
+    # # - CronJob successful jobs history limit
+    # successfulJobsHistoryLimit: 3
+    # # - CronJob starting deadline seconds
+    # startingDeadlineSeconds: 0
 
-    # -- OpenVPN specific configuration
-    # @default -- See below
-    openvpn:
-      # -- Credentials to connect to the VPN Service (used with -a)
-      # Only using password is enough
-      username: ""
-      password: ""
+    # # -- Job
+    # # - Job active deadline seconds
+    # activeDeadlineSeconds: 0
+    # # - Job backoff limit
+    # backoffLimit: 6
+    # # - Job completions
+    # completions: 1
+    # # - Job parallelism
+    # parallelism: 1
+    # # - Job ttl seconds after finished
+    # ttlSecondsAfterFinished: 0
+    # # - Job completion mode
+    # completionMode: NonIndexed
 
-    # -- Tailscale specific configuration
-    # @default -- See below
-    # See more info for the configuration
-    # https://github.com/tailscale/tailscale/blob/main/docs/k8s/run.sh
-    tailscale:
-      # -- Auth key to connect to the VPN Service
-      authkey: ""
-      # As a sidecar, it should only need to run in userspace
-      userspace: true
-      auth_once: true
-      accept_dns: false
-      routes: ""
-      dest_ip: ""
-      sock5_server: ""
-      extra_args: ""
-      daemon_extra_args: ""
-      outbound_http_proxy_listen: ""
-      # -- Annotations for tailscale sidecar
-      annotations: {}
-
-    killSwitch: true
-    excludedNetworks_IPv4: []
-    excludedNetworks_IPv6: []
-
-    # -- Set the VPN container specific securityContext
-    # @default -- See values.yaml
-    securityContext: {}
-
-    # -- All variables specified here will be added to the vpn sidecar container
-    # See the documentation of the VPN image for all config values
-    env: {}
-      # TZ: UTC
-
-    # -- All variables specified here will be added to the vpn sidecar container
-    # See the documentation of the VPN image for all config values
-    envList: []
-      # - name: someenv
-      #  value: somevalue
-
-    # -- Provide a customized vpn configuration file to be used by the VPN.
-    configFile:
-      enabled: true
-      type: hostPath
-      # -- Which path on the host should be mounted.
-      hostPath: /vpn/vpn.conf
-      noMount: true
-      # -- Specifying a hostPathType adds a check before trying to mount the path.
-      # See Kubernetes documentation for options.
-      hostPathType: "File"
-
-  # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
-  # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server)
-  # @default -- See values.yaml
-  codeserver:
-    # -- Enable running a code-server container in the pod
-    enabled: false
-
-    # -- Set any environment variables for code-server here
-    env: {}
-      # TZ: UTC
-
-    # -- All variables specified here will be added to the codeserver sidecar container
-    # See the documentation of the codeserver image for all config values
-    envList: []
-      # - name: someenv
-      #  value: somevalue
-    # -- Set codeserver command line arguments.
-    # Consider setting --user-data-dir to a persistent location to preserve code-server setting changes
-    args:
-      - --auth
-      - none
-      # - --user-data-dir
-      # - "/config/.vscode"
-
-    # -- Specify the working dir that will be opened when code-server starts
-    # If not given, the app will default to the mountpah of the first specified volumeMount
-    workingDir: "/"
-
-    # -- Optionally allow access a Git repository by passing in a private SSH key
-    # @default -- See below
-    git:
-      # -- Raw SSH private key
-      deployKey: ""
-      # -- Base64-encoded SSH private key. When both variables are set, the raw SSH key takes precedence.
-      deployKeyBase64: ""
-      # -- Existing secret containing SSH private key
-      # The chart expects it to be present under the `id_rsa` key.
-      deployKeySecret: ""
-
-    service:
-      # -- Enable a service for the code-server add-on.
-      enabled: true
-      type: ClusterIP
-      # Specify the default port information
-      ports:
-        codeserver:
-          port: 12321
+    # -- Pod Spec
+    podSpec:
+      # # -- Pod labels
+      # labels: {}
+      # # -- Pod annotations
+      # annotations: {}
+      # -- hostNetwork
+      hostNetwork: false
+      # -- enableServiceLinks
+      enableServiceLinks: true
+      # -- restartPolicy
+      restartPolicy: Always
+      # -- schedulerName
+      schedulerName: ""
+      # -- priorityClassName
+      priorityClassName: ""
+      # -- hostname
+      hostname: ""
+      # -- nodeselector
+      nodeSelector: {}
+      # -- tolerations
+      tolerations: []
+      # -- runtimeClassName
+      runtimeClassName: ""
+      # -- terminationGracePeriodSeconds
+      terminationGracePeriodSeconds: 30
+      # -- securityContext
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        sysctls: []
+        supplementalGroups: []
+      # -- Containers
+      containers:
+        # -- Container name
+        main:
+          # -- Enables the container
           enabled: true
-          protocol: TCP
-          targetPort: 12321
-          ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-          ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-          ##
-          # nodePort: 36107
+          # -- Sets the container as primary
+          primary: true
+          # -- Container image
+          imageSelector: ""
+          tty: false
+          stdin: false
+          command: []
+          args: []
+          extraArgs: []
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          lifecycle:
+            postStart:
+              command: []
+            preStop:
+              command: []
+          termination:
+            messagePath: ""
+            messagePolicy: ""
+          env: {}
+          envList: []
+          envFrom: []
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          probes:
+            liveness:
+              enabled: true
+              type: HTTP
+              port:
+              path:
+              httpHeaders: {}
+              command: []
+            readiness:
+              enabled: true
+              type: HTTP
+              port:
+              path:
+              httpHeaders: {}
+              command: []
+            startup:
+              enabled: true
+              type: HTTP
+              port:
+              path:
+              httpHeaders: {}
+              command: []
+      initContainers:
+        init-cont-name:
+          enabled: false
+          type: install
+          # ...containerSpec
 
-    ingress:
-      # -- Enable an ingress for the code-server add-on.
-      enabled: false
-      annotations: {}
-        # kubernetes.io/ingress.class: nginx
-      labels: {}
-      hosts:
-        - host: code.chart-example.local
-          paths:
-            - path: /
-              # Ignored if not kubeVersion >= 1.14-0
-              pathType: Prefix
-      tls: []
+# TODO:
+portal: {}
 
+# Done
+# -- Image Pull Secrets
+imagePullSecret: []
+  # -- Image Pull Secret name
+  # image-secret-name:
+  #   # -- Enables the Image Pull Secret
+  #   enabled: false
+  #   # -- Labels
+  #   labels: {}
+  #   # -- Annotations
+  #   annotations: {}
+  #   # -- Image Pull Secret Data
+  #   data:
+  #     # -- Registry
+  #     registry: ""
+  #     # -- Username
+  #     username: ""
+  #     # -- Password
+  #     password: ""
+  #     # -- Email
+  #     email: ""
+  #   targetSelectAll: true
+  #   targetSelector:
+  #     - main
 
-##
-# This section contains some-preconfig for frequently used dependencies
-##
+# -- ConfigMaps (docs/configmap.md)
+configmap: {}
+  # # -- ConfigMap name
+  # conf-name:
+  #   # -- Enables the ConfigMap
+  #   enabled: false
+  #   # -- ConfigMap labels
+  #   labels: {}
+  #   # -- ConfigMap annotations
+  #   annotations: {}
+  #   # -- ConfigMap data
+  #   data: {}
 
-# -- Postgresql dependency configuration
-# @default -- See below
-postgresql:
-  enabled: false
-  existingSecret: "dbcreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
+# -- Secrets (docs/secret.md)
+secret: {}
+  # # -- Secret name
+  # secret-name:
+  #   # -- Enables the secret
+  #   enabled: false
+  #   # -- Secret labels
+  #   labels: {}
+  #   # -- Secret annotations
+  #   annotations: {}
+  #   # -- Secret data
+  #   data:
+  #     # -- Secret data (stringData)
+  #     key: value
 
-cnpg:
-  main:
-    enabled: false
-    primary: true
-    # -- number of instances for both postgres and pgbouncer
-    instances: 2
-    database: "app"
-    user: "app"
-    # password:
-    # superUserPassword:
-    # -- change to supervised to disable unsupervised updates
-    # Example of rolling update strategy:
-    # - unsupervised: automated update of the primary once all
-    #                 replicas have been upgraded (default)
-    # - supervised: requires manual supervision to perform
-    #               the switchover of the primary
-    primaryUpdateStrategy: unsupervised
-    # -- enable to create extra pgbouncer for readonly access
-    acceptRO: false
-    # -- storage size for the two pvc's per instance
-    storage:
-      size: "256Gi"
-      walsize: "256Gi"
-    pooler:
-      instances: 2
-    # -- set to enable prometheus metrics
-    monitoring:
-      enablePodMonitor: true
-    # -- contains credentials and urls output by generator
-    creds: {}
+# -- Service Account:
+serviceAccount: {}
+  # main:
+  #   # -- Enables the service account
+  #   enabled: false
+  #   # -- Primary service account
+  #   primary: true
+  #   # -- Service account labels
+  #   labels: {}
+  #   # -- Service account annotations
+  #   annotations: {}
+  #   targetSelectAll: false
+  #   targetSelector:
+  #     - main
 
-# -- Redis dependency configuration
-# @default -- See below
-redis:
-  enabled: false
-  existingSecret: "rediscreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
-
-# -- mariadb dependency configuration
-# @default -- See below
-mariadb:
-  enabled: false
-  existingSecret: "mariadbcreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
-
-# -- mongodb dependency configuration
-# @default -- See below
-mongodb:
-  enabled: false
-  existingSecret: "mongodbcreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
-
-# -- clickhouse dependency configuration
-# @default -- See below
-clickhouse:
-  enabled: false
-  existingSecret: "clickhousecreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
-
-# -- solr dependency configuration
-# @default -- See below
-solr:
-  enabled: false
-  solrCores: 1
-  solrEnableAuthentication: "no"
-  existingSecret: "solrcreds"
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
-  url: {}
-  manifests:
-    enabled: false
+# -- RBAC
+rbac: {}
+  # main:
+  #   # -- Enables the RBAC
+  #   enabled: false
+  #   # -- Primary RBAC
+  #   primary: true
+  #   # -- RBAC labels
+  #   labels: {}
+  #   # -- RBAC annotations
+  #   annotations: {}
+  #   # -- ClusterWide
+  #   clusterWide: false
+  #   # -- Select all service accounts
+  #   allServiceAccounts: false
+  #   # -- Service accounts to select
+  #   serviceAccounts:
+  #     - main
+  #   # -- RBAC rules
+  #   rules:
+  #     - apiGroups:
+  #         - ""
+  #       resources:
+  #         - pods
+  #       verbs:
+  #         - get
+  #   # -- RBAC subjects
+  #   subjects:
+  #     - kind: a-kind
+  #       name: a-name
+  #       apiGroup: a-group
