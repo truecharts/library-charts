@@ -1,1 +1,1 @@
-{{ include "ix.v1.common.util.notes" . }}
+{{- include "ix.v1.common.lib.chart.notes" $ -}}
