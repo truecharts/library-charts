@@ -4,6 +4,9 @@
   {{/* Render ConfigMap(s) */}}
   {{- include "ix.v1.common.spawner.configmap" . | nindent 0 -}}
 
+  {{/* Render Certificate(s) */}}
+  {{- include "ix.v1.common.spawner.certificate" . | nindent 0 -}}
+
   {{/* Render Secret(s) */}}
   {{- include "ix.v1.common.spawner.secret" . | nindent 0 -}}
 
@@ -15,6 +18,9 @@
 
   {{/* Render RBAC(s) */}}
   {{- include "ix.v1.common.spawner.rbac" . | nindent 0 -}}
+
+  {{/* Render External Interface(s) */}}
+  {{- include "ix.v1.common.spawner.externalInterface" . | nindent 0 -}}
 
   {{/* Render Workload(s) */}}
   {{- include "ix.v1.common.spawner.workload" . | nindent 0 -}}

@@ -2,21 +2,13 @@
 {{/* Call this template:
 {{ include "ix.v1.common.lib.service.validation" (dict "objectData" $objectData) -}}
 objectData:
-  rootCtx: The root context.
+  rootCtx: The root context of the chart.
   objectData: The service object.
 */}}
 
 {{- define "ix.v1.common.lib.service.validation" -}}
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
-
-  {{- if and $objectData.labels (not (kindIs "map" $objectData.labels)) -}}
-    {{- fail (printf "Service - Expected <labels> to be a dictionary, but got [%v]" (kindOf $objectData.labels)) -}}
-  {{- end -}}
-
-  {{- if and $objectData.annotations (not (kindIs "map" $objectData.annotations)) -}}
-    {{- fail (printf "Service - Expected <annotations> to be a dictionary, but got [%v]" (kindOf $objectData.annotations)) -}}
-  {{- end -}}
 
   {{- if and $objectData.targetSelector (not (kindIs "string" $objectData.targetSelector)) -}}
     {{- fail (printf "Service - Expected <targetSelector> to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
