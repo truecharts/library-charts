@@ -1,7 +1,7 @@
 {{/* Returns Volumes */}}
 {{/* Call this template:
 {{ include "ix.v1.common.lib.pod.volumes" (dict "rootCtx" $ "objectData" $objectData) }}
-rootCtx: The root context of the template. It is used to access the global context.
+rootCtx: The root context of the chart.
 objectData: The object data to be used to render the Pod.
 */}}
 {{- define "ix.v1.common.lib.pod.volumes" -}}
@@ -51,6 +51,8 @@ objectData: The object data to be used to render the Pod.
           {{- include "ix.v1.common.lib.pod.volume.emptyDir" (dict "rootCtx" $rootCtx "objectData" $persistence) | trim | nindent 0 -}}
         {{- else if eq "nfs" $type -}}
           {{- include "ix.v1.common.lib.pod.volume.nfs" (dict "rootCtx" $rootCtx "objectData" $persistence) | trim | nindent 0 -}}
+        {{- else if eq "device" $type -}}
+          {{- include "ix.v1.common.lib.pod.volume.device" (dict "rootCtx" $rootCtx "objectData" $persistence) | trim | nindent 0 -}}
         {{- end -}}
 
       {{- end -}}

@@ -1,7 +1,7 @@
 {{/* Returns Pod Security Context */}}
 {{/* Call this template:
 {{ include "ix.v1.common.lib.pod.securityContext" (dict "rootCtx" $ "objectData" $objectData) }}
-rootCtx: The root context of the template. It is used to access the global context.
+rootCtx: The root context of the chart.
 objectData: The object data to be used to render the Pod.
 */}}
 {{- define "ix.v1.common.lib.pod.securityContext" -}}
@@ -26,9 +26,8 @@ objectData: The object data to be used to render the Pod.
     TODO: Unit Test the above cases
     */}}
   {{- $portRange := fromJson (include "ix.v1.common.lib.pod.securityContext.getPortRange" (dict "rootCtx" $rootCtx "objectData" $objectData)) -}}
-  {{- if and $portRange.low $portRange.high -}}
+  {{- if and $portRange.low (le (int $portRange.low) 1024) -}}
     {{- $_ := set $secContext "sysctls" (mustAppend $secContext.sysctls (dict "name" "net.ipv4.ip_unprivileged_port_start" "value" (printf "%v" $portRange.low))) -}}
-    {{- $_ := set $secContext "sysctls" (mustAppend $secContext.sysctls (dict "name" "net.ipv4.ping_group_range" "value" (printf "%v %v" $portRange.low $portRange.high))) -}}
   {{- end -}}
 
   {{- if not $secContext.fsGroup -}}
@@ -73,7 +72,7 @@ sysctls: []
 {{/* Returns Lowest and Highest ports assigned to the any container in the pod */}}
 {{/* Call this template:
 {{ include "ix.v1.common.lib.pod.securityContext.getPortRange" (dict "rootCtx" $ "objectData" $objectData) }}
-rootCtx: The root context of the template. It is used to access the global context.
+rootCtx: The root context of the chart.
 objectData: The object data to be used to render the Pod.
 */}}
 {{- define "ix.v1.common.lib.pod.securityContext.getPortRange" -}}

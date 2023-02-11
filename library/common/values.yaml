@@ -1,3 +1,4 @@
+# TODO: Docs
 # -- Global values
 global:
   # -- Set additional global labels
@@ -11,7 +12,7 @@ global:
   # -- Minimum nodePort value
   minNodePort: 9000
 
-# TODO:
+# TODO: Docs
 fallbackDefaults:
   # -- Define a storageClassName that will be used for all PVCs
   # Can be overruled per PVC
@@ -30,19 +31,7 @@ fallbackDefaults:
   pvcAccessModes:
     - ReadWriteOnce
 
-# -- Injected from SCALE middleware
-# Only for reference here
-ixExternalInterfacesConfiguration: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixExternalInterfacesConfigurationNames: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixCertificates: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixVolumes: []
-
+# TODO: Docs (for the imageName) convention
 # -- Image values
 image:
   # -- Image repository
@@ -52,6 +41,7 @@ image:
   # -- Image pull policy
   pullPolicy: IfNotPresent
 
+# TODO: Docs
 # -- Security Context
 securityContext:
   # -- Container security context for all containers
@@ -77,8 +67,7 @@ securityContext:
     supplementalGroups: []
     sysctls: []
 
-TZ: UTC
-
+# TODO: Docs
 containerOptions:
   # -- Resources
   # Can be overruled per container
@@ -98,7 +87,7 @@ containerOptions:
   NVIDIA_CAPS:
     - all
 
-# -- Options for all pods
+# -- Options for all pods # TODO: Docs
 # Can be overruled per pod
 podOptions:
   enableServiceLinks: false
@@ -117,352 +106,20 @@ podOptions:
   runtimeClassName: ""
   automountServiceAccountToken: false
   terminationGracePeriodSeconds: 120
-  # TODO: Add affinity
-  # TODO: Add topologySpreadConstraints
 
-# -- Persistence
-persistence:
-  shared:
-    enabled: true
-    type: emptyDir
-    mountPath: /shared
-    targetSelectAll: true
-  varlogs:
-    enabled: true
-    type: emptyDir
-    mountPath: /var/logs
-    targetSelectAll: true
-  tmp:
-    enabled: true
-    type: emptyDir
-    mountPath: /tmp
-    targetSelectAll: true
-  devshm:
-    # TODO: Enable by default?
-    enabled: false
-    type: emptyDir
-    mountPath: /dev/shm
-    targetSelectAll: true
-
-  # # -- Volume name
-  # vol-name:
-  #   # -- Enables the volume
-  #   enabled: false
-  #   # -- Type of volume
-  #   type: type
-  #   # -- Volume Options
-
-  #   # -  ConfigMap, Secret
-  #   # Default Mode (ConfigMap, Secret)
-  #   defaultMode: "0600"
-  #   # Items (ConfigMap, Secret)
-  #   items:
-  #     - key: key
-  #       path: path
-
-  #   # - EmptyDir
-  #   # Medium
-  #   medium: Memory
-  #   # SizeLimit
-  #   size: 1Gi
-
-  #   # - HostPath
-  #   # Host Path
-  #   hostPath: /path/to/host
-  #   # Host Path Type
-  #   hostPathType: DirectoryOrCreate
-
-  #   # - NFS
-  #   # Server
-  #   server: nfs-server
-  #   # Path
-  #   path: /path/to/nfs
-
-  #   # - ixVolumes
-  #   # datasetName
-  #   datasetName: dataset-name
-  #   # Host Path Type
-  #   # hostPathType: DirectoryOrCreate
-
-  #   # - PVC
-  #   # labels (Only for PVC type)
-  #   labels: {}
-  #   # annotations (Only for PVC type)
-  #   annotations: {}
-  #   # Size
-  #   # size: 1Gi
-  #   # Retain
-  #   retain: false
-  #   # Storage Class
-  #   storageClassName: ""
-  #   # Existing Claim
-  #   existingClaim: ""
-  #   # VolumeName
-  #   volumeName: ""
-  #   # Access Modes
-  #   accessModes:
-  #     - ReadWriteOnce
-  #   # -- Options that apply to all volumeMounts
-  #   # Can be overruled per volumeMount under targetSelector
-  #   mountPath: /shared
-  #   readOnly: False
-  #   subPath: ""
-  #   mountPropagation: ""
-  #   # Where to define the volume and mount the volume
-  #   # targetSelector: all
-  #   targetSelector:
-  #     pod-name:
-  #       container-name:
-  #         mountPath: /shared
-  #         readOnly: False
-  #         subPath: ""
-  #         mountPropagation: ""
-
-# -- Service
-service:
-  # -- Service name
-  main:
-    # -- Enables the service
-    enabled: true
-    # -- Primary service
-    primary: true
-    # -- Service labels
-    labels: {}
-    # -- Service annotations
-    annotations: {}
-    # -- Pod to connect
-    # targetSelector: main
-    # -- Ports
-    ports:
-      main:
-        # -- Enable the port
-        enabled: true
-        # -- Primary port
-        primary: true
-        # -- Port
-        port:
-        # -- Protocol
-        protocol: HTTP
-        # -- Target port
-        targetPort:
-        # -- Node port
-        nodePort:
-        # -- Container to assign the port
-        targetSelector: container-name
-
-# -- VolumeClaimTemplates (StatefulSet only)
-volumeClaimTemplates:
-  # -- VolumeClaimTemplate name
-  vct-name:
-    # -- Enables the VolumeClaimTemplate
-    enabled: true
-    # -- VolumeClaimTemplate labels
-    labels: {}
-    # -- VolumeClaimTemplate annotations
-    annotations: {}
-    # -- VolumeClaimTemplate access modes
-    accessModes:
-      - ReadWriteOnce
-    # -- VolumeClaimTemplate storage class
-    storageClassName: ""
-    # -- VolumeClaimTemplate size
-    size: 1Gi
-    # -- Options that apply to all volumeMounts
-    # Can be overruled per volumeMount under targetSelector
-    # -- VolumeClaimTemplate mount path
-    mountPath: /data
-    readOnly: false
-    subPath: ""
-    mountPropagation: ""
-    targetSelector:
-      pod-name:
-        container-name:
-          mountPath: /data
-          readOnly: False
-          subPath: ""
-          mountPropagation: ""
-
-# -- SCALE GPU
-scaleGPU:
-  - gpu:
-      key: value
-    # Without targetSelector, the gpu will
-    # be applied to primary pods
-    targetSelector:
-      pod-name:
-        - container-name
-
-# -- SCALE External Interfaces
-scaleExternalInterfaces:
-  - hostInterface: ""
-    ipam:
-      type: ""
-    staticRoutes: []
-    staticIPConfigurations: []
-    # targetSelector: all
-    targetSelector:
-      - pod-name
-
-# -- SCALE Certificates
-scaleCerts:
-  # -- Certificate name
-  cert-name:
-    # -- Enables the certificate
-    enabled: false
-    # -- Certificate ID (Comes from SCALE)
-    id: 1
-    # -- Default Paths that will be used on all defined containers
-    # Can be overruled per container under targetSelector
-    certPath: ""
-    keyPath: ""
-    # -- Defining a selector is only needed
-    # if you want to mount the certificate file(s)
-    # It will be mounted as readOnly
-    targetSelector:
-      pod-name:
-        container-name:
-          certPath: ""
-          keyPath: ""
-
-# -- Devices
-devices:
-  # -- Device name
-  device-name:
-    # -- Enables the device
-    enabled: false
-    # -- Device host path
-    hostPath: /host/device/path
-    # -- Options that apply to all volumeMounts
-    # Can be overruled per volumeMount under targetSelector
-    mountPath: /shared
-    readOnly: False
-    subPath: ""
-    mountPropagation: ""
-    # Where to define the volume and mount the volume
-    # targetSelector: all
-    targetSelector:
-      pod-name:
-        container-name:
-          mountPath: /shared
-          readOnly: False
-          subPath: ""
-          mountPropagation: ""
-
-notes:
-  header: |
-    # Welcome to SCALE
-    Thank you for installing <{{ .Chart.Name }}>.
-  # custom: "{{ toYaml $.Values }}"
-  custom: ""
-  footer: |
-    # Documentation
-    # Bug reports
-
-# -- workload
+# -- (docs/workload/README.md)
 workload:
-  # -- Workload name
   main:
-    # -- Enables the workload
     enabled: true
-    # -- Primary workload
     primary: true
-    # -- Workload type
     type: Deployment
-    # -- Workload labels
-    # labels: {}
-    # # -- Workload annotations
-    # annotations: {}
-    # # -- Workload replicas (Deployment and StatefulSet only)
-    # replicas: 1
-    # # -- Workload revision history limit
-    # revisionHistoryLimit: 3
-    # # Strategy
-    # # -- Workload strategy type
-    # strategy: Recreate
-    # # -- Workload strategy rolling update
-    # rollingUpdate:
-    #   # -- Workload strategy rolling update max unavailable
-    #   maxUnavailable: 1
-    #   # -- Workload strategy rolling update max surge
-    #   maxSurge: 1
-    #   # -- Workload strategy rolling update partition (StatefulSet only)
-    #   partition: 0
-
-    # # -- CronJob
-    # # - CronJob schedule
-    # schedule: "5"
-    # # - CronJob concurrency policy
-    # concurrencyPolicy: ""
-    # # - CronJob timezone
-    # timezone: ""
-    # # - CronJob failed jobs history limit
-    # failedJobsHistoryLimit: 1
-    # # - CronJob successful jobs history limit
-    # successfulJobsHistoryLimit: 3
-    # # - CronJob starting deadline seconds
-    # startingDeadlineSeconds: 0
-
-    # # -- Job
-    # # - Job active deadline seconds
-    # activeDeadlineSeconds: 0
-    # # - Job backoff limit
-    # backoffLimit: 6
-    # # - Job completions
-    # completions: 1
-    # # - Job parallelism
-    # parallelism: 1
-    # # - Job ttl seconds after finished
-    # ttlSecondsAfterFinished: 0
-    # # - Job completion mode
-    # completionMode: NonIndexed
-
-    # -- Pod Spec
     podSpec:
-      # # -- Pod labels
-      # labels: {}
-      # # -- Pod annotations
-      # annotations: {}
-      # -- hostNetwork
-      hostNetwork: false
-      # -- enableServiceLinks
-      enableServiceLinks: true
-      # -- restartPolicy
-      restartPolicy: Always
-      # -- schedulerName
-      schedulerName: ""
-      # -- priorityClassName
-      priorityClassName: ""
-      # -- hostname
-      hostname: ""
-      # -- nodeselector
-      nodeSelector: {}
-      # -- tolerations
-      tolerations: []
-      # -- runtimeClassName
-      runtimeClassName: ""
-      # -- terminationGracePeriodSeconds
-      terminationGracePeriodSeconds: 30
-      # -- securityContext
-      securityContext:
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        sysctls: []
-        supplementalGroups: []
-      # -- Containers
+      # TODO: Currently implementing
       containers:
-        # -- Container name
         main:
-          # -- Enables the container
           enabled: true
-          # -- Sets the container as primary
           primary: true
-          # -- Container image
-          imageSelector: ""
-          tty: false
-          stdin: false
-          command: []
-          args: []
-          extraArgs: []
+          imageSelector: image
           securityContext:
             runAsNonRoot: true
             runAsUser: 568
@@ -474,14 +131,6 @@ workload:
               add: []
               drop:
                 - ALL
-          lifecycle:
-            postStart:
-              command: []
-            preStop:
-              command: []
-          termination:
-            messagePath: ""
-            messagePolicy: ""
           env: {}
           envList: []
           envFrom: []
@@ -519,106 +168,133 @@ workload:
           enabled: false
           type: install
           # ...containerSpec
-
 # TODO:
 portal: {}
 
-# Done
-# -- Image Pull Secrets
+# -- VolumeClaimTemplates (StatefulSet only)
+volumeClaimTemplates:
+  # -- VolumeClaimTemplate name
+  vct-name:
+    # -- Enables the VolumeClaimTemplate
+    enabled: true
+    # -- VolumeClaimTemplate labels
+    labels: {}
+    # -- VolumeClaimTemplate annotations
+    annotations: {}
+    # -- VolumeClaimTemplate access modes
+    accessModes:
+      - ReadWriteOnce
+    # -- VolumeClaimTemplate storage class
+    storageClassName: ""
+    # -- VolumeClaimTemplate size
+    size: 1Gi
+    # -- Options that apply to all volumeMounts
+    # Can be overruled per volumeMount under targetSelector
+    # -- VolumeClaimTemplate mount path
+    mountPath: /data
+    readOnly: false
+    subPath: ""
+    mountPropagation: ""
+    # targetSelector:
+    #   pod-name:
+    #     container-name:
+    #       mountPath: /data
+    #       readOnly: false
+    #       subPath: ""
+    #       mountPropagation: ""
+
+# -- SCALE GPU (TODO: Only the resources part is left)
+scaleGPU:
+  - gpu:
+      key: value
+    # Without targetSelector, the gpu will
+    # be applied to primary pod/container
+    targetSelector:
+      pod-name:
+        - container-name
+
+##### ⬇ Done ⬇ #####
+
+# -- (docs/persistence/README.md)
+persistence:
+  shared:
+    enabled: false # TODO: Enable by default?
+    type: emptyDir
+    mountPath: /shared
+    targetSelectAll: true
+  varlogs:
+    enabled: false # TODO: Enable by default?
+    type: emptyDir
+    mountPath: /var/logs
+    targetSelectAll: true
+  tmp:
+    enabled: false # TODO: Enable by default?
+    type: emptyDir
+    mountPath: /tmp
+    targetSelectAll: true
+  devshm:
+    enabled: false # TODO: Enable by default?
+    type: emptyDir
+    mountPath: /dev/shm
+    targetSelectAll: true
+
+# -- (docs/service/README.md)
+service:
+  main:
+    enabled: true
+    primary: true
+    ports:
+      main:
+        enabled: true
+        primary: true
+        protocol: HTTP
+
+# -- Timezone used everywhere applicable
+TIMEZONE: UTC
+
+# -- Injected from SCALE middleware
+# Only for reference here
+ixExternalInterfacesConfiguration: []
+# -- Injected from SCALE middleware
+# Only for reference here
+ixExternalInterfacesConfigurationNames: []
+# -- Injected from SCALE middleware
+# Only for reference here
+ixCertificates: []
+# -- Injected from SCALE middleware
+# Only for reference here
+ixVolumes: []
+
+# -- (docs/imagePullSecrets.md)
 imagePullSecret: []
-  # -- Image Pull Secret name
-  # image-secret-name:
-  #   # -- Enables the Image Pull Secret
-  #   enabled: false
-  #   # -- Labels
-  #   labels: {}
-  #   # -- Annotations
-  #   annotations: {}
-  #   # -- Image Pull Secret Data
-  #   data:
-  #     # -- Registry
-  #     registry: ""
-  #     # -- Username
-  #     username: ""
-  #     # -- Password
-  #     password: ""
-  #     # -- Email
-  #     email: ""
-  #   targetSelectAll: true
-  #   targetSelector:
-  #     - main
 
-# -- ConfigMaps (docs/configmap.md)
+# -- (docs/configmap.md)
 configmap: {}
-  # # -- ConfigMap name
-  # conf-name:
-  #   # -- Enables the ConfigMap
-  #   enabled: false
-  #   # -- ConfigMap labels
-  #   labels: {}
-  #   # -- ConfigMap annotations
-  #   annotations: {}
-  #   # -- ConfigMap data
-  #   data: {}
 
-# -- Secrets (docs/secret.md)
+# -- (docs/secret.md)
 secret: {}
-  # # -- Secret name
-  # secret-name:
-  #   # -- Enables the secret
-  #   enabled: false
-  #   # -- Secret labels
-  #   labels: {}
-  #   # -- Secret annotations
-  #   annotations: {}
-  #   # -- Secret data
-  #   data:
-  #     # -- Secret data (stringData)
-  #     key: value
 
-# -- Service Account:
+# -- (docs/serviceAccount.md)
 serviceAccount: {}
-  # main:
-  #   # -- Enables the service account
-  #   enabled: false
-  #   # -- Primary service account
-  #   primary: true
-  #   # -- Service account labels
-  #   labels: {}
-  #   # -- Service account annotations
-  #   annotations: {}
-  #   targetSelectAll: false
-  #   targetSelector:
-  #     - main
 
-# -- RBAC
+# -- (docs/rbac.md)
 rbac: {}
-  # main:
-  #   # -- Enables the RBAC
-  #   enabled: false
-  #   # -- Primary RBAC
-  #   primary: true
-  #   # -- RBAC labels
-  #   labels: {}
-  #   # -- RBAC annotations
-  #   annotations: {}
-  #   # -- ClusterWide
-  #   clusterWide: false
-  #   # -- Select all service accounts
-  #   allServiceAccounts: false
-  #   # -- Service accounts to select
-  #   serviceAccounts:
-  #     - main
-  #   # -- RBAC rules
-  #   rules:
-  #     - apiGroups:
-  #         - ""
-  #       resources:
-  #         - pods
-  #       verbs:
-  #         - get
-  #   # -- RBAC subjects
-  #   subjects:
-  #     - kind: a-kind
-  #       name: a-name
-  #       apiGroup: a-group
+
+# -- (docs/scaleExternalInterface.md)
+scaleExternalInterface: []
+
+# -- (docs/scaleCertificate.md)
+scaleCertificate: {}
+
+# NOTES.txt TODO: Docs
+notes:
+  header: |
+    # Welcome to SCALE
+    Thank you for installing <{{ .Chart.Name }}>.
+  # custom: "{{ toYaml $.Values }}"
+  custom: ""
+  footer: |
+    # Documentation
+    Documentation for this chart can be found at ...
+    # Bug reports
+    If you find a bug in this chart, please file an issue at ...

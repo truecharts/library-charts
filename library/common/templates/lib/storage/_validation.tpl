@@ -2,7 +2,7 @@
 {{/* Call this template:
 {{ include "ix.v1.common.lib.persistence.validation" (dict "objectData" $objectData) -}}
 objectData:
-  rootCtx: The root context.
+  rootCtx: The root context of the chart.
   objectData: The service object.
 */}}
 
@@ -10,15 +10,7 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- if and $objectData.labels (not (kindIs "map" $objectData.labels)) -}}
-    {{- fail (printf "Persistence - Expected <labels> to be a dictionary, but got [%v]" (kindOf $objectData.labels)) -}}
-  {{- end -}}
-
-  {{- if and $objectData.annotations (not (kindIs "map" $objectData.annotations)) -}}
-    {{- fail (printf "Persistence - Expected <annotations> to be a dictionary, but got [%v]" (kindOf $objectData.annotations)) -}}
-  {{- end -}}
-
-  {{- $types := (list "pvc" "emptyDir" "nfs" "hostPath" "ixVolume" "secret" "configmap") -}}
+  {{- $types := (list "pvc" "emptyDir" "nfs" "hostPath" "ixVolume" "secret" "configmap" "device") -}}
   {{- if not (mustHas $objectData.type $types) -}}
     {{- fail (printf "Persistence - Expected <type> to be one of [%s], but got [%s]" (join ", " $types) $objectData.type) -}}
   {{- end -}}
