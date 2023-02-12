@@ -20,7 +20,7 @@ kind: PrometheusRule
 metadata:
   name: {{ $prometheusruleName }}
   {{- $labels := (mustMerge ($prometheusruleLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
+  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels)) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end }}
