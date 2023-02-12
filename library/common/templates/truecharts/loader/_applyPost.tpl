@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.loader.apply" -}}
+{{- define "tc.v1.common.loader.apply.post" -}}
   {{- include "tc.v1.common.spawner.ingress" . | nindent 0 -}}
 
   {{- include "tc.v1.common.spawner.hpa" . | nindent 0 -}}

@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.loader.init" -}}
+{{- define "tc.v1.common.loader.init.post" -}}
   {{- include "tc.v1.common.lib.util.manifest.manage" . | nindent 0 -}}
 
   {{/* Autogenerate postgresql passwords if needed */}}
