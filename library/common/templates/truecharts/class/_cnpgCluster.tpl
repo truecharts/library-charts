@@ -15,12 +15,12 @@ apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
 kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
-  {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end }}
-  {{- $annotations := (mustMerge ($cnpgClusterAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- $annotations := (mustMerge ($cnpgClusterAnnotations | default dict) (include "ix.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}

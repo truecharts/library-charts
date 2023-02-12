@@ -24,12 +24,12 @@ apiVersion: {{ include "tc.v1.common.capabilities.hpa.apiVersion" $ }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $hpaName }}
-  {{- $labels := (mustMerge ($hpaLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  {{- $labels := (mustMerge ($hpaLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge ($hpaAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- $annotations := (mustMerge ($hpaAnnotations | default dict) (include "ix.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}

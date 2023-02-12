@@ -19,12 +19,12 @@ apiVersion: {{ include "tc.v1.common.capabilities.podmonitor.apiVersion" $ }}
 kind: PodMonitor
 metadata:
   name: {{ $podmonitorName }}
-  {{- $labels := (mustMerge ($podmonitorLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  {{- $labels := (mustMerge ($podmonitorLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end }}
-  {{- $annotations := (mustMerge ($podmonitorAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- $annotations := (mustMerge ($podmonitorAnnotations | default dict) (include "ix.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
@@ -36,7 +36,7 @@ spec:
     {{- tpl (toYaml $values.selector) $ | nindent 4 }}
     {{- else }}
     matchLabels:
-      {{- include "ix.v1.common.labels.selectorLabels" $ | nindent 6 }}
+      {{- include "ix.v1.common.lib.metadata.allLabels.selectorLabels" $ | nindent 6 }}
     {{- end }}
   podMetricsEndpoints:
     {{- tpl (toYaml $values.endpoints) $ | nindent 4 }}
