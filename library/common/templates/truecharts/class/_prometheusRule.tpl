@@ -1,5 +1,5 @@
 {{- define "tc.v1.common.class.prometheusrule" -}}
-  {{- $fullName := include "ix.v1.common.names.fullname" . -}}
+  {{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . -}}
   {{- $prometheusruleName := $fullName -}}
   {{- $values := .Values.prometheusrule -}}
 

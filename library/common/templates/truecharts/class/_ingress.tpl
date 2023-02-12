@@ -3,7 +3,7 @@ This template serves as a blueprint for all Ingress objects that are created
 within the common library.
 */}}
 {{- define "tc.v1.common.class.ingress" -}}
-  {{- $fullName := include "ix.v1.common.names.fullname" . -}}
+  {{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . -}}
   {{- $ingressName := $fullName -}}
   {{- $values := .Values.ingress -}}
 

@@ -1,30 +1,30 @@
-{{- define "tc.v1.common.class.podmonitor" -}}
-  {{- $fullName := include "ix.v1.common.names.fullname" . -}}
-  {{- $podmonitorName := $fullName -}}
-  {{- $values := .Values.podmonitor -}}
+{{- define "tc.v1.common.class.servicemonitor" -}}
+  {{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . -}}
+  {{- $servicemonitorName := $fullName -}}
+  {{- $values := .Values.servicemonitor -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.metrics -}}
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
-  {{- $podmonitorLabels := $values.labels -}}
-  {{- $podmonitorAnnotations := $values.annotations -}}
+  {{- $servicemonitorLabels := $values.labels -}}
+  {{- $servicemonitorAnnotations := $values.annotations -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
-    {{- $podmonitorName = printf "%v-%v" $podmonitorName $values.nameOverride -}}
+    {{- $servicemonitorName = printf "%v-%v" $servicemonitorName $values.nameOverride -}}
   {{- end }}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.podmonitor.apiVersion" $ }}
-kind: PodMonitor
+apiVersion: {{ include "tc.v1.common.capabilities.servicemonitor.apiVersion" $ }}
+kind: ServiceMonitor
 metadata:
-  name: {{ $podmonitorName }}
-  {{- $labels := (mustMerge ($podmonitorLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
+  name: {{ $servicemonitorName }}
+  {{- $labels := (mustMerge ($servicemonitorLabels | default dict) (include "ix.v1.common.labels" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.labels.render" (dict "root" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end }}
-  {{- $annotations := (mustMerge ($podmonitorAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
+  {{- $annotations := (mustMerge ($servicemonitorAnnotations | default dict) (include "ix.v1.common.annotations" $ | fromYaml)) -}}
   {{- with (include "ix.v1.common.util.annotations.render" (dict "root" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
@@ -38,6 +38,6 @@ spec:
     matchLabels:
       {{- include "ix.v1.common.labels.selectorLabels" $ | nindent 6 }}
     {{- end }}
-  podMetricsEndpoints:
+  endpoints:
     {{- tpl (toYaml $values.endpoints) $ | nindent 4 }}
 {{- end -}}

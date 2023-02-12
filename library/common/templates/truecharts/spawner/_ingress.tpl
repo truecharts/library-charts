@@ -4,7 +4,7 @@
   {{- range $name, $ingress := .Values.ingress -}}
     {{- if $ingress.enabled -}}
       {{- $ingressValues := $ingress -}}
-      {{- $ingressName := include "ix.v1.common.names.fullname" $ -}}
+      {{- $ingressName := include "ix.v1.common.lib.chart.names.fullname" $ -}}
 
       {{/* set defaults */}}
       {{- if and (not $ingressValues.nameOverride) (ne $name (include "tc.v1.common.lib.util.ingress.primary" $)) -}}

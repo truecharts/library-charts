@@ -3,8 +3,8 @@ This template serves as a blueprint for horizontal pod autoscaler objects that a
 using the common library.
 */}}
 {{- define "tc.v1.common.class.hpa" -}}
-  {{- $targetName := include "ix.v1.common.names.fullname" . -}}
-  {{- $fullName := include "ix.v1.common.names.fullname" . -}}
+  {{- $targetName := include "ix.v1.common.lib.chart.names.fullname" . -}}
+  {{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . -}}
   {{- $hpaName := $fullName -}}
   {{- $values := .Values.hpa -}}
 
