@@ -31,7 +31,4 @@
   {{/* Render PVC(s) */}}
   {{- include "ix.v1.common.spawner.pvc" . | nindent 0 -}}
 
-  {{/* Render TrueCharts Addition(s) */}}
-  {{- include "tc.v1.common.loader.apply" . | nindent 0 -}}
-
 {{- end -}}
