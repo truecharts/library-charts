@@ -20,12 +20,12 @@ kind: PodMonitor
 metadata:
   name: {{ $podmonitorName }}
   {{- $labels := (mustMerge ($podmonitorLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels)) | trim) }}
+  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end }}
   {{- $annotations := (mustMerge ($podmonitorAnnotations | default dict) (include "ix.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations)) | trim) }}
+  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
   {{- end }}

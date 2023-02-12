@@ -72,7 +72,7 @@ kind: Ingress
 metadata:
   name: {{ $ingressName }}
   {{- $labels := (mustMerge ($ingressLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels)) | trim) }}
+  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
@@ -83,7 +83,7 @@ metadata:
   {{- end }}
     "traefik.ingress.kubernetes.io/router.entrypoints": {{ $values.entrypoint | default "websecure" }}
     "traefik.ingress.kubernetes.io/router.middlewares": {{ $middlewares | quote }}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations)) | trim) }}
+  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
 spec:
