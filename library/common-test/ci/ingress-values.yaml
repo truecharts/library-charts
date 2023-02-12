@@ -12,11 +12,13 @@ service:
     ports:
       main:
         port: 8080
+        protocol: http
   autolink:
     enabled: true
     ports:
       autolink:
         enabled: true
+        protocol: http
         port: 8081
 
 manifests:
