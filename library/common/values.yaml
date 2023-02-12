@@ -1,4 +1,70 @@
 # TODO: Docs
+# Defines image info
+image:
+  repository: repo
+  tag: tag
+  pullPolicy: IfNotPresent
+
+openvpnImage:
+  repository: tccr.io/truecharts/openvpn-client
+  tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
+  pullPolicy: IfNotPresent
+
+wireguardImage:
+  repository: tccr.io/truecharts/wireguard
+  tag: v1.0.20210914@sha256:9f56e5660e8df8d4d38521ed73a4cc29fa24bf578007bfbe633e00184e2ebfbc
+  pullPolicy: IfNotPresent
+
+tailscaleImage:
+  repository: tailscale/tailscale
+  # TODO: Switch to stable once a v1.33.x is released
+  tag: v1.34.1@sha256:69bec9fdea25765e1b9dd129ccaeaf1e160f1132bb390535772fa939f0bf620b
+  pullPolicy: IfNotPresent
+
+codeserverImage:
+  repository: tccr.io/truecharts/code-server
+  tag: 4.9.1@sha256:b339bd8f6da4c73c0259d6951991278aa1595a6be570a207ce635c75aac9893d
+  pullPolicy: IfNotPresent
+
+alpineImage:
+  repository: tccr.io/truecharts/alpine
+  tag: v3.17.0@sha256:f8607e14a5e456c1b8fe50b7f0c9371b4aae543d23080f5e2fe0bdbb06d2413b
+  pullPolicy: IfNotPresent
+
+scratchImage:
+  repository: tccr.io/truecharts/scratch
+  tag: latest@sha256:b4289ea433ec1308f6f2e8bff3f23bcd52b751ccb691284210ed826385ba9317
+  pullPolicy: IfNotPresent
+
+kubectlImage:
+  repository: tccr.io/truecharts/kubectl
+  tag: v1.26.0@sha256:e56d1c8dd3ba85bb8410cc9f5c04f03f814e4b76ffcc7f12730868faba5b9c52
+  pullPolicy: IfNotPresent
+
+wgetImage:
+  repository: tccr.io/truecharts/wget
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+postgresClientImage:
+  repository: tccr.io/truecharts/db-wait-postgres
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+mariadbClientImage:
+  repository: tccr.io/truecharts/db-wait-mariadb
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+redisClientImage:
+  repository: tccr.io/truecharts/db-wait-redis
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+mongodbClientImage:
+  repository: tccr.io/truecharts/db-wait-mongodb
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
 # -- Global values
 global:
   # -- Set additional global labels
