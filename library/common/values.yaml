@@ -12,6 +12,11 @@ global:
   # -- Minimum nodePort value
   minNodePort: 9000
 
+# -- Used to inject our own operator manifests into SCALE
+manifests:
+  enabled: true
+  staging: false
+
 # TODO: Docs
 fallbackDefaults:
   # -- Define a storageClassName that will be used for all PVCs
