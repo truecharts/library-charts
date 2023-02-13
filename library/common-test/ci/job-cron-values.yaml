@@ -3,6 +3,24 @@ image:
   pullPolicy: IfNotPresent
   tag: 1.8.7@sha256:8c61f0ca92fd806fcb4ed1465cb793c05443f37951554b105b0f2dc686a95772
 
+workload:
+  main:
+    enabled: true
+    primary: true
+    type: Deployment
+    podSpec: {}
+  job:
+    enabled: true
+    type: Job
+    podSpec:
+      restartPolicy: Never
+  cronjob:
+    enabled: true
+    type: CronJob
+    schedule: "* * * * *"
+    podSpec:
+      restartPolicy: OnFailure
+
 service:
   main:
     ports:
@@ -21,20 +39,3 @@ probes:
     enabled: true
   startup:
     enabled: true
-
-jobs:
-  testjob:
-    enabled: true
-    podSpec:
-      containers:
-        main:
-          imageSelector: image
-  testchronjob:
-    enabled: true
-    cron:
-      enabled: true
-      schedule: "* * * * *"
-    podSpec:
-      containers:
-        main:
-          imageSelector: image
