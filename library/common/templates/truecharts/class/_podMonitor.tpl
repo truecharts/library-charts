@@ -36,7 +36,7 @@ spec:
     {{- tpl (toYaml $values.selector) $ | nindent 4 }}
     {{- else }}
     matchLabels:
-      {{- $primaryPodName := (include "ix.v1.common.lib.util.workload.primary" (dict "workload" .Values.workloads "root" $)) -}}
+      {{ $primaryPodName := (include "ix.v1.common.lib.util.workload.primary" (dict "workload" .Values.workloads "root" $)) }}
       {{ include "ix.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $primaryPodName) }}
     {{- end }}
   podMetricsEndpoints:

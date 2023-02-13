@@ -36,7 +36,7 @@ spec:
     {{- tpl (toYaml $values.selector) $ | nindent 4 }}
     {{- else }}
     matchLabels:
-      {{- $primaryServiceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" $)) -}}
+      {{ $primaryServiceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" $)) }}
       {{ include "ix.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "service" "objectName" $primaryServiceName) }}
     {{- end }}
   endpoints:
