@@ -5,7 +5,7 @@ image:
 
 workload:
   main:
-    pod:
+    podSpec:
       containers:
         main:
           args:

@@ -9,7 +9,7 @@ global:
 
 workload:
   main:
-    pod:
+    podSpec:
       containers:
         main:
           args:
