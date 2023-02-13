@@ -49,7 +49,7 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: {{ tpl ($values.storage.walsize | default $.Values.global.defaults.VCTSize) $ | quote }}
+          storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   walStorage:
     pvcTemplate:
@@ -60,7 +60,7 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: {{ tpl ($values.storage.walsize | default $.Values.global.defaults.VCTSize) $ | quote }}
+          storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   monitoring:
     enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
