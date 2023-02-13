@@ -9,9 +9,11 @@ global:
 
 workload:
   main:
+    enabled: true
     podSpec:
       containers:
         main:
+          enabled: true
           args:
             - --port
             - "8080"
