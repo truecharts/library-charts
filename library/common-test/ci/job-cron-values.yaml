@@ -5,21 +5,54 @@ image:
 
 workload:
   main:
-    enabled: true
-    primary: true
-    type: Deployment
-    podSpec: {}
+    pod:
+      containers:
+        main:
+          args:
+            - --port
+            - "8080"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
   job:
     enabled: true
     type: Job
     podSpec:
       restartPolicy: Never
-  cronjob:
+      containers:
+        main:
+          args:
+            - --port
+            - "8081"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
+  job:
     enabled: true
     type: CronJob
     schedule: "* * * * *"
     podSpec:
       restartPolicy: OnFailure
+      containers:
+        main:
+          args:
+            - --port
+            - "8082"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
 
 service:
   main:
@@ -27,15 +60,3 @@ service:
       main:
         protocol: HTTP
         port: 8080
-
-args:
-  - --port
-  - "8080"
-
-probes:
-  liveness:
-    enabled: true
-  readiness:
-    enabled: true
-  startup:
-    enabled: true

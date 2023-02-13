@@ -7,6 +7,22 @@ global:
   ixChartContext:
     something: something
 
+workload:
+  main:
+    pod:
+      containers:
+        main:
+          args:
+            - --port
+            - "8080"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
+
 service:
   main:
     ports:
@@ -24,18 +40,6 @@ service:
 manifests:
   enabled: false
   staging: false
-
-args:
-  - --port
-  - '8080'
-
-probes:
-  liveness:
-    enabled: true
-  readiness:
-    enabled: true
-  startup:
-    enabled: true
 
 
 # -- Configure the ingresses for the chart here.

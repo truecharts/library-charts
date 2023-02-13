@@ -10,9 +10,21 @@ service:
         protocol: HTTP
         port: 8080
 
-args:
-  - --port
-  - "8080"
+workload:
+  main:
+    pod:
+      containers:
+        main:
+          args:
+            - --port
+            - "8080"
+          probes:
+            liveness:
+              enabled: true
+            readiness:
+              enabled: true
+            startup:
+              enabled: true
 
 additionalContainers:
   some-name:
@@ -45,11 +57,3 @@ systemContainers:
 installContainers:
   some-name:
     imageSelector: scratchImage
-
-probes:
-  liveness:
-    enabled: true
-  readiness:
-    enabled: true
-  startup:
-    enabled: true
