@@ -104,7 +104,7 @@ spec:
         {{- $cert := dict }}
         {{- $_ := set $cert "id" $tlsValues.scaleCert }}
         {{- $_ := set $cert "nameOverride" $tlsName }}
-      secretName: {{ include "ix.v1.common.names.certificateSecret" (dict "root" $ "certValues" $cert "certName" $cert.nameOverride "certID" $cert.id) }}
+      secretName: {{ printf "%s-tls-%v" (include "ix.v1.common.lib.chart.names.fullname" $) $index }}
       {{- else if .secretName }}
       secretName: {{ tpl .secretName $ | quote }}
       {{- end -}}
