@@ -25,11 +25,11 @@ probes:
   startup:
     enabled: true
 
-addons:
-  codeserver:
-    enabled: true
-    service:
-      type: LoadBalancer
-      ports:
-        codeserver:
-          nodePort: 30067
+# addons:
+#   codeserver:
+#     enabled: true
+#     service:
+#       type: LoadBalancer
+#       ports:
+#         codeserver:
+#           nodePort: 30067
