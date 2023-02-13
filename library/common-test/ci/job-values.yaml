@@ -18,8 +18,9 @@ workload:
   main:
     enabled: true
     primary: true
-    type: Deployment
+    type: Job
     podSpec:
+      restartPolicy: Never
       containers:
         main:
           enabled: true

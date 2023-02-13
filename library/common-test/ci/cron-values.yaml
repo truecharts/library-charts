@@ -18,8 +18,10 @@ workload:
   main:
     enabled: true
     primary: true
-    type: Deployment
+    type: CronJob
+    schedule: "*/1 * * * *"
     podSpec:
+      restartPolicy: OnFailure
       containers:
         main:
           enabled: true

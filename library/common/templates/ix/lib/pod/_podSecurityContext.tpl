@@ -113,11 +113,11 @@ objectData: The object data to be used to render the Pod.
             {{- $portToCheck = (tpl $portToCheck $rootCtx) | float64 -}}
           {{- end -}}
 
-          {{- if or (not $portRange.low) (lt $portToCheck $portRange.low) -}}
+          {{- if or (not $portRange.low) (lt $portToCheck ($portRange.low | float64)) -}}
             {{- $_ := set $portRange "low" $portToCheck -}}
           {{- end -}}
 
-          {{- if or (not $portRange.high) (gt $portToCheck $portRange.high) -}}
+          {{- if or (not $portRange.high) (gt $portToCheck ($portRange.high | float64)) -}}
             {{- $_ := set $portRange "high" $portToCheck -}}
           {{- end -}}
 

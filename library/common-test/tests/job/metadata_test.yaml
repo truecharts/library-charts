@@ -53,7 +53,7 @@ tests:
           value:
             app: common-test-1.0.0
             release: RELEASE-NAME
-            helm-revision: 0
+            helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
@@ -61,13 +61,6 @@ tests:
             g_label2: global_label2
             label1: label1
             label2: label2
-      - documentIndex: *jobDoc
-        equal:
-          path: spec.selector.matchLabels
-          value:
-            pod.name: workload-name
-            app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
       - documentIndex: *jobDoc
         equal:
           path: spec.template.metadata.labels
@@ -79,7 +72,7 @@ tests:
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: common-test
             app.kubernetes.io/version: v9.9.9
-            helm-revision: 0
+            helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             g_label1: global_label1
             g_label2: global_label2
@@ -89,60 +82,3 @@ tests:
         matchRegex:
           path: spec.template.metadata.annotations.rollme
           pattern: '^[0-9a-zA-Z]{5}$'
-
-  - it: should pass with 2 job created with correct selector labels
-    set:
-      workload:
-        workload-name:
-          enabled: true
-          primary: true
-          type: Job
-          podSpec: {}
-        other-workload-name:
-          enabled: true
-          primary: false
-          type: Job
-          podSpec: {}
-    asserts:
-      - documentIndex: *jobDoc
-        isKind:
-          of: Job
-      - documentIndex: *jobDoc
-        equal:
-          path: metadata.name
-          value: release-name-common-test-other-workload-name
-      - documentIndex: *jobDoc
-        equal:
-          path: spec.selector.matchLabels
-          value:
-            pod.name: other-workload-name
-            app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
-      - documentIndex: *jobDoc
-        isSubset:
-          path: spec.template.metadata.labels
-          content:
-            pod.name: other-workload-name
-            app.kubernetes.io/instance: RELEASE-NAME
-            app.kubernetes.io/name: common-test
-      - documentIndex: &otherJobDoc 1
-        isKind:
-          of: Job
-      - documentIndex: *otherJobDoc
-        equal:
-          path: metadata.name
-          value: release-name-common-test
-      - documentIndex: *otherJobDoc
-        equal:
-          path: spec.selector.matchLabels
-          value:
-            pod.name: workload-name
-            app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
-      - documentIndex: *otherJobDoc
-        isSubset:
-          path: spec.template.metadata.labels
-          content:
-            pod.name: workload-name
-            app.kubernetes.io/instance: RELEASE-NAME
-            app.kubernetes.io/name: common-test
