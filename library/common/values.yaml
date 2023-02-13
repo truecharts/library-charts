@@ -22,6 +22,8 @@ fallbackDefaults:
   # -- Define a storageClassName that will be used for all PVCs
   # Can be overruled per PVC
   storageClass:
+  # -- Default probe type
+  probeType: http
   # -- Default Service Protocol
   serviceProtocol: TCP
   # -- Default Service Type
@@ -37,6 +39,26 @@ fallbackDefaults:
   # -- Default PVC/VCT Access Modes
   accessModes:
     - ReadWriteOnce
+  # -- Default probe timeouts
+  probeTimeouts:
+    liveness:
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+      successThreshold: 1
+    readiness:
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+      successThreshold: 2
+    startup:
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 2
+      failureThreshold: 60
+      successThreshold: 1
 
 # TODO: Docs (for the imageName) convention
 # -- Image values
