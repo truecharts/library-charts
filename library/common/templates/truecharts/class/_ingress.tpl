@@ -22,19 +22,12 @@ within the common library.
   {{- $primarySeriviceName := (include "ix.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
   {{/* Get service values of the primary service, if any */}}
   {{- $primaryService := get .Values.service $primarySeriviceName -}}
-  {{- $autoLinkService := $primaryService -}}
   {{- $defaultServiceName := $fullName -}}
 
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
     {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
   {{- end -}}
   {{- $defaultServicePort := get $primaryService.ports (include "ix.v1.common.lib.util.service.ports.primary" (dict "svcValues" $primaryService "svcName" $primarySeriviceName )) -}}
-
-  {{- if and (hasKey $values "nameOverride") ( $values.nameOverride ) ( $values.autoLink ) -}}
-    {{- $autoLinkService = get .Values.service $values.nameOverride -}}
-    {{- $defaultServiceName = $ingressName -}}
-    {{- $defaultServicePort = get $autoLinkService.ports $values.nameOverride -}}
-  {{- end -}}
 
   {{- $mddwrNamespace := "default" -}}
   {{- if $values.ingressClassName -}}
