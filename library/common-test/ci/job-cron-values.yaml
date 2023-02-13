@@ -35,7 +35,7 @@ workload:
               enabled: true
             startup:
               enabled: true
-  job:
+  cronjob:
     enabled: true
     type: CronJob
     schedule: "* * * * *"
