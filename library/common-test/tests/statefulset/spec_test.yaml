@@ -24,6 +24,30 @@ tests:
             revisionHistoryLimit: 3
             updateStrategy:
               type: RollingUpdate
+              rollingUpdate:
+                maxUnavailable: 1
+                partition: 1
+
+  - it: should apply defaults to rollingUpdate
+    set:
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: StatefulSet
+          replicas: 2
+          revisionHistoryLimit: 4
+          strategy: RollingUpdate
+          podSpec: {}
+    asserts:
+      - documentIndex: *statefulSetDoc
+        isSubset:
+          path: spec.updateStrategy
+          content:
+            type: RollingUpdate
+            rollingUpdate:
+              maxUnavailable: 1
+              partition: 1
 
   - it: should apply spec correctly
     set:
