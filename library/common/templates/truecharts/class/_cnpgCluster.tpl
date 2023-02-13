@@ -42,7 +42,7 @@ spec:
 
   storage:
     pvcTemplate:
-      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values.storage "root" . )) | trim }}
+      {{- with (include "ix.v1.common.lib.storage.storageClassName" (dict "persistence" $values.storage "root" . )) | trim }}
       storageClassName: {{ . }}
       {{- end }}
       accessModes:
@@ -53,7 +53,7 @@ spec:
 
   walStorage:
     pvcTemplate:
-      {{- with (include "ix.v1.common.storage.storageClassName" (dict "persistence" $values.storage "root" $ )) | trim }}
+      {{- with (include "ix.v1.common.lib.storage.storageClassName" (dict "persistence" $values.storage "root" $ )) | trim }}
       storageClassName: {{ . }}
       {{- end }}
       accessModes:
