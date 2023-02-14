@@ -40,3 +40,9 @@ workload:
               enabled: true
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
+
+volumeClaimTemplates:
+  data:
+    mountPath: /data
+    accessMode: "ReadWriteOnce"
+    size: 1Gi

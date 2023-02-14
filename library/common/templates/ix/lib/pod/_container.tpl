@@ -42,6 +42,10 @@ objectData: The object data to be used to render the Pod.
     {{- . | nindent 4 }}
   {{- end -}}
   {{- include "ix.v1.common.lib.container.probes" (dict "rootCtx" $rootCtx "objectData" $objectData) | trim | nindent 2 -}}
+  {{- with (include "ix.v1.common.lib.container.resources" (dict "rootCtx" $rootCtx "objectData" $objectData) | trim) }}
+  resources:
+    {{- . | nindent 4 }}
+  {{- end -}}
 {{- end -}}
 
 {{/*
@@ -50,6 +54,5 @@ TODO: envList
 TODO: fixedEnv
 TODO: envFrom
 TODO: securityContext
-TODO: resources
-TODO: ignore vkeys that are not supported in initContainers
+TODO: ignore keys that are not supported in initContainers
 */}}

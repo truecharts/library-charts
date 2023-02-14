@@ -21,12 +21,29 @@ objectData: The object data to be used to render the Pod.
   {{- end -}}
 
   {{/* TODO: Add supplemental groups
-    scaleGPU (44) (Only when GPU is enabled on the pod's containers)
     devices (5, 10, 20, 24) (Only when devices is assigned on the pod's containers)
     TODO: Unit Test the above cases
-    */}}
-  {{- $portRange := fromJson (include "ix.v1.common.lib.pod.securityContext.getPortRange" (dict "rootCtx" $rootCtx "objectData" $objectData)) -}}
-  {{- if and $portRange.low (le (int $portRange.low) 1024) -}}
+  */}}
+
+  {{- $addSupplemental := list -}}
+  {{- range $GPUValues := $rootCtx.Values.scaleGPU -}}
+    {{/* If there is a selector and pod is selected */}}
+    {{- if $GPUValues.targetSelector -}}
+      {{- if mustHas $objectData.shortName ($GPUValues.targetSelector | keys) -}}
+        {{- $addSupplemental = mustAppend $addSupplemental 44 -}}
+      {{- end -}}
+    {{/* If there isn't a selector, but pod is primary */}}
+    {{- else if $objectData.primary -}}
+      {{- $addSupplemental = mustAppend $addSupplemental 44 -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $addSupplemental -}}
+    {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups $addSupplemental) -}}
+  {{- end -}}
+
+  {{- $portRange := fromJson (include "ix.v1.common.lib.helpers.securityContext.getPortRange" (dict "rootCtx" $rootCtx "objectData" $objectData)) -}}
+  {{- if and $portRange.low (le (int $portRange.low) 1024) -}} {{/* If a container wants to bind a port <= 1024 change the unprivileged_port_start */}}
     {{- $_ := set $secContext "sysctls" (mustAppend $secContext.sysctls (dict "name" "net.ipv4.ip_unprivileged_port_start" "value" (printf "%v" $portRange.low))) -}}
   {{- end -}}
 
@@ -67,65 +84,4 @@ sysctls:
   {{- else }}
 sysctls: []
   {{- end -}}
-{{- end -}}
-
-{{/* Returns Lowest and Highest ports assigned to the any container in the pod */}}
-{{/* Call this template:
-{{ include "ix.v1.common.lib.pod.securityContext.getPortRange" (dict "rootCtx" $ "objectData" $objectData) }}
-rootCtx: The root context of the chart.
-objectData: The object data to be used to render the Pod.
-*/}}
-{{- define "ix.v1.common.lib.pod.securityContext.getPortRange" -}}
-  {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData -}}
-
-  {{ $portRange := (dict "high" 0 "low" 0) }}
-
-  {{- range $name, $service := $rootCtx.Values.service -}}
-    {{- $selected := false -}}
-    {{/* If service is enabled... */}}
-    {{- if $service.enabled -}}
-
-      {{/* If there is a selector */}}
-      {{- if $service.targetSelector -}}
-
-        {{/* And pod is selected */}}
-        {{- if eq $service.targetSelector $objectData.shortName -}}
-          {{- $selected = true -}}
-        {{- end -}}
-
-      {{- else -}}
-        {{/* If no selector is defined but pod is primary */}}
-        {{- if $objectData.primary -}}
-          {{- $selected = true -}}
-        {{- end -}}
-
-      {{- end -}}
-    {{- end -}}
-
-    {{- if $selected -}}
-      {{- range $name, $portValues := $service.ports -}}
-        {{- if $portValues.enabled -}}
-
-          {{- $portToCheck := ($portValues.targetPort | default $portValues.port) -}}
-          {{- if kindIs "string" $portToCheck -}}
-            {{/* Helm stores ints as floats, so convert string to float before comparing */}}
-            {{- $portToCheck = (tpl $portToCheck $rootCtx) | float64 -}}
-          {{- end -}}
-
-          {{- if or (not $portRange.low) (lt $portToCheck ($portRange.low | float64)) -}}
-            {{- $_ := set $portRange "low" $portToCheck -}}
-          {{- end -}}
-
-          {{- if or (not $portRange.high) (gt $portToCheck ($portRange.high | float64)) -}}
-            {{- $_ := set $portRange "high" $portToCheck -}}
-          {{- end -}}
-
-        {{- end -}}
-      {{- end -}}
-    {{- end -}}
-
-  {{- end -}}
-
-  {{- $portRange | toJson -}}
 {{- end -}}
