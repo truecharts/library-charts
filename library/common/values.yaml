@@ -12,11 +12,6 @@ global:
   # -- Minimum nodePort value
   minNodePort: 9000
 
-# -- Used to inject our own operator manifests into SCALE
-manifests:
-  enabled: true
-  staging: false
-
 # TODO: Docs
 fallbackDefaults:
   # -- Define a storageClassName that will be used for all PVCs
@@ -25,7 +20,7 @@ fallbackDefaults:
   # -- Default probe type
   probeType: http
   # -- Default Service Protocol
-  serviceProtocol: TCP
+  serviceProtocol: tcp
   # -- Default Service Type
   serviceType: ClusterIP
   # -- Default persistence type
@@ -62,71 +57,12 @@ fallbackDefaults:
 
 # TODO: Docs (for the imageName) convention
 # -- Image values
-# Defines image info
 image:
-  repository: repo
-  tag: tag
-  pullPolicy: IfNotPresent
-
-openvpnImage:
-  repository: tccr.io/truecharts/openvpn-client
-  tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
-  pullPolicy: IfNotPresent
-
-wireguardImage:
-  repository: tccr.io/truecharts/wireguard
-  tag: v1.0.20210914@sha256:9f56e5660e8df8d4d38521ed73a4cc29fa24bf578007bfbe633e00184e2ebfbc
-  pullPolicy: IfNotPresent
-
-tailscaleImage:
-  repository: tailscale/tailscale
-  # TODO: Switch to stable once a v1.33.x is released
-  tag: v1.34.1@sha256:69bec9fdea25765e1b9dd129ccaeaf1e160f1132bb390535772fa939f0bf620b
-  pullPolicy: IfNotPresent
-
-codeserverImage:
-  repository: tccr.io/truecharts/code-server
-  tag: 4.9.1@sha256:b339bd8f6da4c73c0259d6951991278aa1595a6be570a207ce635c75aac9893d
-  pullPolicy: IfNotPresent
-
-alpineImage:
-  repository: tccr.io/truecharts/alpine
-  tag: v3.17.0@sha256:f8607e14a5e456c1b8fe50b7f0c9371b4aae543d23080f5e2fe0bdbb06d2413b
-  pullPolicy: IfNotPresent
-
-scratchImage:
-  repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:b4289ea433ec1308f6f2e8bff3f23bcd52b751ccb691284210ed826385ba9317
-  pullPolicy: IfNotPresent
-
-kubectlImage:
-  repository: tccr.io/truecharts/kubectl
-  tag: v1.26.0@sha256:e56d1c8dd3ba85bb8410cc9f5c04f03f814e4b76ffcc7f12730868faba5b9c52
-  pullPolicy: IfNotPresent
-
-wgetImage:
-  repository: tccr.io/truecharts/wget
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-postgresClientImage:
-  repository: tccr.io/truecharts/db-wait-postgres
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-mariadbClientImage:
-  repository: tccr.io/truecharts/db-wait-mariadb
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-redisClientImage:
-  repository: tccr.io/truecharts/db-wait-redis
-  tag: v0.0.1
-  pullPolicy: IfNotPresent
-
-mongodbClientImage:
-  repository: tccr.io/truecharts/db-wait-mongodb
-  tag: v0.0.1
+  # -- Image repository
+  repository: traefik/whoami
+  # -- Image tag
+  tag: latest
+  # -- Image pull policy
   pullPolicy: IfNotPresent
 
 # TODO: Docs
@@ -202,75 +138,49 @@ workload:
     primary: true
     type: Deployment
     podSpec:
-      # TODO: Currently implementing
       containers:
         main:
           enabled: true
           primary: true
           imageSelector: image
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 568
-            runAsGroup: 568
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            privileged: false
-            capabilities:
-              add: []
-              drop:
-                - ALL
-          env: {}
-          envList: []
-          envFrom: []
-          resources:
-            limits:
-              cpu: 100m
-              memory: 128Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
           probes:
             liveness:
               enabled: true
               type: http
-              port:
-              path:
-              httpHeaders: {}
-              command: []
+              port: "{{ .Values.service.main.ports.main.port }}"
             readiness:
               enabled: true
               type: http
-              port:
-              path:
-              httpHeaders: {}
-              command: []
+              port: "{{ .Values.service.main.ports.main.port }}"
             startup:
               enabled: true
               type: http
-              port:
-              path:
-              httpHeaders: {}
-              command: []
-      initContainers:
-        init-cont-name:
-          enabled: false
-          type: install
-          # ...containerSpec
+              port: "{{ .Values.service.main.ports.main.port }}"
+    #       # TODO: Currently implementing
+    #   initContainers:
+    #     init-cont-name:
+    #       enabled: false
+    #       type: install
+    #       # ...containerSpec
+
 # TODO:
 portal: {}
 
-
-# -- SCALE GPU (TODO: Only the resources part is left)
-scaleGPU:
-  - gpu:
-      key: value
-    # Without targetSelector, the gpu will
-    # be applied to primary pod/container
-    targetSelector:
-      pod-name:
-        - container-name
-
 ##### ⬇ Done ⬇ #####
+
+# -- Timezone used everywhere applicable
+TIMEZONE: UTC
+
+# -- (docs/service/README.md)
+service:
+  main:
+    enabled: true
+    primary: true
+    ports:
+      main:
+        enabled: true
+        primary: true
+        protocol: http
 
 # -- (docs/persistence/README.md)
 persistence:
@@ -294,20 +204,6 @@ persistence:
     type: emptyDir
     mountPath: /dev/shm
     targetSelectAll: true
-
-# -- (docs/service/README.md)
-service:
-  main:
-    enabled: true
-    primary: true
-    ports:
-      main:
-        enabled: true
-        primary: true
-        protocol: http
-
-# -- Timezone used everywhere applicable
-TIMEZONE: UTC
 
 # -- Injected from SCALE middleware
 # Only for reference here
@@ -346,6 +242,9 @@ scaleExternalInterface: []
 # -- (docs/scaleCertificate.md)
 scaleCertificate: {}
 
+# -- (docs/scaleGPU.md)
+scaleGPU: []
+
 # NOTES.txt TODO: Docs
 notes:
   header: |
@@ -359,6 +258,79 @@ notes:
     # Bug reports
     If you find a bug in this chart, please file an issue at ...
 
+
+
+####
+##
+## TrueCharts Specific Root Objects
+##
+####
+
+# -- Used to inject our own operator manifests into SCALE
+manifests:
+  enabled: true
+  staging: false
+
+openvpnImage:
+  repository: tccr.io/truecharts/openvpn-client
+  tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
+  pullPolicy: IfNotPresent
+
+wireguardImage:
+  repository: tccr.io/truecharts/wireguard
+  tag: v1.0.20210914@sha256:9f56e5660e8df8d4d38521ed73a4cc29fa24bf578007bfbe633e00184e2ebfbc
+  pullPolicy: IfNotPresent
+
+tailscaleImage:
+  repository: tailscale/tailscale
+  # TODO: Switch to stable once a v1.33.x is released
+  tag: v1.34.1@sha256:69bec9fdea25765e1b9dd129ccaeaf1e160f1132bb390535772fa939f0bf620b
+  pullPolicy: IfNotPresent
+
+codeserverImage:
+  repository: tccr.io/truecharts/code-server
+  tag: 4.9.1@sha256:b339bd8f6da4c73c0259d6951991278aa1595a6be570a207ce635c75aac9893d
+  pullPolicy: IfNotPresent
+
+alpineImage:
+  repository: tccr.io/truecharts/alpine
+  tag: v3.17.0@sha256:f8607e14a5e456c1b8fe50b7f0c9371b4aae543d23080f5e2fe0bdbb06d2413b
+  pullPolicy: IfNotPresent
+
+scratchImage:
+  repository: tccr.io/truecharts/scratch
+  tag: latest@sha256:b4289ea433ec1308f6f2e8bff3f23bcd52b751ccb691284210ed826385ba9317
+  pullPolicy: IfNotPresent
+
+kubectlImage:
+  repository: tccr.io/truecharts/kubectl
+  tag: v1.26.0@sha256:e56d1c8dd3ba85bb8410cc9f5c04f03f814e4b76ffcc7f12730868faba5b9c52
+  pullPolicy: IfNotPresent
+
+wgetImage:
+  repository: tccr.io/truecharts/wget
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+postgresClientImage:
+  repository: tccr.io/truecharts/db-wait-postgres
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+mariadbClientImage:
+  repository: tccr.io/truecharts/db-wait-mariadb
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+redisClientImage:
+  repository: tccr.io/truecharts/db-wait-redis
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+mongodbClientImage:
+  repository: tccr.io/truecharts/db-wait-mongodb
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
 
 
 # -- Configure the ingresses for the chart here.
