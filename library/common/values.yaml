@@ -232,21 +232,21 @@ workload:
           probes:
             liveness:
               enabled: true
-              type: HTTP
+              type: http
               port:
               path:
               httpHeaders: {}
               command: []
             readiness:
               enabled: true
-              type: HTTP
+              type: http
               port:
               path:
               httpHeaders: {}
               command: []
             startup:
               enabled: true
-              type: HTTP
+              type: http
               port:
               path:
               httpHeaders: {}
@@ -304,7 +304,7 @@ service:
       main:
         enabled: true
         primary: true
-        protocol: HTTP
+        protocol: http
 
 # -- Timezone used everywhere applicable
 TIMEZONE: UTC
