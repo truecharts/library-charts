@@ -46,3 +46,6 @@ volumeClaimTemplates:
     mountPath: /data
     accessMode: "ReadWriteOnce"
     size: 1Gi
+
+manifests:
+  enabled: false

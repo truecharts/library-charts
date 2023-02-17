@@ -102,3 +102,6 @@ persistence:
     hostPath: /usr
     mountPath: /hptest
     hostPathType: ""
+
+manifests:
+  enabled: false

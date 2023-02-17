@@ -52,12 +52,8 @@ additionalContainers:
         port: 8081
         type: http
         path: /
-initContainers:
-  some-name:
-    imageSelector: scratchImage
-systemContainers:
-  some-name:
-    imageSelector: scratchImage
-installContainers:
-  some-name:
-    imageSelector: scratchImage
+
+
+
+manifests:
+  enabled: false

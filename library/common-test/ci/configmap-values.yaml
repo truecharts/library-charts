@@ -75,3 +75,6 @@ configmap:
             "key3": "value2"
           }
         }
+
+manifests:
+  enabled: false

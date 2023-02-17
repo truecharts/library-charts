@@ -112,3 +112,6 @@ serviceAccount:
     enabled: true
     targetSelector:
       - workload2
+
+manifests:
+  enabled: false

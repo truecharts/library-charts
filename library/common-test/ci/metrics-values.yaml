@@ -30,7 +30,7 @@ workload:
               enabled: true
 
 manifests:
-  enabled: false
+  enabled: true
   staging: false
 
 
