@@ -44,6 +44,6 @@ type: Opaque
 {{- define "tc.v1.common.dependencies.mariadb.injector" -}}
   {{- $secret := include "tc.v1.common.dependencies.mariadb.secret" . | fromYaml -}}
   {{- if $secret -}}
-    {{- $_ := set .Values.secrets "mariadbcreds" $secret -}}
+    {{- $_ := set .Values.secret "mariadbcreds" $secret -}}
   {{- end -}}
 {{- end -}}

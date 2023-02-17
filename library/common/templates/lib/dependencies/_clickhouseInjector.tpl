@@ -47,6 +47,6 @@ data:
 {{- define "tc.v1.common.dependencies.clickhouse.injector" -}}
   {{- $secret := include "tc.v1.common.dependencies.clickhouse.secret" . | fromYaml -}}
   {{- if $secret -}}
-    {{- $_ := set .Values.secrets "clickhousecreds" $secret -}}
+    {{- $_ := set .Values.secret "clickhousecreds" $secret -}}
   {{- end -}}
 {{- end -}}

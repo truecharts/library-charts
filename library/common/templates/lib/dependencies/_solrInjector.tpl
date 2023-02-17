@@ -29,6 +29,6 @@ type: Opaque
 {{- define "tc.v1.common.dependencies.solr.injector" -}}
   {{- $secret := include "tc.v1.common.dependencies.solr.secret" . | fromYaml -}}
   {{- if $secret -}}
-    {{- $_ := set .Values.secrets "solrcreds" $secret -}}
+    {{- $_ := set .Values.secret "solrcreds" $secret -}}
   {{- end -}}
 {{- end -}}

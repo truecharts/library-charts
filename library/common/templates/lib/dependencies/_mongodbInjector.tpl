@@ -43,6 +43,6 @@ type: Opaque
 {{- define "tc.v1.common.dependencies.mongodb.injector" -}}
   {{- $secret := include "tc.v1.common.dependencies.mongodb.secret" . | fromYaml -}}
   {{- if $secret -}}
-    {{- $_ := set .Values.secrets "mongodbcreds" $secret -}}
+    {{- $_ := set .Values.secret "mongodbcreds" $secret -}}
   {{- end -}}
 {{- end -}}
