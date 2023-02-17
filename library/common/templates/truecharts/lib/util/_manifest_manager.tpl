@@ -1,6 +1,6 @@
 {{- define "tc.v1.common.lib.util.manifest.manage" -}}
 {{- if .Values.manifests.enabled }}
-{{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . }}
+{{- $fullName := include "tc.v1.common.lib.chart.names.fullname" . }}
 ---
 apiVersion: batch/v1
 kind: Job

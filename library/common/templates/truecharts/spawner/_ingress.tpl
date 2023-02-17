@@ -4,7 +4,7 @@
   {{- range $name, $ingress := .Values.ingress -}}
     {{- if $ingress.enabled -}}
       {{- $ingressValues := $ingress -}}
-      {{- $ingressName := include "ix.v1.common.lib.chart.names.fullname" $ -}}
+      {{- $ingressName := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
       {{/* set defaults */}}
       {{- if and (not $ingressValues.nameOverride) (ne $name (include "tc.v1.common.lib.util.ingress.primary" $)) -}}
@@ -30,14 +30,14 @@
           {{- $objectData := dict -}}
           {{- $_ := set $objectData "id" .scaleCert -}}
 
-          {{- $objectName := (printf "%s-%s" (include "ix.v1.common.lib.chart.names.fullname" $) $tlsName) -}}
+          {{- $objectName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $tlsName) -}}
           {{/* Perform validations */}}
-          {{- include "ix.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
-          {{- include "ix.v1.common.lib.certificate.validation" (dict "objectData" $objectData) -}}
-          {{- include "ix.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Certificate") -}}
+          {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
+          {{- include "tc.v1.common.lib.certificate.validation" (dict "objectData" $objectData) -}}
+          {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Certificate") -}}
 
           {{/* Prepare data */}}
-          {{- $data := fromJson (include "ix.v1.common.lib.certificate.getData" (dict "rootCtx" $ "objectData" $objectData)) -}}
+          {{- $data := fromJson (include "tc.v1.common.lib.certificate.getData" (dict "rootCtx" $ "objectData" $objectData)) -}}
           {{- $_ := set $objectData "data" $data -}}
 
           {{/* Set the type to certificate */}}
@@ -48,7 +48,7 @@
           {{- $_ := set $objectData "shortName" $name -}}
 
           {{/* Call class to create the object */}}
-          {{- include "ix.v1.common.class.secret" (dict "rootCtx" $ "objectData" $objectData) -}}
+          {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $objectData) -}}
 
         {{- end -}}
       {{- end -}}

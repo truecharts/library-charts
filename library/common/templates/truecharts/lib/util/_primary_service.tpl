@@ -1,5 +1,5 @@
 {{/* Returns the primary service object */}}
-{{- define "ix.v1.common.lib.util.service.primary" -}}
+{{- define "tc.v1.common.lib.util.service.primary" -}}
   {{- $services := .services -}}
 
   {{- $enabledServices := dict -}}

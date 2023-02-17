@@ -5,7 +5,7 @@
   {{- include "tc.v1.common.loader.apply.pre" . | nindent 0 -}}
 
   {{/* Adds iX Apply */}}
-  {{- include "ix.v1.common.loader.apply" . | nindent 0 -}}
+  {{- include "tc.v1.common.loader.apply" . | nindent 0 -}}
 
   {{/* Adds TC apply after to iX Init */}}
   {{- include "tc.v1.common.loader.apply.post" . | nindent 0 -}}

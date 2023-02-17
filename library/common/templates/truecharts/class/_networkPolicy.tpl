@@ -2,7 +2,7 @@
 Blueprint for the NetworkPolicy object
 */}}
 {{- define "tc.v1.common.class.networkpolicy" -}}
-  {{- $fullName := include "ix.v1.common.lib.chart.names.fullname" . -}}
+  {{- $fullName := include "tc.v1.common.lib.chart.names.fullname" . -}}
   {{- $networkPolicyName := $fullName -}}
   {{- $values := .Values.networkPolicy -}}
 
@@ -22,13 +22,13 @@ kind: NetworkPolicy
 apiVersion: {{ include "tc.v1.common.capabilities.networkpolicy.apiVersion" $ }}
 metadata:
   name: {{ $networkPolicyName }}
-  {{- $labels := (mustMerge ($networkpolicyLabels | default dict) (include "ix.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
+  {{- $labels := (mustMerge ($networkpolicyLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
+  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge ($networkpolicyAnnotations | default dict) (include "ix.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
-  {{- with (include "ix.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
+  {{- $annotations := (mustMerge ($networkpolicyAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) -}}
+  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
   {{- end }}
@@ -40,7 +40,7 @@ spec:
   {{- end -}}
   {{- else }}
     matchLabels:
-    {{- include "ix.v1.common.lib.metadata.allLabels.selectorLabels" . | nindent 6 }}
+    {{- include "tc.v1.common.lib.metadata.allLabels.selectorLabels" . | nindent 6 }}
   {{- end -}}
 
   {{- if $values.policyType }}
