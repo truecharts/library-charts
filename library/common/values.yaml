@@ -520,7 +520,6 @@ addons:
 
     # -- Set any environment variables for code-server here
     env: {}
-      # TZ: UTC
 
     # -- All variables specified here will be added to the codeserver sidecar container
     # See the documentation of the codeserver image for all config values
@@ -539,17 +538,6 @@ addons:
     # If not given, the app will default to the mountpah of the first specified volumeMount
     workingDir: "/"
 
-    # -- Optionally allow access a Git repository by passing in a private SSH key
-    # @default -- See below
-    git:
-      # -- Raw SSH private key
-      deployKey: ""
-      # -- Base64-encoded SSH private key. When both variables are set, the raw SSH key takes precedence.
-      deployKeyBase64: ""
-      # -- Existing secret containing SSH private key
-      # The chart expects it to be present under the `id_rsa` key.
-      deployKeySecret: ""
-
     service:
       # -- Enable a service for the code-server add-on.
       enabled: true
@@ -559,7 +547,7 @@ addons:
         codeserver:
           port: 12321
           enabled: true
-          protocol: TCP
+          protocol: http
           targetPort: 12321
           ## Specify the nodePort value for the LoadBalancer and NodePort service types.
           ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
