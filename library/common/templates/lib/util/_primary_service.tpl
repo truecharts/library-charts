@@ -31,5 +31,9 @@
     {{- end -}}
   {{- end -}}
 
+  {{- if $result -}}
   {{- $result -}}
+  {{- else -}}
+  {{- fail "No primary and enabled service found" -}}
+  {{- end -}}
 {{- end -}}

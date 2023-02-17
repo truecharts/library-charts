@@ -35,9 +35,11 @@ spec:
     {{- if $values.selector }}
     {{- tpl (toYaml $values.selector) $ | nindent 4 }}
     {{- else }}
+    {{- $objectData := dict "targetSelector" $values.targetSelector }}
+    {{- $selectedPod := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedPodValues" (dict "rootCtx" $ "objectData" $objectData)) }}
+    {{- $selectedPodName := $selectedPod.shortName }}
     matchLabels:
-      {{ $primaryPodName := (include "tc.v1.common.lib.util.workload.primary" (dict "workload" .Values.workloads "root" $)) }}
-      {{ include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $primaryPodName) }}
+      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $selectedPodName) | indent 6 }}
     {{- end }}
   podMetricsEndpoints:
     {{- tpl (toYaml $values.endpoints) $ | nindent 4 }}

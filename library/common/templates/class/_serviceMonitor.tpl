@@ -35,9 +35,11 @@ spec:
     {{- if $values.selector }}
     {{- tpl (toYaml $values.selector) $ | nindent 4 }}
     {{- else }}
+    {{- $objectData := dict "targetSelector" $values.targetSelector }}
+    {{- $selectedService := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ "objectData" $objectData)) }}
+    {{- $selectedServiceName := $selectedService.shortName }}
     matchLabels:
-      {{ $primaryServiceName := (include "tc.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" $)) }}
-      {{ include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "service" "objectName" $primaryServiceName) }}
+      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "service" "objectName" $selectedServiceName) | indent 6 }}
     {{- end }}
   endpoints:
     {{- tpl (toYaml $values.endpoints) $ | nindent 4 }}
