@@ -399,6 +399,7 @@ workload:
               EOF
         cnpg-wait:
           enabled: '{{ $result := false }}{{ range .Values.cnpg }}{{ if .enabled }}{{ $result = true }}{{ end }}{{ end }}{{ $result }}'
+          type: init
           imageSelector: postgresClientImage
           securityContext:
             runAsUser: 568
