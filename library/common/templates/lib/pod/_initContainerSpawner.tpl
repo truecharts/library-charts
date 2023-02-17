@@ -14,7 +14,14 @@ objectData: The object data to be used to render the Pod.
                                 "upgrade" list) -}}
 
   {{- $types := (list "system" "init" "install" "upgrade") -}}
-  {{- range $containerName, $containerValues := $objectData.podSpec.initContainers -}}
+  {{- $dbWait := include "tc.v1.common.lib.deps.wait.init" $rootCtx | fromYaml -}}
+  {{- $mergedContainers := $objectData.podSpec.initContainers -}}
+
+  {{- if $objectData.dbWait -}}
+  {{- $mergedContainers = merge $mergedContainers $dbWait -}}
+  {{- end -}}
+
+  {{- range $containerName, $containerValues := $mergedContainers -}}
 
     {{- $enabled := $containerValues.enabled -}}
     {{- if kindIs "string" $enabled -}}
