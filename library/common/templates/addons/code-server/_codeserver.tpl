@@ -7,7 +7,7 @@ It will include / inject the required templates based on the given values.
   {{/* Append the code-server container to the additionalContainers */}}
   {{- $container := include "tc.v1.common.addon.codeserver.container" . | fromYaml -}}
   {{- if $container -}}
-    {{- $_ := set .Values.additionalContainers "codeserver" $container -}}
+    {{- $_ := set .Values.workload.main.podSpec.containers "codeserver" $container -}}
   {{- end -}}
 
   {{/* Add the code-server service */}}
