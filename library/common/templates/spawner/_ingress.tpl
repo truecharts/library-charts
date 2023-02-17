@@ -33,11 +33,11 @@
           {{- $objectName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $tlsName) -}}
           {{/* Perform validations */}}
           {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
-          {{- include "tc.v1.common.lib.certificate.validation" (dict "objectData" $objectData) -}}
+          {{- include "tc.v1.common.lib.scaleCertificate.validation" (dict "objectData" $objectData) -}}
           {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Certificate") -}}
 
           {{/* Prepare data */}}
-          {{- $data := fromJson (include "tc.v1.common.lib.certificate.getData" (dict "rootCtx" $ "objectData" $objectData)) -}}
+          {{- $data := fromJson (include "tc.v1.common.lib.scaleCertificate.getData" (dict "rootCtx" $ "objectData" $objectData)) -}}
           {{- $_ := set $objectData "data" $data -}}
 
           {{/* Set the type to certificate */}}
