@@ -409,7 +409,7 @@ workload:
               {{ range $name, $cnpg := .Values.cnpg }}
               {{ if $cnpg.enabled }}
               echo "Executing DB waits..."
-              {{ $cnpgName := include "ix.v1.common.names.fullname" $ }}
+              {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
               {{ $nameOverride := $cnpg.nameOverride }}
               {{ if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) }}
                 {{ $_ := set $cnpg.nameOverride $name }}
