@@ -169,7 +169,7 @@ portal: {}
 ##### ⬇ Done ⬇ #####
 
 # -- Timezone used everywhere applicable
-TIMEZONE: UTC
+TZ: UTC
 
 # -- (docs/service/README.md)
 service:
