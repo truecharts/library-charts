@@ -8,11 +8,12 @@ objectData: The object data to be used to render the Pod.
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- $initContainers := (dict  "init" list
+  {{- $initContainers := (dict  "system" list
+                                "init" list
                                 "install" list
                                 "upgrade" list) -}}
 
-  {{- $types := (list "init" "install" "upgrade") -}}
+  {{- $types := (list "system" "init" "install" "upgrade") -}}
   {{- range $containerName, $containerValues := $objectData.podSpec.initContainers -}}
 
     {{- $enabled := $containerValues.enabled -}}
@@ -67,6 +68,10 @@ objectData: The object data to be used to render the Pod.
     {{- range $container := (get $initContainers "upgrade") -}}
       {{- include "tc.v1.common.lib.pod.container" (dict "rootCtx" $rootCtx "objectData" $container) -}}
     {{- end -}}
+  {{- end -}}
+
+  {{- range $container := (get $initContainers "system") -}}
+    {{- include "tc.v1.common.lib.pod.container" (dict "rootCtx" $rootCtx "objectData" $container) -}}
   {{- end -}}
 
   {{- range $container := (get $initContainers "init") -}}
