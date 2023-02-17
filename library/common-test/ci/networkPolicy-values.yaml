@@ -80,6 +80,3 @@ networkPolicy:
       ports:
       - protocol: TCP
         port: 5978
-
-manifests:
-  enabled: false
