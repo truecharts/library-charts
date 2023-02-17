@@ -5,7 +5,7 @@
   {{- include "tc.v1.common.spawner.configmap" . | nindent 0 -}}
 
   {{/* Render Certificate(s) */}}
-  {{- include "tc.v1.common.spawner.certificate" . | nindent 0 -}}
+  {{- include "tc.v1.common.spawner.scaleCertificate" . | nindent 0 -}}
 
   {{/* Render Secret(s) */}}
   {{- include "tc.v1.common.spawner.secret" . | nindent 0 -}}
@@ -30,5 +30,20 @@
 
   {{/* Render PVC(s) */}}
   {{- include "tc.v1.common.spawner.pvc" . | nindent 0 -}}
+
+  {{/* Render ingress(s) */}}
+  {{- include "tc.v1.common.spawner.ingress" . | nindent 0 -}}
+
+  {{/* Render Horizontal Pod Autoscalers(s) */}}
+  {{- include "tc.v1.common.spawner.hpa" . | nindent 0 -}}
+
+  {{/* Render Networkpolicy(s) */}}
+  {{- include "tc.v1.common.spawner.networkpolicy" . | nindent 0 -}}
+
+  {{/* Render Prometheus Metrics(s) */}}
+  {{- include "tc.v1.common.spawner.metrics" . | nindent 0 -}}
+
+  {{/* Render Cert-Manager Certificates(s) */}}
+  {{- include "tc.v1.common.spawner.certificate" . | nindent 0 -}}
 
 {{- end -}}

@@ -1,10 +1,10 @@
 {{/* Certificate Validation */}}
 {{/* Call this template:
-{{ include "tc.v1.common.lib.certificate.validation" (dict "objectData" $objectData) -}}
+{{ include "tc.v1.common.lib.scaleCertificate.validation" (dict "objectData" $objectData) -}}
 objectData: The object data of the certificate.
 */}}
 
-{{- define "tc.v1.common.lib.certificate.validation" -}}
+{{- define "tc.v1.common.lib.scaleCertificate.validation" -}}
   {{- $objectData := .objectData -}}
 
   {{- if not $objectData.id -}}

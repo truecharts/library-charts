@@ -1,10 +1,10 @@
 {{/* Get Certificate Data */}}
 {{/* Call this template:
-{{ include "tc.v1.common.lib.certificate.getData" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
+{{ include "tc.v1.common.lib.scaleCertificate.getData" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
 rootCtx: The root context of the chart.
 objectData: The object data of the certificate
 */}}
-{{- define "tc.v1.common.lib.certificate.getData" -}}
+{{- define "tc.v1.common.lib.scaleCertificate.getData" -}}
   {{- $objectData := .objectData -}}
   {{- $rootCtx := .rootCtx -}}
 
