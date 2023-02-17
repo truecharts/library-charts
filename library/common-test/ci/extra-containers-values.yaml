@@ -53,7 +53,5 @@ additionalContainers:
         type: http
         path: /
 
-
-
 manifests:
   enabled: false
