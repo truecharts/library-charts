@@ -1,17 +1,11 @@
 {{/*
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.mariadb.injector" -}}
+{{- define "tc.v1.common.dependencies.mariadb.secret" -}}
 {{- $pghost := printf "%v-%v" .Release.Name "mariadb" }}
 
 {{- if .Values.mariadb.enabled }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: mariadbcreds
+enabled: true
 {{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "mariadbcreds" }}
 {{- $dbPass := "" }}
 {{- $rootPass := "" }}
@@ -45,4 +39,11 @@ type: Opaque
 {{- $_ := set .Values.mariadb.url "jdbc" ( ( printf "jdbc:sqlserver://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase  ) | quote ) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.mariadb.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.mariadb.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secrets "mariadbcreds" $secret -}}
+  {{- end -}}
 {{- end -}}

@@ -1,17 +1,11 @@
 {{/*
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.postgresql.injector" -}}
+{{- define "tc.v1.common.dependencies.postgresql.secret" -}}
 {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
 
 {{- if .Values.postgresql.enabled }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: dbcreds
+enabled: true
 {{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "dbcreds" }}
 {{- $dbPass := "" }}
 {{- $pgPass := "" }}
@@ -45,4 +39,11 @@ type: Opaque
 {{- $_ := set .Values.postgresql.url "jdbc" ( ( printf "jdbc:postgresql://%v-postgresql:5432/%v" .Release.Name .Values.postgresql.postgresqlDatabase  ) | quote ) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.postgresql.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.postgresql.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secrets "postgresqlcreds" $secret -}}
+  {{- end -}}
 {{- end -}}

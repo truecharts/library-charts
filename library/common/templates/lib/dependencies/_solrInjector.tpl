@@ -1,17 +1,11 @@
 {{/*
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.solr.injector" -}}
+{{- define "tc.v1.common.dependencies.solr.secret" -}}
 {{- $host := printf "%v-%v" .Release.Name "solr" }}
 
 {{- if .Values.solr.enabled }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: solrcreds
+enabled: true
 {{- $solrprevious := lookup "v1" "Secret" .Release.Namespace "solrcreds" }}
 {{- $solrPass := "" }}
 data:
@@ -30,4 +24,11 @@ type: Opaque
 {{- $_ := set .Values.solr.url "plainhost" ( ( printf "%v-%v" .Release.Name "solr" ) | quote ) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.solr.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.solr.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secrets "solrcreds" $secret -}}
+  {{- end -}}
 {{- end -}}

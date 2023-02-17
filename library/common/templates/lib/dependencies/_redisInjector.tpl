@@ -1,18 +1,13 @@
 {{/*
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.redis.injector" -}}
-{{- $pghost := printf "%v-%v" .Release.Name "redis" }}
+{{- define "tc.v1.common.dependencies.redis.secret" -}}
+{{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ }}
+{{- $name := ( printf "%s-rediscreds" $fullname ) }}
 
 {{- if .Values.redis.enabled }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: rediscreds
-{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "rediscreds" }}
+enabled: true
+{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace $name }}
 {{- $dbPass := "" }}
 {{- $dbIndex := default "0" .Values.redis.redisDatabase }}
 data:
@@ -35,4 +30,11 @@ type: Opaque
 {{- $_ := set .Values.redis.url "plainporthost" ( ( printf "%v-%v:6379" .Release.Name "redis" ) | quote ) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.redis.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.redis.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secret "rediscreds" $secret -}}
+  {{- end -}}
 {{- end -}}

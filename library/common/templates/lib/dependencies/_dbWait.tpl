@@ -1,6 +1,8 @@
 {{- define "tc.v1.common.lib.deps.wait.init" -}}
+{{ $fullname := include "tc.v1.common.lib.chart.names.fullname" $ }}
 {{ if .Values.redis.enabled }}
 redis-wait:
+{{- $redissecret := ( printf "%s-rediscreds" $fullname ) }}
   enabled: true
   type: system
   imageSelector: redisClientImage
@@ -232,29 +234,28 @@ cnpg-wait:
       {{ range $name, $cnpg := .Values.cnpg }}
       {{ if $cnpg.enabled }}
       echo "Executing DB waits..."
-      {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
       {{ $nameOverride := $cnpg.nameOverride }}
       {{ if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) }}
         {{ $_ := set $cnpg.nameOverride $name }}
       {{ end }}
       {{ if $cnpg.nameOverride }}
-        {{ $cnpgName = printf "%v-%v" $cnpgName $nameOverride }}
+        {{ $fullname = printf "%v-%v" $fullname $nameOverride }}
       {{ end }}
       until
-        pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-rw
+        pg_isready -U {{ .user }} -h cnpg-{{ $fullname }}-rw
         do sleep 2
       done
       until
-        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-rw
+        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $fullname }}-rw
         do sleep 2
       done
       {{ if $cnpg.acceptRO }}
       until
-        pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-ro
+        pg_isready -U {{ .user }} -h cnpg-{{ $fullname }}-ro
         do sleep 2
       done
       until
-        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-ro
+        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $fullname }}-ro
         do sleep 2
       done
       {{ end }}

@@ -1,7 +1,7 @@
 {{/*
   This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.clickhouse.injector" -}}
+{{- define "tc.v1.common.dependencies.clickhouse.secret" -}}
 {{- if .Values.clickhouse.enabled }}
 
 {{- $secretName := "clickhousecreds" }}
@@ -18,13 +18,7 @@
 {{- $ping     := printf       "http://%v-clickhouse:8123/ping" .Release.Name }}
 {{- $url      := printf "http://%v:%v@%v-clickhouse:8123/%v"   .Values.clickhouse.clickhouseUsername $dbPass .Release.Name .Values.clickhouse.clickhouseDatabase }}
 {{- $jdbc     := printf    "jdbc:ch://%v-clickhouse:8123/%v"   .Release.Name }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: {{ $secretName }}
+enabled: true
 data:
   clickhouse-password: {{ $dbPass | b64enc | quote }}
   plainhost:           {{ $host | b64enc | quote }}
@@ -32,6 +26,11 @@ data:
   ping:                {{ $ping | b64enc | quote }}
   url:                 {{ $url | b64enc | quote }}
   jdbc:                {{ $jdbc | b64enc | quote }}
+
+{{- $secretData := "clickhouse-password" ( $dbPass | b64enc | quote ) "plainhost" ( $host | b64enc | quote ) "plainporthost" ( $portHost | b64enc | quote ) "ping" ( $ping | b64enc | quote ) "url" ( $url | b64enc | quote ) "jdbc" ( $jdbc | b64enc | quote ) -}}
+{{- $secret := dict "enabled" true "data" $secretData -}}
+
+{{- $_ := set .Values.secret.clickhouse     "clickhousePassword" ($dbPass | quote) }}
 
 {{- $_ := set .Values.clickhouse     "clickhousePassword" ($dbPass | quote) }}
 {{- $_ := set .Values.clickhouse.url "plain"              ($host | quote) }}
@@ -43,4 +42,11 @@ data:
 {{- $_ := set .Values.clickhouse.url "jdbc"               ($jdbc | quote) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.clickhouse.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.clickhouse.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secrets "clickhousecreds" $secret -}}
+  {{- end -}}
 {{- end -}}

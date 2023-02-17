@@ -1,17 +1,11 @@
 {{/*
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
-{{- define "tc.v1.common.dependencies.mongodb.injector" -}}
+{{- define "tc.v1.common.dependencies.mongodb.secret" -}}
 {{- $pghost := printf "%v-%v" .Release.Name "mongodb" }}
 
 {{- if .Values.mongodb.enabled }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    {{- include "tc.common.labels" . | nindent 4 }}
-  name: mongodbcreds
+enabled: true
 {{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "mongodbcreds" }}
 {{- $dbPass := "" }}
 {{- $rootPass := "" }}
@@ -44,4 +38,11 @@ type: Opaque
 {{- $_ := set .Values.mongodb.url "jdbc" ( ( printf "jdbc:mongodb://%v-mongodb:27017/%v" .Release.Name .Values.mongodb.mongodbDatabase  ) | quote ) }}
 
 {{- end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.mongodb.injector" -}}
+  {{- $secret := include "tc.v1.common.dependencies.mongodb.secret" . | fromYaml -}}
+  {{- if $secret -}}
+    {{- $_ := set .Values.secrets "mongodbcreds" $secret -}}
+  {{- end -}}
 {{- end -}}
