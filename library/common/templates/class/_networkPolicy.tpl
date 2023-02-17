@@ -35,13 +35,17 @@ metadata:
 spec:
   podSelector:
   {{- if $values.podSelector }}
-  {{- with $values.podSelector }}
-    {{- . | toYaml | nindent 4 }}
-  {{- end -}}
+  {{- tpl (toYaml $values.podSelector) $ | nindent 4 }}
+  {{- else if $values.targetSelector }}
+    {{- $objectData := dict "targetSelector" $values.targetSelector }}
+    {{- $selectedPod := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedPodValues" (dict "rootCtx" $ "objectData" $objectData)) }}
+    {{- $selectedPodName := $selectedPod.shortName }}
+    matchLabels:
+      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $selectedPodName) | indent 8 }}
   {{- else }}
     matchLabels:
-    {{- include "tc.v1.common.lib.metadata.allLabels.selectorLabels" . | nindent 6 }}
-  {{- end -}}
+      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "" "objectName" "") | indent 8 }}
+  {{- end }}
 
   {{- if $values.policyType }}
   {{- if eq $values.policyType "ingress" }}
