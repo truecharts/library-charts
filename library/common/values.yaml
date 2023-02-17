@@ -159,7 +159,7 @@ workload:
       initContainers:
         auto-permissions:
           enabled: '{{ if or ( eq ( include "tc.v1.common.lib.util.autoperms.detect" $ ) "true" ) ( and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) ) }}true{{ else }}false{{ end }}'
-          type: init
+          type: system
           imageSelector: alpineImage
           securityContext:
             runAsUser: 0
@@ -192,7 +192,7 @@ workload:
             - inherit: "setPermissions"
         # redis-wait:
         #   enabled: "{{ if .Values.redis.enabled }}true{{ else }}false{{ end }}"
-        #   type: init
+        #   type: system
         #   imageSelector: redisClientImage
         #   securityContext:
         #     runAsUser: 568
@@ -242,7 +242,7 @@ workload:
         #       EOF
         # mariadb-wait:
         #   enabled: "{{ if .Values.mariadb.enabled  }}true{{ else }}false{{end}}"
-        #   type: init
+        #   type: system
         #   imageSelector: mariadbClientImage
         #   securityContext:
         #     runAsUser: 568
@@ -274,7 +274,7 @@ workload:
         #       EOF
         # mongodb-wait:
         #   enabled: "{{ if .Values.mongodb.enabled }}true{{ else }}false{{end}}"
-        #   type: init
+        #   type: system
         #   imageSelector: mongodbClientImage
         #   securityContext:
         #     runAsUser: 568
@@ -303,7 +303,7 @@ workload:
         #       EOF
         # clickhouse-wait:
         #   enabled: "{{ if .Values.clickhouse.enabled }}true{{ else }}false{{end}}"
-        #   type: init
+        #   type: system
         #   imageSelector: alpineImage
         #   securityContext:
         #     runAsUser: 568
@@ -331,7 +331,7 @@ workload:
         #       EOF
         # solr-wait:
         #   enabled: "{{ if .Values.solr.enabled }}true{{ else }}false{{end}}"
-        #   type: init
+        #   type: system
         #   imageSelector: wgetImage
         #   securityContext:
         #     runAsUser: 568
@@ -374,32 +374,32 @@ workload:
         #         done
         #       fi;
         #       EOF
-        # postgresql-wait:
-        #   enabled: "{{ if .Values.postgresql.enabled }}true{{ else }}false{{end}}"
-        #   type: init
-        #   imageSelector: postgresClientImage
-        #   securityContext:
-        #     runAsUser: 568
-        #     runAsGroup: 568
-        #     readOnlyRootFilesystem: true
-        #     runAsNonRoot: true
-        #   resources:
-        #     inherit: true
-        #   command:
-        #     - "/bin/sh"
-        #     - "-c"
-        #     - |
-        #       /bin/sh <<'EOF'
-        #       echo "Executing DB waits..."
-        #       {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
-        #       until
-        #         pg_isready -U {{ .Values.postgresql.postgresqlUsername }} -h {{ $pghost }}
-        #         do sleep 2
-        #       done
-        #       EOF
+        postgresql-wait:
+          enabled: "{{ if .Values.postgresql.enabled }}true{{ else }}false{{end}}"
+          type: system
+          imageSelector: postgresClientImage
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            inherit: true
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              /bin/sh <<'EOF'
+              echo "Executing DB waits..."
+              {{- $pghost := printf "%v-%v" .Release.Name "postgresql" }}
+              until
+                pg_isready -U {{ .Values.postgresql.postgresqlUsername }} -h {{ $pghost }}
+                do sleep 2
+              done
+              EOF
         cnpg-wait:
           enabled: '{{ $result := false }}{{ range .Values.cnpg }}{{ if .enabled }}{{ $result = true }}{{ end }}{{ end }}{{ $result }}'
-          type: init
+          type: system
           imageSelector: postgresClientImage
           securityContext:
             runAsUser: 568
