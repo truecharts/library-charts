@@ -2,13 +2,11 @@ Business Source License 1.1
 
 Parameters
 
-Licensor:             The TrueCharts Project and it's contributors
-Licensed Work:        The TrueCharts Application catalog
-                      Including all other works by the TrueCharts project
+Licensor:             The TrueCharts Project, it's owner and it's contributors
+Licensed Work:        The TrueCharts "Common" Helm Chart
 Additional Use Grant: You may use the licensed work in production, as long
                       as it is directly sourced from a TrueCharts provided
-                      official repository, catalog  or other offical
-                      TrueCharts source. You may also make private
+                      official repository, catalog or source. You may also make private
                       modification to the directly sourced licenced work,
                       when used in production.
 
