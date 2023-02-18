@@ -50,7 +50,7 @@ spec:
               {{- if $.Values.ixChartContext }}
               /usr/sbin/nfs4xdr_winacl -a chown -O 568 -G 568 -c /vpn/vpn.conf -p /vpn/vpn.conf || echo "Failed setting permissions..."
               {{- else }}
-              chown -rf :568 /vpn/vpn.conf || echo "Failed setting permissions..."
+              chown -f :568 /vpn/vpn.conf || echo "Failed setting permissions..."
               {{- end }}
               {{- end }}
               {{- range $_, $hpm := $hostPathMounts }}
@@ -58,7 +58,7 @@ spec:
               {{- if $.Values.ixChartContext }}
               /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c {{ tpl $hpm.mountPath $ | squote }} -p {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions..."
               {{- else }}
-              chown -rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions..."
+              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions..."
               {{- end }}
               {{- end }}
               EOF
