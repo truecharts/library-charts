@@ -3,32 +3,9 @@ templates:
   - common.yaml
 tests:
   - it: default should pass
-    set:
-      service:
-        main:
-          enabled: true
-          ports:
-            main:
-              enabled: true
-              primary: true
-              port: 12345
-      workload:
-        my-workload:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec: {}
     asserts:
       - hasDocuments:
-          count: 2
-      - documentIndex: 0
-        not: true
-        isKind:
-          of: Ingress
-      - documentIndex: 1
-        not: true
-        isKind:
-          of: Ingress
+          count: 0
 
 
   - it: explicitly disabled should pass
@@ -36,15 +13,7 @@ tests:
       ingress.main.enabled: false
     asserts:
       - hasDocuments:
-          count: 2
-      - documentIndex: 0
-        not: true
-        isKind:
-          of: Ingress
-      - documentIndex: 1
-        not: true
-        isKind:
-          of: Ingress
+          count: 0
 
   - it: explicitly enabled should pass
     set:
@@ -74,7 +43,7 @@ tests:
         not: true
         isKind:
           of: Ingress
-      - documentIndex: 3
+      - documentIndex: 2
         isKind:
           of: Ingress
 
@@ -82,6 +51,20 @@ tests:
     set:
       ingress.main.enabled: true
       ingress.test.enabled: true
+      service:
+        main:
+          enabled: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 12345
+      workload:
+        my-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
     asserts:
       - hasDocuments:
           count: 4
@@ -93,9 +76,9 @@ tests:
         not: true
         isKind:
           of: Ingress
-      - documentIndex: 3
+      - documentIndex: 2
         isKind:
           of: Ingress
-      - documentIndex: 4
+      - documentIndex: 3
         isKind:
           of: Ingress

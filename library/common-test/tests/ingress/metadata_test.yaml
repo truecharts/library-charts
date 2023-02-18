@@ -1,6 +1,8 @@
 suite: ingress metadata
 templates:
   - common.yaml
+chart:
+  appVersion: &appVer v9.9.9
 tests:
   - it: default metadata should pass
     set:
@@ -34,12 +36,12 @@ tests:
         equal:
           path: metadata.labels
           value:
-            app: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
-            app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/name: common-test
-            helm.sh/chart: common-test-1.0.0
+            app: common-test-1.0.0
             release: RELEASE-NAME
+            helm-revision: "0"
+            helm.sh/chart: common-test-1.0.0
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/version: *appVer
 
   - it: custom metadata should pass
     set:
@@ -79,10 +81,10 @@ tests:
         equal:
           path: metadata.labels
           value:
-            app: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
-            app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/name: common-test
-            helm.sh/chart: common-test-1.0.0
+            app: common-test-1.0.0
             release: RELEASE-NAME
+            helm-revision: "0"
+            helm.sh/chart: common-test-1.0.0
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/version: *appVer
             test_label: test
