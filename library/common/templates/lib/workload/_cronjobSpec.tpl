@@ -19,7 +19,7 @@ schedule: {{ (tpl $objectData.schedule $rootCtx) | quote }}
 concurrencyPolicy: {{ $objectData.concurrencyPolicy | default "Forbid" }}
 failedJobsHistoryLimit: {{ $objectData.failedJobsHistoryLimit | default 1 }}
 successfulJobsHistoryLimit: {{ $objectData.successfulJobsHistoryLimit | default 3 }}
-startingDeadlineSeconds: {{ $objectData.startingDeadlineSeconds | default nil }}
+startingDeadlineSeconds: {{ $objectData.startingDeadlineSeconds | default 600 }}
 jobTemplate:
   spec:
     {{- include "tc.v1.common.lib.workload.jobSpec" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 4 }}
