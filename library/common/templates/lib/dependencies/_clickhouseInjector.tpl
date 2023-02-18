@@ -27,11 +27,6 @@ data:
   url:                 {{ $url | b64enc | quote }}
   jdbc:                {{ $jdbc | b64enc | quote }}
 
-{{- $secretData := "clickhouse-password" ( $dbPass | b64enc | quote ) "plainhost" ( $host | b64enc | quote ) "plainporthost" ( $portHost | b64enc | quote ) "ping" ( $ping | b64enc | quote ) "url" ( $url | b64enc | quote ) "jdbc" ( $jdbc | b64enc | quote ) -}}
-{{- $secret := dict "enabled" true "data" $secretData -}}
-
-{{- $_ := set .Values.secret.clickhouse     "clickhousePassword" ($dbPass | quote) }}
-
 {{- $_ := set .Values.clickhouse     "clickhousePassword" ($dbPass | quote) }}
 {{- $_ := set .Values.clickhouse.url "plain"              ($host | quote) }}
 {{- $_ := set .Values.clickhouse.url "plainhost"          ($host | quote) }}
