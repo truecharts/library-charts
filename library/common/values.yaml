@@ -157,41 +157,6 @@ workload:
               enabled: true
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
-      initContainers:
-        auto-permissions:
-          enabled: '{{ if or ( eq ( include "tc.v1.common.lib.util.autoperms.detect" $ ) "true" ) ( and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) ) }}true{{ else }}false{{ end }}'
-          type: system
-          imageSelector: alpineImage
-          securityContext:
-            runAsUser: 0
-            runAsNonRoot: false
-          resources:
-            inherit: true
-          command:
-            - "/bin/sh"
-            - "-c"
-            - |
-              /bin/sh <<'EOF'
-              echo "Automatically correcting permissions..."
-              {{- $hostPathMounts := dict -}}
-              {{- range $name, $mount := .Values.persistence -}}
-                {{- if and $mount.enabled $mount.setPermissions -}}
-                  {{- $name = default ( $name| toString ) $mount.name -}}
-                  {{- $_ := set $hostPathMounts $name $mount -}}
-                {{- end -}}
-              {{- end }}
-              {{- if and ( .Values.addons.vpn.configFile.enabled ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) }}
-              echo "Automatically correcting permissions for vpn config file..."
-              /usr/sbin/nfs4xdr_winacl -a chown -O 568 -G 568 -c /vpn/vpn.conf -p /vpn/vpn.conf || echo "Failed setting permissions..."
-              {{- end }}
-              {{- range $_, $hpm := $hostPathMounts }}
-              echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
-              /usr/sbin/nfs4xdr_winacl -a chown -G {{ $.Values.podSecurityContext.fsGroup | default $.Values.global.defaults.podSecurityContext.fsGroup }} -r -c {{ tpl $hpm.mountPath $ | squote }} -p {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions..."
-              {{- end }}
-              EOF
-          volumeMounts:
-            - inherit: "setPermissions"
-
 
 # TODO:
 portal: {}

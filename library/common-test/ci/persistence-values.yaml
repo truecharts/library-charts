@@ -103,5 +103,13 @@ persistence:
     mountPath: /hptest
     hostPathType: ""
 
+  autopermissions:
+    enabled: true
+    type: hostPath
+    setPermissions: true
+    hostPath: /usr
+    mountPath: /hptest
+    hostPathType: ""
+
 manifestManager:
   enabled: false
