@@ -11,8 +11,21 @@ redis-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   env:
     REDIS_HOST:
       secretKeyRef:
@@ -62,8 +75,21 @@ mariadb-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   env:
     MARIADB_HOST:
       secretKeyRef:
@@ -96,8 +122,21 @@ mongodb-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   env:
     MONGODB_HOST:
       secretKeyRef:
@@ -126,8 +165,21 @@ clickhouse-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   env:
     CLICKHOUSE_PING:
       secretKeyRef:
@@ -156,8 +208,21 @@ solr-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   env:
     SOLR_HOST:
       secretKeyRef:
@@ -200,8 +265,21 @@ postgresql-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
   resources:
-    inherit: true
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   command:
     - "/bin/sh"
     - "-c"
@@ -226,6 +304,21 @@ cnpg-wait:
     runAsGroup: 568
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add: []
+      drop:
+        - ALL
+  resources:
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
   command:
     - "/bin/sh"
     - "-c"

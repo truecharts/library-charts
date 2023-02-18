@@ -30,8 +30,19 @@ spec:
         - name: {{ $fullName }}-autopermissions
           image: {{ .Values.alpineImage.repository }}:{{ .Values.alpineImage.tag }}
           securityContext:
-            runAsUser: 0
             runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+
           command:
             - "/bin/sh"
             - "-c"
