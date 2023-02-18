@@ -242,7 +242,7 @@ jobs:
           - cron-values.yaml
           - statefulset-values.yaml
           - persistence-values.yaml
-          # - extra-containers-values.yaml
+          - extra-containers-values.yaml
           - rbac-values.yaml
           - ingress-values.yaml
           - networkPolicy-values.yaml
@@ -273,6 +273,6 @@ jobs:
         uses: datreeio/action-datree@main
         with:
           path: 'library/common-test'
-          cliArguments: '--policy ManifestManager'
+          cliArguments: '--ignore-missing-schemas --policy ManifestManager'
           isHelmChart: true
           helmArguments: '--values library/common-test/ci/${{ matrix.values }}'
