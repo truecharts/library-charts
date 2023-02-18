@@ -28,6 +28,6 @@ metadata:
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
-  {{- end -}}
+  {{- end }}
 automountServiceAccountToken: {{ $objectData.automountServiceAccountToken | default false }}
 {{- end -}}
