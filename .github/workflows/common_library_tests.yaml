@@ -273,6 +273,6 @@ jobs:
         uses: datreeio/action-datree@main
         with:
           path: 'library/common-test'
-          cliArguments: '--policy CommonBasic'
+          cliArguments: '--policy ManifestManager'
           isHelmChart: true
           helmArguments: '--values library/common-test/ci/${{ matrix.values }}'
