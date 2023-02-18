@@ -304,27 +304,27 @@ kubectlImage:
 
 wgetImage:
   repository: tccr.io/truecharts/wget
-  tag: v0.0.1
+  tag: v0.0.1@sha256:46cca8469c987385bc27bc63cb2abf95a564cd18380b30648fea0ce02a97c6aa
   pullPolicy: IfNotPresent
 
 postgresClientImage:
   repository: tccr.io/truecharts/db-wait-postgres
-  tag: v0.0.1
+  tag: v0.0.1@sha256:b03a81433b82a24289bd461d7713e20721d8f4479781f337dfb48d5f84ffddc4
   pullPolicy: IfNotPresent
 
 mariadbClientImage:
   repository: tccr.io/truecharts/db-wait-mariadb
-  tag: v0.0.1
+  tag: v0.0.1@sha256:b9c82f29daafe72d07b23951bdd5654561cb95e5ca4a493ca1f68688c625e6bb
   pullPolicy: IfNotPresent
 
 redisClientImage:
   repository: tccr.io/truecharts/db-wait-redis
-  tag: v0.0.1
+  tag: v0.0.1@sha256:190b199bebf88a6def50cf8efd38651d79595a1e69566062843062a8c34bb0ff
   pullPolicy: IfNotPresent
 
 mongodbClientImage:
   repository: tccr.io/truecharts/db-wait-mongodb
-  tag: v0.0.1
+  tag: v0.0.1@sha256:d2d237297cbcde63a038ef8dc1634241c476396d03d370ffa2814177ff56d1e7
   pullPolicy: IfNotPresent
 
 
