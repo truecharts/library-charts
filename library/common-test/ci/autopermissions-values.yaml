@@ -41,64 +41,10 @@ workload:
               port: "{{ .Values.service.main.ports.main.port }}"
 
 persistence:
-  pvc-stock:
-    enabled: true
-    type: pvc
-    mountPath: /pvcstock
-
-  pvc-size:
-    enabled: true
-    type: pvc
-    mountPath: /pvcsize
-    size: 1Gi
-
-  pvc-readonly:
-    enabled: true
-    type: pvc
-    mountPath: /pvcro
-    readOnly: true
-
-  pvc-labeled:
-    enabled: true
-    labels:
-      labelexample1: labelvalue2
-    type: pvc
-    mountPath: /pvclabeled
-
-  pvc-sc-empty:
-    enabled: true
-    type: pvc
-    mountPath: /pvcscempty
-    readOnly: false
-    storageClass: ""
-
-  emptydir:
-    enabled: true
-    type: emptyDir
-    mountPath: /emptydir
-
-  emptydir-mem:
-    enabled: true
-    type: emptyDir
-    mountPath: /emptydirmem
-    medium: Memory
-
-  emptydir-size:
-    enabled: true
-    type: emptyDir
-    mountPath: /emptydirsize
-    size: 1Gi
-
-  emptydir-memsize:
-    enabled: true
-    type: emptyDir
-    mountPath: /emptydirmemsize
-    medium: Memory
-    size: 1Gi
-
-  hostpath-stock:
+  autopermissions:
     enabled: true
     type: hostPath
+    setPermissions: true
     hostPath: /usr
     mountPath: /hptest
     hostPathType: ""
