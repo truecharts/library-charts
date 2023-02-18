@@ -62,11 +62,11 @@ spec:
               {{- end }}
               {{- end }}
               EOF
-              volumeMounts:
-              {{- range $name, $hpm := $hostPathMounts }}
-                - name: {{ $name }}
-                  mountPath: {{ tpl $hpm.mountPath $ | squote }}
-              {{- end }}
+          volumeMounts:
+          {{- range $name, $hpm := $hostPathMounts }}
+            - name: {{ $name }}
+              mountPath: {{ tpl $hpm.mountPath $ | squote }}
+          {{- end }}
 
       volumes:
       {{- range $name, $hpm := $hostPathMounts }}
