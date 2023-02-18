@@ -6,6 +6,6 @@ Template to render gluetun addon. It will add a container to the main pod.
   {{/* Append the code-server container to the additionalContainers */}}
   {{- $container := include "tc.v1.common.addon.vpn.gluetun.container" . | fromYaml -}}
   {{- if $container -}}
-    {{- $_ := set .Values.workload.main.podSpec.containers "gluetun" $container -}}
+    {{- $_ := set .Values.workload.main.podSpec.containers "vpn" $container -}}
   {{- end -}}
 {{- end -}}
