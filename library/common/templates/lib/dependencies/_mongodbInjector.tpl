@@ -6,7 +6,10 @@ This template generates a random password and ensures it persists across updates
 
 {{- if .Values.mongodb.enabled }}
 enabled: true
-{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "mongodbcreds" }}
+{{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+{{- $fetchname := printf "%s-mongodbcreds" $basename -}}
+{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace $fetchname }}
+{{- $dbpreviousold := lookup "v1" "Secret" .Release.Namespace "mongodbcreds" }}
 {{- $dbPass := "" }}
 {{- $rootPass := "" }}
 data:
@@ -15,6 +18,11 @@ data:
   {{- $rootPass = ( index $dbprevious.data "mongodb-root-password" ) | b64dec  }}
   mongodb-password: {{ ( index $dbprevious.data "mongodb-password" ) }}
   mongodb-root-password: {{ ( index $dbprevious.data "mongodb-root-password" ) }}
+{{- else if $dbpreviousold }}
+  {{- $dbPass = ( index $dbpreviousold.data "mongodb-password" ) | b64dec  }}
+  {{- $rootPass = ( index $dbpreviousold.data "mongodb-root-password" ) | b64dec  }}
+  mongodb-password: {{ ( index $dbpreviousold.data "mongodb-password" ) }}
+  mongodb-root-password: {{ ( index $dbpreviousold.data "mongodb-root-password" ) }}
 {{- else }}
   {{- $dbPass = randAlphaNum 50 }}
   {{- $rootPass = randAlphaNum 50 }}

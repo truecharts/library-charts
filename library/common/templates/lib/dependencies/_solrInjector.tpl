@@ -6,12 +6,18 @@ This template generates a random password and ensures it persists across updates
 
 {{- if .Values.solr.enabled }}
 enabled: true
-{{- $solrprevious := lookup "v1" "Secret" .Release.Namespace "solrcreds" }}
+{{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+{{- $fetchname := printf "%s-solrcreds" $basename -}}
+{{- $solrprevious := lookup "v1" "Secret" .Release.Namespace $fetchname }}
+{{- $solrpreviousold := lookup "v1" "Secret" .Release.Namespace "solrcreds" }}
 {{- $solrPass := "" }}
 data:
 {{- if $solrprevious }}
   {{- $solrPass = ( index $solrprevious.data "solr-password" ) | b64dec  }}
   solr-password: {{ ( index $solrprevious.data "solr-password" ) }}
+{{- else if $solrpreviousold }}
+  {{- $solrPass = ( index $solrpreviousold.data "solr-password" ) | b64dec  }}
+  solr-password: {{ ( index $solrpreviousold.data "solr-password" ) }}
 {{- else }}
   {{- $solrPass = randAlphaNum 50 }}
   solr-password: {{ $solrPass | b64enc | quote }}

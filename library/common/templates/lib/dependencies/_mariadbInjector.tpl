@@ -6,7 +6,10 @@ This template generates a random password and ensures it persists across updates
 
 {{- if .Values.mariadb.enabled }}
 enabled: true
-{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace "mariadbcreds" }}
+{{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+{{- $fetchname := printf "%s-mariadbcreds" $basename -}}
+{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace $fetchname }}
+{{- $dbpreviousold := lookup "v1" "Secret" .Release.Namespace "mariadbcreds" }}
 {{- $dbPass := "" }}
 {{- $rootPass := "" }}
 data:
@@ -15,6 +18,11 @@ data:
   {{- $rootPass = ( index $dbprevious.data "mariadb-root-password" ) | b64dec  }}
   mariadb-password: {{ ( index $dbprevious.data "mariadb-password" ) }}
   mariadb-root-password: {{ ( index $dbprevious.data "mariadb-root-password" ) }}
+{{- else if $dbpreviousold }}
+  {{- $dbPass = ( index $dbpreviousold.data "mariadb-password" ) | b64dec  }}
+  {{- $rootPass = ( index $dbpreviousold.data "mariadb-root-password" ) | b64dec  }}
+  mariadb-password: {{ ( index $dbpreviousold.data "mariadb-password" ) }}
+  mariadb-root-password: {{ ( index $dbpreviousold.data "mariadb-root-password" ) }}
 {{- else }}
   {{- $dbPass = randAlphaNum 50 }}
   {{- $rootPass = randAlphaNum 50 }}
