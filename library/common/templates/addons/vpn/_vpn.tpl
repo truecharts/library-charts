@@ -4,12 +4,9 @@ It will include / inject the required templates based on the given values.
 */}}
 {{- define "tc.v1.common.addon.vpn" -}}
 {{- if ne "disabled" .Values.addons.vpn.type -}}
-  {{- if eq "openvpn" .Values.addons.vpn.type -}}
-    {{- include "tc.v1.common.addon.openvpn" . }}
-  {{- end -}}
 
-  {{- if eq "wireguard" .Values.addons.vpn.type -}}
-    {{- include "tc.v1.common.addon.wireguard" . }}
+  {{- if eq "gluetun" .Values.addons.vpn.type -}}
+    {{- include "tc.v1.common.addon.gluetun" . }}
   {{- end -}}
 
   {{- if eq "tailscale" .Values.addons.vpn.type -}}
