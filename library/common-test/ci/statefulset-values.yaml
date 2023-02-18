@@ -47,5 +47,5 @@ volumeClaimTemplates:
     accessMode: "ReadWriteOnce"
     size: 1Gi
 
-manifests:
+manifestManager:
   enabled: false

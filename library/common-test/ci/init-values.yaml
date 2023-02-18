@@ -60,5 +60,5 @@ service:
         protocol: http
         port: 8080
 
-manifests:
+manifestManager:
   enabled: false

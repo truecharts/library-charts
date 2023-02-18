@@ -28,6 +28,6 @@ workload:
               enabled: true
             startup:
               enabled: true
-manifests:
+manifestManager:
   enabled: true
   staging: false

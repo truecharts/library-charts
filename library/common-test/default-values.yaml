@@ -14,6 +14,6 @@ service:
         enabled: true
         port: 80
 
-manifests:
-  enabed: false
+manifestManager:
+  enabled: false
   staging: false

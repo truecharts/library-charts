@@ -103,5 +103,5 @@ persistence:
     mountPath: /hptest
     hostPathType: ""
 
-manifests:
+manifestManager:
   enabled: false

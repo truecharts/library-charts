@@ -297,7 +297,7 @@ notes:
 ####
 
 # -- Used to inject our own operator manifests into SCALE
-manifests:
+manifestManager:
   enabled: true
   staging: false
 
@@ -610,7 +610,7 @@ postgresql:
   existingSecret: "dbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false
 
 cnpg:
@@ -651,7 +651,7 @@ redis:
   existingSecret: "rediscreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false
 
 # -- mariadb dependency configuration
@@ -661,7 +661,7 @@ mariadb:
   existingSecret: "mariadbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false
 
 # -- mongodb dependency configuration
@@ -671,7 +671,7 @@ mongodb:
   existingSecret: "mongodbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false
 
 # -- clickhouse dependency configuration
@@ -681,7 +681,7 @@ clickhouse:
   existingSecret: "clickhousecreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false
 
 # -- solr dependency configuration
@@ -693,5 +693,5 @@ solr:
   existingSecret: "solrcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   url: {}
-  manifests:
+  manifestManager:
     enabled: false

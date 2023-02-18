@@ -46,7 +46,7 @@ args:
   - --port
   - '8080'
 
-manifests:
+manifestManager:
   enabled: false
   staging: false
 

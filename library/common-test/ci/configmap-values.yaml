@@ -76,5 +76,5 @@ configmap:
           }
         }
 
-manifests:
+manifestManager:
   enabled: false

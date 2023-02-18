@@ -17,8 +17,8 @@ service:
       main:
         enabled: false
 
-manifests:
-  enabed: false
+manifestManager:
+  enabled: false
   staging: false
 
 # The above just disables the "main" objects,

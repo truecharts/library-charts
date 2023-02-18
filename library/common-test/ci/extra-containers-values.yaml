@@ -53,5 +53,5 @@ additionalContainers:
         type: http
         path: /
 
-manifests:
+manifestManager:
   enabled: false
