@@ -5,8 +5,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: tc-system
   name: {{ $fullName }}-manifests
+  namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-6"
@@ -121,13 +121,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ $fullName }}-manifests
-    namespace: tc-system
+    namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ $fullName }}-manifests
-  namespace: tc-system
+  namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-7"
