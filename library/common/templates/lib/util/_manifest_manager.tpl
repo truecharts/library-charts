@@ -5,7 +5,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: tc-system
   name: {{ $fullName }}-manifests
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
@@ -73,7 +73,7 @@ metadata:
 rules:
   - apiGroups:  ["*"]
     resources:  ["*"]
-    verbs:  ["*"]
+    verbs:  ["watch", "create", "update", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -90,13 +90,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ $fullName }}-manifests
-    namespace: {{ .Release.Namespace }}
+    namespace: tc-system
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ $fullName }}-manifests
-  namespace: {{ .Release.Namespace }}
+  namespace: tc-system
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-7"
