@@ -38,11 +38,42 @@ spec:
             limits:
               cpu: 4000m
               memory: 8Gi
+          livenessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
           command:
             - "/bin/sh"
             - "-c"
             - |
               /bin/sh <<'EOF'
+              touch /tmp/healthy
               echo "installing manifests..."
               kubectl apply --server-side --force-conflicts --grace-period 30 --v=4 -k https://github.com/truecharts/manifests/{{ if .Values.manifestManager.staging }}staging{{ else }}manifests{{ end }} || kubectl apply --server-side --force-conflicts --grace-period 30 -k https://github.com/truecharts/manifests/{{ if .Values.manifestManager.staging }}staging{{ else }}manifests || echo "job failed..."{{ end }}
               kubectl wait --namespace cnpg-system --for=condition=ready pod --selector=app.kubernetes.io/name=cloudnative-pg --timeout=90s || echo "metallb-system wait failed..."

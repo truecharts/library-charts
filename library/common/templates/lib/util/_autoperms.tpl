@@ -49,11 +49,42 @@ spec:
             limits:
               cpu: 4000m
               memory: 8Gi
+          livenessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
           command:
             - "/bin/sh"
             - "-c"
             - |
               /bin/sh <<'EOF'
+              touch /tmp/healthy
               echo "Automatically correcting permissions..."
               {{- $hostPathMounts := dict -}}
               {{- range $name, $mount := .Values.persistence -}}
@@ -84,6 +115,8 @@ spec:
             - name: {{ $name }}
               mountPath: /mounts/{{ $name }}
           {{- end }}
+            - name: tmp-data
+              mountPath: /tmp
 
       volumes:
       {{- range $name, $hpm := $hostPathMounts }}
@@ -94,5 +127,7 @@ spec:
             type: {{ $hpm.hostPathType }}
             {{- end }}
       {{- end }}
+        - name: tmp-data
+          emptyDir: {}
 {{- end }}
 {{- end -}}
