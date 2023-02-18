@@ -131,7 +131,7 @@ clickhouse-wait:
   env:
     CLICKHOUSE_PING:
       secretKeyRef:
-        name: '{{ printf "%v-%v" .Release.Name "clickhousecreds"}}'
+        name: "clickhousecreds"
         key: ping
   command:
     - "/bin/sh"
