@@ -101,5 +101,6 @@ metadata:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "-7"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation,hook-failed
+automountServiceAccountToken: false
 {{- end }}
 {{- end -}}
