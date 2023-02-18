@@ -30,9 +30,9 @@ spec:
               /bin/sh <<'EOF'
               echo "installing manifests..."
               kubectl apply --server-side --force-conflicts --grace-period 30 --v=4 -k https://github.com/truecharts/manifests/{{ if .Values.manifestManager.staging }}staging{{ else }}manifests{{ end }} || kubectl apply --server-side --force-conflicts --grace-period 30 -k https://github.com/truecharts/manifests/{{ if .Values.manifestManager.staging }}staging{{ else }}manifests || echo "job failed..."{{ end }}
-              kubectl wait --namespace cnpg-system --for=condition=ready pod --selector=app=metallb --timeout=90s || echo "metallb-system wait failed..."
+              kubectl wait --namespace cnpg-system --for=condition=ready pod --selector=app.kubernetes.io/name=cloudnative-pg --timeout=90s || echo "metallb-system wait failed..."
               kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb --timeout=90s || echo "metallb-system wait failed..."
-              kubectl wait --namespace cert-manager --for=condition=ready pod --selector=app=cert-manager --timeout=90s || echo "cert-manager wait failed..."
+              kubectl wait --namespace cert-manager --for=condition=ready pod --selector=app.kubernetes.io/instance=cert-manager --timeout=90s || echo "cert-manager wait failed..."
               cmctl check api --wait=2m || echo "cmctl wait failed..."
               EOF
           volumeMounts:
