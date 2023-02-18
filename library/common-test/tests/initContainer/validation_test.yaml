@@ -65,4 +65,4 @@ tests:
                 type: invalid
     asserts:
       - failedTemplate:
-          errorMessage: InitContainer - Expected <type> to be one of [init, install, upgrade], but got [invalid]
+          errorMessage: InitContainer - Expected <type> to be one of [system, init, install, upgrade], but got [invalid]
