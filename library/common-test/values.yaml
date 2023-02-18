@@ -19,6 +19,7 @@ service:
 
 manifests:
   enabed: false
+  staging: false
 
 # The above just disables the "main" objects,
 # every other config is stays as it is set in common's values.yaml.

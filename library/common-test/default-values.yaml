@@ -13,3 +13,7 @@ service:
       main:
         enabled: true
         port: 80
+
+manifests:
+  enabed: false
+  staging: false
