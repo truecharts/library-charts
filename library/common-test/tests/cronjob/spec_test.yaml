@@ -27,7 +27,7 @@ tests:
             concurrencyPolicy: Forbid
             failedJobsHistoryLimit: 1
             successfulJobsHistoryLimit: 3
-            startingDeadlineSeconds:
+            startingDeadlineSeconds: 600
       - documentIndex: *cronJobDoc
         isSubset:
           path: spec.jobTemplate.spec
