@@ -202,7 +202,7 @@ persistence:
   vpnconfig:
     enabled: '{{ if or ( eq .Values.addons.vpn.type "gluetun" ) ( eq .Values.addons.vpn.type "tailscale" ) }}true{{ else }}false{{ end }}'
     type: hostPath
-    hostPath: '{{ .Values.addons.vpn.configFile}}'
+    hostPath: '{{ .Values.addons.vpn.configFile | default "/vpn/vpn.conf" }}'
     hostPathType: "File"
     targetSelector:
       main:
@@ -211,7 +211,7 @@ persistence:
   vpnfolder:
     enabled: '{{ if and ( or ( eq .Values.addons.vpn.type "gluetun" ) ( eq .Values.addons.vpn.type "tailscale" )) ( .Values.addons.vpn.configFolder ) }}true{{ else }}false{{ end }}'
     type: hostPath
-    hostPath: '{{ .Values.addons.vpn.configFolder}}'
+    hostPath: '{{ .Values.addons.vpn.configFolder | default "/vpn/mnt/" }}'
     targetSelector:
       main:
         vpn:
