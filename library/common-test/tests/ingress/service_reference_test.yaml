@@ -5,6 +5,20 @@ tests:
   - it: default should pass
     set:
       ingress.main.enabled: true
+      service:
+        main:
+          enabled: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 12345
+      workload:
+        my-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
     asserts:
       - documentIndex: &ingressDocument 3
         isKind:
@@ -20,6 +34,20 @@ tests:
 
   - it: custom service reference should pass
     set:
+      service:
+        main:
+          enabled: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 12345
+      workload:
+        my-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
       ingress.main:
         enabled: true
         hosts:
