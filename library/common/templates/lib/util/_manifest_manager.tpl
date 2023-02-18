@@ -23,6 +23,21 @@ spec:
             runAsGroup: 568
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              cpu: 4000m
+              memory: 8Gi
           command:
             - "/bin/sh"
             - "-c"
