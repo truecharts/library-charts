@@ -1,8 +1,7 @@
 {{/*
 The Tailscale sidecar container to be inserted.
 */}}
-{{- define "tc.v1.common.addon.tailscale.container" -}}
-{{- $secretName := printf "%s-tailscale-secret" (include "tc.v1.common.names.fullname" .) }}
+{{- define "tc.v1.common.addon.vpn.tailscale.container" -}}
 name: tailscale
 imageSelector: "tailscaleImage"
 imagePullPolicy: {{ .Values.tailscaleImage.pullPolicy }}
@@ -28,7 +27,7 @@ securityContext:
 
 envFrom:
   - secretRef:
-      name: {{ $secretName }}
+      name: tailscale-secret
 
 {{/*
 Set KUBE_SECRET to empty string to force tailscale
@@ -62,6 +61,9 @@ env:
   {{- with .Values.addons.vpn.tailscale.daemon_extra_args }}
   TS_TAILSCALED_EXTRA_ARGS: {{ . | quote }}
   {{- end -}}
+  {{- with .Values.addons.vpn.tailscale.authkey }}
+  TS_AUTH_KEY: {{ . | b64enc }}
+  {{- end }}
 
 {{- range $envList := .Values.addons.vpn.envList -}}
   {{- if and $envList.name $envList.value }}
@@ -77,17 +79,9 @@ env:
   {{- end -}}
 {{- end }}
 
-volumeMounts:
-  - mountPath: {{ .Values.persistence.shared.mountPath }}
-    name: shared
-  - mountPath: /var/lib/tailscale
-    name: {{ printf "%v-%v" .Release.Name "tailscale" }}
 {{- with .Values.addons.vpn.livenessProbe }}
 livenessProbe:
   {{- toYaml . | nindent 2 }}
 {{- end -}}
-{{- with .Values.addons.vpn.resources }}
-resources:
-  inherit: true
-{{- end -}}
+
 {{- end -}}

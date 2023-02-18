@@ -216,7 +216,13 @@ persistence:
       main:
         vpn:
           mountPath: /vpn/mnt/
-
+  tailscale:
+    enabled: '{{ if eq .Values.addons.vpn.type "tailscale" }}'
+    type: emptyDir
+    targetSelector:
+      main:
+        vpn:
+          mountPath: /var/lib/tailscale
 
 
 # -- Injected from SCALE middleware

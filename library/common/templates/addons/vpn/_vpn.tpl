@@ -13,9 +13,5 @@ It will include / inject the required templates based on the given values.
     {{- include "tc.v1.common.addon.tailscale" . }}
   {{- end -}}
 
-  {{- if ne "tailscale" .Values.addons.vpn.type -}}
-    {{- $_ := set .Values.persistence "vpnconfig" .Values.addons.vpn.configFile -}}
-  {{- end -}}
-
 {{- end -}}
 {{- end -}}
