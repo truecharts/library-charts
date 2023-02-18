@@ -11,10 +11,12 @@ securityContext:
     add:
       - NET_ADMIN
       - SYS_MODULE
+
 {{- with .Values.addons.vpn.env }}
 env:
   {{- . | toYaml | nindent 2 }}
 {{- end }}
+
 {{- range $envList := .Values.addons.vpn.envList -}}
   {{- if and $envList.name $envList.value }}
   {{ $envList.name }}: {{ $envList.value | quote }}
@@ -22,11 +24,12 @@ env:
     {{- fail "Please specify name/value for VPN environment variable" -}}
   {{- end -}}
 {{- end -}}
+
 {{- with .Values.addons.vpn.args }}
 args:
   {{- . | toYaml | nindent 2 }}
 {{- end }}
-{{- end }}
+
 {{- with .Values.addons.vpn.livenessProbe }}
 livenessProbe:
   {{- toYaml . | nindent 2 }}
