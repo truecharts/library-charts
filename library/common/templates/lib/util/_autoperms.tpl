@@ -17,7 +17,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ $fullName }}-autoPermissions
+  name: {{ $fullName }}-autopermissions
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
     "helm.sh/hook-weight": "3"
