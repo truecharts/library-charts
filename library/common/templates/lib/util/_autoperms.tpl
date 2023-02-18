@@ -42,6 +42,13 @@ spec:
               add: []
               drop:
                 - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              cpu: 4000m
+              memory: 8Gi
           command:
             - "/bin/sh"
             - "-c"
