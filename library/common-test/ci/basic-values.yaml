@@ -1,8 +1,3 @@
-image:
-  repository: traefik/whoami
-  pullPolicy: IfNotPresent
-  tag: latest
-
 service:
   main:
     enabled: true
