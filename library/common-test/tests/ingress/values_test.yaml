@@ -20,7 +20,7 @@ tests:
           podSpec: {}
       ingress.main.enabled: true
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
@@ -55,7 +55,7 @@ tests:
             paths:
               - path: /test
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
@@ -88,7 +88,7 @@ tests:
         hosts:
           - host: "{{ .Release.Name }}.hostname"
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
@@ -119,7 +119,7 @@ tests:
             paths:
               - path: "/{{ .Release.Name }}.path"
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument

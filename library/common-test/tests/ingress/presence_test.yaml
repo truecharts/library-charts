@@ -20,7 +20,7 @@ tests:
           podSpec: {}
     asserts:
       - hasDocuments:
-          count: 3
+          count: 2
       - documentIndex: 0
         not: true
         isKind:
@@ -29,26 +29,19 @@ tests:
         not: true
         isKind:
           of: Ingress
-      - documentIndex: 2
-        not: true
-        isKind:
-          of: Ingress
+
 
   - it: explicitly disabled should pass
     set:
       ingress.main.enabled: false
     asserts:
       - hasDocuments:
-          count: 3
+          count: 2
       - documentIndex: 0
         not: true
         isKind:
           of: Ingress
       - documentIndex: 1
-        not: true
-        isKind:
-          of: Ingress
-      - documentIndex: 2
         not: true
         isKind:
           of: Ingress
@@ -72,16 +65,12 @@ tests:
           podSpec: {}
     asserts:
       - hasDocuments:
-          count: 4
+          count: 3
       - documentIndex: 0
         not: true
         isKind:
           of: Ingress
       - documentIndex: 1
-        not: true
-        isKind:
-          of: Ingress
-      - documentIndex: 2
         not: true
         isKind:
           of: Ingress
@@ -95,16 +84,12 @@ tests:
       ingress.test.enabled: true
     asserts:
       - hasDocuments:
-          count: 5
+          count: 4
       - documentIndex: 0
         not: true
         isKind:
           of: Ingress
       - documentIndex: 1
-        not: true
-        isKind:
-          of: Ingress
-      - documentIndex: 2
         not: true
         isKind:
           of: Ingress

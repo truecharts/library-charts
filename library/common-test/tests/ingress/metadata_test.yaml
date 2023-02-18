@@ -20,7 +20,7 @@ tests:
           type: Deployment
           podSpec: {}
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
@@ -65,7 +65,7 @@ tests:
           labels:
             test_label: test
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument

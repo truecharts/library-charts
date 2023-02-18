@@ -20,7 +20,7 @@ tests:
           type: Deployment
           podSpec: {}
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
@@ -58,7 +58,7 @@ tests:
                   name: pathService
                   port: 1234
     asserts:
-      - documentIndex: &ingressDocument 3
+      - documentIndex: &ingressDocument 2
         isKind:
           of: Ingress
       - documentIndex: *ingressDocument
