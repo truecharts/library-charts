@@ -505,9 +505,9 @@ addons:
       #  value: somevalue
 
     # -- Provide a customized vpn configuration file to be used by the VPN.
-    configFile: "/vpn/vpn.conf"
+    configFile: ""
 
-    # -- Provide a customized vpn configuration file to be used by the VPN.
+    # -- Provide a customized vpn configuration folder to be added to the VPN container
     configFolder: ""
 
     ## TODO to be implemented
