@@ -59,9 +59,9 @@ fallbackDefaults:
 # -- Image values
 image:
   # -- Image repository
-  repository: ghcr.io/truecharts/whoami
+  repository: tccr.io/truecharts/whoami
   # -- Image tag
-  tag: v1.8.7@sha256:9e28a33572507f3648b623daed06626e9ef1ca0ee993a484f9b9e053037b42e0
+  tag: v1.8.7@sha256:8c61f0ca92fd806fcb4ed1465cb793c05443f37951554b105b0f2dc686a95772
   # -- Image pull policy
   pullPolicy: IfNotPresent
 
