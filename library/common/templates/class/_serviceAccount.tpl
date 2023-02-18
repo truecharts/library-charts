@@ -29,4 +29,5 @@ metadata:
   annotations:
     {{- . | nindent 4 }}
   {{- end -}}
+automountServiceAccountToken: {{ $objectData.automountServiceAccountToken | default false }}
 {{- end -}}
