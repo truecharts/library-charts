@@ -63,19 +63,19 @@ spec:
               chown -f :568 /vpn/vpn.conf || echo "Failed setting permissions using chown..."
               {{- end }}
               {{- end }}
-              {{- range $_, $hpm := $hostPathMounts }}
+              {{- range $name, $hpm := $hostPathMounts }}
               echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
               {{- if $.Values.ixChartContext }}
-              /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c {{ tpl $hpm.mountPath $ | squote }} -p {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions using winacl..."
+              /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c  "/mounts/{{ $name }}" -p  "/mounts/{{ $name }}" || echo "Failed setting permissions using winacl..."
               {{- else }}
-              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} {{ tpl $hpm.mountPath $ | squote }} || echo "Failed setting permissions using chown..."
+              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }}  /mounts/$name || echo "Failed setting permissions using chown..."
               {{- end }}
               {{- end }}
               EOF
           volumeMounts:
           {{- range $name, $hpm := $hostPathMounts }}
             - name: {{ $name }}
-              mountPath: {{ tpl $hpm.mountPath $ | squote }}
+              mountPath: /mounts/{{ $name }}
           {{- end }}
 
       volumes:
