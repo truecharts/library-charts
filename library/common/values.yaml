@@ -263,6 +263,19 @@ notes:
 ##
 ####
 
+portal:
+  open:
+    enabled: false
+    override:
+      protocol:
+      host:
+      port:
+    urlSuffix: ""
+    targetSelector:
+      ingress: ""
+      service: ""
+      port: ""
+
 # -- Used to inject our own operator manifests into SCALE
 manifestManager:
   enabled: true
