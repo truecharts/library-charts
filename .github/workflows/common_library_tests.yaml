@@ -120,7 +120,7 @@ jobs:
           - cron-values.yaml
           - statefulset-values.yaml
           - persistence-values.yaml
-          # - extra-containers-values.yaml
+          - extra-containers-values.yaml
           - rbac-values.yaml
           - ingress-values.yaml
           - networkPolicy-values.yaml
@@ -246,10 +246,13 @@ jobs:
           - rbac-values.yaml
           - ingress-values.yaml
           - networkPolicy-values.yaml
+          - codeserver-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
           - manifest-values.yaml
           - stagingmanifest-values.yaml
+          - vpn-gluetun-values.yaml
+          - vpn-tailscale-values.yaml
 
     steps:
       - name: Install Helm
