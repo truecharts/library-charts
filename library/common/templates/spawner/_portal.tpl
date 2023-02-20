@@ -20,7 +20,7 @@
       {{- $url := "" -}}
 
       {{/* Get service, default to primary */}}
-      {{- $selectedService := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ "objectData" $objectData.targetSeleector.service ) ) }}
+      {{- $selectedService := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ "objectData" $objectData.targetSeleector.service ) ) -}}
 
       {{/* read loadbalancer IP's for metallb */}}
       {{- if eq $selectedService.type "LoadBalancer" -}}
@@ -54,7 +54,7 @@
       {{- if $objectData.targetSelector.ingress -}}
       {{- $targetIngress := $objectData.targetSelector.ingress -}}
       {{- else -}}
-      {{- $targetIngress := include "tc.v1.common.lib.util.service.ingress.primary" $-}}
+      {{- $targetIngress := include "tc.v1.common.lib.util.service.ingress.primary" $ -}}
       {{- end -}}
       {{- $selectedIngress = get .Values.ingress $targetIngress -}}
 
@@ -95,9 +95,9 @@
 
       {{/* Construct URL*/}}
       {{- if $port -}}
-      {{- $url = printf "%s://%s:%s/%s" $protocol $host $port %suffix -}}
+      {{- $url = printf "%s://%s:%s/%s" $protocol $host $port $suffix -}}
       {{- else -}}
-      {{- $url = printf "%s://%s/%s" $protocol $host %suffix -}}
+      {{- $url = printf "%s://%s/%s" $protocol $host $suffix -}}
       {{- end -}}
 
     {{- end -}}

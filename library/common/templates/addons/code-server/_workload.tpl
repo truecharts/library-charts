@@ -3,10 +3,19 @@ The code-server sidecar container to be inserted.
 */}}
 {{- define "tc.v1.common.addon.codeserver.workload" -}}
 enabled: true
+type: Deployment
 podSpec:
   containers:
     codeserver:
       enabled: true
+      primary: true
+      probes:
+        liveness:
+          enabled: false
+        readiness:
+          enabled: false
+        startup:
+          enabled: false
       imageSelector: "codeserverImage"
       imagePullPolicy: {{ .Values.codeserverImage.pullPolicy }}
       securityContext:
