@@ -4,17 +4,20 @@ It will include / inject the required templates based on the given values.
 */}}
 {{- define "tc.v1.common.addon.codeserver" -}}
 {{- if .Values.addons.codeserver.enabled -}}
-  {{/* Append the code-server container to the additionalContainers */}}
-  {{- $container := include "tc.v1.common.addon.codeserver.container" . | fromYaml -}}
-  {{- if $container -}}
-    {{- $_ := set .Values.workload.main.podSpec.containers "codeserver" $container -}}
+  {{/* Append the code-server workload to the workloads */}}
+  {{- $workload := include "tc.v1.common.addon.codeserver.workload" . | fromYaml -}}
+  {{- if $workload -}}
+    {{- $_ := set $.Values.workload "codeserver" $workload -}}
   {{- end -}}
 
   {{/* Add the code-server service */}}
   {{- if .Values.addons.codeserver.service.enabled -}}
     {{- $serviceValues := .Values.addons.codeserver.service -}}
+    {{- $_ := set $serviceValues "targetPort" 12321 -}}
+    {{- $_ := set $serviceValues "targetSelector" "codeserver" -}}
     {{- $_ := set .Values.service "codeserver" $serviceValues -}}
   {{- end -}}
+
 
   {{/* Add the code-server ingress */}}
   {{- if .Values.addons.codeserver.ingress.enabled -}}

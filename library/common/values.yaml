@@ -506,6 +506,7 @@ addons:
     existingSecret: ""
 
     # -- select pods to bind vpn addon to
+    # Add "codeserver" to also add the codeserver pod to VPN
     targetSelector:
       - main
 
@@ -547,11 +548,7 @@ addons:
           port: 12321
           enabled: true
           protocol: http
-          targetPort: 12321
-          ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-          ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-          ##
-          # nodePort: 36107
+
 
     ingress:
       # -- Enable an ingress for the code-server add-on.
