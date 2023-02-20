@@ -7,7 +7,15 @@ The gluetun sidecar container to be inserted.
   podSpec:
     containers:
       gluetun:
+        enabled: true
         imageSelector: gluetunImage
+        probes:
+          liveness:
+            enabled: false
+          readiness:
+            enabled: false
+          startup:
+            enabled: false
         securityContext:
           runAsUser: 568
           runAsGroup: 568

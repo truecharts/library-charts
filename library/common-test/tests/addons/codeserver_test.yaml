@@ -3,9 +3,26 @@ templates:
   - common.yaml
 tests:
   - it: default should pass
+    set:
+      workload: &workload
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      service: &service
+        service-name:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              protocol: http
+              port: 8080
     asserts:
       - hasDocuments:
-          count: 3
+          count: 2
       - documentIndex: 1
         isKind:
           of: Service
@@ -19,6 +36,8 @@ tests:
 
   - it: addon enabled should pass
     set:
+      workload: *workload
+      service: *service
       addons:
         codeserver:
           enabled: true

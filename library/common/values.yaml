@@ -281,6 +281,12 @@ manifestManager:
   enabled: true
   staging: false
 
+# TODO: Update repo/tag
+gluetunImage:
+  repository: tccr.io/truecharts/gluetun
+  tag: some_tag
+  pullPolicy: IfNotPresent
+
 openvpnImage:
   repository: tccr.io/truecharts/openvpn-client
   tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
