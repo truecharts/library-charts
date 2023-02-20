@@ -199,30 +199,7 @@ persistence:
     type: emptyDir
     mountPath: /dev/shm
     targetSelectAll: true
-  vpnconfig:
-    enabled: '{{ if or ( eq .Values.addons.vpn.type "gluetun" ) ( eq .Values.addons.vpn.type "tailscale" ) }}true{{ else }}false{{ end }}'
-    type: hostPath
-    hostPath: '{{ .Values.addons.vpn.configFile | default "/vpn/vpn.conf" }}'
-    hostPathType: "File"
-    targetSelector:
-      main:
-        vpn:
-          mountPath: /vpn/vpn.conf
-  vpnfolder:
-    enabled: '{{ if and ( or ( eq .Values.addons.vpn.type "gluetun" ) ( eq .Values.addons.vpn.type "tailscale" )) ( .Values.addons.vpn.configFolder ) }}true{{ else }}false{{ end }}'
-    type: hostPath
-    hostPath: '{{ .Values.addons.vpn.configFolder | default "/vpn/mnt/" }}'
-    targetSelector:
-      main:
-        vpn:
-          mountPath: /vpn/mnt/
-  tailscale:
-    enabled: '{{ if eq .Values.addons.vpn.type "tailscale" }}'
-    type: emptyDir
-    targetSelector:
-      main:
-        vpn:
-          mountPath: /var/lib/tailscale
+
 
 
 # -- Injected from SCALE middleware
@@ -504,16 +481,34 @@ addons:
       # - name: someenv
       #  value: somevalue
 
-    # -- Provide a customized vpn configuration file to be used by the VPN.
+
+    # -- you can directly specify the config file here
+    config: ""
+
+    scripts:
+      # -- you can directly specify the upscript here
+      up: ""
+      # some script
+
+      # -- you can directly specify the downscript here
+      down: ""
+      # some script
+
+    # -- Provide a customized vpn configuration file location to be used by the VPN.
     configFile: ""
 
-    # -- Provide a customized vpn configuration folder to be added to the VPN container
+    # -- Provide a customized vpn configuration folder location to be added to the VPN container
+    # The config file needs to be mounted seperately
+    # the upscript and downscript need to be named: upscript.sh and downscript.sh respectively
     configFolder: ""
 
-    ## TODO to be implemented
-    # -- Reference an existing secret that contains the VPN configuration file
-    # The chart expects it to be present under the `vpnConfigfile` key.
-    # configFileSecret:
+    # -- Provide an existing secret for vpn config storage
+    existingSecret: ""
+
+    # -- select pods to bind vpn addon to
+    targetSelector:
+      - main
+
 
   # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
   # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server)
