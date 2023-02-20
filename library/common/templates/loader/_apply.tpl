@@ -48,4 +48,6 @@
 
   {{- include "tc.v1.common.lib.util.autoperms" . | nindent 0 -}}
 
+  {{- include "tc.v1.common.spawner.portal" . | nindent 0 -}}
+
 {{- end -}}
