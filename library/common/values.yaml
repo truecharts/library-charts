@@ -158,9 +158,6 @@ workload:
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
 
-# TODO:
-portal: {}
-
 ##### ⬇ Done ⬇ #####
 
 # -- Timezone used everywhere applicable
