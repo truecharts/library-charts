@@ -308,11 +308,38 @@ tests:
         isAPIVersion:
           of: batch/v1
       - documentIndex: *jobDoc
-        isNull:
+        contains:
           path: spec.template.spec.containers[0].volumeMounts
+          content:
+            - mountPath: /dev/shm
+              name: devshm
+              readOnly: false
+            - mountPath: /shared
+              name: shared
+              readOnly: false
+            - mountPath: /tmp
+              name: tmp
+              readOnly: false
+            - mountPath: /var/logs
+              name: varlogs
+              readOnly: false
+
       - documentIndex: *jobDoc
-        isNull:
+        contains:
           path: spec.template.spec.containers[1].volumeMounts
+          content:
+            - mountPath: /dev/shm
+              name: devshm
+              readOnly: false
+            - mountPath: /shared
+              name: shared
+              readOnly: false
+            - mountPath: /tmp
+              name: tmp
+              readOnly: false
+            - mountPath: /var/logs
+              name: varlogs
+              readOnly: false
 
   - it: should pass with volume with selected pod and containers and specific values
     set:
