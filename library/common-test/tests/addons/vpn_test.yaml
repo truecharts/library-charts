@@ -8,7 +8,7 @@ tests:
         vpn:
           type: gluetun
           configFile: "/tmp/vpn.conf"
-      workload:
+      workload: &workload
         main:
           enabled: true
           primary: true
@@ -18,10 +18,19 @@ tests:
               main:
                 enabled: true
                 primary: true
+      service:
+        main:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 8080
     asserts:
       - hasDocuments:
-          count: 1
-      - documentIndex: &DeploymentDocument 1
+          count: 2
+      - documentIndex: &DeploymentDocument 0
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDocument
@@ -61,9 +70,6 @@ tests:
       - documentIndex: &SecretDocument 0
         isKind:
           of: Secret
-      - documentIndex: 2
-        isKind:
-          of: Service
       - documentIndex: &DeploymentDocument 1
         isKind:
           of: Deployment
@@ -98,7 +104,7 @@ tests:
       - documentIndex: *DeploymentDocument
         notEqual:
           path: spec.template.spec.containers[0].name
-          value: RELEASE-NAME-common-test-additional-tailscale
+          value: RELEASE-NAME-common-test
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].name
