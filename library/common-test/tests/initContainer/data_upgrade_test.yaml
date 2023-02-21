@@ -89,6 +89,18 @@ tests:
               - name: shared-vol
                 mountPath: /some/path
                 readOnly: false
+              - mountPath: /dev/shm
+                name: devshm
+                readOnly: false
+              - mountPath: /shared
+                name: shared
+                readOnly: false
+              - mountPath: /tmp
+                name: tmp
+                readOnly: false
+              - mountPath: /var/logs
+                name: varlogs
+                readOnly: false
       - documentIndex: *deploymentDoc
         isNull:
           path: spec.template.spec.initContainers[0].livenessProbe
@@ -107,8 +119,21 @@ tests:
         isNull:
           path: spec.template.spec.initContainers[1].command
       - documentIndex: *deploymentDoc
-        isNull:
+        contains:
           path: spec.template.spec.initContainers[1].volumeMounts
+          content:
+            - mountPath: /dev/shm
+              name: devshm
+              readOnly: false
+            - mountPath: /shared
+              name: shared
+              readOnly: false
+            - mountPath: /tmp
+              name: tmp
+              readOnly: false
+            - mountPath: /var/logs
+              name: varlogs
+              readOnly: false
       - documentIndex: *deploymentDoc
         isNull:
           path: spec.template.spec.initContainers[2]
