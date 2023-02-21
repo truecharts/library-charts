@@ -11,18 +11,21 @@
 
         {{/* Create a copy of the portal */}}
         {{- $objectData := (mustDeepCopy $portal) -}}
+        {{- $override := $objectData.override -}}
+        {{- $targetSelector := $objectData.targetSelector -}}
 
         {{/* Create defaults */}}
         {{- $protocol := "https" -}}
         {{- $host := "$node_ip" -}}
         {{- $port := "443" -}}
-        {{- $suffix := $objectData.urlSuffix -}}
+        {{- $path := $objectData.path | default "/" -}}
         {{- $url := "" -}}
 
-        {{/* Get service, default to primary */}}
-        {{- $serviceData := dict "targetSelector" $objectData.targetSelector.service -}}
-        {{- $selectedService := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ "objectData" $serviceData)) }}
 
+
+        {{/* Get service, default to primary */}}
+        {{- $serviceData := dict "targetSelector" $targetSelector.service -}}
+        {{- $selectedService := fromYaml ( include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ "objectData" $serviceData)) }}
 
 
         {{/* read loadbalancer IP's for metallb */}}
@@ -36,8 +39,8 @@
         {{- $selectedPort := "" -}}
 
         {{/* Fetch port values */}}
-        {{- if $objectData.targetSelector.port -}}
-        {{- $targetPort := $objectData.targetSeleector.port -}}
+        {{- if $targetSelector.port -}}
+        {{- $targetPort := $targetSelector.port -}}
         {{- else -}}
         {{- $targetPort := include "tc.v1.common.lib.util.service.ports.primary" $selectedService -}}
         {{- end -}}
@@ -54,11 +57,12 @@
         {{- $selectedIngress := "" -}}
 
         {{/* Fetch ingress values */}}
-        {{- if $objectData.targetSelector.ingress -}}
-        {{- $targetIngress := $objectData.targetSelector.ingress -}}
+        {{- if $targetSelector.ingress -}}
+        {{- $targetIngress = $targetSelector.ingress -}}
         {{- else -}}
-        {{- $targetIngress := include "tc.v1.common.lib.util.ingress.primary" $ -}}
+        {{- $targetIngress = ( include "tc.v1.common.lib.util.ingress.primary" $ ) -}}
         {{- end -}}
+
         {{- $selectedIngress = get $.Values.ingress $targetIngress -}}
 
         {{/* store host from ingress number */}}
@@ -67,26 +71,41 @@
         {{- with (index $selectedIngress.hosts 0) }}
            {{- $host = .host -}}
         {{- end }}
+
+        {{/* Get the port for the ingress entrypoint */}}
+        {{- $namespace := "tc-system" }}
+        {{- if $selectedIngress.ingressClassName }}
+        {{- $namespace := ( printf "ix-%s" $selectedIngress.ingressClassName ) }}
         {{- end }}
+        {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" }}
+
+        {{- $entrypoint := "websecure" }}
+        {{- if $selectedIngress.entrypoint }}
+          {{- $entrypoint = $selectedIngress.entrypoint }}
         {{- end }}
 
-        {{/* TODO: grab ports via portal */}}
+        {{- if $traefikportalhook }}
+          {{- if ( index $traefikportalhook.data $entrypoint ) }}
+            {{- $port = ( index $traefikportalhook.data $entrypoint ) }}
+          {{- end }}
+        {{- end }}
+
+        {{- end }}
+        {{- end }}
 
 
         {{/* Apply overrides */}}
-        {{- if $objectData.override.protocol -}}
-          {{- $protocol = $objectData.override.protocol -}}
+        {{- if $override.protocol -}}
+          {{- $protocol = $override.protocol -}}
         {{- end -}}
 
-        {{- if $objectData.override.host -}}
-          {{- $host = $objectData.override.host -}}
+        {{- if $override.host -}}
+          {{- $host = $override.host -}}
         {{- end -}}
 
-        {{- if $objectData.override.port -}}
-          {{- $port = $objectData.override.port -}}
+        {{- if $override.port -}}
+          {{- $port = $override.port -}}
         {{- end -}}
-
-
 
         {{/* sanitise */}}
         {{- if eq $port "443" -}}
@@ -97,22 +116,24 @@
           {{- $protocol = "http" -}}
         {{- end -}}
 
-        {{- if or ( eq $protocol "https" ) ( eq $protocol "http" ) -}}
+        {{- if or ( and ( eq $protocol "https" )  ( eq $port "443" ) ) ( and ( eq $protocol "http" )  ( eq $port "80" ) ) -}}
           {{- $port = "" -}}
         {{- end -}}
 
+        {{- $port = toString $port -}}
+
         {{/* Construct URL*/}}
         {{- if $port -}}
-        {{- $url = printf "%s://%s:%s/%s" $protocol $host $port $suffix -}}
+        {{- $url = printf "%s://%s:%s%s" $protocol $host $port $path -}}
         {{- else -}}
-        {{- $url = printf "%s://%s/%s" $protocol $host $suffix -}}
+        {{- $url = printf "%s://%s%s" $protocol $host $path -}}
         {{- end -}}
 
         {{/* create configmap entry*/}}
-        {{- $portalData := dict "protocol" $protocol "host" $host "port" $port "suffix" $suffix "url" $url  -}}
+        {{- $portalData := dict "protocol" $protocol "host" $host "port" $port "path" $path "url" $url  -}}
 
         {{/* construct configmap */}}
-        {{- $objectName := "tcportal" -}}
+        {{- $objectName := ( printf "tcportal-%s" $name ) -}}
         {{- $configMap := dict "enabled" true "name" $objectName "shortName" $objectName "data" $portalData -}}
 
         {{/* Perform validations */}}
@@ -122,6 +143,16 @@
 
         {{/* Call class to create the object */}}
         {{- include "tc.v1.common.class.configmap" (dict "rootCtx" $ "objectData" $configMap) -}}
+
+        {{/* iXportals */}}
+        {{- $useNodeIP := false -}}
+        {{- if eq $host "$node_ip" -}}
+        {{- $useNodeIP = true -}}
+        {{- end -}}
+
+        {{- $iXPortalData := dict "portalName" $name "useNodeIP" $useNodeIP "protocol" $protocol "host" $host "port" $port "path" $path "url" $url  -}}
+        {{- $iXPortals := append $.Values.iXPortals $iXPortalData -}}
+        {{- $_ := set $.Values "iXPortals" $iXPortals -}}
 
       {{- end -}}
     {{- end -}}

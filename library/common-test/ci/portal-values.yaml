@@ -27,10 +27,10 @@ service:
         enabled: true
         port: 8080
         protocol: http
-  autolink:
+  test:
     enabled: true
     ports:
-      autolink:
+      test:
         enabled: true
         protocol: http
         port: 8081
@@ -55,7 +55,17 @@ ingress:
               name:
               port:
     tls: []
-
+  test:
+    enabled: true
+    hosts:
+      - host: chart-test.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              name:
+              port:
+    tls: []
 "ixCertificateAuthorities": {}
 "ixCertificates":
   "1":
@@ -112,13 +122,34 @@ ingress:
 
 portal:
   open:
-    enabled: false
+    enabled: true
     override:
       protocol:
       host:
       port:
-    urlSuffix: ""
+    path: ""
+  path:
+    enabled: true
+    path: "somepath"
+  explicit:
+    enabled: true
     targetSelector:
-      ingress: ""
-      service: ""
+      ingress: "test"
+      service: "test"
+      port: ""
+  override:
+    enabled: true
+    override:
+      protocol: "http"
+      host: "test.example.com"
+      port: "666"
+  override-explicit:
+    enabled: true
+    override:
+      protocol: "http"
+      host: "test.example.com"
+      port: "666"
+    targetSelector:
+      ingress: "test"
+      service: "test"
       port: ""

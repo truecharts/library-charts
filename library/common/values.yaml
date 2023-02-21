@@ -267,11 +267,13 @@ portal:
       protocol:
       host:
       port:
-    urlSuffix: ""
+    path: ""
     targetSelector:
       ingress: ""
       service: ""
       port: ""
+
+iXPortals: []
 
 # -- Used to inject our own operator manifests into SCALE
 manifestManager:
