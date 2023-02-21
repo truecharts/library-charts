@@ -252,7 +252,8 @@ notes:
     # Bug reports
     If you find a bug in this chart, please file an issue at ...
 
-
+# -- iXsystems prototype values.yaml based portals
+iXPortals: []
 
 ####
 ##
@@ -260,6 +261,7 @@ notes:
 ##
 ####
 
+# -- Defines the portals for which config needs to be generated
 portal:
   open:
     enabled: false
@@ -273,7 +275,8 @@ portal:
       service: ""
       port: ""
 
-iXPortals: []
+# -- Set by "open" portal, used for some applications internally.
+APPURL: ""
 
 # -- Used to inject our own operator manifests into SCALE
 manifestManager:
