@@ -57,14 +57,16 @@
         {{- if $objectData.targetSelector.ingress -}}
         {{- $targetIngress := $objectData.targetSelector.ingress -}}
         {{- else -}}
-        {{- $targetIngress := include "tc.v1.common.lib.util.service.ingress.primary" $ -}}
+        {{- $targetIngress := include "tc.v1.common.lib.util.ingress.primary" $ -}}
         {{- end -}}
-        {{- $selectedIngress = get .Values.ingress $targetIngress -}}
+        {{- $selectedIngress = get $.Values.ingress $targetIngress -}}
 
         {{/* store host from ingress number */}}
+        {{- if $selectedIngress -}}
         {{- if $selectedIngress.enabled -}}
         {{- with (index $selectedIngress.hosts 0) }}
            {{- $host = .host -}}
+        {{- end }}
         {{- end }}
         {{- end }}
 
