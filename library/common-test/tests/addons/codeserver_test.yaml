@@ -21,25 +21,38 @@ tests:
           ports:
             main:
               enabled: true
+              primary: true
+              port: 8080
       addons:
         codeserver:
           enabled: true
     asserts:
       - hasDocuments:
-          count: 3
-      - documentIndex: &AddonServiceDocument 0
-        isKind:
-          of: Service
-      - documentIndex: 1
-        isKind:
-          of: Service
-      - documentIndex: &DeploymentDocument 2
+          count: 4
+      - documentIndex: &CodeServerDeploymentDocument 0
         isKind:
           of: Deployment
+      - documentIndex: &DeploymentDocument 1
+        isKind:
+          of: Deployment
+      - documentIndex: &AddonServiceDocument 2
+        isKind:
+          of: Service
+      - documentIndex: &ServiceDocument 3
+        isKind:
+          of: Service
       - documentIndex: *DeploymentDocument
         equal:
-          path: spec.template.spec.containers[0].name
-          value: release-name-common-test-additional-codeserver
+          path: metadata.name
+          value: release-name-common-test
+      - documentIndex: *CodeServerDeploymentDocument
+        equal:
+          path: metadata.name
+          value: release-name-common-test-codeserver
+      - documentIndex: *ServiceDocument
+        equal:
+          path: metadata.name
+          value: release-name-common-test
       - documentIndex: *AddonServiceDocument
         equal:
           path: metadata.name
