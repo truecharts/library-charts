@@ -11,11 +11,14 @@ podSpec:
       primary: true
       probes:
         liveness:
-          enabled: false
+          enabled: true
+          port: {{ .Values.addons.codeserver.service.ports.codeserver.port }}
         readiness:
-          enabled: false
+          enabled: true
+          port: {{ .Values.addons.codeserver.service.ports.codeserver.port }}
         startup:
-          enabled: false
+          enabled: true
+          port: {{ .Values.addons.codeserver.service.ports.codeserver.port }}
       imageSelector: "codeserverImage"
       imagePullPolicy: {{ .Values.codeserverImage.pullPolicy }}
       securityContext:

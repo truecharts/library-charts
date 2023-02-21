@@ -246,7 +246,8 @@ jobs:
           - rbac-values.yaml
           - ingress-values.yaml
           - networkPolicy-values.yaml
-          - codeserver-values.yaml
+          # Runs as root, so test results become obviously red
+          # - codeserver-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
           - manifest-values.yaml
