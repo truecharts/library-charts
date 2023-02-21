@@ -5,17 +5,7 @@ tests:
   - it: default should pass
     asserts:
       - hasDocuments:
-          count: 3
-      - documentIndex: &DeploymentDocument 0
-        isKind:
-          of: Deployment
-      - documentIndex: 1
-        isKind:
-          of: Service
-      - documentIndex: *DeploymentDocument
-        notEqual:
-          path: spec.template.spec.containers[0].name
-          value: RELEASE-NAME-common-test-additional-vpn
+          count: 0
 
   - it: addon enabled with configFile should pass
     set:
@@ -24,6 +14,11 @@ tests:
           type: openvpn
           configFile:
             enabled: true
+      workload:
+        main:
+          enabled: true
+          primary: true
+          type: Deployment
     asserts:
       - hasDocuments:
           count: 4
@@ -56,10 +51,15 @@ tests:
     set:
       addons:
         vpn:
-          type: openvpn
+          type: gluetun
           openvpn:
             username: something
             password: something
+      workload:
+        main:
+          enabled: true
+          primary: true
+          type: Deployment
     asserts:
       - hasDocuments:
           count: 4
@@ -84,6 +84,11 @@ tests:
           type: tailscale
           tailscale:
             authkey: something
+      workload:
+        main:
+          enabled: true
+          primary: true
+          type: Deployment
     asserts:
       - hasDocuments:
           count: 4

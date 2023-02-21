@@ -23,21 +23,15 @@ tests:
     asserts:
       - hasDocuments:
           count: 2
-      - documentIndex: 1
+      - documentIndex: 0
         isKind:
           of: Service
-      - documentIndex: &DeploymentDocument 0
+      - documentIndex: &DeploymentDocument 1
         isKind:
           of: Deployment
-      - documentIndex: *DeploymentDocument
-        notEqual:
-          path: spec.template.spec.containers[0].name
-          value: RELEASE-NAME-common-test-additional-codeserver
 
   - it: addon enabled should pass
     set:
-      workload: *workload
-      service: *service
       addons:
         codeserver:
           enabled: true
@@ -47,20 +41,26 @@ tests:
     asserts:
       - hasDocuments:
           count: 4
-      - documentIndex: 2
+      - documentIndex: &AddonServiceDocument 0
         isKind:
           of: Service
-      - documentIndex: &DeploymentDocument 0
+      - documentIndex: 1
+        isKind:
+          of: Service
+      - documentIndex: &DeploymentDocument 2
+        isKind:
+          of: Deployment
+      - documentIndex: 3
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].name
-          value: RELEASE-NAME-common-test-additional-codeserver
+          value: release-name-common-test-additional-codeserver
       - documentIndex: &AddonServiceDocument 1
         isKind:
           of: Service
       - documentIndex: *AddonServiceDocument
         equal:
           path: metadata.name
-          value: RELEASE-NAME-common-test-codeserver
+          value: release-name-common-test-codeserver
