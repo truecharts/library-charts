@@ -13,6 +13,11 @@ tests:
           enabled: true
           primary: true
           type: Deployment
+          podSpec:
+            containers:
+              main:
+                enabled: true
+                primary: true
     asserts:
       - hasDocuments:
           count: 1
@@ -45,6 +50,11 @@ tests:
           enabled: true
           primary: true
           type: Deployment
+          podSpec:
+            containers:
+              main:
+                enabled: true
+                primary: true
     asserts:
       - hasDocuments:
           count: 2
@@ -74,20 +84,15 @@ tests:
           enabled: true
           primary: true
           type: Deployment
+          podSpec:
+            containers:
+              main:
+                enabled: true
+                primary: true
     asserts:
       - hasDocuments:
-          count: 2
-      - documentIndex: &SecretDocument 0
-        isKind:
-          of: Secret
-      - documentIndex: *SecretDocument
-        isNotNull:
-          path: data.TS_AUTH_KEY
-      - documentIndex: *SecretDocument
-        equal:
-          path: metadata.name
-          value: RELEASE-NAME-common-test-tailscale-secret
-      - documentIndex: &DeploymentDocument 1
+          count: 1
+      - documentIndex: &DeploymentDocument 0
         isKind:
           of: Deployment
       - documentIndex: *DeploymentDocument

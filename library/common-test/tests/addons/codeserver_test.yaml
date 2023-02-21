@@ -9,7 +9,18 @@ tests:
           enabled: true
           primary: true
           type: Deployment
-          podSpec: {}
+          podSpec:
+            containers:
+              main:
+                enabled: true
+                primary: true
+      service:
+        main:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
       addons:
         codeserver:
           enabled: true
