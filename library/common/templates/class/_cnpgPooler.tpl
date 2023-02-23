@@ -7,6 +7,7 @@
     {{- end -}}
   {{- end -}}
   {{- $cnpgClusterName := $values.name -}}
+  {{- $cnpgName := $values.cnpgName -}}
   {{- $cnpgPoolerName := $values.poolerName -}}
   {{- $cnpgClusterLabels := $values.labels -}}
   {{- $cnpgClusterAnnotations := $values.annotations }}
@@ -15,7 +16,7 @@
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $ }}
 kind: Pooler
 metadata:
-  name: {{ printf "%v-%v" $cnpgPoolerName $values.pooler.type }}
+  name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
 spec:
   cluster:
     name: {{ $cnpgClusterName }}
@@ -33,7 +34,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: pooler-{{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
+  name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
 spec:
   selector:
     matchLabels:

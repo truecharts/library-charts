@@ -5,23 +5,16 @@
     {{- if $cnpg.enabled -}}
       {{- $cnpgValues := $cnpg -}}
       {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+      {{- $_ := set $cnpgValues "shortName" $name -}}
 
       {{/* set defaults */}}
-      {{- if and (not $cnpgValues.nameOverride) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) -}}
-        {{- $_ := set $cnpgValues "nameOverride" $name -}}
-      {{- end -}}
+      {{- $_ := set $cnpgValues "nameOverride" $name -}}
 
-      {{- if $cnpgValues.nameOverride -}}
-        {{- $cnpgName = printf "%v-%v" $cnpgName $cnpgValues.nameOverride -}}
-      {{- end -}}
-
-      {{- $cnpgPoolerName := printf "cnpg-pooler-%v" $cnpgName -}}
-      {{- $cnpgName = printf "cnpg-%v" $cnpgName -}}
+      {{- $cnpgName := printf "%v-cnpg-%v" $cnpgName $cnpgValues.nameOverride -}}
 
       {{- $_ := set $cnpgValues "name" $cnpgName -}}
 
       {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) -}}
-      {{- $_ := set $cnpgValues "poolerName" $cnpgPoolerName -}}
       {{- include "tc.v1.common.class.cnpg.cluster" $ -}}
 
       {{- $_ := set $cnpgValues.pooler "type" "rw" -}}
