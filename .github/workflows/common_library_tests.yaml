@@ -125,6 +125,7 @@ jobs:
           - ingress-values.yaml
           - networkPolicy-values.yaml
           - codeserver-values.yaml
+          - netshoot-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
           - manifest-values.yaml
@@ -248,6 +249,7 @@ jobs:
           - networkPolicy-values.yaml
           # Runs as root, so test results become obviously red
           # - codeserver-values.yaml
+          # - netshoot-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
           - manifest-values.yaml
