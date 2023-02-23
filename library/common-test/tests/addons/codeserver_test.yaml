@@ -32,10 +32,10 @@ tests:
       - documentIndex: &DeploymentDocument 0
         isKind:
           of: Deployment
-      - documentIndex: &AddonServiceDocument 2
+      - documentIndex: &AddonServiceDocument 1
         isKind:
           of: Service
-      - documentIndex: &ServiceDocument 3
+      - documentIndex: &ServiceDocument 2
         isKind:
           of: Service
       - documentIndex: *DeploymentDocument
@@ -45,11 +45,11 @@ tests:
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[0].name
-          value: release-name-common-test-codeserver
+          value: release-name-common-test
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].name
-          value: release-name-common-test
+          value: release-name-common-test-codeserver
       - documentIndex: *ServiceDocument
         equal:
           path: metadata.name
