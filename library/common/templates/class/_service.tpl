@@ -51,8 +51,7 @@ objectData: The service data, that will be used to render the Service object.
     {{- if $hasHostPort -}}
       {{- $svcType = "ClusterIP" -}}
     {{- end -}}
-  {{- end }}
-  {{- end }}
+  {{- end -}}
   {{- $_ := set $objectData "type" $svcType  }}
 
 ---
