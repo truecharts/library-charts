@@ -283,26 +283,19 @@ manifestManager:
   enabled: true
   staging: false
 
-# TODO: Update repo/tag
 gluetunImage:
   repository: tccr.io/truecharts/gluetun
-  tag: some_tag
+  tag: latest@sha256:921c0d0d7f51c5c0a9b6ff64c02acdaeb49c9c225b6a41d75f07db6350c6b229
   pullPolicy: IfNotPresent
 
-openvpnImage:
-  repository: tccr.io/truecharts/openvpn-client
-  tag: latest@sha256:1f83decdf614cbf48e2429921b6f0efa0e825f447f5c510b65bc90f660227688
-  pullPolicy: IfNotPresent
-
-wireguardImage:
-  repository: tccr.io/truecharts/wireguard
-  tag: v1.0.20210914@sha256:9f56e5660e8df8d4d38521ed73a4cc29fa24bf578007bfbe633e00184e2ebfbc
+netshootImage:
+  repository: tccr.io/truecharts/netshoot
+  tag: v0.9.0@sha256:cb04e9350c925087e6fd9030f1686cd3310b17e55d5559a0efeb541ec485d917
   pullPolicy: IfNotPresent
 
 tailscaleImage:
-  repository: tailscale/tailscale
-  # TODO: Switch to stable once a v1.33.x is released
-  tag: v1.34.1@sha256:69bec9fdea25765e1b9dd129ccaeaf1e160f1132bb390535772fa939f0bf620b
+  repository: tccr.io/truecharts/tailscale
+  tag: v1.36.2@sha256:d692efd698082835ce098db5f2af69fcadf524ef16a00f23896f40cf424b0fa2
   pullPolicy: IfNotPresent
 
 codeserverImage:
@@ -585,6 +578,14 @@ addons:
 
       # -- Select a container to add the addon to
       targetSelector: ""
+
+
+  netshoot:
+    # -- Enable running a netshoot container in the pod
+    enabled: false
+
+    # -- Set any environment variables for netshoot here
+    env: {}
 
 
 ##
