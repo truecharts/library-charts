@@ -70,7 +70,7 @@ spec:
     reusePVC: on
 
 {{- $dbPass := "" }}
-{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace ( printf "cnpg-%s-user" $values.shortName ) }}
+{{- $dbprevious := lookup "v1" "Secret" .Release.Namespace ( printf "%s-user" $cnpgClusterName ) }}
 {{- if $dbprevious }}
   {{- $dbPass = ( index $dbprevious.data "user-password" ) | b64dec  }}
 {{- else }}
@@ -78,7 +78,7 @@ spec:
 {{- end }}
 
 {{- $pgPass := "" }}
-{{- $pgprevious := lookup "v1" "Secret" .Release.Namespace ( printf "cnpg-%s-superuser" $values.shortName ) }}
+{{- $pgprevious := lookup "v1" "Secret" .Release.Namespace ( printf "%s-superuser" $cnpgClusterName ) }}
 {{- if $pgprevious }}
   {{- $pgPass = ( index $dbprevious.data "superuser-password" ) | b64dec  }}
 {{- else }}
@@ -114,7 +114,6 @@ spec:
 {{- $_ := set $values.creds "host" $host }}
 {{- $_ := set $values.creds "jdbc" $jdbc }}
 
-
 {{- end -}}
 
 
@@ -130,10 +129,6 @@ type: kubernetes.io/basic-auth
 
 {{- define "tc.v1.common.class.cnpg.secret.user" -}}
 {{- $dbPass := .dbPass }}
-{{- $pgPass := .pgPass }}
-{{- $user := .user }}
-{{- $cnpgClusterName := .cnpgClusterName }}
-{{- $database := .database }}
 {{- $values := .values -}}
 enabled: true
 type: kubernetes.io/basic-auth

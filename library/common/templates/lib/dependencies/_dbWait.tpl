@@ -328,29 +328,18 @@ cnpg-wait:
       {{ if $cnpg.enabled }}
       echo "Executing DB waits..."
       {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
-      {{ $nameOverride := $cnpg.nameOverride }}
-      {{ if and (not $cnpg.nameOverride ) (ne $name (include "tc.v1.common.lib.util.cnpg.primary" $)) }}
-        {{ $_ := set $cnpg.nameOverride $name }}
-      {{ end }}
-      {{ if $cnpg.nameOverride }}
-        {{ $cnpgName = printf "%v-%v" $cnpgName $nameOverride }}
-      {{ end }}
+      {{ $cnpgName = printf "%v-%v" $cnpgName $name }}
       until
-        pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-rw
-        pg_isready -U {{ .user }} -h cnpg-{{ $fullname }}-rw
+        pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}
         do sleep 2
       done
       until
-        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-rw
+        pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}-rw
         do sleep 2
       done
       {{ if $cnpg.acceptRO }}
       until
-        pg_isready -U {{ .user }} -h cnpg-{{ $cnpgName }}-ro
-        do sleep 2
-      done
-      until
-        pg_isready -U {{ .user }} -h cnpg-pooler-{{ $cnpgName }}-ro
+        pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}-ro
         do sleep 2
       done
       {{ end }}

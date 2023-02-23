@@ -10,7 +10,7 @@
       {{/* set defaults */}}
       {{- $_ := set $cnpgValues "nameOverride" $name -}}
 
-      {{- $cnpgName := printf "%v-cnpg-%v" $cnpgName $cnpgValues.nameOverride -}}
+      {{- $cnpgName := printf "%v-%v" $cnpgName $cnpgValues.nameOverride -}}
 
       {{- $_ := set $cnpgValues "name" $cnpgName -}}
 
