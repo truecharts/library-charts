@@ -42,11 +42,11 @@ tests:
         equal:
           path: metadata.name
           value: release-name-common-test
-      - documentIndex: *CodeServerDeploymentDocument
+      - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[0].name
           value: release-name-common-test-codeserver
-      - documentIndex: *CodeServerDeploymentDocument
+      - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].name
           value: release-name-common-test
