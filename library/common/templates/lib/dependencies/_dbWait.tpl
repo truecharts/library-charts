@@ -59,9 +59,7 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.cnpg" $ | fromYaml -}}
 {{- if $container -}}
   {{- range $.Values.workload -}}
-    {{- if and .enabled .podSpec }}
-      {{- $_ := set .podSpec.initContainers "cnpg-wait" $container -}}
-    {{- end }}
+    {{- $_ := set .podSpec.initContainers "cnpg-wait" $container -}}
   {{- end }}
 {{- end -}}
 {{- end }}
