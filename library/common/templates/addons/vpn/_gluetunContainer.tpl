@@ -1,7 +1,7 @@
 {{/*
 The gluetun sidecar container to be inserted.
 */}}
-{{- define "tc.v1.common.addon.vpn.gluetun.containers" -}}
+{{- define "tc.v1.common.addon.vpn.gluetun.container" -}}
 enabled: true
 imageSelector: gluetunImage
 probes:
