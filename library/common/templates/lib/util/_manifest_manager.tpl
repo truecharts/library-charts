@@ -104,7 +104,7 @@ metadata:
 rules:
   - apiGroups:  ["*"]
     resources:  ["*"]
-    verbs:  ["watch", "create", "update", "patch"]
+    verbs:  ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
