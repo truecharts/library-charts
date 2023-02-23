@@ -45,29 +45,36 @@ It will include / inject the required templates based on the given values.
     {{- end -}}
   {{- end -}}
 
+  {{/* Ensure target Selector defaults to main pod even if unset */}}
+  {{- $targetSelector := list "main" -}}
+  {{- if $.Values.addons.codeserver.targetSelector -}}
+    {{- $targetSelector = $.Values.addons.codeserver.targetSelector -}}
+  {{- end -}}
 
-  {{- if eq "gluetun" .Values.addons.vpn.type -}}
-    {{/* Append the code-server container to the additionalContainers */}}
-    {{- $containers := include "tc.v1.common.addon.vpn.gluetun.containers" . | fromYaml -}}
-    {{- if $containers -}}
-      {{- $newworkloads := merge $.Values.workload $containers }}
-      {{- $_ := set $.Values "workload" $newworkloads -}}
-    {{- end -}}
-  {{- else if ( eq "tailscale" .Values.addons.vpn.type ) -}}
-    {{/* Append the code-server container to the additionalContainers */}}
-    {{- $containers := include "tc.v1.common.addon.vpn.tailscale.containers" . | fromYaml -}}
-    {{- if $containers -}}
-      {{- $newworkloads := merge $.Values.workload $containers }}
-      {{- $_ := set $.Values "workload" $newworkloads -}}
-    {{- end -}}
-
-    {{/* Append the empty tailscale folder to the persistence */}}
-    {{- $tailscaleper := include "tc.v1.common.addon.vpn.volume.tailscale" . | fromYaml -}}
-    {{- if $tailscaleper -}}
-      {{- $_ := set .Values.persistence "tailscale" $tailscaleper -}}
+  {{/* Append the vpn container to the containers */}}
+  {{- range $targetSelector -}}
+    {{- if eq "gluetun" $.Values.addons.vpn.type -}}
+      {{- $container := include "tc.v1.common.addon.vpn.gluetun.container" $ | fromYaml -}}
+      {{- if $container -}}
+        {{- $workload := get $.Values.workload . -}}
+        {{- $_ := set $workload.podSpec.containers "vpn" $container -}}
+      {{- end -}}
+    {{- else if eq "tailscale" $.Values.addons.vpn.type -}}
+      {{- $container := include "tc.v1.common.addon.vpn.tailscale.container" $ | fromYaml -}}
+      {{- if $container -}}
+        {{- $workload := get $.Values.workload . -}}
+        {{- $_ := set $workload.podSpec.containers "vpn" $container -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
+  {{- if eq "tailscale" $.Values.addons.vpn.type -}}
+  {{/* Append the empty tailscale folder to the persistence */}}
+  {{- $tailscaleper := include "tc.v1.common.addon.vpn.volume.tailscale" . | fromYaml -}}
+  {{- if $tailscaleper -}}
+    {{- $_ := set .Values.persistence "tailscale" $tailscaleper -}}
+  {{- end -}}
+  {{- end -}}
 
 
 {{- end -}}
