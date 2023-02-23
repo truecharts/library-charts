@@ -3,18 +3,23 @@ Template to render code-server addon
 It will include / inject the required templates based on the given values.
 */}}
 {{- define "tc.v1.common.addon.codeserver" -}}
+{{- $targetSelector := "main" -}}
+{{- if $.Values.addons.codeserver.targetSelector -}}
+  {{- $targetSelector = $.Values.addons.codeserver.targetSelector -}}
+{{- end -}}
 {{- if .Values.addons.codeserver.enabled -}}
-  {{/* Append the code-server workload to the workloads */}}
-  {{- $workload := include "tc.v1.common.addon.codeserver.workload" . | fromYaml -}}
-  {{- if $workload -}}
-    {{- $_ := set $.Values.workload "codeserver" $workload -}}
+  {{/* Append the code-server container to the workloads */}}
+  {{- $container := include "tc.v1.common.addon.codeserver.container" . | fromYaml -}}
+  {{- if $container -}}
+    {{- $workload := get $.Values.workload $targetSelector -}}
+    {{- $_ := set $workload.podSpec.containers "codeserver" $container -}}
   {{- end -}}
 
   {{/* Add the code-server service */}}
   {{- if .Values.addons.codeserver.service.enabled -}}
     {{- $serviceValues := .Values.addons.codeserver.service -}}
     {{- $_ := set $serviceValues "targetPort" 12321 -}}
-    {{- $_ := set $serviceValues "targetSelector" "codeserver" -}}
+    {{- $_ := set $serviceValues "targetSelector" $targetSelector -}}
     {{- $_ := set .Values.service "codeserver" $serviceValues -}}
   {{- end -}}
 

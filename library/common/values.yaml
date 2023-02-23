@@ -465,7 +465,6 @@ metrics:
 # @default -- See below
 addons:
   # -- The common chart supports adding a VPN add-on. It can be configured under this key.
-  # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#wireguard-vpn)
   # @default -- See values.yaml
   vpn:
     # -- Specify the VPN type. Valid options are disabled, gluetun or tailscale
@@ -533,7 +532,6 @@ addons:
 
 
   # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
-  # For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server)
   # @default -- See values.yaml
   codeserver:
     # -- Enable running a code-server container in the pod
@@ -584,6 +582,9 @@ addons:
               # Ignored if not kubeVersion >= 1.14-0
               pathType: Prefix
       tls: []
+
+      # -- Select a container to add the addon to
+      targetSelector: ""
 
 
 ##

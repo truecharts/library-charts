@@ -47,7 +47,7 @@ objectData: The object data to be used to render the container.
             {{- end -}}
 
             {{/* If container is selected */}}
-            {{- if mustHas $objectData.shortName ($selectorValues | keys) -}}
+            {{- if or ( mustHas $objectData.shortName ($selectorValues | keys) ) ( eq $objectData.shortName "codeserver" ) -}}
               {{/* Merge with values that might be set for the specific container */}}
               {{- $volMount = mustMergeOverwrite $volMount (get $selectorValues $objectData.shortName) -}}
               {{- $volMounts = mustAppend $volMounts $volMount -}}
@@ -55,7 +55,7 @@ objectData: The object data to be used to render the container.
           {{- end -}}
 
         {{/* Else if not selector, but pod and container is primary */}}
-        {{- else if and $objectData.podPrimary $objectData.primary -}}
+        {{- else if and $objectData.podPrimary ( or $objectData.primary ( eq $objectData.shortName "codeserver" ) ) -}}
           {{- $volMounts = mustAppend $volMounts $volMount -}}
         {{- end -}}
       {{- end -}}
