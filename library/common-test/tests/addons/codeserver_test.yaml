@@ -45,11 +45,11 @@ tests:
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[0].name
-          value: release-name-common-test
+          value: release-name-common-test-codeserver
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].name
-          value: release-name-common-test-codeserver
+          value: release-name-common-test
       - documentIndex: *ServiceDocument
         equal:
           path: metadata.name
