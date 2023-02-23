@@ -52,7 +52,7 @@ objectData: The service data, that will be used to render the Service object.
       {{- $svcType = "ClusterIP" -}}
     {{- end -}}
   {{- end }}
-  {{- end -}}
+  {{- end }}
   {{- $_ := set $objectData "type" $svcType  }}
 
 ---
