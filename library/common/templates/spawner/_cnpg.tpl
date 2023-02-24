@@ -72,6 +72,19 @@
     {{- $_ := set $cnpgValues.creds "host" $host }}
     {{- $_ := set $cnpgValues.creds "jdbc" $jdbc }}
 
+
+    {{- if $cnpgValues.monitoring }}
+      {{- if $cnpgValues.monitoring.enablePodMonitor }}
+        {{- $poolermetrics :=  include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" ( printf "%s-rw" $cnpgValues.name) ) | fromYaml -}}
+
+        {{- $_ := set $.Values.metrics ( printf "cnpg-%s-rw" $cnpgValues.shortName ) $poolermetrics }}
+        {{- if $cnpgValues.acceptRO }}
+          {{- $poolermetricsRO :=  include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" ( printf "%s-ro" $cnpgValues.name) ) | fromYaml -}}
+          {{- $_ := set $.Values.metrics ( printf "cnpg-%s-ro" $cnpgValues.shortName ) $poolermetricsRO }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
     {{- end -}}
   {{- end -}}
 {{- end -}}
