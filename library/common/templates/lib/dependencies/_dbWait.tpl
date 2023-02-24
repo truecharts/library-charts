@@ -52,6 +52,9 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.solr" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
+    {{- if not (hasKey . "initContainers") -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
   {{- $_ := set .podSpec.initContainers "solr-wait" $container -}}
   {{- end }}
 {{- end -}}
@@ -61,6 +64,9 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.postgresql" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
+    {{- if not (hasKey . "initContainers") -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
   {{- $_ := set .podSpec.initContainers "postgresql-wait" $container -}}
   {{- end }}
 {{- end -}}
