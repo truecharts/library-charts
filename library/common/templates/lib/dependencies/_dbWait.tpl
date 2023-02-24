@@ -419,17 +419,14 @@ command:
     echo "Executing DB waits..."
     {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
     {{ $cnpgName = printf "%v-cnpg-%v" $cnpgName $name }}
-    # until
-    #   echo "Testing database on url:  {{ $cnpgName }}"
-    #   pg_isready -U {{ .user }} -h {{ $cnpgName }}
-    #   do sleep 2
-    # done
+    echo "Detected RW pooler, testing RW pooler availability..."
     until
       echo "Testing database on url:  {{ $cnpgName }}-rw"
       pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
       do sleep 2
     done
     {{ if $cnpg.acceptRO }}
+    echo "Detected RO pooler, testing RO pooler availability..."
     until
       echo "Testing database on url:  {{ $cnpgName }}-ro"
       pg_isready -U {{ .user }} -h {{ $cnpgName }}-ro
