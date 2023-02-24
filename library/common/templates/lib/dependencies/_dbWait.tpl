@@ -3,6 +3,9 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.redis" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
+    {{- if not (hasKey . "initContainers") -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
   {{- $_ := set .podSpec.initContainers "redis-wait" $container -}}
   {{- end }}
 {{- end -}}
@@ -13,6 +16,9 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.mariadb" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
+    {{- if not (hasKey . "initContainers") -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
   {{- $_ := set .podSpec.initContainers "mariadb-wait" $container -}}
   {{- end }}
 {{- end -}}
@@ -22,6 +28,9 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.mongodb" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
+    {{- if not (hasKey . "initContainers") -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
   {{- $_ := set .podSpec.initContainers "mongodb-wait" $container -}}
   {{- end }}
 {{- end -}}
