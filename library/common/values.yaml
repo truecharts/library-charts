@@ -68,7 +68,6 @@ securityContext:
   # -- Container security context for all containers
   # Can be overruled per container
   container:
-    runAsNonRoot: true
     runAsUser: 568
     runAsGroup: 568
     readOnlyRootFilesystem: true

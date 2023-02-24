@@ -10,7 +10,7 @@ objectData: The object data to be used to render the container.
 
   {{/* Initialize from the "global" options */}}
   {{- $secContext := fromJson (include "tc.v1.common.lib.container.securityContext.calculate" (dict "rootCtx" $rootCtx "objectData" $objectData)) }}
-runAsNonRoot: {{ $secContext.runAsNonRoot }}
+runAsNonRoot: {{ if or ( eq $secContext.runAsUser 0 ) ( eq $secContext.runAsGroup 0 )}}false{{else}}true{[end}}
 runAsUser: {{ $secContext.runAsUser }}
 runAsGroup: {{ $secContext.runAsGroup }}
 readOnlyRootFilesystem: {{ $secContext.readOnlyRootFilesystem }}
