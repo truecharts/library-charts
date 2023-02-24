@@ -31,7 +31,10 @@
 {{- $container := include "tc.v1.common.lib.deps.wait.clickhouse" $ | fromYaml -}}
 {{- if $container -}}
   {{- range .Values.workload -}}
-  {{- $_ := set .podSpec.initContainers "clickhouse-wait" $container -}}
+    {{- if not (hasKey "initContainers" .) -}}
+      {{- $_ := set .podSpec "initContainers" dict -}}
+    {{- end -}}
+    {{- $_ := set .podSpec.initContainers "clickhouse-wait" $container -}}
   {{- end }}
 {{- end -}}
 {{- end }}
