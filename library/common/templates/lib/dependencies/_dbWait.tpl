@@ -418,18 +418,18 @@ command:
     {{ if $cnpg.enabled }}
     echo "Executing DB waits..."
     {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
-    {{ $cnpgName = printf "%v-%v" $cnpgName $name }}
+    {{ $cnpgName = printf "%v-cnpg-%v" $cnpgName $name }}
     until
-      pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}
+      pg_isready -U {{ .user }} -h {{ $cnpgName }}
       do sleep 2
     done
     until
-      pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}-rw
+      pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
       do sleep 2
     done
     {{ if $cnpg.acceptRO }}
     until
-      pg_isready -U {{ .user }} -h {{ $cnpgName }}-{{ $cnpgName }}-ro
+      pg_isready -U {{ .user }} -h {{ $cnpgName }}-ro
       do sleep 2
     done
     {{ end }}
