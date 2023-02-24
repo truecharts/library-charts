@@ -128,6 +128,7 @@ jobs:
           - netshoot-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
+          - cnpg-multi-values.yaml
           - manifest-values.yaml
           - stagingmanifest-values.yaml
 
@@ -252,6 +253,7 @@ jobs:
           # - netshoot-values.yaml
           - metrics-values.yaml
           - cnpg-values.yaml
+          - cnpg-multi-values.yaml
           - manifest-values.yaml
           - stagingmanifest-values.yaml
           - vpn-gluetun-values.yaml

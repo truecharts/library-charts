@@ -420,15 +420,18 @@ command:
     {{ $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
     {{ $cnpgName = printf "%v-cnpg-%v" $cnpgName $name }}
     until
+      echo "Testing database on url:  {{ $cnpgName }}"
       pg_isready -U {{ .user }} -h {{ $cnpgName }}
       do sleep 2
     done
     until
+      echo "Testing database on url:  {{ $cnpgName }}-rw"
       pg_isready -U {{ .user }} -h {{ $cnpgName }}-rw
       do sleep 2
     done
     {{ if $cnpg.acceptRO }}
     until
+      echo "Testing database on url:  {{ $cnpgName }}-ro"
       pg_isready -U {{ .user }} -h {{ $cnpgName }}-ro
       do sleep 2
     done
