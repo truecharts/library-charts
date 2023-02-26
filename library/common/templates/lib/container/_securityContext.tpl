@@ -63,17 +63,23 @@ objectData: The object data to be used to render the container.
   {{- end -}}
 
   {{/* Validations, as we might endup with null values after merge */}}
-  {{- range $key := (list "privileged" "allowPrivilegeEscalation" "runAsNonRoot" "readOnlyRootFilesystem") -}}
-    {{- $value := (get $secContext $key) -}}
-    {{- if not (kindIs "bool" $value) -}}
-      {{- fail (printf "Container - Expected <securityContext.%s> to be [bool], but got [%s] of type [%s]" $key $value (kindOf $value)) -}}
-    {{- end -}}
-  {{- end -}}
-
   {{- range $key := (list "runAsUser" "runAsGroup") -}}
     {{- $value := (get $secContext $key) -}}
     {{- if not (mustHas (kindOf $value) (list "float64" "int")) -}}
       {{- fail (printf "Container - Expected <securityContext.%s> to be [int], but got [%s] of type [%s]" $key $value (kindOf $value)) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if or (eq (int $secContext.runAsUser) 0) (eq (int $secContext.runAsGroup) 0) -}}
+    {{- $_ := set $secContext "runAsNonRoot" false -}}
+  {{- else -}}
+    {{- $_ := set $secContext "runAsNonRoot" true -}}
+  {{- end -}}
+
+  {{- range $key := (list "privileged" "allowPrivilegeEscalation" "runAsNonRoot" "readOnlyRootFilesystem") -}}
+    {{- $value := (get $secContext $key) -}}
+    {{- if not (kindIs "bool" $value) -}}
+      {{- fail (printf "Container - Expected <securityContext.%s> to be [bool], but got [%s] of type [%s]" $key $value (kindOf $value)) -}}
     {{- end -}}
   {{- end -}}
 
@@ -107,10 +113,6 @@ objectData: The object data to be used to render the container.
         {{- fail (printf "Container - Expected items of <securityContext.capabilities.%s> to be [string], but got [%s]" $key (kindOf .)) -}}
       {{- end -}}
     {{- end -}}
-  {{- end -}}
-
-  {{- if or (eq (int $secContext.runAsUser) 0) (eq (int $secContext.runAsGroup) 0) -}}
-    {{- $_ := set $secContext "runAsNonRoot" false -}}
   {{- end -}}
 
   {{- $secContext | toJson -}}
