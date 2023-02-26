@@ -79,6 +79,12 @@ securityContext:
       add: []
       drop:
         - ALL
+    # -- PUID for all containers
+    # Can be overruled per container
+    PUID: 568
+    # -- UMASK for all containers
+    # Can be overruled per container
+    UMASK: "002"
   # -- Pod security context for all pods
   # Can be overruled per pod
   pod:
@@ -98,12 +104,6 @@ resources:
     memory: 50Mi
 
 containerOptions:
-  # -- PUID for all containers
-  # Can be overruled per container
-  PUID: 568
-  # -- UMASK for all containers
-  # Can be overruled per container
-  UMASK: "002"
   NVIDIA_CAPS:
     - all
 
