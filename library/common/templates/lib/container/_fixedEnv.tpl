@@ -36,6 +36,9 @@ objectData: The object data to be used to render the container.
   {{- $TZ := $objectData.fixedEnv.TZ | default $rootCtx.Values.TZ -}}
   {{- $UMASK := $objectData.fixedEnv.UMASK | default $rootCtx.Values.securityContext.container.UMASK -}}
   {{- $PUID := $objectData.fixedEnv.PUID | default $rootCtx.Values.securityContext.container.PUID -}}
+  {{- if and (not (kindIs "invalid" $objectData.fixedEnv.PUID)) (eq (int $objectData.fixedEnv.PUID) 0) -}}
+    {{- $PUID = $objectData.fixedEnv.PUID -}}
+  {{- end -}}
   {{/* calculatedFSGroup is passed from the pod */}}
   {{- $PGID := $objectData.calculatedFSGroup -}}
 
