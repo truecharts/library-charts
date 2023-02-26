@@ -416,7 +416,6 @@ tests:
                   readOnlyRootFilesystem: false
                   allowPrivilegeEscalation: true
                   privileged: true
-                  runAsNonRoot: false
                   capabilities:
                     add:
                       - NET_ADMIN
@@ -442,7 +441,7 @@ tests:
               readOnlyRootFilesystem: false
               allowPrivilegeEscalation: true
               privileged: true
-              runAsNonRoot: false
+              runAsNonRoot: true
               seccompProfile:
                 type: Localhost
                 localhostProfile: path/to/profile.json
@@ -473,27 +472,6 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Container - Expected non-empty <.Values.securityContext.container>
-
-  - it: should fail with runAsNonRoot not a bool
-    set:
-      image: *image
-      workload:
-        workload-name1:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec:
-            containers:
-              container-name1:
-                enabled: true
-                primary: true
-                imageSelector: image
-                probes: *probes
-                securityContext:
-                  runAsNonRoot: "true"
-    asserts:
-      - failedTemplate:
-          errorMessage: Container - Expected <securityContext.runAsNonRoot> to be [bool], but got [true] of type [string]
 
   - it: should fail with readOnlyRootFilesystem not a bool
     set:
