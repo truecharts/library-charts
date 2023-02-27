@@ -328,7 +328,6 @@ jobs:
           cliArguments: '--ignore-missing-schemas --policy ManifestManager'
           isHelmChart: true
           helmArguments: '--values library/common-test/ci/${{ matrix.values }}'
-          Prevent containers from having insecure capabilities
 
   security-vpn:
     needs:
@@ -373,4 +372,3 @@ jobs:
           cliArguments: '--ignore-missing-schemas --policy WithVPN'
           isHelmChart: true
           helmArguments: '--values library/common-test/ci/${{ matrix.values }}'
-          Prevent containers from having insecure capabilities
