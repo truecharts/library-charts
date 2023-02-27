@@ -8,10 +8,10 @@ probes:
 {{- if $.Values.addons.vpn.livenessProbe }}
   liveness:
   {{- toYaml . | nindent 2 }}
-{{- else -}}
+{{- else }}
   liveness:
     enabled: false
-{{- end -}}
+{{- end }}
   readiness:
     enabled: false
   startup:
@@ -27,7 +27,7 @@ securityContext:
 {{- with $.Values.addons.vpn.env }}
 env:
   {{- . | toYaml | nindent 2 }}
-{{- end }}
+{{- end -}}
 
 {{- range $envList := $.Values.addons.vpn.envList -}}
   {{- if and $envList.name $envList.value }}

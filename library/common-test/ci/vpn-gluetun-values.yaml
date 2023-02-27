@@ -36,7 +36,6 @@ workload:
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
 
-
 args:
   - --port
   - '8080'
@@ -53,7 +52,7 @@ addons:
   # @default -- See values.yaml
   vpn:
     # -- Specify the VPN type. Valid options are disabled, gluetun or tailscale
-    type: tailscale
+    type: gluetun
 
     # -- All variables specified here will be added to the vpn sidecar container
     # See the documentation of the VPN image for all config values

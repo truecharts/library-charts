@@ -8,10 +8,10 @@ probes:
 {{- if $.Values.addons.vpn.livenessProbe }}
   liveness:
   {{- toYaml . | nindent 2 }}
-{{- else -}}
+{{- else }}
   liveness:
     enabled: false
-{{- end -}}
+{{- end }}
   readiness:
     enabled: false
   startup:
