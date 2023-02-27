@@ -300,8 +300,6 @@ jobs:
           - cnpg-multi-values.yaml
           - manifest-values.yaml
           - stagingmanifest-values.yaml
-          - vpn-gluetun-values.yaml
-          - vpn-tailscale-values.yaml
 
     steps:
       - name: Install Helm
