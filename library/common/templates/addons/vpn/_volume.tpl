@@ -11,19 +11,17 @@ items:
 {{- if .Values.addons.vpn.scripts.up }}
 - key: up.sh
   path: up.sh
-  mode: 0777
-{{- end }}
+{{- end -}}
 {{- if .Values.addons.vpn.scripts.down }}
 - key: down.sh
   path: down.sh
-  mode: 0777
 {{- end }}
 targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn/
-  {{- end }}
+      mountPath: /vpn
+  {{- end -}}
 {{- end -}}
 
 
@@ -39,26 +37,25 @@ items:
   - key: vpn.conf
     path: vpn.conf
 
-{{ if .Values.addons.vpn.existingSecret }}
+{{- if .Values.addons.vpn.existingSecret }}
 objectName: {{ .Values.addons.vpn.existingSecret }}
 expandObjectName: false
-{{ else }}
+{{- else }}
 objectName: vpnconfig
 expandObjectName: true
-{{ end }}
-{{ else }}
-
+{{- end -}}
+{{- else }}
 
 type: hostPath
-hostPath: {{ .Values.addons.vpn.configFile | default "/vpn/" }}
+hostPath: {{ .Values.addons.vpn.configFile | default "/vpn" }}
 hostPathType: "File"
-{{- end -}}
+{{- end }}
 targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn/
-  {{- end }}
+      mountPath: /vpn
+  {{- end -}}
 {{- end -}}
 
 {{/*
@@ -67,13 +64,13 @@ The volume (referencing VPN config folder) to be inserted into persistence.
 {{- define "tc.v1.common.addon.vpn.volume.folder" -}}
 enabled: true
 type: hostPath
-hostPath: '{{ .Values.addons.vpn.configFolder }}'
+hostPath: {{ .Values.addons.vpn.configFolder | quote }}
 targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn/
-  {{- end }}
+      mountPath: /vpn
+  {{- end -}}
 {{- end -}}
 
 
@@ -86,7 +83,7 @@ type: emptyDir
 targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
-    vpn:
-      mountPath: /vpn/
-  {{- end }}
+    tailscale:
+      mountPath: /var/lib/tailscale
+  {{- end -}}
 {{- end -}}

@@ -59,19 +59,6 @@ addons:
     env:
       something: UTC
 
-
-    # -- you can directly specify the config file here
-    config: "fdgdfsg"
-
-    scripts:
-      # -- you can directly specify the upscript here
-      up: "sffds"
-      # some script
-
-      # -- you can directly specify the downscript here
-      down: "fsdfds"
-      # some script
-
     # -- select pods to bind vpn addon to
     targetSelector:
       - main

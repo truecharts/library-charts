@@ -7,7 +7,7 @@ data:
 {{- with .Values.addons.vpn.scripts.up }}
   up.sh: |-
     {{- . | nindent 4 }}
-{{- end }}
+{{- end -}}
 
 {{- with .Values.addons.vpn.scripts.down }}
   down.sh: |-

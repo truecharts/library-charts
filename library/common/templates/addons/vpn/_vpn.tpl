@@ -17,11 +17,11 @@ It will include / inject the required templates based on the given values.
     {{/* Append the vpn up/down scripts to the configmaps */}}
     {{- $configmap := include "tc.v1.common.addon.vpn.configmap" . | fromYaml -}}
     {{- if $configmap -}}
-      {{- $_ := set .Values.secret "vpnscripts" $configmap -}}
+      {{- $_ := set .Values.configmap "vpnscripts" $configmap -}}
     {{- end -}}
   {{- end }}
 
-  {{- if or .Values.addons.vpn.configFile .Values.addons.vpn.config .Values.addons.vpn.configSecret -}}
+  {{- if or .Values.addons.vpn.configFile .Values.addons.vpn.config .Values.addons.vpn.existingSecret -}}
     {{/* Append the vpn config to the persistence */}}
     {{- $configper := include "tc.v1.common.addon.vpn.volume.config" . | fromYaml -}}
     {{- if $configper -}}
@@ -37,9 +37,9 @@ It will include / inject the required templates based on the given values.
     {{- end -}}
   {{- end -}}
 
-  {{- if or .Values.addons.vpn.configFolder -}}
+  {{- if .Values.addons.vpn.configFolder -}}
     {{/* Append the vpn folder to the persistence */}}
-    {{- $folderper := include "tc.v1.common.addon.vpn.volume.scripts" . | fromYaml -}}
+    {{- $folderper := include "tc.v1.common.addon.vpn.volume.folder" . | fromYaml -}}
     {{- if $folderper -}}
       {{- $_ := set .Values.persistence "vpnfolder" $folderper -}}
     {{- end -}}
@@ -63,7 +63,7 @@ It will include / inject the required templates based on the given values.
       {{- $container := include "tc.v1.common.addon.vpn.tailscale.container" $ | fromYaml -}}
       {{- if $container -}}
         {{- $workload := get $.Values.workload . -}}
-        {{- $_ := set $workload.podSpec.containers "vpn" $container -}}
+        {{- $_ := set $workload.podSpec.containers "tailscale" $container -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -72,7 +72,7 @@ It will include / inject the required templates based on the given values.
   {{/* Append the empty tailscale folder to the persistence */}}
   {{- $tailscaleper := include "tc.v1.common.addon.vpn.volume.tailscale" . | fromYaml -}}
   {{- if $tailscaleper -}}
-    {{- $_ := set .Values.persistence "tailscale" $tailscaleper -}}
+    {{- $_ := set .Values.persistence "tailscalestate" $tailscaleper -}}
   {{- end -}}
   {{- end -}}
 
