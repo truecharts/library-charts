@@ -344,7 +344,8 @@ jobs:
         values:
           - vpn-gluetun-values.yaml
           - vpn-tailscale-values.yaml
-          - vpn-openvpn-values.yaml
+          # Is deprecated and runs as root, skipping for now
+          # - vpn-openvpn-values.yaml
           - vpn-wireguard-values.yaml
 
     steps:
