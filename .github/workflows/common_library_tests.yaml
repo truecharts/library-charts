@@ -344,6 +344,8 @@ jobs:
         values:
           - vpn-gluetun-values.yaml
           - vpn-tailscale-values.yaml
+          - vpn-openvpn-values.yaml
+          - vpn-wireguard-values.yaml
 
     steps:
       - name: Install Helm
