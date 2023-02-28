@@ -27,24 +27,24 @@ securityContext:
 {{- with $.Values.addons.vpn.env }}
 env:
   {{- . | toYaml | nindent 2 }}
-{{- end -}}
+{{- end }}
   VPN_AUTH: {{ ( printf "%v;%v" .Values.addons.vpn.openvpn.username .Values.addons.vpn.openvpn.password ) }}
 {{- if .Values.addons.vpn.killSwitch }}
   FIREWALL:"ON"
   ROUTE_1: "172.16.0.0/12"
   {{- range $index, $value := .Values.addons.vpn.excludedNetworks_IPv4 }}
   ROUTE_{{ add $index 2 }}: {{ $value | quote }}
-  {{- end}}
+  {{- end -}}
 {{- if .Values.addons.vpn.excludedNetworks_IPv6 }}
-  {{- $excludednetworksv6 := ""}}
+  {{- $excludednetworksv6 := "" -}}
   {{- range .Values.addons.vpn.excludedNetworks_IPv4 }}
-    {{- $excludednetworksv6 =  ( printf "%v;%v" $excludednetworksv6 . ) }}
-  {{- end}}
+    {{- $excludednetworksv6 = ( printf "%v;%v" $excludednetworksv6 . ) -}}
+  {{- end -}}
   {{- range $index, $value := .Values.addons.vpn.excludedNetworks_IPv6 }}
   ROUTE6_{{ add $index 1 }}: {{ $value | quote }}
-  {{- end}}
-{{- end }}
-{{- end }}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{- range $envList := $.Values.addons.vpn.envList -}}
   {{- if and $envList.name $envList.value }}
@@ -57,5 +57,5 @@ env:
 {{- with $.Values.addons.vpn.args }}
 args:
   {{- . | toYaml | nindent 2 }}
-{{- end }}
+{{- end -}}
 {{- end -}}
