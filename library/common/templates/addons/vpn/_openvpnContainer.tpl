@@ -28,16 +28,18 @@ securityContext:
 env:
   {{- . | toYaml | nindent 2 }}
 {{- end }}
+  {{- if and .Values.addons.vpn.openvpn.username .Values.addons.vpn.openvpn.password }}
   VPN_AUTH: {{ ( printf "%v;%v" .Values.addons.vpn.openvpn.username .Values.addons.vpn.openvpn.password ) }}
+  {{- end -}}
 {{- if .Values.addons.vpn.killSwitch }}
-  FIREWALL:"ON"
+  FIREWALL: "ON"
   ROUTE_1: "172.16.0.0/12"
   {{- range $index, $value := .Values.addons.vpn.excludedNetworks_IPv4 }}
   ROUTE_{{ add $index 2 }}: {{ $value | quote }}
   {{- end -}}
 {{- if .Values.addons.vpn.excludedNetworks_IPv6 }}
   {{- $excludednetworksv6 := "" -}}
-  {{- range .Values.addons.vpn.excludedNetworks_IPv4 }}
+  {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
     {{- $excludednetworksv6 = ( printf "%v;%v" $excludednetworksv6 . ) -}}
   {{- end -}}
   {{- range $index, $value := .Values.addons.vpn.excludedNetworks_IPv6 }}
