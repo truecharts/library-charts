@@ -37,7 +37,7 @@ spec:
   {{- $olddbprevious2 := lookup "v1" "Secret" .Release.Namespace "dbcreds" }}
 
   bootstrap:
-  {{- if and .Values.postgresql.enabled ( or $olddbprevious1 $olddbprevious2 ) .Release.IsUpgrade }}
+  {{- if and $.Values.postgresql.enabled ( or $olddbprevious1 $olddbprevious2 ) $.Release.IsUpgrade }}
     pg_basebackup:
       source: old-db
   {{- else }}
@@ -80,7 +80,7 @@ spec:
     reusePVC: on
 
   externalClusters:
-  {{- if and .Values.postgresql.enabled ( or $olddbprevious1 $olddbprevious2 ) .Release.IsUpgrade }}
+  {{- if and $.Values.postgresql.enabled ( or $olddbprevious1 $olddbprevious2 ) $.Release.IsUpgrade }}
   - name: old-db
     connectionParameters:
       host: {{ (printf "%v-%v" .Release.Name "postgresql" ) }}
