@@ -26,11 +26,21 @@
       {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
       {{- end }}
 
+    {{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+    {{- $fetchname := printf "%s-dbcreds" $basename -}}
+    {{- $olddbprevious1 := lookup "v1" "Secret" .Release.Namespace $fetchname }}
+    {{- $olddbprevious2 := lookup "v1" "Secret" .Release.Namespace "dbcreds" }}
+
+
     {{/* Inject the required secrets */}}
     {{- $dbPass := "" }}
     {{- $dbprevious := lookup "v1" "Secret" $.Release.Namespace ( printf "%s-user" $cnpgValues.name ) }}
     {{- if $dbprevious }}
       {{- $dbPass = ( index $dbprevious.data "user-password" ) | b64dec  }}
+    {{- else if $olddbprevious1 }}
+      {{- $dbPass = ( index $olddbprevious1.data "postgresql-password" ) | b64dec  }}
+    {{- else if $olddbprevious2 }}
+      {{- $dbPass = ( index $olddbprevious2.data "postgresql-password" ) | b64dec  }}
     {{- else }}
       {{- $dbPass = $cnpgValues.password | default ( randAlphaNum 62 ) }}
     {{- end }}
