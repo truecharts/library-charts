@@ -28,8 +28,8 @@
 
     {{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
     {{- $fetchname := printf "%s-dbcreds" $basename -}}
-    {{- $olddbprevious1 := lookup "v1" "Secret" .Release.Namespace $fetchname }}
-    {{- $olddbprevious2 := lookup "v1" "Secret" .Release.Namespace "dbcreds" }}
+    {{- $olddbprevious1 := lookup "v1" "Secret" $.Release.Namespace $fetchname }}
+    {{- $olddbprevious2 := lookup "v1" "Secret" $.Release.Namespace "dbcreds" }}
 
 
     {{/* Inject the required secrets */}}
