@@ -424,4 +424,4 @@ tests:
                       key: secret-key
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected the defined key [expandObjectName] in <env.%s> to not be empty
+          errorMessage: Container - Expected the defined key [expandObjectName] in <env.key1> to not be empty
