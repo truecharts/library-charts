@@ -33,7 +33,7 @@ objectData: The object data to be used to render the container.
           {{/* After tpl it becomes a string, not a bool */}}
           {{-  if eq $expandName "true" -}}
             {{- $expandName = true -}}
-          {{- else -}}
+          {{- else if eq $expandName "false" -}}
             {{- $expandName = false -}}
           {{- end -}}
         {{- end -}}
