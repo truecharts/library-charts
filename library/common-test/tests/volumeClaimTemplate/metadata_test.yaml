@@ -45,19 +45,9 @@ tests:
           value:
             annotation1: annotation1
             annotation2: annotation2
-            g_annotation1: global_annotation1
-            g_annotation2: global_annotation2
       - documentIndex: *statefulSetDoc
         equal:
           path: spec.volumeClaimTemplates[0].metadata.labels
           value:
-            app: common-test-1.0.0
-            release: RELEASE-NAME
-            helm-revision: "0"
-            helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/version: *appVer
-            g_label1: global_label1
-            g_label2: global_label2
             label1: label1
             label2: label2
