@@ -4,7 +4,7 @@
 rootCtx: The root context of the chart.
 objectData: The object data to be used to render the Pod.
 */}}
-{{- define "tc.v1.common.lib.workload.volumeClaimTemplates" -}}
+{{- define "tc.v1.common.lib.storage.volumeClaimTemplates" -}}
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
