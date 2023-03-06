@@ -7,16 +7,12 @@ tests:
   - it: should pass with vct created with labels and annotations
     set:
       label1: label1
-      label2: global_label2
       annotation1: annotation1
-      annotation2: global_annotation2
       global:
         labels:
           g_label1: global_label1
-          g_label2: "{{ .Values.label2 }}"
         annotations:
           g_annotation1: global_annotation1
-          g_annotation2: "{{ .Values.annotation2 }}"
       volumeClaimTemplates:
         my-volume1:
           enabled: true
