@@ -23,7 +23,7 @@
       {{- end -}}
     {{- end -}}
 
-    {{- if $enabled -}}
+
       {{- $cnpgValues := $cnpg }}
       {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
       {{- $_ := set $cnpgValues "shortName" $name }}
@@ -35,6 +35,7 @@
 
       {{- $_ := set $cnpgValues "name" $cnpgName }}
 
+    {{- if $enabled -}}
       {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) }}
       {{- include "tc.v1.common.class.cnpg.cluster" $ }}
 
