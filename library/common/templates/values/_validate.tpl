@@ -1,6 +1,6 @@
 {{/* Validates any object that it does not contain helm errors */}}
-{{/* This usually can happen after merging values from an include that didn't render correcly */}}
-{{/* Any object will be "toYaml"'ed */}}
+{{/* This usually can happen after merging values from an include that did not render correcly */}}
+{{/* Any object will be passed to "toYaml" */}}
 {{/* Call this template:
 {{ include "tc.v1.common.values.validate" . }}
 */}}
