@@ -2,7 +2,7 @@
 {{- define "tc.v1.common.loader.apply" -}}
 
   {{/* Make sure there are not any YAML errors */}}
-  {{- include "tc.v1.common.values.validate" $ -}}
+  {{- include "tc.v1.common.values.validate" .Values -}}
 
   {{/* Render ConfigMap(s) */}}
   {{- include "tc.v1.common.spawner.configmap" . | nindent 0 -}}
