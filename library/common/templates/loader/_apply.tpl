@@ -1,7 +1,7 @@
 {{/* Loads all spawners */}}
 {{- define "tc.v1.common.loader.apply" -}}
 
-  {{/* Make sure there aren't any YAML errors */}}
+  {{/* Make sure there are not any YAML errors */}}
   {{- include "tc.v1.common.values.validate" $ -}}
 
   {{/* Render ConfigMap(s) */}}
