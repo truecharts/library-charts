@@ -42,6 +42,7 @@ tests:
             annotation2: annotation2
             g_annotation1: global_annotation1
             g_annotation2: global_annotation2
+            helm.sh/resource-policy: keep
       - documentIndex: *pvcDoc
         equal:
           path: metadata.labels
@@ -63,16 +64,14 @@ tests:
         my-volume1:
           enabled: true
           type: pvc
-          retain: true
+          retain: false
     asserts:
       - documentIndex: *pvcDoc
         isKind:
           of: PersistentVolumeClaim
       - documentIndex: *pvcDoc
-        equal:
-          path: metadata.annotations
-          value:
-            "helm.sh/resource-policy": keep
+        isNull:
+          path: metadata.annotations.helm\.sh/resource-policy
       - documentIndex: *pvcDoc
         equal:
           path: metadata.labels
