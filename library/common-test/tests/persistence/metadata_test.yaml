@@ -70,10 +70,8 @@ tests:
         isKind:
           of: PersistentVolumeClaim
       - documentIndex: *pvcDoc
-        isNotSubset:
+        isNull:
           path: metadata.annotations
-          value:
-            helm.sh/resource-policy: keep
       - documentIndex: *pvcDoc
         equal:
           path: metadata.labels
