@@ -24,7 +24,7 @@ fallbackDefaults:
   # -- Default persistence type
   persistenceType: pvc
   # -- Default Retain PVC
-  pvcRetain: false
+  pvcRetain: true
   # -- Default PVC Size
   pvcSize: 1Gi
   # -- Default VCT Size
