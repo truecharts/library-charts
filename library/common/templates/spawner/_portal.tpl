@@ -114,10 +114,13 @@
         {{- if eq $port "80" -}}
           {{- $protocol = "http" -}}
         {{- end -}}
-
+        
+        {{/* TODO: Reenable when iX fixes bugs crashing GUI on empty port */}}
+        {{/*
         {{- if or ( and ( eq $protocol "https" )  ( eq $port "443" ) ) ( and ( eq $protocol "http" )  ( eq $port "80" ) ) -}}
           {{- $port = "" -}}
         {{- end -}}
+        */}}
 
         {{- $port = toString $port -}}
 
