@@ -135,7 +135,7 @@ objectData: The object data to be used to render the container.
   {{/*
     Most containers that run as root, is because it has to chown
     files before switching to another user.
-    Let's add automatically the CHOWN cap.
+    Lets add automatically the CHOWN cap.
   */}}
   {{- if eq (int $secContext.runAsUser) 0 -}}
     {{- $addCap := $secContext.capabilities.add -}}
