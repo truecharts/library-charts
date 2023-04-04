@@ -540,7 +540,7 @@ tests:
             securityContext:
               runAsUser: 0
               runAsGroup: 0
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               privileged: false
               runAsNonRoot: false
@@ -588,7 +588,7 @@ tests:
             securityContext:
               runAsUser: 0
               runAsGroup: 0
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               privileged: false
               runAsNonRoot: false
@@ -637,7 +637,7 @@ tests:
             securityContext:
               runAsUser: 0
               runAsGroup: 0
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               privileged: false
               runAsNonRoot: false
@@ -684,7 +684,7 @@ tests:
             securityContext:
               runAsUser: 0
               runAsGroup: 0
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               privileged: false
               runAsNonRoot: false
@@ -1047,6 +1047,9 @@ tests:
                 imageSelector: image
                 probes: *probes
                 securityContext:
+                  runAsUser: 0
+                  runAsGroup: 0
+                  runAsNonRoot: false
                   capabilities:
                     disableAutoCapCHOWN: not-bool
     asserts:
@@ -1069,6 +1072,9 @@ tests:
                 imageSelector: image
                 probes: *probes
                 securityContext:
+                  runAsUser: 0
+                  runAsGroup: 0
+                  runAsNonRoot: false
                   capabilities:
                     disableAutoCapSETUID: not-bool
     asserts:
@@ -1091,6 +1097,9 @@ tests:
                 imageSelector: image
                 probes: *probes
                 securityContext:
+                  runAsUser: 0
+                  runAsGroup: 0
+                  runAsNonRoot: false
                   capabilities:
                     disableAutoCapSETGID: not-bool
     asserts:
