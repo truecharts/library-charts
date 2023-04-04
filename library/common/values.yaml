@@ -180,6 +180,11 @@ persistence:
     type: emptyDir
     mountPath: /var/logs
     targetSelectAll: true
+  varrun:
+    enabled: true
+    type: emptyDir
+    mountPath: /var/run
+    targetSelectAll: true
   tmp:
     enabled: true
     type: emptyDir
