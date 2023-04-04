@@ -184,6 +184,7 @@ persistence:
     enabled: true
     type: emptyDir
     mountPath: /var/run
+    mediume: Memory
     targetSelectAll: true
   tmp:
     enabled: true
