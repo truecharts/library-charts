@@ -2,7 +2,7 @@
 {{- define "tc.v1.common.lib.util.chartcontext" -}}
   {{/* Create defaults */}}
   {{- $protocol := "https" -}}
-  {{- $host := "$node_ip" -}}
+  {{- $host := "127.0.0.1" -}}
   {{- $port := "443" -}}
   {{- $url := "" -}}
   {{- $podCIDR := "172.16.0.0/16" -}}
