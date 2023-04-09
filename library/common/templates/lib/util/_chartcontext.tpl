@@ -80,9 +80,9 @@
   {{/* Construct URL*/}}
   {{- if $port -}}
   {{ fail (toYaml $port) }}
-    {{- $url = printf "%s://%s:%s%s" $protocol $host $port -}}
+    {{- $url = printf "%s://%s:%s" $protocol $host $port -}}
   {{- else -}}
-    {{- $url = printf "%s://%s%s" $protocol $host -}}
+    {{- $url = printf "%s://%s" $protocol $host -}}
   {{- end -}}
 
   {{/* TrueNAS SCALE specific code */}}
