@@ -6,6 +6,11 @@ tests:
     set:
       some_object: some-object-name
       some_mode: "0777"
+      configmap: &configmap
+        some-object-name:
+          enabled: true
+          data:
+            some-key: some-value
       workload:
         workload-name1:
           enabled: true
@@ -37,6 +42,7 @@ tests:
       some_mode: "0777"
       some_key: some-key
       some_path: some-path
+      configmap: *configmap
       workload:
         workload-name1:
           enabled: true
@@ -135,6 +141,7 @@ tests:
 
   - it: should fail with defaultMode not a string in configmap
     set:
+      configmap: *configmap
       workload:
         some-workload:
           enabled: true
@@ -153,6 +160,7 @@ tests:
 
   - it: should fail with defaultMode not in format of "0000"-"0777" in configmap
     set:
+      configmap: *configmap
       workload:
         some-workload:
           enabled: true
@@ -171,6 +179,7 @@ tests:
 
   - it: should fail without key in items in configmap
     set:
+      configmap: *configmap
       workload:
         some-workload:
           enabled: true
@@ -191,6 +200,7 @@ tests:
 
   - it: should fail without path in items in configmap
     set:
+      configmap: *configmap
       workload:
         some-workload:
           enabled: true
