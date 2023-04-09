@@ -44,7 +44,7 @@
       {{/* Get the port for the ingress entrypoint */}}
       {{- $namespace := "tc-system" -}}
       {{- if $selectedIngress.ingressClassName -}}
-        {{- $namespace := (printf "ix-%s" $selectedIngress.ingressClassName) -}}
+        {{- $namespace = (printf "ix-%s" $selectedIngress.ingressClassName) -}}
       {{- end -}}
       {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" -}}
       {{- $entrypoint := "websecure" -}}
