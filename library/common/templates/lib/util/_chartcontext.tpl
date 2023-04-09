@@ -74,8 +74,6 @@
     {{- $port = "" -}}
   {{- end -}}
 
-  {{- $port = toString $port -}}
-
   {{/* Construct URL*/}}
   {{- if $port -}}
     {{- $url = printf "%s://%s:%s" $protocol $host $port -}}
