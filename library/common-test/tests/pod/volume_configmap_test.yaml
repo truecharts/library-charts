@@ -24,7 +24,7 @@ tests:
           objectName: "{{ .Values.some_object }}"
           defaultMode: "{{ .Values.some_mode }}"
     asserts:
-      - documentIndex: &deploymentDoc 0
+      - documentIndex: &deploymentDoc 1
         isKind:
           of: Deployment
       - documentIndex: *deploymentDoc
