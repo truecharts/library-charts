@@ -12,7 +12,6 @@
   {{- $targetIngress := "" -}}
   {{- $selectedIngress := "" -}}
 
-
   {{/* Get service, default to primary */}}
   {{- $selectedService := fromYaml (include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ )) -}}
 
@@ -71,7 +70,7 @@
     {{- $protocol = "http" -}}
   {{- end -}}
 
-  {{- if or (and (eq $protocol "https")  (eq $port "443")) (and (eq $protocol "http") (eq $port "80")) -}}
+  {{- if or (and (eq $protocol "https") (eq $port "443")) (and (eq $protocol "http") (eq $port "80")) -}}
     {{- $port = "" -}}
   {{- end -}}
 
@@ -79,7 +78,6 @@
 
   {{/* Construct URL*/}}
   {{- if $port -}}
-  {{ fail (toYaml $port) }}
     {{- $url = printf "%s://%s:%s" $protocol $host $port -}}
   {{- else -}}
     {{- $url = printf "%s://%s" $protocol $host -}}
