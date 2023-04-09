@@ -61,10 +61,10 @@ tests:
             - key: some-other-key
               path: some-other-path
     asserts:
-      - documentIndex: *deploymentDoc
+      - documentIndex: &otherDeploymentDoc 0
         isKind:
           of: Deployment
-      - documentIndex: *deploymentDoc
+      - documentIndex: *otherDeploymentDoc
         contains:
           path: spec.template.spec.volumes
           content:
