@@ -216,7 +216,7 @@ tests:
               runAsUser: 568
               runAsGroup: 568
               readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
               privileged: true
               runAsNonRoot: true
               seccompProfile:
@@ -493,8 +493,7 @@ tests:
               privileged: true
               runAsNonRoot: true
               seccompProfile:
-                type: Localhost
-                localhostProfile: path/to/profile.json
+                type: RuntimeDefault
               capabilities:
                 add: []
                 drop:
