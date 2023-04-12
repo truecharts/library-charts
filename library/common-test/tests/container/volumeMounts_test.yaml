@@ -826,7 +826,7 @@ tests:
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
-            name: dev-0
+            name: device-0
             mountPath: /dev/sda
             readOnly: true
 
