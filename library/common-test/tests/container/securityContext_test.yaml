@@ -500,10 +500,12 @@ tests:
                   - CHOWN
                   - SETUID
                   - SETGID
+                  - FOWNER
+                  - DAC_OVERRIDE
                 drop:
                   - ALL
 
-  - it: should not include SETUID/SETGID when disabled from global
+  - it: should not include extra caps when disabled from global
     set:
       image: *image
       securityContext:
@@ -512,8 +514,7 @@ tests:
           runAsUser: 0
           runAsGroup: 0
           capabilities:
-            disableAutoCapSETUID: true
-            disableAutoCapSETGID: true
+            disableS6Caps: true
       workload:
         workload-name1:
           enabled: true
@@ -547,61 +548,11 @@ tests:
               seccompProfile:
                 type: RuntimeDefault
               capabilities:
-                add:
-                  - CHOWN
+                add: []
                 drop:
                   - ALL
 
-  - it: should not include CHOWN when disabled from global
-    set:
-      image: *image
-      securityContext:
-        container:
-          runAsNonRoot: false
-          runAsUser: 0
-          runAsGroup: 0
-          capabilities:
-            disableAutoCapCHOWN: true
-      workload:
-        workload-name1:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec:
-            containers:
-              container-name1:
-                enabled: true
-                primary: true
-                imageSelector: image
-                probes: *probes
-    asserts:
-      - documentIndex: &deploymentDoc 0
-        isKind:
-          of: Deployment
-      - documentIndex: *deploymentDoc
-        isAPIVersion:
-          of: apps/v1
-      - documentIndex: *deploymentDoc
-        isSubset:
-          path: spec.template.spec.containers[0]
-          content:
-            securityContext:
-              runAsUser: 0
-              runAsGroup: 0
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              privileged: false
-              runAsNonRoot: false
-              seccompProfile:
-                type: RuntimeDefault
-              capabilities:
-                add:
-                  - SETUID
-                  - SETGID
-                drop:
-                  - ALL
-
-  - it: should not include SETUID/SETGID when disabled from container level
+  - it: should not include extra caps when disabled from container level
     set:
       image: *image
       workload:
@@ -621,8 +572,7 @@ tests:
                   runAsUser: 0
                   runAsGroup: 0
                   capabilities:
-                    disableAutoCapSETUID: true
-                    disableAutoCapSETGID: true
+                    disableS6Caps: true
     asserts:
       - documentIndex: &deploymentDoc 0
         isKind:
@@ -644,56 +594,7 @@ tests:
               seccompProfile:
                 type: RuntimeDefault
               capabilities:
-                add:
-                  - CHOWN
-                drop:
-                  - ALL
-
-  - it: should not include CHOWN when disabled from container level
-    set:
-      image: *image
-      workload:
-        workload-name1:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec:
-            containers:
-              container-name1:
-                enabled: true
-                primary: true
-                imageSelector: image
-                probes: *probes
-                securityContext:
-                  runAsNonRoot: false
-                  runAsUser: 0
-                  runAsGroup: 0
-                  capabilities:
-                    disableAutoCapCHOWN: true
-    asserts:
-      - documentIndex: &deploymentDoc 0
-        isKind:
-          of: Deployment
-      - documentIndex: *deploymentDoc
-        isAPIVersion:
-          of: apps/v1
-      - documentIndex: *deploymentDoc
-        isSubset:
-          path: spec.template.spec.containers[0]
-          content:
-            securityContext:
-              runAsUser: 0
-              runAsGroup: 0
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              privileged: false
-              runAsNonRoot: false
-              seccompProfile:
-                type: RuntimeDefault
-              capabilities:
-                add:
-                  - SETUID
-                  - SETGID
+                add: []
                 drop:
                   - ALL
 
