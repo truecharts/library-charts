@@ -148,14 +148,12 @@ objectData: The object data to be used to render the container.
 
     {{- $addCap := $secContext.capabilities.add -}}
 
-    {{- if not $secContext.capabilities.disableAutoCapCHOWN -}}
+    {{- if not $secContext.capabilities.disableS6Caps -}}
       {{- $addCap = mustAppend $addCap "CHOWN" -}}
-    {{- end -}}
-    {{- if not $secContext.capabilities.disableAutoCapSETUID }}
       {{- $addCap = mustAppend $addCap "SETUID" -}}
-    {{- end -}}
-    {{- if not $secContext.capabilities.disableAutoCapSETGID }}
       {{- $addCap = mustAppend $addCap "SETGID" -}}
+      {{- $addCap = mustAppend $addCap "FOWNER" -}}
+      {{- $addCap = mustAppend $addCap "DAC_OVERRIDE" -}}
     {{- end -}}
 
     {{- $_ := set $secContext.capabilities "add" $addCap -}}
