@@ -952,57 +952,7 @@ tests:
                   runAsGroup: 0
                   runAsNonRoot: false
                   capabilities:
-                    disableAutoCapCHOWN: not-bool
+                    disableS6Caps: not-bool
     asserts:
       - failedTemplate:
           errorMessage: Container - Expected <securityContext.capabilities.disableAutoCapCHOWN> to be [bool], but got [not-bool] of type [string]
-
-  - it: should fail capabilities.disableAutoCapSETUID not a bool
-    set:
-      image: *image
-      workload:
-        workload-name1:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec:
-            containers:
-              container-name1:
-                enabled: true
-                primary: true
-                imageSelector: image
-                probes: *probes
-                securityContext:
-                  runAsUser: 0
-                  runAsGroup: 0
-                  runAsNonRoot: false
-                  capabilities:
-                    disableAutoCapSETUID: not-bool
-    asserts:
-      - failedTemplate:
-          errorMessage: Container - Expected <securityContext.capabilities.disableAutoCapSETUID> to be [bool], but got [not-bool] of type [string]
-
-  - it: should fail capabilities.disableAutoCapSETGID not a bool
-    set:
-      image: *image
-      workload:
-        workload-name1:
-          enabled: true
-          primary: true
-          type: Deployment
-          podSpec:
-            containers:
-              container-name1:
-                enabled: true
-                primary: true
-                imageSelector: image
-                probes: *probes
-                securityContext:
-                  runAsUser: 0
-                  runAsGroup: 0
-                  runAsNonRoot: false
-                  capabilities:
-                    disableAutoCapSETGID: not-bool
-    asserts:
-      - failedTemplate:
-          errorMessage: Container - Expected <securityContext.capabilities.disableAutoCapSETGID> to be [bool], but got [not-bool] of type [string]
