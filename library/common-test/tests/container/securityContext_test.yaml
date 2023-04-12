@@ -94,6 +94,8 @@ tests:
                   - CHOWN
                   - SETUID
                   - SETGID
+                  - FOWNER
+                  - DAC_OVERRIDE
                 drop:
                   - ALL
 
@@ -669,6 +671,8 @@ tests:
                   - CHOWN
                   - SETUID
                   - SETGID
+                  - FOWNER
+                  - DAC_OVERRIDE
                 drop:
                   - ALL
 
@@ -932,7 +936,7 @@ tests:
       - failedTemplate:
           errorMessage: Container - Expected <securityContext.capabilities.drop> to be [list], but got [string]
 
-  - it: should fail capabilities.disableAutoCapCHOWN not a bool
+  - it: should fail capabilities.disableS6Caps not a bool
     set:
       image: *image
       workload:
@@ -955,4 +959,4 @@ tests:
                     disableS6Caps: not-bool
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected <securityContext.capabilities.disableAutoCapCHOWN> to be [bool], but got [not-bool] of type [string]
+          errorMessage: Container - Expected <securityContext.capabilities.disableS6Caps> to be [bool], but got [not-bool] of type [string]
