@@ -806,6 +806,77 @@ tests:
             mountPath: /some/other/path
             readOnly: false
 
+  - it: should default mountPath to hostPath on device type
+    set:
+      image: *image
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            containers:
+              container-name1:
+                enabled: true
+                primary: true
+                imageSelector: image
+                probes: *probes
+      persistence:
+        dev01:
+          enabled: true
+          type: device
+          hostPath: /dev/sda
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        isAPIVersion:
+          of: apps/v1
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: dev01
+            mountPath: /dev/sda
+            readOnly: false
+
+  - it: should use mountPath if given instead of hostPath on device type
+    set:
+      image: *image
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            containers:
+              container-name1:
+                enabled: true
+                primary: true
+                imageSelector: image
+                probes: *probes
+      persistence:
+        dev01:
+          enabled: true
+          type: device
+          hostPath: /dev/sda
+          mountPath: /dev/sdb
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        isAPIVersion:
+          of: apps/v1
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: dev01
+            mountPath: /dev/sdb
+            readOnly: false
+
   # Failures
   - it: should fail with invalid mountPropagation
     set:
