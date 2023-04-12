@@ -140,7 +140,7 @@ objectData: The object data to be used to render the container.
   {{- if eq (int $secContext.runAsUser) 0 -}}
 
     {{- if not (kindIs "bool" $secContext.capabilitiesdisableS6Caps) -}}
-      {{- fail (printf "Container - Expected <securityContext.capabilities.disableS6Caps%s> to be [bool], but got [%s] of type [%s]" $value (kindOf $value)) -}}
+      {{- fail (printf "Container - Expected <securityContext.capabilities.disableS6Caps%s> to be [bool], but got [%s] of type [%s]" $secContext.capabilitiesdisableS6Caps (kindOf $secContext.capabilitiesdisableS6Caps)) -}}
     {{- end -}}
 
     {{- $addCap := $secContext.capabilities.add -}}
