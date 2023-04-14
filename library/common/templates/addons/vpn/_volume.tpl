@@ -54,7 +54,7 @@ targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn
+      mountPath: /vpn/vpn.conf
   {{- end -}}
 {{- end -}}
 
