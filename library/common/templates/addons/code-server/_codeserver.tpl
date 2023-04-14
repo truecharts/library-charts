@@ -29,7 +29,7 @@ It will include / inject the required templates based on the given values.
     {{- $serviceValues := .Values.addons.codeserver.service -}}
     {{- $_ := set $serviceValues "targetSelector" $targetSelector -}}
     {{- if not $hasPrimaryService -}}
-    {{- $_ := set $serviceValues "primary" true -}}
+      {{- $_ := set $serviceValues "primary" true -}}
     {{- end -}}
     {{- $_ := set .Values.service "codeserver" $serviceValues -}}
   {{- end -}}
