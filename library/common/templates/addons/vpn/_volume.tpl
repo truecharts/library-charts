@@ -31,12 +31,12 @@ The volume (referencing VPN config) to be inserted into persistence.
 {{- define "tc.v1.common.addon.vpn.volume.config" -}}
 enabled: true
 {{- if or .Values.addons.vpn.config .Values.addons.vpn.existingSecret }}
+  {{- $mountPath := "/vpn" }}
 type: secret
 defaultMode: "0777"
 items:
   - key: vpn.conf
     path: vpn.conf
-
 {{- if .Values.addons.vpn.existingSecret }}
 objectName: {{ .Values.addons.vpn.existingSecret }}
 expandObjectName: false
@@ -45,7 +45,7 @@ objectName: vpnconfig
 expandObjectName: true
 {{- end -}}
 {{- else }}
-
+{{- $mountPath = "/vpn/vpn.conf" }}
 type: hostPath
 hostPath: {{ .Values.addons.vpn.configFile | default "/vpn" }}
 hostPathType: "File"
@@ -54,7 +54,7 @@ targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn/vpn.conf
+      mountPath: {{ $mountPath }}
   {{- end -}}
 {{- end -}}
 
