@@ -7,9 +7,8 @@ tests:
       serviceList:
         - name: my-service
           enabled: true
-          primary: true
           type: LoadBalancer
-          ports:
+          portsList:
             - name: port-name
               enabled: true
               primary: true
@@ -17,7 +16,7 @@ tests:
         - name: my-service2
           enabled: true
           type: LoadBalancer
-          ports:
+          portsList:
             - name: port-name
               enabled: true
               primary: true
@@ -86,9 +85,8 @@ tests:
     set:
       serviceList:
         - enabled: true
-          primary: true
           type: LoadBalancer
-          ports:
+          portsList:
             - enabled: true
               primary: true
               port: 12345
@@ -130,9 +128,8 @@ tests:
     set:
       serviceList:
         - enabled: true
-          primary: true
           type: ClusterIP
-          ports:
+          portsList:
             - enabled: true
               primary: true
               port: 12345

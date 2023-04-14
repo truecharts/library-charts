@@ -1,8 +1,23 @@
 {{- define "tc.v1.common.values.serviceList" -}}
   {{- $rootCtx := . -}}
 
-  {{- range $idx, $svcValues := $rootCtx.Values.serviceList -}}
-    {{- $svcName := (printf "svc-list-%s" (toString $idx)) -}}
+  {{- $hasPrimary := false -}}
+  {{- range $svcName, $svcValues := $rootCtx.Values.service -}}
+    {{- if $svcValues.enabled -}}
+      {{- if $svcValues.primary -}}
+        {{- $hasPrimary = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- range $svcIdx, $svcValues := $rootCtx.Values.serviceList -}}
+    {{- $svcName := (printf "svc-list-%s" (toString $svcIdx)) -}}
+
+    {{- if eq $svcIdx 0 -}}
+      {{- if not $hasPrimary -}}
+        {{- $_ := set $svcValues "primary" true -}}
+      {{- end -}}
+    {{- end -}}
 
     {{- with $svcValues.name -}}
       {{- $svcName = . -}}
@@ -12,8 +27,12 @@
       {{- $_ := set $rootCtx.Values "service" dict -}}
     {{- end -}}
 
-    {{- range $idx, $portValues := $svcValues.ports -}}
-      {{- $portName := (printf "port-list-%s" (toString $idx)) -}}
+    {{- range $portIdx, $portValues := $svcValues.portsList -}}
+      {{- $portName := (printf "port-list-%s" (toString $portIdx)) -}}
+
+      {{- if eq $portIdx 0 -}}
+        {{- $_ := set $portValues "primary" true -}}
+      {{- end -}}
 
       {{- with $portValues.name -}}
         {{- $portName = . -}}
@@ -24,7 +43,6 @@
       {{- end -}}
 
       {{- $_ := set $svcValues.ports $portName $portValues -}}
-
     {{- end -}}
 
     {{- $_ := set $rootCtx.Values.service $svcName $svcValues -}}
