@@ -29,9 +29,9 @@ targetSelector:
 The volume (referencing VPN config) to be inserted into persistence.
 */}}
 {{- define "tc.v1.common.addon.vpn.volume.config" -}}
+{{- $mountPath := "/vpn" }} {{/* On existingSecret use /vpn */}}
 enabled: true
 {{- if or .Values.addons.vpn.config .Values.addons.vpn.existingSecret }}
-  {{- $mountPath := "/vpn" }}
 type: secret
 defaultMode: "0777"
 items:
@@ -44,7 +44,7 @@ expandObjectName: false
 objectName: vpnconfig
 expandObjectName: true
 {{- end -}}
-{{- else }}
+{{- else }} {{/* On configFile use /vpn/vpn.conf */}}
 {{- $mountPath = "/vpn/vpn.conf" }}
 type: hostPath
 hostPath: {{ .Values.addons.vpn.configFile | default "/vpn" }}
