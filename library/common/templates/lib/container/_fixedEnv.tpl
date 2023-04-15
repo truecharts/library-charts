@@ -49,6 +49,7 @@ objectData: The object data to be used to render the container.
     {{- $fixed = mustAppend $fixed (dict "k" "NVIDIA_DRIVER_CAPABILITIES" "v" (join "," $nvidiaCaps)) -}}
   {{- else -}} {{/* Only when in SCALE */}}
     {{- if hasKey $rootCtx.Values.global "ixChartContext" -}}
+      {{/* FIXME: Remove the conditional once Cobia hits the shelf. It should have gpu sharing builtin */}}
       {{- if not (get ((get $objectData "env") | default dict) "NVIDIA_VISIBLE_DEVICES") -}} {{/* Allow overriding from "env" for a loophole to work. This probably wont work on Cobia */}}
         {{- $fixed = mustAppend $fixed (dict "k" "NVIDIA_VISIBLE_DEVICES" "v" "void") -}}
       {{- end -}}
