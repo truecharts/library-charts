@@ -26,8 +26,8 @@ securityContext:
       - MKNOD
       - SYS_MODULE
 
-{{- with $.Values.addons.vpn.env }}
 env:
+{{- with $.Values.addons.vpn.env }}
   {{- . | toYaml | nindent 2 }}
 {{- end }}
   {{- if and .Values.addons.vpn.openvpn.username .Values.addons.vpn.openvpn.password }}
