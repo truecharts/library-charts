@@ -642,6 +642,7 @@ tests:
           targetSelector:
             workload-name1:
               - container-name1
+              - container-name2
       workload:
         workload-name1:
           enabled: true
@@ -709,6 +710,7 @@ tests:
           targetSelector:
             workload-name1:
               - container-name1
+              - container-name2
       workload:
         workload-name1:
           enabled: true
