@@ -23,8 +23,6 @@ securityContext:
     add:
       - NET_ADMIN
       - NET_RAW
-      - SETUID
-      - SETGID
       - MKNOD
       - SYS_MODULE
 
