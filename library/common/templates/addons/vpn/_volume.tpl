@@ -29,7 +29,14 @@ targetSelector:
 The volume (referencing VPN config) to be inserted into persistence.
 */}}
 {{- define "tc.v1.common.addon.vpn.volume.config" -}}
-{{- $mountPath := "/vpn" }} {{/* On existingSecret use /vpn */}}
+{{- $basePath := "/vpn" -}} {{/* Base Path for OVPN */}}
+{{- if eq .Values.addons.vpn.type "wireguard" -}}
+  {{- $basePath := "/etc/wireguard" -}} {{/* Base Path for Wireguard */}}
+{{- else if eq .Values.addons.vpn.type "gluetun" -}}
+  {{- $basePath := "/gluetun" -}} {{/* Base Path for Gluetun */}}
+{{- end -}}
+{{- $mountPath := $basePath }}
+
 enabled: true
 {{- if or .Values.addons.vpn.config .Values.addons.vpn.existingSecret }}
 type: secret
@@ -44,8 +51,8 @@ expandObjectName: false
 objectName: vpnconfig
 expandObjectName: true
 {{- end -}}
-{{- else }} {{/* On configFile use /vpn/vpn.conf */}}
-{{- $mountPath = "/vpn/vpn.conf" }}
+{{- else }}
+{{- $mountPath = printf ( "%s/vpn.conf" $basePath) }}
 type: hostPath
 hostPath: {{ .Values.addons.vpn.configFile | default "/vpn" }}
 hostPathType: "File"
