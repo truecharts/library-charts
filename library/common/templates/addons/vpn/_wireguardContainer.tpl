@@ -23,6 +23,8 @@ securityContext:
     add:
       - NET_ADMIN
       - NET_RAW
+      - SETUID
+      - SETGID
       - SYS_MODULE
 
 {{- with $.Values.addons.vpn.env }}
