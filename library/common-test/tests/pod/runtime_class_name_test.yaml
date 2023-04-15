@@ -135,15 +135,12 @@ tests:
         ixChartContext:
           addNvidiaRuntimeClass: true
           nvidiaRuntimeClassName: ix-runtime
-      podOptions:
-        runtimeClassName: some-class
       workload:
         workload-name1:
           enabled: true
           primary: true
           type: Deployment
-          podSpec:
-            runtimeClassName: some-other-class
+          podSpec: {}
     asserts:
       - documentIndex: *deploymentDoc
         isNull:
