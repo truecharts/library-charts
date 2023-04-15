@@ -2,6 +2,7 @@
 The volume (referencing VPN scripts) to be inserted into persistence.
 */}}
 {{- define "tc.v1.common.addon.vpn.volume.scripts" -}}
+{{- $basePath := (include "tc.v1.common.addon.vpn.volume.basePath" .) }}
 enabled: true
 type: configmap
 objectName: vpnscripts
@@ -20,7 +21,7 @@ targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn
+      mountPath: {{ $basePath }}
   {{- end -}}
 {{- end -}}
 
@@ -29,12 +30,7 @@ targetSelector:
 The volume (referencing VPN config) to be inserted into persistence.
 */}}
 {{- define "tc.v1.common.addon.vpn.volume.config" -}}
-{{- $basePath := "/vpn" -}} {{/* Base Path for OVPN */}}
-{{- if eq .Values.addons.vpn.type "wireguard" -}}
-  {{- $basePath = "/etc/wireguard" -}} {{/* Base Path for Wireguard */}}
-{{- else if eq .Values.addons.vpn.type "gluetun" -}}
-  {{- $basePath = "/gluetun" -}} {{/* Base Path for Gluetun */}}
-{{- end -}}
+{{- $basePath := (include "tc.v1.common.addon.vpn.volume.basePath" .) }}
 {{- $mountPath := $basePath }}
 
 enabled: true
@@ -52,7 +48,7 @@ objectName: vpnconfig
 expandObjectName: true
 {{- end -}}
 {{- else }}
-{{- $mountPath = printf ( "%s/vpn.conf" $basePath) }}
+{{- $mountPath = (printf "%s/vpn.conf" $basePath) }}
 type: hostPath
 hostPath: {{ .Values.addons.vpn.configFile | default "/vpn" }}
 hostPathType: "File"
@@ -69,6 +65,7 @@ targetSelector:
 The volume (referencing VPN config folder) to be inserted into persistence.
 */}}
 {{- define "tc.v1.common.addon.vpn.volume.folder" -}}
+{{- $basePath := (include "tc.v1.common.addon.vpn.volume.basePath" .) }}
 enabled: true
 type: hostPath
 hostPath: {{ .Values.addons.vpn.configFolder | quote }}
@@ -76,7 +73,7 @@ targetSelector:
   {{- range .Values.addons.vpn.targetSelector }}
   {{ . }}:
     vpn:
-      mountPath: /vpn
+      mountPath: {{ $basePath }}
   {{- end -}}
 {{- end -}}
 
@@ -93,4 +90,14 @@ targetSelector:
     tailscale:
       mountPath: /var/lib/tailscale
   {{- end -}}
+{{- end -}}
+
+{{- define "tc.v1.common.addon.vpn.volume.basePath" -}}
+  {{- $basePath := "/vpn" -}} {{/* Base Path for OVPN */}}
+  {{- if eq .Values.addons.vpn.type "wireguard" -}}
+    {{- $basePath = "/etc/wireguard" -}} {{/* Base Path for Wireguard */}}
+  {{- else if eq .Values.addons.vpn.type "gluetun" -}}
+    {{- $basePath = "/gluetun" -}} {{/* Base Path for Gluetun */}}
+  {{- end -}}
+  {{- $basePath -}}
 {{- end -}}
