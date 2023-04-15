@@ -242,7 +242,7 @@ tests:
             fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups: []
-            sysctls: []            
+            sysctls: []
 
   - it: should pass with no sysctls port_start automatically appended based on services when port is higher than 1024
     set:
