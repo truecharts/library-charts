@@ -706,10 +706,15 @@ tests:
       scaleGPU:
         - gpu:
             nvidia.com/gpu: 1
-            amd.com/gpu: 1
+            amd.com/gpu: 0
           targetSelector:
             workload-name1:
               - container-name1
+        - gpu:
+            nvidia.com/gpu: 0
+            amd.com/gpu: 1
+          targetSelector:
+            workload-name1:
               - container-name2
       workload:
         workload-name1:
@@ -759,7 +764,6 @@ tests:
               limits:
                 cpu: 4000m
                 memory: 8Gi
-                nvidia.com/gpu: "1"
                 amd.com/gpu: "1"
               requests:
                 cpu: 10m
