@@ -25,6 +25,7 @@ securityContext:
       - NET_RAW
       - SETUID
       - SETGID
+      - MKNOD
       - SYS_MODULE
 
 {{- with $.Values.addons.vpn.env }}
