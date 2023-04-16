@@ -37,7 +37,7 @@ env:
   IPTABLES_BACKEND: "nft"
 {{- if $.Values.addons.vpn.killSwitch }}
   KILLSWITCH: "true"
-  {{- $excludednetworksv4 := "172.16.0.0/12" -}}
+  {{- $excludednetworksv4 := ( printf "%v;%v" $.Values.chartContext.podCIDR $.Values.chartContext.svcCIDR ) -}}
   {{- range $.Values.addons.vpn.excludedNetworks_IPv4 -}}
     {{- $excludednetworksv4 = ( printf "%v;%v" $excludednetworksv4 . ) -}}
   {{- end }}

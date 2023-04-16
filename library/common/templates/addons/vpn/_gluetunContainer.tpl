@@ -32,24 +32,18 @@ env:
   DNS_KEEP_NAMESERVER: on
   DOT: off
 {{- if $.Values.addons.vpn.killSwitch }}
+{{- $excludednetworks := ( printf "%v,%v" $.Values.chartContext.podCIDR $.Values.chartContext.svcCIDR ) -}}
+{{- range $.Values.addons.vpn.excludedNetworks_IPv4 -}}
+  {{- $excludednetworks = ( printf "%v,%v" $excludednetworks . ) -}}
+{{- end }}
+{{- range $.Values.addons.vpn.excludedNetworks_IPv6 -}}
+  {{- $excludednetworksv6 = ( printf "%v,%v" $excludednetworks . ) -}}
+{{- end }}
   FIREWALL: "on"
-  {{- $excludednetworksv4 := "172.16.0.0/12" -}}
-  {{- range $.Values.addons.vpn.excludedNetworks_IPv4 -}}
-    {{- $excludednetworksv4 = ( printf "%v,%v" $excludednetworksv4 . ) -}}
-  {{- end }}
-
-{{- if $.Values.addons.vpn.excludedNetworks_IPv6 -}}
-  {{- $excludednetworksv6 := "" -}}
-  {{- range $.Values.addons.vpn.excludedNetworks_IPv4 -}}
-    {{- $excludednetworksv6 = ( printf "%v,%v" $excludednetworksv6 . ) -}}
-  {{- end }}
-  FIREWALL_OUTBOUND_SUBNETS: {{ ( printf "%v,%v" $excludednetworksv4 $excludednetworksv6 ) | quote }}
-{{- else -}}
-  FIREWALL_OUTBOUND_SUBNETS: {{ $excludednetworksv4 | quote }}
-{{- end -}}
-{{- else -}}
+  FIREWALL_OUTBOUND_SUBNETS: {{ $excludednetworks | quote }}
+{{- else }}
   FIREWALL: "off"
-{{- end -}}
+{{- end }}
 
 {{- with $.Values.addons.vpn.env }}
   {{- . | toYaml | nindent 2 }}
