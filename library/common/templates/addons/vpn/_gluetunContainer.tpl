@@ -41,7 +41,7 @@ env:
   {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
     {{- $excludednetworksv4 = ( printf "%v;%v" $excludednetworksv4 . ) -}}
   {{- end }}
-  
+
 {{- if .Values.addons.vpn.excludedNetworks_IPv6 -}}
   {{- $excludednetworksv6 := "" -}}
   {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
