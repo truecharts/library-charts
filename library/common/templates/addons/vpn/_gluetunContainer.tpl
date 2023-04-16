@@ -29,8 +29,29 @@ securityContext:
       - SYS_MODULE
 
 env:
+  DNS_KEEP_NAMESERVER: on
 {{- with $.Values.addons.vpn.env }}
   {{- . | toYaml | nindent 2 }}
+{{- end -}}
+
+{{- if .Values.addons.vpn.killSwitch }}
+  FIREWALL: "on"
+  {{- $excludednetworksv4 := "172.16.0.0/12" -}}
+  {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
+    {{- $excludednetworksv4 = ( printf "%v;%v" $excludednetworksv4 . ) -}}
+  {{- end }}
+  
+{{- if .Values.addons.vpn.excludedNetworks_IPv6 -}}
+  {{- $excludednetworksv6 := "" -}}
+  {{- range .Values.addons.vpn.excludedNetworks_IPv4 -}}
+    {{- $excludednetworksv6 = ( printf "%v;%v" $excludednetworksv6 . ) -}}
+  {{- end }}
+  FIREWALL_OUTBOUND_SUBNETS: {{ $excludednetworksv4 }},{{ $excludednetworksv6 }}
+{{- else -}}
+  FIREWALL_OUTBOUND_SUBNETS: {{ $excludednetworksv4 | quote }}
+{{- end -}}
+{{- else -}}
+  FIREWALL: "off"
 {{- end -}}
 
 {{- range $envList := $.Values.addons.vpn.envList -}}
