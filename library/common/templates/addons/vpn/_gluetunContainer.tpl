@@ -30,6 +30,7 @@ securityContext:
 
 env:
   DNS_KEEP_NAMESERVER: on
+  DOT: off
 {{- with $.Values.addons.vpn.env }}
   {{- . | toYaml | nindent 2 }}
 {{- end -}}
