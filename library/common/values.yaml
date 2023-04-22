@@ -195,7 +195,7 @@ persistence:
     enabled: true
     type: emptyDir
     mountPath: /var/run
-    mediume: Memory
+    medium: Memory
     targetSelectAll: true
   tmp:
     enabled: true
@@ -206,6 +206,7 @@ persistence:
     enabled: true
     type: emptyDir
     mountPath: /dev/shm
+    medium: Memory
     targetSelectAll: true
 
 persistenceList: []
