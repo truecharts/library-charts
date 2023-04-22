@@ -21,12 +21,12 @@ tests:
     asserts:
       - hasDocuments:
           count: 2
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
       - documentIndex: &serviceDoc 1
         isKind:
           of: Service
-      - documentIndex: &deploymentDoc 1
-        isKind:
-          of: Deployment
       - documentIndex: *serviceDoc
         isAPIVersion:
           of: v1
