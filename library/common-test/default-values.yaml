@@ -1,6 +1,8 @@
 workload:
   main:
+    type: CronJob
     enabled: true
+    schedule: "*/1 * * * *"
     podSpec:
       containers:
         main:

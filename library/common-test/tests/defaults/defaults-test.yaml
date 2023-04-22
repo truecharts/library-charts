@@ -10,7 +10,8 @@ tests:
             main:
               port: 1025
     asserts:
-      - hasDocuments: 2
+      - hasDocuments:
+          count: 2
       - documentIndex: &serviceDoc 1
         isKind:
           of: Service
