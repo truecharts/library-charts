@@ -6,9 +6,18 @@ tests:
     set:
       service:
         main:
+          enabled: true
           ports:
             main:
+              enabled: true
               port: 1025
+      workload:
+        main:
+          enabled: true
+          podSpec:
+            containers:
+              main:
+                enabled: true
     asserts:
       - hasDocuments:
           count: 2
