@@ -134,7 +134,7 @@ podOptions:
   priorityClassName: ""
   runtimeClassName: ""
   automountServiceAccountToken: false
-  terminationGracePeriodSeconds: 120
+  terminationGracePeriodSeconds: 60
 
 # -- (docs/workload/README.md)
 workload:
