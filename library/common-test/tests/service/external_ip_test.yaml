@@ -96,7 +96,6 @@ tests:
             - name: port-name
               port: 12345
               protocol: TCP
-              targetPort: 12345
             - name: port-name2
               port: 12344
               protocol: TCP
@@ -134,7 +133,7 @@ tests:
               port: 12345
               protocol: TCP
             - name: port-name2
-              port: 12344
+              port: 12346
               protocol: TCP
               appProtocol: http
       - documentIndex: *endpointSliceDoc
