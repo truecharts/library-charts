@@ -96,6 +96,7 @@ tests:
             - name: port-name
               port: 12345
               protocol: TCP
+              targetPort: 12345
             - name: port-name2
               port: 12344
               protocol: TCP
