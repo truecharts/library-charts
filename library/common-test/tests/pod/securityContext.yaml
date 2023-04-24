@@ -434,6 +434,7 @@ tests:
             supplementalGroups:
               - 44
               - 107
+              - 568
             sysctls: []
 
   - it: should pass with with device assigned to selected pod
