@@ -219,7 +219,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls:
               - name: net.ipv4.ip_unprivileged_port_start
                 value: "443"
@@ -245,7 +246,8 @@ tests:
           value:
             fsGroup: 0
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
 
   - it: should pass with no sysctls port_start automatically appended based on services when port is higher than 1024
@@ -277,7 +279,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
 
   - it: should pass with with gpu assigned to primary pod
@@ -324,7 +327,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
 
   - it: should pass with with gpu assigned to specific pod
@@ -374,7 +378,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
 
   - it: should pass with with gpu assigned to multiple pod
@@ -462,7 +467,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
       - documentIndex: &otherDeploymentDoc 1
         isKind:
