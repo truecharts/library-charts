@@ -5,12 +5,15 @@ This template generates a random password and ensures it persists across updates
 {{- $dbhost := printf "%v-%v" .Release.Name "mariadb" -}}
 
 {{- if .Values.mariadb.enabled -}}
+  {{/* Initialize variables */}}
   {{- $basename := include "tc.v1.common.lib.chart.names.fullname" $ -}}
   {{- $fetchname := printf "%s-mariadbcreds" $basename -}}
   {{- $dbprevious := lookup "v1" "Secret" .Release.Namespace $fetchname -}}
   {{- $dbpreviousold := lookup "v1" "Secret" .Release.Namespace "mariadbcreds" -}}
   {{- $dbPass := randAlphaNum 50 -}}
   {{- $rootPass := randAlphaNum 50 -}}
+
+  {{/* If there are previous secrets, fetch values and decrypt them */}}
   {{- if $dbprevious -}}
     {{- $dbPass = (index $dbprevious.data "mariadb-password") | b64dec -}}
     {{- $rootPass = (index $dbprevious.data "mariadb-root-password") | b64dec -}}
@@ -18,6 +21,8 @@ This template generates a random password and ensures it persists across updates
     {{- $dbPass = (index $dbpreviousold.data "mariadb-password") | b64dec -}}
     {{- $rootPass = (index $dbpreviousold.data "mariadb-root-password") | b64dec -}}
   {{- end -}}
+
+  {{/* Append some values to mariadb.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.mariadb.creds "mariadbPassword" ($dbPass | quote) -}}
   {{- $_ := set .Values.mariadb.creds "mariadbRootPassword" ($rootPass | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plain" ((printf "%v" $dbhost) | quote) -}}
@@ -25,7 +30,8 @@ This template generates a random password and ensures it persists across updates
   {{- $_ := set .Values.mariadb.creds "plainport" ((printf "%v:3306" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plainporthost" ((printf "%v:3306" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "complete" ((printf "sql://%v:%v@%v-mariadb:3306/%v" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase) | quote) -}}
-  {{- $_ := set .Values.mariadb.creds "jdbc" ((printf "jdbc:sqlserver://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) | quote) }}
+  {{- $_ := set .Values.mariadb.creds "jdbc" ((printf "jdbc:sqlserver://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) | quote) -}}
+  {{/* Create the secret */}}
 enabled: true
 expandObjectName: false
 data:
