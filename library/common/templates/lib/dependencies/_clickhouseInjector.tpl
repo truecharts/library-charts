@@ -23,7 +23,7 @@
   {{- $portHost := printf "%v:8123" $dbHost -}}
   {{- $ping := printf "http://%v/ping" $portHost -}}
   {{- $url := printf "http://%v:%v@%v/%v" .Values.clickhouse.clickhouseUsername $dbPass $portHost .Values.clickhouse.clickhouseDatabase -}}
-  {{- $jdbc := printf "jdbc:ch://%v/%v" $$portHost -}}
+  {{- $jdbc := printf "jdbc:ch://%v/%v" $portHost -}}
 
   {{/* Append some values to clickhouse.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.clickhouse.creds "plain" ($dbHost | quote) -}}
