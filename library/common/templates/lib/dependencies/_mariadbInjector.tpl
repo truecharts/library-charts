@@ -25,8 +25,8 @@ This template generates a random password and ensures it persists across updates
   {{/* Append some values to mariadb.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.mariadb.creds "mariadbPassword" ($dbPass | quote) -}}
   {{- $_ := set .Values.mariadb.creds "mariadbRootPassword" ($rootPass | quote) -}}
-  {{- $_ := set .Values.mariadb.creds "plain" ((printf "%v" $dbhost) | quote) -}}
-  {{- $_ := set .Values.mariadb.creds "plainhost" ((printf "%v" $dbhost) | quote) -}}
+  {{- $_ := set .Values.mariadb.creds "plain" ($dbhost | quote) -}}
+  {{- $_ := set .Values.mariadb.creds "plainhost" ($dbhost | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plainport" ((printf "%v:3306" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plainporthost" ((printf "%v:3306" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "complete" ((printf "sql://%v:%v@%v:3306/%v" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) | quote) -}}
@@ -41,7 +41,7 @@ data:
   url: {{ (printf "sql://%v:%v@%v:3306/%v" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) }}
   urlnossl: {{ (printf "sql://%v:%v@%v:3306/%v?sslmode=disable" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) }}
   plainporthost: {{ (printf "%v:3306" $dbhost) }}
-  plainhost: {{ (printf "%v" $dbhost) }}
+  plainhost: {{ $dbhost }}
   jdbc: {{ (printf "jdbc:sqlserver://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}
   jdbc-mysql: {{ (printf "jdbc:mysql://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}
   jdbc-mariadb: {{ (printf "jdbc:mariadb://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}

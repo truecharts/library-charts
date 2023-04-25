@@ -24,8 +24,8 @@ This template generates a random password and ensures it persists across updates
   {{/* Append some values to mariadb.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.mongodb.creds "mongodbPassword" ($dbPass | quote) -}}
   {{- $_ := set .Values.mongodb.creds "mongodbRootPassword" ($rootPass | quote) -}}
-  {{- $_ := set .Values.mongodb.creds "plain" ((printf "%v" $dbhost) | quote) -}}
-  {{- $_ := set .Values.mongodb.creds "plainhost" ((printf "%v" $dbhost) | quote) -}}
+  {{- $_ := set .Values.mongodb.creds "plain" ($dbhost | quote) -}}
+  {{- $_ := set .Values.mongodb.creds "plainhost" ($dbhost | quote) -}}
   {{- $_ := set .Values.mongodb.creds "plainport" ((printf "%v:27017" $dbhost) | quote) -}}
   {{- $_ := set .Values.mongodb.creds "plainporthost" ((printf "%v:27017" $dbhost) | quote) -}}
   {{- $_ := set .Values.mongodb.creds "complete" ((printf "mongodb://%v:%v@%v:27017/%v" .Values.mongodb.mongodbUsername $dbPass $dbhost .Values.mongodb.mongodbDatabase) | quote) -}}
@@ -41,7 +41,7 @@ data:
   urlssl: {{ (printf "mongodb://%v:%v@%v:27017/%v?ssl=true" .Values.mongodb.mongodbUsername $dbPass $dbhost .Values.mongodb.mongodbDatabase) }}
   urltls: {{ (printf "mongodb://%v:%v@%v:27017/%v?tls=true" .Values.mongodb.mongodbUsername $dbPass $dbhost .Values.mongodb.mongodbDatabase) }}
   jdbc: {{ (printf "jdbc:mongodb://%v:27017/%v" $dbhost .Values.mongodb.mongodbDatabase) }}
-  plainhost: {{ (printf "%v" $dbhost) }}
+  plainhost: {{ $dbhost }}
   plainporthost: {{ (printf "%v:27017" $dbhost) }}
   {{- end -}}
 {{- end -}}
