@@ -2,7 +2,6 @@
   This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
 {{- define "tc.v1.common.dependencies.clickhouse.secret" -}}
-{{- $dbHost := printf "%v-%v" .Release.Name "clickhouse" -}}
 
 {{- if .Values.clickhouse.enabled -}}
   {{/* Initialize variables */}}
@@ -20,6 +19,7 @@
   {{- end -}}
 
   {{/* Prepare data */}}
+  {{- $dbHost := printf "%v-%v" .Release.Name "clickhouse" -}}
   {{- $portHost := printf "%v:8123" $dbHost -}}
   {{- $ping := printf "http://%v/ping" $portHost -}}
   {{- $url := printf "http://%v:%v@%v/%v" .Values.clickhouse.clickhouseUsername $dbPass $portHost .Values.clickhouse.clickhouseDatabase -}}

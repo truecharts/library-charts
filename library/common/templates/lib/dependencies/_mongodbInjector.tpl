@@ -2,7 +2,6 @@
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
 {{- define "tc.v1.common.dependencies.mongodb.secret" -}}
-{{- $dbhost := printf "%v-%v" .Release.Name "mongodb" -}}
 
 {{- if .Values.mongodb.enabled -}}
   {{/* Initialize variables */}}
@@ -23,6 +22,7 @@ This template generates a random password and ensures it persists across updates
   {{- end -}}
 
   {{/* Prepare data */}}
+  {{- $dbhost := printf "%v-%v" .Release.Name "mongodb" -}}
   {{- $portHost := printf "%v:27017" $dbhost -}}
   {{- $jdbc := printf "jdbc:mongodb://%v/%v" $portHost .Values.mongodb.mongodbDatabase -}}
   {{- $url := printf "mongodb://%v:%v@%v/%v" .Values.mongodb.mongodbUsername $dbPass $portHost .Values.mongodb.mongodbDatabase -}}

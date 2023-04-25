@@ -2,7 +2,6 @@
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
 {{- define "tc.v1.common.dependencies.redis.secret" -}}
-{{- $dbHost := printf "%v-%v" .Release.Name "redis" -}}
 
 {{- if .Values.redis.enabled -}}
   {{/* Initialize variables */}}
@@ -18,6 +17,7 @@ This template generates a random password and ensures it persists across updates
   {{- end -}}
 
   {{/* Prepare data */}}
+  {{- $dbHost := printf "%v-%v" .Release.Name "redis" -}}
   {{- $portHost := printf "%v:6379" $dbHost -}}
   {{- $url := printf "redis://%v:%v@%v/%v" .Values.redis.redisUsername $dbPass $portHost $dbIndex -}}
   {{- $hostPass := printf "%v:%v@%v" .Values.redis.redisUsername $dbPass $dbHost -}}

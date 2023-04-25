@@ -2,7 +2,6 @@
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
 {{- define "tc.v1.common.dependencies.solr.secret" -}}
-  {{- $dbHost := printf "%v-%v" .Release.Name "solr" -}}
 
 {{- if .Values.solr.enabled -}}
   {{/* Initialize variables */}}
@@ -20,6 +19,7 @@ This template generates a random password and ensures it persists across updates
   {{- end -}}
 
   {{/* Prepare data */}}
+  {{- $dbHost := printf "%v-%v" .Release.Name "solr" -}}
   {{- $portHost := printf "%v:8983" $dbHost -}}
   {{- $url := printf "http://%v:%v@%v/url/%v" .Values.solr.solrUsername $solrPass $portHost .Values.solr.solrCores -}}
 
