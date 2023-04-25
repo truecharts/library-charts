@@ -17,19 +17,15 @@ data:
 {{- if $dbprevious }}
   {{- $dbPass = ( index $dbprevious.data "mariadb-password" ) | b64dec  }}
   {{- $rootPass = ( index $dbprevious.data "mariadb-root-password" ) | b64dec  }}
-  mariadb-password: {{ ( index $dbprevious.data "mariadb-password" ) }}
-  mariadb-root-password: {{ ( index $dbprevious.data "mariadb-root-password" ) }}
 {{- else if $dbpreviousold }}
   {{- $dbPass = ( index $dbpreviousold.data "mariadb-password" ) | b64dec  }}
   {{- $rootPass = ( index $dbpreviousold.data "mariadb-root-password" ) | b64dec  }}
-  mariadb-password: {{ ( index $dbpreviousold.data "mariadb-password" ) }}
-  mariadb-root-password: {{ ( index $dbpreviousold.data "mariadb-root-password" ) }}
 {{- else }}
   {{- $dbPass = randAlphaNum 50 }}
   {{- $rootPass = randAlphaNum 50 }}
+{{- end }}
   mariadb-password: {{ $dbPass }}
   mariadb-root-password: {{ $rootPass }}
-{{- end }}
   url: {{ ( printf "sql://%v:%v@%v-mariadb:3306/%v" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase  ) }}
   urlnossl: {{ ( printf "sql://%v:%v@%v-mariadb:3306/%v?sslmode=disable" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase  ) }}
   plainporthost: {{ ( printf "%v-%v:3306" .Release.Name "mariadb" ) }}
