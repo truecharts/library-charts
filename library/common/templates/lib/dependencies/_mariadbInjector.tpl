@@ -29,21 +29,22 @@ This template generates a random password and ensures it persists across updates
   {{- $_ := set .Values.mariadb.creds "plainhost" ((printf "%v" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plainport" ((printf "%v:3306" $dbhost) | quote) -}}
   {{- $_ := set .Values.mariadb.creds "plainporthost" ((printf "%v:3306" $dbhost) | quote) -}}
-  {{- $_ := set .Values.mariadb.creds "complete" ((printf "sql://%v:%v@%v-mariadb:3306/%v" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase) | quote) -}}
-  {{- $_ := set .Values.mariadb.creds "jdbc" ((printf "jdbc:sqlserver://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) | quote) -}}
-  {{/* Create the secret */}}
+  {{- $_ := set .Values.mariadb.creds "complete" ((printf "sql://%v:%v@%v:3306/%v" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) | quote) -}}
+  {{- $_ := set .Values.mariadb.creds "jdbc" ((printf "jdbc:sqlserver://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) | quote) -}}
+
+{{/* Create the secret (Comment also plays a role on correct formatting) */}}
 enabled: true
 expandObjectName: false
 data:
   mariadb-password: {{ $dbPass }}
   mariadb-root-password: {{ $rootPass }}
-  url: {{ (printf "sql://%v:%v@%v-mariadb:3306/%v" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase) }}
-  urlnossl: {{ (printf "sql://%v:%v@%v-mariadb:3306/%v?sslmode=disable" .Values.mariadb.mariadbUsername $dbPass .Release.Name .Values.mariadb.mariadbDatabase) }}
+  url: {{ (printf "sql://%v:%v@%v:3306/%v" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) }}
+  urlnossl: {{ (printf "sql://%v:%v@%v:3306/%v?sslmode=disable" .Values.mariadb.mariadbUsername $dbPass $dbhost .Values.mariadb.mariadbDatabase) }}
   plainporthost: {{ (printf "%v:3306" $dbhost) }}
   plainhost: {{ (printf "%v" $dbhost) }}
-  jdbc: {{ (printf "jdbc:sqlserver://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) }}
-  jdbc-mysql: {{ (printf "jdbc:mysql://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) }}
-  jdbc-mariadb: {{ (printf "jdbc:mariadb://%v-mariadb:3306/%v" .Release.Name .Values.mariadb.mariadbDatabase) }}
+  jdbc: {{ (printf "jdbc:sqlserver://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}
+  jdbc-mysql: {{ (printf "jdbc:mysql://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}
+  jdbc-mariadb: {{ (printf "jdbc:mariadb://%v:3306/%v" $dbhost .Values.mariadb.mariadbDatabase) }}
   {{- end -}}
 {{- end -}}
 
