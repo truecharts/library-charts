@@ -17,12 +17,19 @@ This template generates a random password and ensures it persists across updates
     {{- $dbPass = (index $dbprevious.data "redis-password") | b64dec -}}
   {{- end -}}
 
-  {{/* Append some values to mariadb.creds, so apps using the dep, can use them */}}
+  {{/* Prepare data */}}
+  {{- $portHost := printf "%v:6379" $dbHost -}}
+  {{- $url := printf "redis://%v:%v@%v/%v" .Values.redis.redisUsername $dbPass $portHost $dbIndex -}}
+  {{- $hostPass := printf "%v:%v@%v" .Values.redis.redisUsername $dbPass $dbHost -}}
+
+  {{/* Append some values to redis.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.redis.creds "redisPassword" ($dbPass | quote) -}}
   {{- $_ := set .Values.redis.creds "plain" ($dbHost | quote) -}}
-  {{- $_ := set .Values.redis.creds "plainhost" ((printf "%v" $dbHost) | quote) -}}
-  {{- $_ := set .Values.redis.creds "plainport" ((printf "%v:6379" $dbHost) | quote) -}}
-  {{- $_ := set .Values.redis.creds "plainporthost" ((printf "%v:6379" $dbHost) | quote) -}}
+  {{- $_ := set .Values.redis.creds "plainhost" ($dbHost | quote) -}}
+  {{- $_ := set .Values.redis.creds "plainport" ($portHost | quote) -}}
+  {{- $_ := set .Values.redis.creds "plainporthost" ($portHost | quote) -}}
+  {{- $_ := set .Values.redis.creds "plainhostpass" ($hostPass | quote) -}}
+  {{- $_ := set .Values.redis.creds "url" ($url | quote) -}}
 
 {{/* Create the secret (Comment also plays a role on correct formatting) */}}
 enabled: true
@@ -30,9 +37,9 @@ expandObjectName: false
 data:
   redis-password: {{ $dbPass }}
   plain: {{ $dbHost }}
-  url: {{ (printf "redis://%v:%v@%v:6379/%v" .Values.redis.redisUsername $dbPass $dbHost $dbIndex) }}
-  plainhostpass: {{ (printf "%v:%v@%v" .Values.redis.redisUsername $dbPass $dbHost) }}
-  plainporthost: {{ (printf "%v:6379" $dbHost) }}
+  url: {{ $url }}
+  plainhostpass: {{ $hostPass }}
+  plainporthost: {{ $portHost }}
   plainhost: {{ $dbHost }}
   {{- end -}}
 {{- end -}}
