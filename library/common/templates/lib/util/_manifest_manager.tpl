@@ -76,11 +76,15 @@ spec:
               /bin/sh <<'EOF'
               touch /tmp/healthy
               echo "Installing manifests..."
-              {{ $branch := ternary "staging" "manifests" .Values.manifestManager.staging }}
+              {{- $branch := "manifests" -}}
+              {{- $handleErr := "&& echo 'Job succeeded...'" -}}
+              {{- if .Values.manifestManager.staging -}}
+                {{- $branch = "staging" -}}
+                {{- $handleErr = "|| echo 'Job failed...'" -}}
+              {{- end }}
 
               kubectl apply --server-side --force-conflicts --grace-period 30 --v=4 -k https://github.com/truecharts/manifests/{{ $branch }} || \
-              kubectl apply --server-side --force-conflicts --grace-period 30 -k https://github.com/truecharts/manifests/{{ $branch }} \
-              {{ ternary "&& echo 'Job succeeded...'" "|| echo 'Job failed...'" .Values.manifestManager.staging }}
+              kubectl apply --server-side --force-conflicts --grace-period 30 -k https://github.com/truecharts/manifests/{{ $branch }} {{ $handleErr }}
 
               echo "Install finished..."
 
