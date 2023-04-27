@@ -77,10 +77,10 @@ spec:
               touch /tmp/healthy
               echo "Installing manifests..."
               {{- $branch := "manifests" -}}
-              {{- $handleErr := "&& echo 'Job succeeded...'" -}}
+              {{- $handleErr := "|| echo 'Job succeeded...'" -}}
               {{- if .Values.manifestManager.staging -}}
                 {{- $branch = "staging" -}}
-                {{- $handleErr = "|| echo 'Job failed...'" -}}
+                {{- $handleErr = "&& echo 'Job failed...'" -}}
               {{- end }}
 
               kubectl apply --server-side --force-conflicts --grace-period 30 --v=4 -k https://github.com/truecharts/manifests/{{ $branch }} || \
