@@ -80,7 +80,7 @@ spec:
 
               kubectl apply --server-side --force-conflicts --grace-period 30 --v=4 -k https://github.com/truecharts/manifests/{{ $branch }} || \
               kubectl apply --server-side --force-conflicts --grace-period 30 -k https://github.com/truecharts/manifests/{{ $branch }} \
-              {{ ternary "|| echo 'Job failed...'" "" .Values.manifestManager.staging }}
+              {{ ternary "|| echo 'Job failed...'" "&& echo 'Job succeeded...'" .Values.manifestManager.staging }}
 
               echo "Install finished..."
 
