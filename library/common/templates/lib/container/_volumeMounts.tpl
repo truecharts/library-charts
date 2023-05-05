@@ -99,7 +99,7 @@ objectData: The object data to be used to render the container.
       {{- end -}}
 
       {{/* If container is selected */}}
-      {{- if or (mustHas $objectData.shortName ($selectorValues | keys)) (eq $objectData.shortName "codeserver") -}}
+      {{- if or (mustHas $objectData.shortName ($selectorValues | keys)) -}}
         {{/* Merge with values that might be set for the specific container */}}
         {{- $volMount = mustMergeOverwrite $volMount (get $selectorValues $objectData.shortName) -}}
         {{- $return = true -}}
