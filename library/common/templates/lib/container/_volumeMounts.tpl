@@ -19,7 +19,7 @@ objectData: The object data to be used to render the container.
   {{- range $key := $keys -}}
     {{- range $persistenceName, $persistenceValues := (get $rootCtx.Values $key) -}}
       {{- if $persistenceValues.enabled -}}
-        {{/* Don't try to mount configmap/sercet to codeserver */}}
+        {{/* Dont try to mount configmap/sercet to codeserver */}}
         {{- if not (and (eq $objectData.shortName "codeserver") (mustHas $persistenceValues.type $codeServerIgnoredTypes)) -}}
           {{- $volMount := (fromJson (include "tc.v1.common.lib.container.volumeMount.isSelected" (dict "persistenceName" $persistenceName "persistenceValues" $persistenceValues "objectData" $objectData "key" $key))) -}}
           {{- if $volMount -}}
