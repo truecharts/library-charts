@@ -10,6 +10,7 @@ objectData: The object data to be used to render the container.
 
   {{- $volMounts := list -}}
 
+  {{- $codeServerIgnoredTypes := (list "configmap" "secret") -}}
   {{- $keys := (list "persistence") -}}
   {{- if eq $objectData.podType "StatefulSet" -}}
     {{- $keys = mustAppend $keys "volumeClaimTemplates" -}}
@@ -18,9 +19,12 @@ objectData: The object data to be used to render the container.
   {{- range $key := $keys -}}
     {{- range $persistenceName, $persistenceValues := (get $rootCtx.Values $key) -}}
       {{- if $persistenceValues.enabled -}}
-        {{- $volMount := (fromJson (include "tc.v1.common.lib.container.volumeMount.isSelected" (dict "persistenceName" $persistenceName "persistenceValues" $persistenceValues "objectData" $objectData "key" $key))) -}}
-        {{- if $volMount -}}
-          {{- $volMounts = mustAppend $volMounts $volMount -}}
+        {{/* Don't try to mount configmap/sercet to codeserver */}}
+        {{- if not (and (eq $objectData.shortName "codeserver") (mustHas $persistenceValues.type $codeServerIgnoredTypes)) -}}
+          {{- $volMount := (fromJson (include "tc.v1.common.lib.container.volumeMount.isSelected" (dict "persistenceName" $persistenceName "persistenceValues" $persistenceValues "objectData" $objectData "key" $key))) -}}
+          {{- if $volMount -}}
+            {{- $volMounts = mustAppend $volMounts $volMount -}}
+          {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
@@ -99,9 +103,13 @@ objectData: The object data to be used to render the container.
       {{- end -}}
 
       {{/* If container is selected */}}
-      {{- if or (mustHas $objectData.shortName ($selectorValues | keys)) -}}
+      {{- if or (mustHas $objectData.shortName ($selectorValues | keys)) (eq $objectData.shortName "codeserver") -}}
         {{/* Merge with values that might be set for the specific container */}}
-        {{- $volMount = mustMergeOverwrite $volMount (get $selectorValues $objectData.shortName) -}}
+        {{- $fetchedSelectorValues := (get $selectorValues $objectData.shortName) -}}
+        {{- if and (eq $objectData.shortName "codeserver") (not $fetchedSelectorValues) -}}
+          {{- $fetchedSelectorValues = (get $selectorValues ($selectorValues | keys | first)) -}}
+        {{- end -}}
+        {{- $volMount = mustMergeOverwrite $volMount $fetchedSelectorValues -}}
         {{- $return = true -}}
       {{- end -}}
     {{- end -}}
