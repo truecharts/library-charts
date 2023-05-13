@@ -15,19 +15,19 @@ objectData: The object data to be used to render the Pod.
     {{- $selectors = . -}}
   {{- end -}}
 
-  {{/* Override with pod's option */}}
+  {{/* Override with pods option */}}
   {{- with $objectData.podSpec.nodeSelector -}}
     {{- $selectors = . -}}
   {{- end -}}
 
   {{- if and $rootCtx.Values.global.stopAll (eq $objectData.type "DaemonSet") }}
 "non-existing": "true"
-  {{- else -}}
+  {{ else }}
     {{- range $k, $v := $selectors -}}
       {{- if not $v -}}
         {{- fail (printf "Expected non-empty value on <nodeSelector> [%s] key." $k) -}}
       {{- end }}
 {{ $k }}: {{ tpl $v $rootCtx }}
     {{- end -}}
-  {{- end -}}
+  {{ end }}
 {{- end -}}
