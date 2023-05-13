@@ -21,9 +21,9 @@ tests:
           of: postgresql.cnpg.io/v1
       - documentIndex: *clusterDoc
         isSubset:
-          path: spec.annotations
+          path: metadata.annotations
           content:
-            cnpg.io/hibernate: "true"
+            cnpg.io/hibernation: "on"
       - documentIndex: &poolerDoc 1
         isKind:
           of: Pooler
@@ -57,9 +57,9 @@ tests:
           of: postgresql.cnpg.io/v1
       - documentIndex: *clusterDoc
         isSubset:
-          path: spec.annotations
+          path: metadata.annotations
           content:
-            cnpg.io/hibernate: "true"
+            cnpg.io/hibernation: "on"
       - documentIndex: &poolerDoc 1
         isKind:
           of: Pooler
