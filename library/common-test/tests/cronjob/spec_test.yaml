@@ -81,3 +81,47 @@ tests:
             parallelism: 5
             ttlSecondsAfterFinished: 100
             activeDeadlineSeconds: 100
+
+  - it: should set suspend to true
+    set:
+      cron: "*/5 * * * *"
+      someTimezone: America/New_York
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "{{ .Values.cron }}"
+          suspend: true
+          podSpec: {}
+    asserts:
+      - documentIndex: *cronJobDoc
+        isSubset:
+          path: spec
+          content:
+            schedule: "*/5 * * * *"
+            timeZone: America/New_York
+            suspend: true
+
+  - it: should set suspend to true on stopAll
+    set:
+      global:
+        stopAll: true
+      cron: "*/5 * * * *"
+      someTimezone: America/New_York
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "{{ .Values.cron }}"
+          suspend: false
+          podSpec: {}
+    asserts:
+      - documentIndex: *cronJobDoc
+        isSubset:
+          path: spec
+          content:
+            schedule: "*/5 * * * *"
+            timeZone: America/New_York
+            suspend: true

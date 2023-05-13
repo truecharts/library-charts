@@ -94,3 +94,41 @@ tests:
               type: RollingUpdate
               rollingUpdate:
                 maxUnavailable: 0
+
+  - it: should set replicas to 0
+    set:
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            replicas: 0
+    asserts:
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec
+          content:
+            replicas: 0
+            strategy:
+              type: RollingUpdate
+
+  - it: should set replicas to 0 on stopAll
+    set:
+      global:
+        stopAll: true
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            replicas: 2
+    asserts:
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec
+          content:
+            replicas: 0
+            strategy:
+              type: RollingUpdate
