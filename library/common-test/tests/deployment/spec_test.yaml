@@ -102,16 +102,14 @@ tests:
           enabled: true
           primary: true
           type: Deployment
-          podSpec:
-            replicas: 0
+          replicas: 0
+          podSpec: {}
     asserts:
       - documentIndex: *deploymentDoc
         isSubset:
           path: spec
           content:
             replicas: 0
-            strategy:
-              type: RollingUpdate
 
   - it: should set replicas to 0 on stopAll
     set:
@@ -122,13 +120,11 @@ tests:
           enabled: true
           primary: true
           type: Deployment
-          podSpec:
-            replicas: 2
+          replicas: 2
+          podSpec: {}
     asserts:
       - documentIndex: *deploymentDoc
         isSubset:
           path: spec
           content:
             replicas: 0
-            strategy:
-              type: RollingUpdate

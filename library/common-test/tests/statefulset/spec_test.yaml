@@ -107,9 +107,9 @@ tests:
         isSubset:
           path: spec
           content:
+            replicas: 2
             updateStrategy:
               type: RollingUpdate
-              replicas: 2
 
   - it: should set replicas to 0
     set:
@@ -125,9 +125,7 @@ tests:
         isSubset:
           path: spec
           content:
-            updateStrategy:
-              type: RollingUpdate
-              replicas: 0
+            replicas: 0
 
   - it: should set replicas to 0 on stopAll
     set:
@@ -145,6 +143,4 @@ tests:
         isSubset:
           path: spec
           content:
-            updateStrategy:
-              type: RollingUpdate
-              replicas: 0
+            replicas: 0

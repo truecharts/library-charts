@@ -42,7 +42,7 @@ tests:
             disk: ssd
             cpu: intel
 
-  - it: should set nodeSelector to non-existent on DaemonSet
+  - it: should set nodeSelector to non-existing on DaemonSet
     set:
       global:
         stopAll: true
@@ -60,7 +60,7 @@ tests:
         equal:
           path: spec.template.spec.nodeSelector
           value:
-            non-existent: "true"
+            non-existing: "true"
 
   - it: should not container non-existing on non-DaemonSet
     set:
