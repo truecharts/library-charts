@@ -11,7 +11,7 @@ global:
   # -- Minimum nodePort value
   minNodePort: 9000
   # -- Enable to stop most pods and containers including cnpg
-  # does not include (cron)jobs, daemonsets and other objects without replicas
+  # does not include stand-alone pods
   stopAll: false
 
 fallbackDefaults:
