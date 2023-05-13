@@ -84,14 +84,12 @@ tests:
 
   - it: should set suspend to true
     set:
-      cron: "*/5 * * * *"
-      someTimezone: America/New_York
       workload:
         workload-name:
           enabled: true
           primary: true
           type: CronJob
-          schedule: "{{ .Values.cron }}"
+          schedule: "*/5 * * * *"
           suspend: true
           podSpec: {}
     asserts:
@@ -100,21 +98,19 @@ tests:
           path: spec
           content:
             schedule: "*/5 * * * *"
-            timeZone: America/New_York
+            timeZone: UTC
             suspend: true
 
   - it: should set suspend to true on stopAll
     set:
       global:
         stopAll: true
-      cron: "*/5 * * * *"
-      someTimezone: America/New_York
       workload:
         workload-name:
           enabled: true
           primary: true
           type: CronJob
-          schedule: "{{ .Values.cron }}"
+          schedule: "*/5 * * * *"
           suspend: false
           podSpec: {}
     asserts:
@@ -123,5 +119,5 @@ tests:
           path: spec
           content:
             schedule: "*/5 * * * *"
-            timeZone: America/New_York
+            timeZone: UTC
             suspend: true
