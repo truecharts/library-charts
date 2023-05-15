@@ -1,5 +1,7 @@
 {{/* Initialiaze values of the chart */}}
 {{- define "tc.v1.common.loader.init" -}}
+  {{/* create tc-system namespace */}}
+  {{- include "tc.v1.common.lib.util.tcnamespace" . }}
 
   {{/* Merge chart values and the common chart defaults */}}
   {{- include "tc.v1.common.values.init" . -}}
@@ -30,6 +32,12 @@
 
   {{/* Autogenerate solr passwords if needed */}}
   {{- include "tc.v1.common.dependencies.solr.injector" . }}
+
+  {{/* Register Operator if needed */}}
+  {{- include "tc.v1.common.lib.util.operator.register" . }}
+
+  {{/* Verify if required operators are present */}}
+  {{- include "tc.v1.common.lib.util.operator.verify" . }}
 
   {{/* Enable code-server add-on if required */}}
   {{- if .Values.addons.codeserver.enabled }}
