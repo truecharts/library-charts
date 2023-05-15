@@ -1,8 +1,8 @@
 {{- define "tc.v1.common.lib.util.operator.register" -}}
 {{- if .Values.operator.register }}
-{{ $operator := lookup "v1" "ConfigMap" "tc-system" {{ $.Chart.Name }} }}
+{{ $operator := lookup "v1" "ConfigMap" "tc-system" $.Chart.Name }}
 {{ if $operator }}
-  {{- fail ( printf "You cannot install 2 copies of the same operator..." ) }}
+  {{- fail "You cannot install the same operator twice..." }}
 {{ end }}
 ---
 apiVersion: v1
