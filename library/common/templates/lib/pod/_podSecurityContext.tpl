@@ -69,7 +69,7 @@ objectData: The object data to be used to render the Pod.
   {{/* If a container wants to bind a port <= 1024 change the unprivileged_port_start */}}
   {{- if and $portRange.low (le (int $portRange.low) 1024) -}}
     {{/* That sysctl is not supported when hostNet is enabled */}}
-    {{- if ne (include "ix.v1.common.lib.pod.hostNetwork" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true" -}}
+    {{- if ne (include "tc.v1.common.lib.pod.hostNetwork" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true" -}}
       {{- $_ := set $secContext "sysctls" (mustAppend $secContext.sysctls (dict "name" "net.ipv4.ip_unprivileged_port_start" "value" (printf "%v" $portRange.low))) -}}
     {{- end -}}
   {{- end -}}
