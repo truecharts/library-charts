@@ -259,7 +259,8 @@ tests:
           value:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: []
+            supplementalGroups:
+              - 568
             sysctls: []
 
   - it: should pass with fsGroup 0
