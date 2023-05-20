@@ -1,7 +1,7 @@
 {{- define "tc.v1.common.lib.util.operator.register" -}}
   {{- if .Values.operator.register -}}
     {{- with (lookup "v1" "ConfigMap" "tc-system" $.Chart.Name) -}}
-      {{- fail "You cannot install the same operator twice..." -}}
+      {{- fail (printf "You cannot install the [%s] operator twice..." $.Chart.Name) -}}
     {{- end -}}
 
     {{- $objectData := (dict  "name"      $.Chart.Name
