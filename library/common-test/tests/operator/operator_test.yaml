@@ -30,3 +30,16 @@ tests:
           value:
             namespace: *namespace
             version: *version
+
+  - it: should fail without additional operators installed
+    set:
+      global:
+        createTCNamespace: true
+      operator:
+        register: true
+        verify:
+          additionalOperators:
+            - some-operator
+    asserts:
+      - failedTemplate:
+          errorMessage: Operator [some-operator] needs to be installed
