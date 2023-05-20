@@ -71,3 +71,18 @@ tests:
         equal:
           path: metadata.namespace
           value: some-namespace
+
+  - it: should pass with configmap created with namespace from tpl
+    set:
+      namespace: some-namespace
+      configmap:
+        my-configmap1:
+          enabled: true
+          namespace: "{{ .Values.namespace }}"
+          data:
+            foo: bar
+    asserts:
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.namespace
+          value: some-namespace
