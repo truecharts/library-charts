@@ -558,7 +558,7 @@ metrics:
 operator:
   # -- Adds a configmap in tc-system namespace to register this chart as an operator
   register: false
-  # -- Verified weither required operators for this chart are actually installed and registered
+  # -- Verified wether required operators for this chart are actually installed and registered
   verify:
     enabled: true
     # -- a list of extra operators to check for

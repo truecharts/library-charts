@@ -38,6 +38,7 @@ tests:
       operator:
         register: true
         verify:
+          enabled: true
           additionalOperators:
             - some-operator
     asserts:
