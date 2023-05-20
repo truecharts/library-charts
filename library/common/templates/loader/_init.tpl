@@ -1,10 +1,11 @@
 {{/* Initialiaze values of the chart */}}
 {{- define "tc.v1.common.loader.init" -}}
-  {{/* create tc-system namespace */}}
-  {{- include "tc.v1.common.lib.util.tcnamespace" . }}
 
   {{/* Merge chart values and the common chart defaults */}}
   {{- include "tc.v1.common.values.init" . -}}
+
+  {{/* Create tc-system namespace */}}
+  {{- include "tc.v1.common.lib.util.tcnamespace" . -}}
 
   {{/* Parse lists and append to values */}}
   {{- include "tc.v1.common.loader.lists" . -}}
