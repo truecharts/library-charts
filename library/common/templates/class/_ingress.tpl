@@ -21,7 +21,7 @@ within the common library.
   {{/* Get the name of the primary service, if any */}}
   {{- $primarySeriviceName := (include "tc.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
   {{/* Get service values of the primary service, if any */}}
-  {{- $primaryService := get .Values.service $primarySeriviceName -}}
+  {{- $primaryService := get .Values.service $primaryServiceName -}}
   {{- $defaultServiceName := $fullName -}}
 
   {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
