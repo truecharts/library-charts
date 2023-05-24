@@ -80,7 +80,7 @@ targetSelector:
 {{/*
 The empty tailscale folder
 */}}
-{{- define "tc.v1.common.addon.vpn.volume.tailscale.emptyDir" -}}
+{{- define "tc.v1.common.addon.vpn.volume.tailscale" -}}
 enabled: true
 type: emptyDir
 targetSelector:
@@ -88,17 +88,6 @@ targetSelector:
   {{ . }}:
     tailscale:
       mountPath: /var/lib/tailscale
-  {{- end -}}
-{{- end -}}
-{{- define "tc.v1.common.addon.vpn.volume.tailscale.devtun" -}}
-enabled: true
-type: device
-hostPath: /dev/net/tun
-targetSelector:
-  {{- range .Values.addons.vpn.targetSelector }}
-  {{ . }}:
-    tailscale:
-      mountPath: /dev/net/tun
   {{- end -}}
 {{- end -}}
 

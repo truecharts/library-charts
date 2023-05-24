@@ -576,19 +576,14 @@ tests:
           path: spec.template.spec.containers[1].name
           value: release-name-common-test-tailscale
       - documentIndex: *DeploymentDocument
-        contains:
-          path: spec.template.spec.containers[1].volumeMounts
+        isSubset:
+          path: spec.template.spec.containers[1].securityContext
           content:
-            name: tailscaledevtun
-            mountPath: /dev/net/tun
-            readOnly: false
-      - documentIndex: *DeploymentDocument
-        contains:
-          path: spec.template.spec.volumes
-          content:
-            name: tailscaledevtun
-            hostPath:
-              path: /dev/net/tun
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
 
   - it: addon vpn openvpn enabled with configFile
     set:
