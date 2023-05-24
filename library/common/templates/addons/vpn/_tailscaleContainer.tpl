@@ -19,10 +19,17 @@ probes:
 command:
   - /usr/local/bin/containerboot
 securityContext:
+  {{- if $.Values.addons.vpn.tailscale.userspace }}
   runAsUser: 1000
   runAsGroup: 1000
   runAsNonRoot: false
   readOnlyRootFilesystem: true
+  {{- else }}
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: true
+  readOnlyRootFilesystem: false
+  {{- end }}
   capabilities:
     add:
       - NET_ADMIN

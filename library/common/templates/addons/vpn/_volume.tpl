@@ -25,7 +25,6 @@ targetSelector:
   {{- end -}}
 {{- end -}}
 
-
 {{/*
 The volume (referencing VPN config) to be inserted into persistence.
 */}}
@@ -81,7 +80,7 @@ targetSelector:
 {{/*
 The empty tailscale folder
 */}}
-{{- define "tc.v1.common.addon.vpn.volume.tailscale" -}}
+{{- define "tc.v1.common.addon.vpn.volume.tailscale.emptyDir" -}}
 enabled: true
 type: emptyDir
 targetSelector:
@@ -89,6 +88,17 @@ targetSelector:
   {{ . }}:
     tailscale:
       mountPath: /var/lib/tailscale
+  {{- end -}}
+{{- end -}}
+{{- define "tc.v1.common.addon.vpn.volume.tailscale.devtun" -}}
+enabled: true
+type: device
+hostPath: /dev/net/tun
+targetSelector:
+  {{- range .Values.addons.vpn.targetSelector }}
+  {{ . }}:
+    tailscale:
+      mountPath: /dev/net/tun
   {{- end -}}
 {{- end -}}
 

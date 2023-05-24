@@ -83,13 +83,19 @@ It will include / inject the required templates based on the given values.
   {{- end -}}
 
   {{- if eq "tailscale" $.Values.addons.vpn.type -}}
-  {{/* Append the empty tailscale folder to the persistence */}}
-  {{- $tailscaleper := include "tc.v1.common.addon.vpn.volume.tailscale" . | fromYaml -}}
-  {{- if $tailscaleper -}}
-    {{- $_ := set .Values.persistence "tailscalestate" $tailscaleper -}}
+    {{/* Append the empty tailscale folder to the persistence */}}
+    {{- $tailscaledir := include "tc.v1.common.addon.vpn.volume.tailscale.emptyDir" . | fromYaml -}}
+    {{- if $tailscaledir -}}
+      {{- $_ := set .Values.persistence "tailscalestate" $tailscaledir -}}
+    {{- end -}}
+    {{- if not $.Values.addons.vpn.tailscale.userspace -}}
+      {{/* Append the /dev/net/tun device for tailscale */}}
+      {{- $tailscaletun := include "tc.v1.common.addon.vpn.volume.tailscale.devtun" . | fromYaml -}}
+      {{- if $tailscaletun -}}
+        {{- $_ := set .Values.persistence "tailscaledevtun" $tailscaletun -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
-  {{- end -}}
-
 
 {{- end -}}
 {{- end -}}
