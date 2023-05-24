@@ -453,6 +453,10 @@ tests:
           of: Deployment
       - documentIndex: *DeploymentDocument
         equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+      - documentIndex: *DeploymentDocument
+        equal:
           path: spec.template.spec.containers[0].name
           value: release-name-common-test
       - documentIndex: *DeploymentDocument
@@ -476,7 +480,7 @@ tests:
           path: spec.template.spec.containers[1].env
           content:
             name: TS_STATE_DIR
-            value: /var/lib/tailscale
+            value: /var/lib/tailscale/state
       - documentIndex: *DeploymentDocument
         contains:
           path: spec.template.spec.containers[1].env
