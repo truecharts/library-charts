@@ -20,7 +20,7 @@
   {{/* Go over all configmaps */}}
   {{- range $index, $cm := (lookup "v1" "ConfigMap" "" "").items -}}
     {{/* If "tc-operator-name" does not exist will return "" */}}
-    {{- $name := (get "tc-operator-name" $cm.data) -}}
+    {{- $name := (get $cm.data "tc-operator-name") -}}
 
     {{/* If fetched name matches the "$opName"... */}}
     {{- if eq $name $opName -}}
