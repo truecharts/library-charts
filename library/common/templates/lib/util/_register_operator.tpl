@@ -2,6 +2,7 @@
   {{- if .Values.operator.register -}}
 
     {{/* If it is an install operator check the operator does not exist */}}
+    {{/* We do not want to fail on upgrades, as the operator will always be present */}}
     {{- if $.Release.IsInstall -}}
       {{- $opExists := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $.Chart.Name) -}}
       {{/* If the operator exists, fail to continue */}}
