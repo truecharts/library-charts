@@ -21,7 +21,7 @@
   {{- range $index, $cm := (lookup "v1" "ConfigMap" "" "").items -}}
     {{/* Go over all keys under data on the configmap */}}
     {{- range $key, $value := $cm.data -}}
-      {{/* If the key is "tc-operator-name */}}
+      {{/* If the key is "tc-operator-name" */}}
       {{- if eq $key "tc-operator-name" -}}
         {{/* And it has value the value of the operator we trying to verify */}}
         {{- if eq $value $opName -}}
