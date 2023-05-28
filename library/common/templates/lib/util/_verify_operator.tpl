@@ -6,7 +6,7 @@
 
       {{/* If the operator was not found */}}
       {{- if eq $opExists "false" -}}
-        {{- fail (printf "Operator [%s] needs to be installed" $opName) -}}
+        {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

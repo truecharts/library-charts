@@ -35,10 +35,12 @@ tests:
             - some-operator
     asserts:
       - failedTemplate:
-          errorMessage: Operator [some-operator] needs to be installed
+          errorMessage: Operator [some-operator] have to be installed first
 
   - it: should not fail with operator verify disabled
     set:
+      global:
+        createTCNamespace: false
       operator:
         register: true
         verify:
