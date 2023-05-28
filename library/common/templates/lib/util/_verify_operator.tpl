@@ -19,16 +19,13 @@
 
   {{/* Go over all configmaps */}}
   {{- range $index, $cm := (lookup "v1" "ConfigMap" "" "").items -}}
-    {{/* Go over all keys under data on the configmap */}}
-    {{- range $key, $value := $cm.data -}}
-      {{/* If the key is "tc-operator-name" */}}
-      {{- if eq $key "tc-operator-name" -}}
-        {{/* And it has value the value of the operator we trying to verify */}}
-        {{- if eq $value $opName -}}
-          {{/* Mark operator as found*/}}
-          {{- $opExists = true -}}
-        {{- end -}}
-      {{- end -}}
+    {{/* If "tc-operator-name" does not exist will return "" */}}
+    {{- $name := (get "tc-operator-name" $cm.data) -}}
+
+    {{/* If fetched name matches the "$opName"... */}}
+    {{- if eq $name $opName -}}
+      {{/* Mark operator as found*/}}
+      {{- $opExists = true -}}
     {{- end -}}
   {{- end -}}
 
