@@ -30,7 +30,7 @@
         {{- end -}}
         {{/* Mark operator as found*/}}
         {{- $opExists = true -}}
-        {{- $operatorData := (dict  "name" $cm.data.tc-operator-name "namespace" $cm.metadata.namespace "version" $cm.data.tc-operator-version) -}}
+        {{- $operatorData := (dict  "name" (get $cm.data "tc-operator-name") "namespace" $cm.metadata.namespace "version"(get $cm.data "tc-operator-version")) -}}
         {{- $_ := set $.Values.operator $opName $operatorData -}}
       {{- end -}}
     {{- end -}}
