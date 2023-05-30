@@ -5,7 +5,7 @@
       {{- $opExists := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $opName) -}}
 
       {{/* If the operator was not found */}}
-      {{- if and ( eq $opExists "false" ) ( $.Values.operator.failOnError ) -}}
+      {{- if and (eq $opExists "false") ($.Values.operator.failOnError) -}}
         {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
       {{- end -}}
     {{- end -}}
