@@ -5,7 +5,7 @@
       {{- $opExists := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $opName) -}}
 
       {{/* If the operator was not found */}}
-      {{- if eq $opExists "false" -}}
+      {{- if and ( eq $opExists "false" ) ( $.values.operator.failOnError ) -}}
         {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
       {{- end -}}
     {{- end -}}
@@ -25,8 +25,13 @@
 
       {{/* If fetched name matches the "$opName"... */}}
       {{- if eq $name $opName -}}
+        {{- if $opExists -}}
+          {{- fail (printf "Found duplicate configmaps for operator [%s]" $opName) -}}
+        {{- end -}}
         {{/* Mark operator as found*/}}
         {{- $opExists = true -}}
+        {{- $operatorData := (dict  "name" $cm.data.tc-operator-name "namespace" $cm.metadata.namespace "version" $cm.data.tc-operator-version -}}
+        {{- $_ := set $.Values.operator $opName $operatorData -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
