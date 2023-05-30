@@ -22,6 +22,7 @@
     {{- if $cm.data -}}
       {{/* If "tc-operator-name" does not exist will return "" */}}
       {{- $name := (get $cm.data "tc-operator-name") -}}
+      {{- $version := (get $cm.data "tc-operator-version") -}}
 
       {{/* If fetched name matches the "$opName"... */}}
       {{- if eq $name $opName -}}
@@ -30,7 +31,7 @@
         {{- end -}}
         {{/* Mark operator as found*/}}
         {{- $opExists = true -}}
-        {{- $operatorData := dict  "name" (get $cm.data "tc-operator-name") "namespace" $cm.metadata.namespace "version"(get $cm.data "tc-operator-version") -}}
+        {{- $operatorData := dict  "name" $name "namespace" $cm.metadata.namespace "version" $version -}}
         {{- $_ := set $.Values.operator $opName $operatorData -}}
       {{- end -}}
     {{- end -}}
