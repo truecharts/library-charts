@@ -31,7 +31,7 @@
         {{- end -}}
         {{/* Mark operator as found*/}}
         {{- $opExists = true -}}
-        {{- $operatorData := dict  "name" $name "namespace" $cm.metadata.namespace "version" $version -}}
+        {{- $operatorData := dict "name" $name "namespace" $cm.metadata.namespace "version" $version -}}
         {{- $_ := set $.Values.operator $opName $operatorData -}}
       {{- end -}}
     {{- end -}}
