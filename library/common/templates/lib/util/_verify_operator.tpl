@@ -13,7 +13,7 @@
       {{/* If $operatorData is not false, we should have JSON data */}}
       {{- else -}}
         {{- $opData := ($operatorData | fromJson) -}}
-        {{- $_ := set $.Values.operator $opName $operator -}}
+        {{- $_ := set $.Values.operator $opName $opData -}}
 
         {{/* Prepare the data for the cache ConfigMap */}}
         {{- $cacheDataWrite := (dict "enabled" true "data" $opData) -}}
