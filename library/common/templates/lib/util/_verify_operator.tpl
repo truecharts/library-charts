@@ -30,7 +30,7 @@
 
   {{- $opExists := false -}}
   {{- $opData := dict -}}
-  {{- $fullname := (include "tc.v1.common.lib.chart.names.fullname" $) -}}
+  {{- $fullname := (include "tc.v1.common.lib.chart.names.fullname" $rootCtx) -}}
   {{- $cache := (lookup "v1" "ConfigMap" $rootCtx.Release.Namespace (printf "%v-operator-%v" $fullname $opName)) | default dict -}}
 
   {{- if $cache.data -}}
