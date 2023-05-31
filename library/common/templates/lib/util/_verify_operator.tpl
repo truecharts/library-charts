@@ -81,7 +81,7 @@
     {{- end -}}
   {{- end -}}
 
-  {{- if $opExists -}} {{/* If operator was found, return it's data as JSON */}}
+  {{- if $opExists -}} {{/* If operator was found, return its data as JSON */}}
     {{- $operatorData | toJson -}}
   {{- else -}} {{/* If operator was not found, return stringified false */}}
     {{- $opExists | toString -}}
