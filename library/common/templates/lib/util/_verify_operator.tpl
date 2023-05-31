@@ -8,7 +8,7 @@
       {{- if and (eq $operatorData "false") ($.Values.operator.verify.failOnError) -}}
         {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
       {{- else -}}
-        {{- $operator := ($opExists | fromJson) -}}
+        {{- $operator := ($operatorData | fromJson) -}}
         {{- $_ := set $.Values.operator $opName $operator -}}
       
         {{/* Create/Update the Cache ConfigMap */}}
