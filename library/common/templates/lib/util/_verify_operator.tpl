@@ -2,17 +2,17 @@
   {{- if .Values.operator.verify.enabled -}}
     {{/* Go over all operators that need to be verified */}}
     {{- range $opName := .Values.operator.verify.additionalOperators -}}
-      {{- $operatorData := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $opName) -}}
+      {{- $fetchedOpData := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $opName) -}}
 
       {{/* If the operator was not found */}}
-      {{- if eq $operatorData "false" -}}
+      {{- if eq $fetchedOpData "false" -}}
         {{/* Fail only if explicitly asked */}}
         {{- if $.Values.operator.verify.failOnError -}}
           {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
         {{- end -}}
-      {{/* If $operatorData is not false, we should have JSON data */}}
+      {{/* If $fetchedOpData is not false, we should have JSON data */}}
       {{- else -}}
-        {{- $opData := ($operatorData | fromJson) -}}
+        {{- $opData := ($fetchedOpData | fromJson) -}}
         {{- $_ := set $.Values.operator $opName $opData -}}
 
         {{/* Prepare the data for the cache ConfigMap */}}
@@ -29,7 +29,7 @@
   {{- $opName := .opName -}}
 
   {{- $opExists := false -}}
-  {{- $operatorData := dict -}}1
+  {{- $opData := dict -}}
   {{- $fullname := (include "tc.v1.common.lib.chart.names.fullname" $) -}}
   {{- $cache := (lookup "v1" "ConfigMap" $rootCtx.Release.Namespace (printf "%v-operator-%v" $fullname $opName)) | default dict -}}
 
@@ -45,7 +45,7 @@
         {{/* Mark operator as found*/}}
         {{- $opExists = true -}}
         {{/* Prepare the data */}}
-        {{- $operatorData = (dict "name" $name
+        {{- $opData = (dict "name" $name
                                   "namespace" $viaCache.metadata.namespace
                                   "version" $version) -}}
       {{- else -}} {{/* If $name does not match $opName, something went very wrong. */}}
@@ -72,7 +72,7 @@
 
           {{/* Mark operator as found*/}}
           {{- $opExists = true -}}
-          {{- $operatorData = (dict "name" $name
+          {{- $opData = (dict "name" $name
                                     "namespace" $cm.metadata.namespace
                                     "version" $version) -}}
 
@@ -82,7 +82,7 @@
   {{- end -}}
 
   {{- if $opExists -}} {{/* If operator was found, return its data as JSON */}}
-    {{- $operatorData | toJson -}}
+    {{- $opData | toJson -}}
   {{- else -}} {{/* If operator was not found, return stringified false */}}
     {{- $opExists | toString -}}
   {{- end -}}
