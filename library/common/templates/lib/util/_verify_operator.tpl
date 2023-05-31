@@ -46,8 +46,8 @@
         {{- $opExists = true -}}
         {{/* Prepare the data */}}
         {{- $opData = (dict "name" $name
-                                  "namespace" $viaCache.metadata.namespace
-                                  "version" $version) -}}
+                            "namespace" $viaCache.metadata.namespace
+                            "version" $version) -}}
       {{- else -}} {{/* If $name does not match $opName, something went very wrong. */}}
         {{- fail (printf "Operator - ConfigMap [tc-data] does not contain the operator [%v] name. Something went wrong." $opName) -}}
       {{- end -}}
@@ -73,8 +73,8 @@
           {{/* Mark operator as found*/}}
           {{- $opExists = true -}}
           {{- $opData = (dict "name" $name
-                                    "namespace" $cm.metadata.namespace
-                                    "version" $version) -}}
+                              "namespace" $cm.metadata.namespace
+                              "version" $version) -}}
 
         {{- end -}}
       {{- end -}}
