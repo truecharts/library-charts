@@ -5,15 +5,19 @@
       {{- $operatorData := include "tc.v1.common.lib.util.operator.verify" (dict "rootCtx" $ "opName" $opName) -}}
 
       {{/* If the operator was not found */}}
-      {{- if and (eq $operatorData "false") ($.Values.operator.verify.failOnError) -}}
-        {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
+      {{- if eq $operatorData "false" -}}
+        {{/* Fail only if explicitly asked */}}
+        {{- if $.Values.operator.verify.failOnError -}}
+          {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
+        {{- end -}}
+      {{/* If $operatorData is not false, we should have JSON data */}}
       {{- else -}}
-        {{- $operator := ($operatorData | fromJson) -}}
+        {{- $opData := ($operatorData | fromJson) -}}
         {{- $_ := set $.Values.operator $opName $operator -}}
 
-        {{/* Create/Update the Cache ConfigMap */}}
-        {{- $cacheDataWrite := (dict "enabled" true "data" $operator) -}}
-        {{/* ConfigMap Name will be expanded to "release-name-chart-name-operator-$opName" */}}
+        {{/* Prepare the data for the cache ConfigMap */}}
+        {{- $cacheDataWrite := (dict "enabled" true "data" $opData) -}}
+        {{/* Create/Update the Configmap - ConfigMap name will be expanded to "$fullname-operator-$opName" */}}
         {{- $_ := set $.Values.configmap (printf "operator-%s" $opName) $cacheDataWrite -}}
       {{- end -}}
     {{- end -}}
@@ -24,33 +28,31 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $opName := .opName -}}
 
-  {{- $fullname := (include "tc.v1.common.lib.chart.names.fullname" $) -}}
   {{- $opExists := false -}}
-  {{- $operatorData := "false" -}}
-  {{- $cache := (lookup "v1" "ConfigMap" $rootCtx.Release.Namespace (printf "%v-operator-%v" $fullname $opName)) -}}
+  {{- $operatorData := dict -}}1
+  {{- $fullname := (include "tc.v1.common.lib.chart.names.fullname" $) -}}
+  {{- $cache := (lookup "v1" "ConfigMap" $rootCtx.Release.Namespace (printf "%v-operator-%v" $fullname $opName)) | default dict -}}
 
-  {{- if $cache -}}
-    {{- if $cache.data -}}
-      {{- $viaCache := (lookup "v1" "ConfigMap" $cache.data.namespace (printf "%v-tc-data" $fullname)) -}}
-      {{- if $viaCache -}}
-        {{- if $viaCache.data -}}
-          {{- $name := (get $viaCache.data "tc-operator-name") -}}
-          {{- $version := (get $viaCache.data "tc-operator-version") -}}
+  {{- if $cache.data -}}
+    {{/* Fetch data that the operator itself stored in the tc-data configmap */}}
+    {{- $viaCache := (lookup "v1" "ConfigMap" $cache.data.namespace (printf "%v-tc-data" $fullname)) | default dict -}}
+    {{- if $viaCache.data -}}
+      {{- $name := (get $viaCache.data "tc-operator-name") -}}
+      {{- $version := (get $viaCache.data "tc-operator-version") -}}
 
-          {{/* If fetched name matches the "$opName"... */}}
-          {{- if eq $name $opName -}}
-            {{- if $opExists -}}
-              {{- fail (printf "Found duplicate configmaps for operator [%s]" $opName) -}}
-            {{- end -}}
-
-            {{/* Mark operator as found*/}}
-            {{- $opExists = true -}}
-            {{- $operatorData = (dict "name" $name
-                                      "namespace" $viaCache.metadata.namespace
-                                      "version" $version) -}}
-          {{- end -}}
-        {{- end -}}
+      {{/* If fetched name matches the "$opName"... */}}
+      {{- if eq $name $opName -}}
+        {{/* Mark operator as found*/}}
+        {{- $opExists = true -}}
+        {{/* Prepare the data */}}
+        {{- $operatorData = (dict "name" $name
+                                  "namespace" $viaCache.metadata.namespace
+                                  "version" $version) -}}
+      {{- else -}} {{/* If $name does not match $opName, something went very wrong. */}}
+        {{- fail (printf "Operator - ConfigMap [tc-data] does not contain the operator [%v] name. Something went wrong." $opName) -}}
       {{- end -}}
+    {{- else -}}
+      {{- fail (printf "Operator - Expected [tc-data] ConfigMap to have non-empty [data] for operator [%v]" $opName) -}}
     {{- end -}}
   {{- end -}}
 
@@ -67,6 +69,7 @@
           {{- if $opExists -}}
             {{- fail (printf "Found duplicate configmaps for operator [%s]" $opName) -}}
           {{- end -}}
+
           {{/* Mark operator as found*/}}
           {{- $opExists = true -}}
           {{- $operatorData = (dict "name" $name
@@ -78,10 +81,9 @@
     {{- end -}}
   {{- end -}}
 
-  {{/* Return the data stringified */}}
-  {{- if $opExists -}}
+  {{- if $opExists -}} {{/* If operator was found, return it's data as JSON */}}
     {{- $operatorData | toJson -}}
-  {{- else -}}
+  {{- else -}} {{/* If operator was not found, return stringified false */}}
     {{- $opExists | toString -}}
   {{- end -}}
 {{- end -}}
