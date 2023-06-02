@@ -21,7 +21,7 @@ objectData: The object data to be used to render the volume.
   {{- if $expandName -}}
     {{- $object := (get $rootCtx.Values.secret $objectName) -}}
     {{- $certObject := (get $rootCtx.Values.scaleCertificate $objectName) -}}
-    {{- if and (not $object) (not $certObject) ( not $objectData.optional ) -}}
+    {{- if and (not $object) (not $certObject) (not $objectData.optional) -}}
       {{- fail (printf "Persistence - Expected secret [%s] defined in <objectName> to exist" $objectName) -}}
     {{- end -}}
 
@@ -47,8 +47,8 @@ objectData: The object data to be used to render the volume.
     {{- with $defMode }}
     defaultMode: {{ . }}
     {{- end -}}
-    {{- if $objectData.optional }}
-    optional: true
+    {{- if kindIs "bool" $objectData.optional }}
+    optional: {{ $objectData.optional }}
     {{- end -}}
     {{- with $objectData.items }}
     items:

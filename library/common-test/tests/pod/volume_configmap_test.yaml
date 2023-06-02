@@ -105,6 +105,33 @@ tests:
             configMap:
               name: some-object-name
 
+  - it: should pass with configmap volume marked as optional
+    set:
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        configmap-vol:
+          enabled: true
+          type: configmap
+          objectName: some-non-existent-object
+          optional: true
+    asserts:
+      - documentIndex: &otherDeploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *otherDeploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: configmap-vol
+            configmap:
+              name: some-object-name
+              optional: true
+
 # Failures
   - it: should fail without objectName in configmap
     set:
