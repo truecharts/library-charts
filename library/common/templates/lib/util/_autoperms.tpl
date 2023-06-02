@@ -113,15 +113,21 @@ spec:
               {{- end -}}
               {{- if $hpm.autoPermissions.chmod }}
               echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
+              echo "Permissions before: [$(stat -c "%a" /mounts/{{ $name }})]"
               chmod {{ $r }} {{ $hpm.autoPermissions.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
+              echo "Permissions after: [$(stat -c "%a" /mounts/{{ $name }})]"
+              echo ""
               {{- end -}}
               {{- if $hpm.autoPermissions.chown }}
               echo "Automatically correcting ownership for {{ $hpm.mountPath }}..."
-                {{- if $.Values.ixChartContext }} {{/* TODO: $hpm.autoPermissions.group, deal with this? */}}
+              echo "Ownership before: [$(stat -c "%u:%g" /mounts/{{ $name }})]"
+                {{- if $.Values.ixChartContext }}
               /usr/sbin/nfs4xdr_winacl -a chown -G {{ $hpm.autoPermissions.group | default $.Values.securityContext.pod.fsGroup }} {{ $r | lower }} -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
                 {{- else }}
               chown {{ $r }} -f :{{ $hpm.autoPermissions.group | default $.Values.securityContext.pod.fsGroup }} /mounts/{{ $name }} || echo "Failed setting ownership using chown..."
-                {{- end -}}
+                {{- end }}
+              echo "Ownership after: [$(stat -c "%u:%g" /mounts/{{ $name }})]"
+              echo ""
               {{- end -}}
             {{- end }}
               EOF
