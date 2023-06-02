@@ -66,6 +66,18 @@ tests:
                 - 568
               sysctls: []
       - documentIndex: *deploymentDoc
+        equal:
+          path: metadata.labels
+          value:
+            app: common-test-1.0.0
+            release: RELEASE-NAME
+            helm-revision: "0"
+            helm.sh/chart: common-test-1.0.0
+            app.kubernetes.io/name: common-test
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/version: 1.0.0
+      - documentIndex: *deploymentDoc
         isSubset:
           path: spec.template.spec
           content:
