@@ -1,6 +1,8 @@
 suite: default test
 templates:
   - common.yaml
+chart:
+  appVersion: &appVer v9.9.9
 tests:
   - it: should pass with defaults
     set:
@@ -76,7 +78,7 @@ tests:
             app.kubernetes.io/name: common-test
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/version: 1.0.0
+            app.kubernetes.io/version: *appVer
       - documentIndex: *deploymentDoc
         isSubset:
           path: spec.template.spec
