@@ -813,4 +813,3 @@ solr:
 
 # -- List of extra objects to deploy with the release
 extraTpl: []
-
