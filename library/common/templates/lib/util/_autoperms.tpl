@@ -2,9 +2,9 @@
 {{- define "tc.v1.common.lib.util.autoperms" -}}
 {{- $autoperms := false -}}
 {{- range $name, $mount := .Values.persistence -}}
-  {{- if and $mount.enabled $mount.setPermissions -}}
+  {{- if and $mount.enabled (or $mount.setPermissions $mount.chmod) -}}
       {{- if $mount.readOnly -}}
-        {{- fail (printf "You cannot automatically set Permissions with readOnly enabled") -}}
+        {{- fail (printf "Auto Permissions - You cannot change permissions automatically with readOnly enabled") -}}
       {{- end -}}
     {{- $autoperms = true -}}
   {{- end -}}
@@ -39,6 +39,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
             capabilities:
+              # TODO: It should need CHOWN and FOWNER (chmod)??!
               add: []
               drop:
                 - ALL
@@ -85,30 +86,37 @@ spec:
             - |
               /bin/sh <<'EOF'
               touch /tmp/healthy
-              echo "Automatically correcting permissions..."
-              {{- $hostPathMounts := dict -}}
-              {{- range $name, $mount := .Values.persistence -}}
-                {{- if and $mount.enabled $mount.setPermissions -}}
-                  {{- $name = default ( $name| toString ) $mount.name -}}
-                  {{- $_ := set $hostPathMounts $name $mount -}}
-                {{- end -}}
-              {{- end }}
-              {{- if and ( .Values.addons.vpn.configFile ) ( ne .Values.addons.vpn.type "disabled" ) ( ne .Values.addons.vpn.type "tailscale" ) }}
-              echo "Automatically correcting permissions for vpn config file..."
+              echo "Automatically correcting ownership and permissions..."
+
+            {{- $hostPathMounts := dict -}}
+            {{- range $name, $mount := .Values.persistence -}}
+              {{- if and $mount.enabled $mount.setPermissions -}}
+                {{- $name = default ($name | toString) $mount.name -}}
+                {{- $_ := set $hostPathMounts $name $mount -}}
+              {{- end -}}
+            {{- end -}}
+
+            {{- if and (.Values.addons.vpn.configFile) (ne .Values.addons.vpn.type "disabled") (ne .Values.addons.vpn.type "tailscale") }}
+              echo "Automatically correcting ownership for vpn config file..."
               {{- if $.Values.ixChartContext }}
-              /usr/sbin/nfs4xdr_winacl -a chown -O 568 -G 568 -c /vpn/vpn.conf -p /vpn/vpn.conf || echo "Failed setting permissions using winacl..."
+              /usr/sbin/nfs4xdr_winacl -a chown -O 568 -G 568 -c /vpn/vpn.conf -p /vpn/vpn.conf || echo "Failed setting ownership using winacl..."
               {{- else }}
-              chown -f :568 /vpn/vpn.conf || echo "Failed setting permissions using chown..."
-              {{- end }}
-              {{- end }}
-              {{- range $name, $hpm := $hostPathMounts }}
+              chown -f :568 /vpn/vpn.conf || echo "Failed setting ownership using chown..."
+              {{- end -}}
+            {{- end -}}
+
+            {{- range $name, $hpm := $hostPathMounts }}
+              {{- if $hpm.chmod }}
               echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
+              chmod ${{ $hpm.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
+              {{- end }}
+              echo "Automatically correcting ownership for {{ $hpm.mountPath }}..."
               {{- if $.Values.ixChartContext }}
-              /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c  "/mounts/{{ $name }}" -p  "/mounts/{{ $name }}" || echo "Failed setting permissions using winacl..."
+              /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
               {{- else }}
-              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }}  /mounts/$name || echo "Failed setting permissions using chown..."
-              {{- end }}
-              {{- end }}
+              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} /mounts/$name || echo "Failed setting ownership using chown..."
+              {{- end -}}
+            {{- end }}
               EOF
           volumeMounts:
           {{- range $name, $hpm := $hostPathMounts }}
