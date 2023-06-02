@@ -1,10 +1,13 @@
 {{- define "tc.v1.common.spawner.extraTpl" -}}
-  {{- range .Values.extraTpl }}
+  {{- range $item := .Values.extraTpl }}
+    {{- if not $item -}}
+      {{- fail "Extra tpl - Expected non-empty <extraTpl> item" -}}
+    {{- end }}
 ---
-    {{- if kindIs "string" . }}
-      {{- tpl . $ | nindent 0 }}
+    {{- if kindIs "string" $item }}
+      {{- tpl $item $ | nindent 0 }}
     {{- else }}
-      {{- tpl (. | toYaml) $ | nindent 0 }}
+      {{- tpl ($item | toYaml) $ | nindent 0 }}
     {{- end }}
   {{- end }}
 {{- end }}
