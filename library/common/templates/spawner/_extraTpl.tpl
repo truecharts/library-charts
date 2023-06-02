@@ -2,8 +2,9 @@
 {{- range .Values.extraTpl }}
 ---
 {{- if typeIs "string" . }}
-    {{- tpl . $ }}
+    {{- tpl . $ | nindent 0 }}
 {{- else }}
-    {{- tpl (. | toYaml) $ }}
+    {{- tpl (. | toYaml) $ | nindent 0 }}
+{{- end }}
 {{- end }}
 {{- end }}
