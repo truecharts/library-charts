@@ -28,8 +28,15 @@ objectData: The object data to be used to render the volume.
     {{- $objectName = (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $rootCtx) $objectName) -}}
   {{- end -}}
 
-  {{- $defMode := "" -}}
+  {{- $optional := false -}}
+  {{- if hasKey $objectData "optional" -}}
+    {{- if not (kindIs "bool" $objectData.optional) -}}
+      {{- fail (printf "Persistence - Expected <optional> to be [bool], but got [%s]" (kindOf $objectData.optional)) -}}
+    {{- end -}}
+    {{- $optional = $objectData.optional -}}
+  {{- end -}}
 
+  {{- $defMode := "" -}}
   {{- if (and $objectData.defaultMode (not (kindIs "string" $objectData.defaultMode))) -}}
     {{- fail (printf "Persistence - Expected <defaultMode> to be [string], but got [%s]" (kindOf $objectData.defaultMode)) -}}
   {{- end -}}
@@ -46,10 +53,8 @@ objectData: The object data to be used to render the volume.
     secretName: {{ $objectName }}
     {{- with $defMode }}
     defaultMode: {{ . }}
-    {{- end -}}
-    {{- if kindIs "bool" $objectData.optional }}
-    optional: {{ $objectData.optional }}
-    {{- end -}}
+    {{- end }}
+    optional: {{ $optional }}
     {{- with $objectData.items }}
     items:
       {{- range . -}}
