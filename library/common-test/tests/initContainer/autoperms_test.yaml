@@ -14,32 +14,39 @@ tests:
         test1:
           enabled: true
           type: hostPath
-          setPermissions: true
+          autoPermissions:
+            chown: true
+            chmod: 770
+            recursive: true
           mountPath: /test1
           hostPath: /testhost1
         test2:
           enabled: true
           type: hostPath
-          setPermissions: true
+          autoPermissions:
+            chown: true
+            chmod: 770
+            recursive: false
           mountPath: /test2
           hostPath: /testhost2
         test3:
           enabled: true
           type: hostPath
-          chmod: -R 775
+          autoPermissions:
+            chmod: 770
           mountPath: /test3
           hostPath: /testhost3
         test4:
           enabled: true
           type: hostPath
-          chmod: 770
+          autoPermissions:
+            chown: true
           mountPath: /test4
           hostPath: /testhost4
+        # Should not appear
         test5:
           enabled: true
           type: hostPath
-          chmod: 700
-          setPermissions: true
           mountPath: /test5
           hostPath: /testhost5
     asserts:
@@ -80,9 +87,6 @@ tests:
             - name: test4
               hostPath:
                 path: /testhost4
-            - name: test5
-              hostPath:
-                path: /testhost5
             - name: tmp-data
               emptyDir: {}
       - documentIndex: *jobDoc
@@ -97,8 +101,6 @@ tests:
               mountPath: /mounts/test3
             - name: test4
               mountPath: /mounts/test4
-            - name: test5
-              mountPath: /mounts/test5
             - name: tmp-data
               mountPath: /tmp
       - documentIndex: *jobDoc
@@ -111,18 +113,18 @@ tests:
               /bin/sh <<'EOF'
               touch /tmp/healthy
               echo "Automatically correcting ownership and permissions..."
+              echo "Automatically correcting permissions for /test1..."
+              chmod -R 770 /mounts/test1 || echo "Failed setting permissions using chmod..."
               echo "Automatically correcting ownership for /test1..."
-              chown -Rf :568 /mounts/test1 || echo "Failed setting ownership using chown..."
+              chown -R -f :568 /mounts/test1 || echo "Failed setting ownership using chown..."
+              echo "Automatically correcting permissions for /test2..."
+              chmod  770 /mounts/test2 || echo "Failed setting permissions using chmod..."
               echo "Automatically correcting ownership for /test2..."
-              chown -Rf :568 /mounts/test2 || echo "Failed setting ownership using chown..."
+              chown  -f :568 /mounts/test2 || echo "Failed setting ownership using chown..."
               echo "Automatically correcting permissions for /test3..."
-              chmod -R 775 /mounts/test3 || echo "Failed setting permissions using chmod..."
-              echo "Automatically correcting permissions for /test4..."
-              chmod 770 /mounts/test4 || echo "Failed setting permissions using chmod..."
-              echo "Automatically correcting permissions for /test5..."
-              chmod 700 /mounts/test5 || echo "Failed setting permissions using chmod..."
-              echo "Automatically correcting ownership for /test5..."
-              chown -Rf :568 /mounts/test5 || echo "Failed setting ownership using chown..."
+              chmod  770 /mounts/test3 || echo "Failed setting permissions using chmod..."
+              echo "Automatically correcting ownership for /test4..."
+              chown  -f :568 /mounts/test4 || echo "Failed setting ownership using chown..."
               EOF
 
 # Failures
@@ -138,7 +140,8 @@ tests:
         test:
           enabled: true
           type: pvc
-          setPermissions: true
+          autoPermissions:
+            chown: true
     asserts:
       - failedTemplate:
           errorMessage: Auto Permissions - You can only change permissions/ownership automatically on host path type
@@ -155,7 +158,8 @@ tests:
         test:
           enabled: true
           type: pvc
-          chmod: 777
+          autoPermissions:
+            chmod: 770
     asserts:
       - failedTemplate:
           errorMessage: Auto Permissions - You can only change permissions/ownership automatically on host path type

@@ -1,19 +1,24 @@
 {{/* contains the auto-permissions job */}}
 {{- define "tc.v1.common.lib.util.autoperms" -}}
-{{- $autoperms := false -}}
+{{- $hostPathMounts := dict -}}
 {{- range $name, $mount := .Values.persistence -}}
-  {{- if and $mount.enabled (or $mount.setPermissions $mount.chmod) -}}
+  {{- if and $mount.enabled $mount.autoPermissions -}}
+    {{- if or $mount.autoPermissions.chown $mount.autoPermissions.chmod -}}
       {{- if ne $mount.type "hostPath" -}}
         {{- fail (printf "Auto Permissions - You can only change permissions/ownership automatically on host path type") -}}
       {{- end -}}
       {{- if $mount.readOnly -}}
         {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically with readOnly enabled") -}}
       {{- end -}}
-    {{- $autoperms = true -}}
+
+      {{- $name = $mount.name | default ($name | toString) -}}
+      {{- $_ := set $hostPathMounts $name $mount -}}
+
+    {{- end -}}
   {{- end -}}
 {{- end }}
 
-{{- if $autoperms }}
+{{- if $hostPathMounts }}
 {{- $fullName := include "tc.v1.common.lib.chart.names.fullname" . }}
 ---
 apiVersion: batch/v1
@@ -92,14 +97,6 @@ spec:
               touch /tmp/healthy
               echo "Automatically correcting ownership and permissions..."
 
-            {{- $hostPathMounts := dict -}}
-            {{- range $name, $mount := .Values.persistence -}}
-              {{- if and $mount.enabled (or $mount.setPermissions $mount.chmod) -}}
-                {{- $name = default ($name | toString) $mount.name -}}
-                {{- $_ := set $hostPathMounts $name $mount -}}
-              {{- end -}}
-            {{- end -}}
-
             {{- if and (.Values.addons.vpn.configFile) (ne .Values.addons.vpn.type "disabled") (ne .Values.addons.vpn.type "tailscale") }}
               echo "Automatically correcting ownership for vpn config file..."
               {{- if $.Values.ixChartContext }}
@@ -110,16 +107,20 @@ spec:
             {{- end -}}
 
             {{- range $name, $hpm := $hostPathMounts }}
-              {{- if $hpm.chmod }}
-              echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
-              chmod {{ $hpm.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
+              {{- $r := "" -}}
+              {{- if $hpm.autoPermissions.recursive -}}
+                {{- $r = "-R" -}}
               {{- end -}}
-              {{- if $hpm.setPermissions }}
+              {{- if $hpm.autoPermissions.chmod }}
+              echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
+              chmod {{ $r }} {{ $hpm.autoPermissions.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
+              {{- end -}}
+              {{- if $hpm.autoPermissions.chown }}
               echo "Automatically correcting ownership for {{ $hpm.mountPath }}..."
-                {{- if $.Values.ixChartContext }}
-              /usr/sbin/nfs4xdr_winacl -a chown -G {{ $hpm.fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
+                {{- if $.Values.ixChartContext }} {{/* TODO: $hpm.autoPermissions.group, deal with this? */}}
+              /usr/sbin/nfs4xdr_winacl -a chown -G {{ $hpm.autoPermissions.group | default $.Values.securityContext.pod.fsGroup }} {{ $r | lower }} -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
                 {{- else }}
-              chown -Rf :{{ $hpm.fsGroup | default $.Values.securityContext.pod.fsGroup }} /mounts/{{ $name }} || echo "Failed setting ownership using chown..."
+              chown {{ $r }} -f :{{ $hpm.autoPermissions.group | default $.Values.securityContext.pod.fsGroup }} /mounts/{{ $name }} || echo "Failed setting ownership using chown..."
                 {{- end -}}
               {{- end -}}
             {{- end }}
