@@ -3,8 +3,11 @@
 {{- $autoperms := false -}}
 {{- range $name, $mount := .Values.persistence -}}
   {{- if and $mount.enabled (or $mount.setPermissions $mount.chmod) -}}
+      {{- if ne $mount.type "hostPath" -}}
+        {{- fail (printf "Auto Permissions - You can only change permissions/ownership automatically on host path type") -}}
+      {{- end -}}
       {{- if $mount.readOnly -}}
-        {{- fail (printf "Auto Permissions - You cannot change permissions automatically with readOnly enabled") -}}
+        {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically with readOnly enabled") -}}
       {{- end -}}
     {{- $autoperms = true -}}
   {{- end -}}
@@ -39,8 +42,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
             capabilities:
-              # TODO: It should need CHOWN and FOWNER (chmod)??!
-              add: []
+              add:
+                - CHOWN
+                - FOWNER
               drop:
                 - ALL
           resources:
@@ -90,7 +94,7 @@ spec:
 
             {{- $hostPathMounts := dict -}}
             {{- range $name, $mount := .Values.persistence -}}
-              {{- if and $mount.enabled $mount.setPermissions -}}
+              {{- if and $mount.enabled (or $mount.setPermissions $mount.chmod) -}}
                 {{- $name = default ($name | toString) $mount.name -}}
                 {{- $_ := set $hostPathMounts $name $mount -}}
               {{- end -}}
@@ -108,13 +112,15 @@ spec:
             {{- range $name, $hpm := $hostPathMounts }}
               {{- if $hpm.chmod }}
               echo "Automatically correcting permissions for {{ $hpm.mountPath }}..."
-              chmod ${{ $hpm.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
-              {{- end }}
+              chmod {{ $hpm.chmod }} /mounts/{{ $name }} || echo "Failed setting permissions using chmod..."
+              {{- end -}}
+              {{- if $hpm.setPermissions }}
               echo "Automatically correcting ownership for {{ $hpm.mountPath }}..."
-              {{- if $.Values.ixChartContext }}
-              /usr/sbin/nfs4xdr_winacl -a chown -G {{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
-              {{- else }}
-              chown -Rf :{{ .fsGroup | default $.Values.securityContext.pod.fsGroup }} /mounts/$name || echo "Failed setting ownership using chown..."
+                {{- if $.Values.ixChartContext }}
+              /usr/sbin/nfs4xdr_winacl -a chown -G {{ $hpm.fsGroup | default $.Values.securityContext.pod.fsGroup }} -r -c "/mounts/{{ $name }}" -p "/mounts/{{ $name }}" || echo "Failed setting ownership using winacl..."
+                {{- else }}
+              chown -Rf :{{ $hpm.fsGroup | default $.Values.securityContext.pod.fsGroup }} /mounts/{{ $name }} || echo "Failed setting ownership using chown..."
+                {{- end -}}
               {{- end -}}
             {{- end }}
               EOF
