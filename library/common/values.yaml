@@ -580,6 +580,11 @@ operator:
   ## -- used as a datastore when a cert-manager operator is found.
   # cert-manager: {}
 
+# -- configures CRD specific options
+# Mostly here as a standardised hook, not used by common itself
+crds:
+  # -- sets CRDs to be installed
+  install: false
 
 # -- The common chart supports several add-ons. These can be configured under this key.
 # @default -- See below
