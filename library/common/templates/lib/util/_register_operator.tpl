@@ -1,5 +1,5 @@
 {{- define "tc.v1.common.lib.util.operator.register" -}}
-  {{- if .Values.crds.install
+  {{- if .Values.crds.install -}}
     {{- $_ := set .Values.operator register true -}}
   {{- end -}}
   {{- if .Values.operator.register -}}
