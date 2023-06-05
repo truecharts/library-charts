@@ -1,7 +1,4 @@
 {{- define "tc.v1.common.lib.util.operator.register" -}}
-  {{- if .Values.crds.upgrade -}}
-    {{- $_ := set .Values.operator register true -}}
-  {{- end -}}
   {{- if .Values.operator.register -}}
 
     {{/* If it is an install operator check the operator does not exist */}}
