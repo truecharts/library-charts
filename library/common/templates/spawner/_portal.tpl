@@ -80,7 +80,7 @@
         {{- end -}}
         {{- if $selectedIngress.ingressClassName }}
           {{- $traefikNamespace = (printf "ix-%s" $selectedIngress.ingressClassName) -}}
-        {{- end }}
+        {{- end -}}
 
         {{- $traefikportalhook := lookup "v1" "ConfigMap" $traefikNamespace "portalhook" }}
 
