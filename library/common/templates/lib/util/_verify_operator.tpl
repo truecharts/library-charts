@@ -30,7 +30,7 @@
       {{- end -}}
     {{- end -}}
     {{- if $metrics -}}
-      {{- $operatorList = append $operatorList "prometheus" -}}
+      {{- $operatorList = mustAppend $operatorList "prometheus" -}}
     {{- end -}}
 
     {{- range $opName := $operatorList -}}
