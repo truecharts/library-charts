@@ -20,7 +20,7 @@
       {{- end -}}
     {{- end -}}
     {{- if $ingress -}}
-      {{- $operatorList = append $operatorList "traefik" -}}
+      {{- $operatorList = mustAppend $operatorList "traefik" -}}
     {{- end -}}
 
     {{- $metrics := false -}}
