@@ -10,7 +10,7 @@
       {{- end -}}
     {{- end -}}
     {{- if $cnpg -}}
-      {{- $operatorList = append $operatorList "cloudnative-pg" -}}
+      {{- $operatorList = mustAppend $operatorList "cloudnative-pg" -}}
     {{- end -}}
 
     {{- $ingress := false -}}
