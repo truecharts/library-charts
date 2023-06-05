@@ -52,7 +52,7 @@
       {{- end -}}
       {{- if $selectedIngress.ingressClassName }}
         {{- $namespace = $selectedIngress.ingressClassName -}}
-      {{- end }}
+      {{- end -}}
 
       {{- if $selectedIngress.ingressClassName -}}
         {{- $namespace = (printf "ix-%s" $selectedIngress.ingressClassName) -}}
