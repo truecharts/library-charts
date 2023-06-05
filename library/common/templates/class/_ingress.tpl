@@ -32,7 +32,7 @@ within the common library.
   {{- $mddwrNamespace := "tc-system" -}}
   {{- if $.Values.operator.traefik -}}
     {{- if $.Values.operator.traefik.namespace -}}
-      {{- $mddwrNamespace := $.Values.operator.traefik.namespace -}}
+      {{- $mddwrNamespace := (printf "ix-%s" $selectedIngress.ingressClassName) -}}
     {{- end -}}
   {{- end -}}
 
