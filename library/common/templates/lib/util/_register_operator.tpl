@@ -1,5 +1,8 @@
 {{- define "tc.v1.common.lib.util.operator.register" -}}
-  {{- if or .Values.operator.register .Values.crds.install -}}
+  {{- if .Values.crds.install
+    {{- $_ := set .Values.operator register true -}}
+  {{- end -}}
+  {{- if .Values.operator.register -}}
 
     {{/* If it is an install operator check the operator does not exist */}}
     {{/* We do not want to fail on upgrades, as the operator will always be present */}}
