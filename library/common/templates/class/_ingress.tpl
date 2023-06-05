@@ -30,9 +30,9 @@ within the common library.
   {{- $defaultServicePort := get $primaryService.ports (include "tc.v1.common.lib.util.service.ports.primary" (dict "svcValues" $primaryService "svcName" $primaryServiceName )) -}}
 
   {{- $mddwrNamespace := "tc-system" -}}
-  {{- if $.values.operator.traefik -}}
-    {{- if $.values.operator.traefik.namespace -}}
-      {{- $mddwrNamespace := $.values.operator.traefik.namespace -}}
+  {{- if $.Values.operator.traefik -}}
+    {{- if $.Values.operator.traefik.namespace -}}
+      {{- $mddwrNamespace := $.Values.operator.traefik.namespace -}}
     {{- end -}}
   {{- end -}}
 
