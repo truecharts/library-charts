@@ -15,7 +15,7 @@
       {{/* Create a copy of the configmap */}}
       {{- $objectData := (mustDeepCopy $service) -}}
 
-      {{- $objectName = (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
+      {{- $objectName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
       {{- if not $objectData.primary -}}
         {{- if hasKey $objectData "expandObjectName" -}}
           {{- if not $objectData.expandObjectName -}}
