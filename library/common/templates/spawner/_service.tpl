@@ -15,9 +15,13 @@
       {{/* Create a copy of the configmap */}}
       {{- $objectData := (mustDeepCopy $service) -}}
 
-      {{- $objectName := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+      {{- $objectName = (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
       {{- if not $objectData.primary -}}
-        {{- $objectName = (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
+        {{- if hasKey $objectData "expandObjectName" -}}
+          {{- if not $objectData.expandObjectName -}}
+            {{- $objectName = $name -}}
+          {{- end -}}
+        {{- end -}}
       {{- end -}}
 
       {{/* Perform validations */}}
