@@ -17,7 +17,6 @@ within the common library.
 
   {{- $ingressName = $values.name -}}
 
-
   {{/* Get the name of the primary service, if any */}}
   {{- $primaryServiceName := (include "tc.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
   {{/* Get service values of the primary service, if any */}}
@@ -32,7 +31,7 @@ within the common library.
   {{- $mddwrNamespace := "tc-system" -}}
   {{- if $.Values.operator.traefik -}}
     {{- if $.Values.operator.traefik.namespace -}}
-      {{- $mddwrNamespace := (printf "ix-%s" $values.ingressClassName) -}}
+      {{- $mddwrNamespace = $.Values.operator.traefik.namespace -}}
     {{- end -}}
   {{- end -}}
 
