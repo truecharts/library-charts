@@ -36,7 +36,12 @@ within the common library.
   {{- end -}}
 
   {{- if $values.ingressClassName -}}
-    {{- $mddwrNamespace = $values.ingressClassName -}}
+    
+    {{- if $.Values.global.ixChartContext -}}
+      {{- $mddwrNamespace = (printf "ix-%s" $values.ingressClassName) -}}
+    {{- else -}}
+      {{- $mddwrNamespace = $values.ingressClassName -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $fixedMiddlewares := "" -}}
