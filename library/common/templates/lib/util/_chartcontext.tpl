@@ -51,7 +51,12 @@
       {{- end -}}
 
       {{- if $selectedIngress.ingressClassName -}}
-        {{- $namespace = $selectedIngress.ingressClassName -}}
+        {{- if $.Values.global.ixChartContext -}}
+          {{- $namespace = (printf "ix-%s" $selectedIngress.ingressClassName) -}}
+        {{- else -}}
+          {{- $namespace = $selectedIngress.ingressClassName -}}
+        {{- end -}}
+        
       {{- end -}}
 
       {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" -}}
