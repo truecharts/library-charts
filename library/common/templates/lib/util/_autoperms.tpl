@@ -55,11 +55,6 @@ podSpec:
       securityContext:
         runAsNonRoot: false
         runAsUser: 0
-        capabilities:
-          add:
-            - CHOWN
-            - FOWNER
-            - DAC_OVERRIDE
       resources:
         limits:
           cpu: 2000m
