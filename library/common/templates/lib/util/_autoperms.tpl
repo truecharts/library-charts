@@ -2,12 +2,13 @@
 {{- define "tc.v1.common.lib.util.autoperms" -}}
 
 {{- $permAllowedTypes := (list "hostPath" "pvc" "emptyDir") -}}
+{{/* If you change this path, you must change it under _volumeMounts.tpl too*/}}
 {{- $basePath := "/mounts" -}}
 
 {{/* Init an empty dict to hold data */}}
 {{- $mounts := dict -}}
 
-{{/* Go over persistence */}}
+{{/* Go over persistence and gather needed data */}}
 {{- range $name, $mount := .Values.persistence -}}
   {{- if and $mount.enabled $mount.autoPermissions -}}
     {{/* If autoPermissions is enabled...*/}}
@@ -18,20 +19,13 @@
       {{- end -}}
 
       {{- if not (mustHas $type $permAllowedTypes) -}}
-        {{- fail (printf "Auto Permissions - Allowed persistent types for auto permissions are [%v], but got [%v]" (join ", " $permAllowedTypes) $type) -}}
+        {{- fail (printf "Auto Permissions - Allowed persistent types for auto permissions are [%v], but got [%v] on [%v]" (join ", " $permAllowedTypes) $type $name) -}}
       {{- end -}}
 
       {{- if $mount.readOnly -}}
-        {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically with readOnly enabled") -}}
+        {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically on [%v] with readOnly enabled" $name) -}}
       {{- end -}}
 
-      {{- if not $mount.targetSelect -}}
-        {{- $_ := set $mount "targetSelector" dict -}}
-      {{- end -}}
-      {{/* Add the autopermission job/container to the selector */}}
-      {{- $_ := set $mount.targetSelector "autopermissions" (dict
-                                            "autopermissions" (dict
-                                                "mountPath" (printf "%v/%v" $basePath $name))) -}}
       {{/* Add some data regarding what actions to perform */}}
       {{- $_ := set $mounts $name $mount.autoPermissions -}}
     {{- end -}}
@@ -48,6 +42,7 @@ annotations:
 podSpec:
   restartPolicy: Never
   containers:
+    # If you change this name, you must change it under _volumeMounts.tpl
     autopermissions:
       enabled: true
       primary: true
@@ -55,6 +50,12 @@ podSpec:
       securityContext:
         runAsNonRoot: false
         runAsUser: 0
+        capabilities:
+          disableS6Caps: true
+          add:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FOWNER
       resources:
         limits:
           cpu: 2000m
@@ -80,7 +81,7 @@ podSpec:
         - -c
       args:
         - |
-          echo "Starting autopermissions job..."
+          echo "Starting auto permissions job..."
           touch /tmp/healthy
 
           echo "Automatically correcting ownership and permissions..."
@@ -117,23 +118,30 @@ podSpec:
             {{- if $vol.chown }}
               echo "Automatically correcting ownership for {{ $mountPath }}..."
               before=$(stat -c "%u:%g" {{ $mountPath }})
-                {{- if $.Values.ixChartContext }}
-                  /usr/sbin/nfs4xdr_winacl -a chown -G {{ $vol.group }} {{ $r | lower }} -c "{{ $mountPath }}" -p "{{ $mountPath }}" || echo "Failed setting ownership using winacl..."
+                {{- if $.Values.ixChartContext }}{{/* TODO: Add user here too? */}}
+                  /usr/sbin/nfs4xdr_winacl -a chown -G {{ $group }} {{ $r | lower }} -c "{{ $mountPath }}" -p "{{ $mountPath }}" || echo "Failed setting ownership using winacl..."
                 {{- else }}
-                  chown {{ $r }} -f {{ $vol.user }}:{{ $vol.group }} {{ $mountPath }} || echo "Failed setting ownership using chown..."
+                  chown {{ $r }} -f {{ $user }}:{{ $group }} {{ $mountPath }} || echo "Failed setting ownership using chown..."
                 {{- end }}
 
               echo "Ownership before: $before"
               echo "Ownership after: [$(stat -c "%u:%g" {{ $mountPath }})]"
               echo ""
             {{- end -}}
-          {{- end -}}
+          {{- end }}
+          echo "Finished auto permissions job..."
 {{- end -}}
 {{- end -}}
 
 {{- define "tc.v1.common.lib.util.autoperms.job" -}}
   {{- $job := (include "tc.v1.common.lib.util.autoperms" $) | fromYaml -}}
   {{- if $job -}}
+    # If you change this name, you must change it under _volumes.tpl
     {{- $_ := set $.Values.workload "autopermissions" $job -}}
   {{- end -}}
 {{- end -}}
+
+# TODO: test pvc
+# TODO: test with targetSelectorAll
+# TODO: test with targetSelector
+# TODO: test user/group
