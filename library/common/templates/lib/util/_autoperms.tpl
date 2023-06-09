@@ -140,8 +140,3 @@ podSpec:
     {{- $_ := set $.Values.workload "autopermissions" $job -}}
   {{- end -}}
 {{- end -}}
-
-# TODO: test pvc
-# TODO: test with targetSelectorAll
-# TODO: test with targetSelector
-# TODO: test user/group
