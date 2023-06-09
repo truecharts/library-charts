@@ -109,7 +109,7 @@ podSpec:
               echo "Automatically correcting permissions for {{ $mountPath }}..."
               before=$(stat -c "%a" {{ $mountPath }})
               chmod {{ $r }} {{ $vol.chmod }} {{ $mountPath }} || echo "Failed setting permissions using chmod..."
-              echo "Permissions after: $before"
+              echo "Permissions after: [$before]"
               echo "Permissions after: [$(stat -c "%a" {{ $mountPath }})]"
               echo ""
             {{- end -}}
@@ -124,7 +124,7 @@ podSpec:
                   chown {{ $r }} -f {{ $user }}:{{ $group }} {{ $mountPath }} || echo "Failed setting ownership using chown..."
                 {{- end }}
 
-              echo "Ownership before: $before"
+              echo "Ownership before: [$before]"
               echo "Ownership after: [$(stat -c "%u:%g" {{ $mountPath }})]"
               echo ""
             {{- end -}}

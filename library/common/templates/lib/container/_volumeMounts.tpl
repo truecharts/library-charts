@@ -96,6 +96,15 @@ objectData: The object data to be used to render the container.
       {{- end -}}
     {{- end -}}
 
+  {{/* If the container is the autopermission */}}
+  {{- else if (eq $objectData.shortName "autopermissions") -}}
+    {{- if $persistenceValues.autoPermissions -}}
+      {{- if or $persistenceValues.autoPermissions.chown $persistenceValues.autoPermissions.chmod -}}
+        {{- $return = true -}}
+        {{- $_ := set $volMount "mountPath" (printf "/mounts/%v" $persistenceName) -}}
+      {{- end -}}
+    {{- end -}}
+
   {{/* Else if selector is defined */}}
   {{- else if $persistenceValues.targetSelector -}}
     {{/* If pod is selected */}}
@@ -124,15 +133,6 @@ objectData: The object data to be used to render the container.
   {{/* if its the codeserver */}}
   {{- else if (eq $objectData.shortName "codeserver") -}}
     {{- $return = true -}}
-
-  {{/* If the container is the autopermission */}}
-  {{- else if (eq $objectData.shortName "autopermissions") -}}
-    {{- if $persistenceValues.autoPermissions -}}
-      {{- if or $persistenceValues.autoPermissions.chown $persistenceValues.autoPermissions.chmod -}}
-        {{- $return = true -}}
-        {{- $_ := set $volMount "mountPath" (printf "/mounts/%v" $persistenceName) -}}
-      {{- end -}}
-    {{- end -}}
 
   {{/* Else if not selector, but pod and container is primary */}}
   {{- else if and $objectData.podPrimary $objectData.primary -}}

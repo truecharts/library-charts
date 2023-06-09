@@ -19,18 +19,18 @@ objectData: The object data to be used to render the Pod.
       {{- if $persistence.targetSelectAll -}}
         {{- $selected = true -}}
 
-      {{/* If targetSelector is set, check if pod is selected */}}
-      {{- else if $persistence.targetSelector -}}
-        {{- if (mustHas $objectData.shortName (keys $persistence.targetSelector)) -}}
-          {{- $selected = true -}}
-        {{- end -}}
-
       {{/* If the pod is the autopermission */}}
       {{- else if eq $objectData.shortName "autopermissions" -}}
         {{- if $persistence.autoPermissions -}}
           {{- if or $persistence.autoPermissions.chown $persistence.autoPermissions.chmod -}}
             {{- $selected = true -}}
           {{- end -}}
+        {{- end -}}
+
+      {{/* If targetSelector is set, check if pod is selected */}}
+      {{- else if $persistence.targetSelector -}}
+        {{- if (mustHas $objectData.shortName (keys $persistence.targetSelector)) -}}
+          {{- $selected = true -}}
         {{- end -}}
 
       {{/* If no targetSelector is set or targetSelectAll, check if pod is primary */}}
