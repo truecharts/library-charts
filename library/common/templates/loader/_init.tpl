@@ -55,6 +55,4 @@
   {{/* Append database wait containers to pods */}}
   {{- include "tc.v1.common.lib.deps.wait" $ }}
 
-  {{/* Ensure automatic permissions containers are injected */}}
-  {{- include "tc.v1.common.lib.util.autoperms.job" $ -}}
 {{- end -}}
