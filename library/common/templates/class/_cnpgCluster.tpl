@@ -71,6 +71,10 @@ spec:
     inProgress: false
     reusePVC: true
 
+  resources:
+{{ include "tc.v1.common.lib.container.resources" (dict "rootCtx" $ "objectData" $values) | nindent 4 }}
+
+
   postgresql:
     {{- tpl ( $values.postgresql | toYaml ) $ | nindent 4 }}
 
