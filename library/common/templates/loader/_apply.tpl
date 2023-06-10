@@ -7,6 +7,9 @@
   {{/* Make sure there are not any YAML errors */}}
   {{- include "tc.v1.common.values.validate" .Values -}}
 
+  {{/* Ensure automatic permissions containers are injected */}}
+  {{- include "tc.v1.common.lib.util.autoperms.job" $ -}}
+
   {{/* Render ConfigMap(s) */}}
   {{- include "tc.v1.common.spawner.configmap" . | nindent 0 -}}
 
