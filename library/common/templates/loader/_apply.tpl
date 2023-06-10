@@ -4,11 +4,11 @@
   {{/* Inject custom tpl files, as defined in values.yaml */}}
   {{- include "tc.v1.common.spawner.extraTpl" . | nindent 0 -}}
 
-  {{/* Make sure there are not any YAML errors */}}
-  {{- include "tc.v1.common.values.validate" .Values -}}
-
   {{/* Ensure automatic permissions containers are injected */}}
   {{- include "tc.v1.common.lib.util.autoperms.job" $ -}}
+
+  {{/* Make sure there are not any YAML errors */}}
+  {{- include "tc.v1.common.values.validate" .Values -}}
 
   {{/* Render ConfigMap(s) */}}
   {{- include "tc.v1.common.spawner.configmap" . | nindent 0 -}}
