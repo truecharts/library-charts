@@ -25,7 +25,7 @@ objectData: The object data to be used to render the volume.
   {{- $charDevices := (list "tty") -}}
   {{- if not $hostPathType -}}
     {{- range $char := $charDevices -}}
-      {{- if startsWith (printf "/dev/%v" $char) $hostPath -}}
+      {{- if hasPrefix (printf "/dev/%v" $char) $hostPath -}}
         {{- $hostPathType = "CharDevice" -}}
       {{- end -}}
     {{- end -}}
@@ -34,7 +34,7 @@ objectData: The object data to be used to render the volume.
   {{- $blockDevices := (list "sd" "hd" "nvme") -}}
   {{- if not $hostPathType -}}
     {{- range $block := $blockDevices -}}
-      {{- if startsWith (printf "/dev/%v" $block) $hostPath -}}
+      {{- if hasPrefix (printf "/dev/%v" $block) $hostPath -}}
         {{- $hostPathType = "BlockDevice" -}}
       {{- end -}}
     {{- end -}}
