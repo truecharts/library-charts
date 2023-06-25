@@ -668,7 +668,7 @@ tests:
           mountPath: /test1
           hostPath: /testhost1
     asserts:
-      - documentIndex: *jobDoc
+      - documentIndex: &jobDoc 0
         isKind:
           of: Job
       - documentIndex: &deploymentDoc 1
@@ -708,6 +708,7 @@ tests:
         test:
           enabled: true
           type: device
+          hostPath: /test
           autoPermissions:
             chown: true
     asserts:
