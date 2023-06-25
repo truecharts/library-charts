@@ -56,10 +56,29 @@
         {{- else -}}
           {{- $namespace = $selectedIngress.ingressClassName -}}
         {{- end -}}
-        
+
       {{- end -}}
 
-      {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" -}}
+      {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" | default dict -}}
+      {{/* If there is no portalhook */}}
+      {{- if not $traefikportalhook -}}
+        {{/* Get all configmaps */}}
+        {{- $hooks := lookup "v1" "ConfigMap" "" "" -}}
+
+        {{- $portalHooks := list -}}
+        {{- range $hook := $hooks -}}
+          {{/* Filter portalhook-* */}}
+          {{- if startswith $hook.metadata.name "portalhook-" -}}
+            {{- $portalHooks = mustAppend $portalHooks $hook -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{/* If there is only one portalhook, use it */}}
+        {{- if eq (len $portalHooks) 1 -}}
+          {{- $traefikportalhook = index $portalHooks 0 -}}
+        {{- end -}}
+      {{- end -}}
+
       {{- $entrypoint := "websecure" -}}
       {{- if $selectedIngress.entrypoint -}}
         {{- $entrypoint = $selectedIngress.entrypoint -}}
