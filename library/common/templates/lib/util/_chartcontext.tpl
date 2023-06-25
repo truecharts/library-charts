@@ -56,7 +56,6 @@
         {{- else -}}
           {{- $namespace = $selectedIngress.ingressClassName -}}
         {{- end -}}
-
       {{- end -}}
 
       {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" | default dict -}}
