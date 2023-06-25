@@ -65,10 +65,10 @@
         {{- $hooks := lookup "v1" "ConfigMap" $namespace "" -}}
 
         {{- $portalHooks := list -}}
-        {{- range $hook := $hooks -}}
-          {{/* Filter portalhook-* */}}
-          {{- $hookData := (get "data" $hook) -}}
+        {{- range $hook := ($hooks.items | default list) -}}
+          {{- $hookData := (get $hook "data") -}}
           {{- if $hookData -}}
+            {{/* Filter portalhook-* */}}
             {{- if hasPrefix $hookData.metadata.name "portalhook-" -}}
               {{- $portalHooks = mustAppend $portalHooks $hook -}}
             {{- end -}}
