@@ -22,7 +22,7 @@ objectData: The object data to be used to render the volume.
     {{- fail "Persistence - Expected <hostPath> to start with a forward slash [/] on <device> type" -}}
   {{- end -}}
 
-  {{- $charDevices := (list "tty")-}}
+  {{- $charDevices := (list "tty") -}}
   {{- if not $hostPathType -}}
     {{- range $char := $charDevices -}}
       {{- if startsWith (printf "/dev/%v" $char) $hostPath -}}
