@@ -414,7 +414,6 @@ tests:
           mountPath: /test9
         # Should not show up, without enabled true
         test10:
-          enabled: true
           type: ixVolume
           datasetName: test
           autoPermissions:
