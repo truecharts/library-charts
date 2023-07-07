@@ -65,7 +65,7 @@ spec:
           storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   monitoring:
-    enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
+    enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default false }}
 
   nodeMaintenanceWindow:
     inProgress: false
