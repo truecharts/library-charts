@@ -18,7 +18,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
 kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
-  namespace: {{ $root.Values.namespace | default $root.Values.global.namespace | default $root.Release.Namespace }}
+  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
   {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
   labels:
     cnpg.io/reload: "on"
