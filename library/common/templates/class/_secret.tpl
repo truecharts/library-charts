@@ -42,9 +42,6 @@ metadata:
   annotations:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- with $objectData.namespace }}
-  namespace: {{ tpl . $rootCtx }}
-  {{- end -}}
   {{- if (mustHas $objectData.type (list "certificate" "imagePullSecret")) }}
 data:
     {{- if eq $objectData.type "certificate" }}

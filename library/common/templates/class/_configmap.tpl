@@ -30,9 +30,6 @@ metadata:
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
-  {{- end -}}
-  {{- with $objectData.namespace }}
-  namespace: {{ tpl . $rootCtx }}
   {{- end }}
 data:
   {{- tpl (toYaml $objectData.data) $rootCtx | nindent 2 }}
