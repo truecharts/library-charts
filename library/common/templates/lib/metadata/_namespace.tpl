@@ -4,8 +4,11 @@
   {{- $rootCtx := .rootCtx -}}
 
   {{- $namespace := $rootCtx.Release.Namespace -}}
-  {{- if $objectData.namespace -}}
-    {{- $namespace = tpl $objectData.namespace $rootCtx -}}
+  {{- with $rootCtx.global.namespace -}}
+    {{- $namespace = tpl . $rootCtx -}}
+  {{- end -}}
+  {{- with $objectData.namespace -}}
+    {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}
 
   {{- if not (and (mustRegexMatch "^[a-z0-9](-?[a-z0-9]-?)+[a-z0-9]$" $namespace) (le (len $namespace) 63)) -}}
