@@ -59,6 +59,7 @@ tests:
   - it: should fail without storageClassName in ixChartContext
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ""
       persistence:
@@ -72,6 +73,7 @@ tests:
   - it: should fail without storageClassName in ixChartContext with SCALE-ZFS explicitly set
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ""
       persistence:
