@@ -64,8 +64,15 @@ spec:
         requests:
           storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
+  {{- $monitoring := true -}}
+  {{- with $values.monitoring -}}
+    {{- if not (kindIs "invalid" .enablePodMonitor) -}}
+      {{- $monitoring = .enablePodMonitor -}}
+    {{- end -}}
+  {{- end }}
+
   monitoring:
-    enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default false }}
+    enablePodMonitor: {{ $monitoring }}
 
   nodeMaintenanceWindow:
     inProgress: false
