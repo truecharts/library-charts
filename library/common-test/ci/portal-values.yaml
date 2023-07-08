@@ -1,5 +1,6 @@
-ixChartContext:
-  something: something
+global:
+  ixChartContext:
+    something: something
 
 workload:
   main:
