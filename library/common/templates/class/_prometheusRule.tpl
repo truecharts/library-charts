@@ -19,6 +19,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.prometheusrule.apiVersion" $ }
 kind: PrometheusRule
 metadata:
   name: {{ $prometheusruleName }}
+  namespace: {{ $root.Values.namespace | default $root.Values.global.namespace | default $root.Release.Namespace }}
   {{- $labels := (mustMerge ($prometheusruleLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
