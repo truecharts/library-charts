@@ -8,7 +8,7 @@ within the common library.
   {{- with .ObjectValues.route -}}
     {{- $values = . -}}
   {{- end -}}
-{{-- end -}}
+{{- end -}}
 
   {{- $routeLabels := $values.labels -}}
   {{- $routeAnnotations := $values.annotations -}}
