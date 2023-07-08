@@ -328,6 +328,7 @@ tests:
           type: Deployment
           podSpec: {}
       global:
+        namespace: ix-namespace
         ixChartContext:
           some: context
       ixVolumes:

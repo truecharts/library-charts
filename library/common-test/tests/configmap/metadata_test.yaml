@@ -141,4 +141,4 @@ tests:
       - documentIndex: *configMapDoc
         equal:
           path: metadata.namespace
-          value: local-namespace
+          value: ix-namespace
