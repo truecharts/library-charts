@@ -78,7 +78,7 @@ tests:
           path: metadata.namespace
           value: some-namespace
 
-  - it: should pass with configmap created with namespace from tpl
+  - it: should pass with configmap created with object namespace from tpl
     set:
       key: some-namespace
       configmap:
