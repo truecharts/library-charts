@@ -139,6 +139,10 @@ tests:
           value: test-release-name-common-test
       - documentIndex: *otherDaemonSetDoc
         equal:
+          path: metadata.namespace
+          value: test-release-namespace
+      - documentIndex: *otherDaemonSetDoc
+        equal:
           path: spec.selector.matchLabels
           value:
             pod.name: workload-name
