@@ -12,6 +12,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.cert-manager.certificate.apiVe
 kind: Certificate
 metadata:
   name: {{ $name }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Cert Manager Certificate") }}
 spec:
   secretName: {{ $name }}
   dnsNames:
