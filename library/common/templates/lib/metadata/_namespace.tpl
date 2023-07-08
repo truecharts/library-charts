@@ -21,6 +21,12 @@
     {{- fail (printf "%s - Namespace [%s] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters." $caller $namespace) -}}
   {{- end -}}
 
+  {{- if $rootCtx.Values.global.ixChartContext -}}
+    {{- if not (hasPrefix "ix-" $namespace) -}}
+      {{- fail (printf "%s - Namespace [%v] expected to have [ix-] prefix when installed in TrueNAS SCALE" $caller $namespace) -}}
+    {{- end -}}
+  {{- end -}}
+
   {{- $namespace -}}
 
 {{- end -}}
