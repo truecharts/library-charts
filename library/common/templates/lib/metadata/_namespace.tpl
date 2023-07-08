@@ -4,6 +4,7 @@
   {{- $rootCtx := .rootCtx -}}
 
   {{- $namespace := $rootCtx.Release.Namespace -}}
+
   {{- with $rootCtx.Values.global.namespace -}}
     {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}

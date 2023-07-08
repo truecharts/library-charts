@@ -95,8 +95,7 @@ tests:
 
   - it: should pass with configmap created with namespace from global with tpl
     set:
-      namespace: local-namespace
-      key: some-namespace
+      key: global-namespace
       global:
         namespace: "{{ .Values.key }}"
       configmap:
@@ -108,11 +107,14 @@ tests:
       - documentIndex: *configMapDoc
         equal:
           path: metadata.namespace
-          value: some-namespace
+          value: global-namespace
 
   - it: should pass with configmap created with namespace from root with tpl
     set:
-      namespace: local-namespace
+      key: local-namespace
+      namespace: "{{ .Values.key }}"
+      global:
+        namespace: global-namespace
       configmap:
         my-configmap1:
           enabled: true
