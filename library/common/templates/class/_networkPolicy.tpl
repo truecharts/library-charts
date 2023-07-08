@@ -22,7 +22,6 @@ kind: NetworkPolicy
 apiVersion: {{ include "tc.v1.common.capabilities.networkpolicy.apiVersion" $ }}
 metadata:
   name: {{ $networkPolicyName }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Network Policy") }}
   {{- $labels := (mustMerge ($networkpolicyLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:

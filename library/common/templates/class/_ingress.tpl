@@ -74,7 +74,6 @@ apiVersion: {{ include "tc.v1.common.capabilities.ingress.apiVersion" $ }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Ingress") }}
   {{- $labels := (mustMerge ($ingressLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:

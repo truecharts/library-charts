@@ -20,7 +20,6 @@ apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $ }}
 kind: Pooler
 metadata:
   name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
 spec:
   cluster:
     name: {{ $cnpgClusterName }}

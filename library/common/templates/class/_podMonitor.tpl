@@ -19,7 +19,6 @@ apiVersion: {{ include "tc.v1.common.capabilities.podmonitor.apiVersion" $ }}
 kind: PodMonitor
 metadata:
   name: {{ $podmonitorName }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Pod Monitor") }}
   {{- $labels := (mustMerge ($podmonitorLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
