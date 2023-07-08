@@ -193,7 +193,7 @@ tests:
           path: metadata.namespace
           value: global-namespace
 
-  - it: should pass with deployment created with global namespace from tpl
+  - it: should pass with deployment created with root namespace from tpl
     set:
       key: local-namespace
       namespace: "{{ .Values.key }}"
@@ -211,7 +211,7 @@ tests:
           path: metadata.namespace
           value: local-namespace
 
-  - it: should pass with deployment created with global namespace from tpl
+  - it: should pass with deployment created with namespace in TrueNAS SCALE
     set:
       global:
         ixChartContext:

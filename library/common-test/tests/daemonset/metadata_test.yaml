@@ -151,3 +151,72 @@ tests:
             pod.name: workload-name
             app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/name: common-test
+
+  - it: should pass with DaemonSet created with object namespace from tpl
+    set:
+      key: some-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: DaemonSet
+          namespace: "{{ .Values.key }}"
+          podSpec: {}
+    asserts:
+      - documentIndex: *daemonSetDoc
+        equal:
+          path: metadata.namespace
+          value: some-namespace
+
+  - it: should pass with DaemonSet created with global namespace from tpl
+    set:
+      key: global-namespace
+      global:
+        namespace: "{{ .Values.key }}"
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: DaemonSet
+          podSpec: {}
+    asserts:
+      - documentIndex: *daemonSetDoc
+        equal:
+          path: metadata.namespace
+          value: global-namespace
+
+  - it: should pass with DaemonSet created with root namespace from tpl
+    set:
+      key: local-namespace
+      namespace: "{{ .Values.key }}"
+      global:
+        namespace: global-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: DaemonSet
+          podSpec: {}
+    asserts:
+      - documentIndex: *daemonSetDoc
+        equal:
+          path: metadata.namespace
+          value: local-namespace
+
+  - it: should pass with DaemonSet created with namespace in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      namespace: ix-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: DaemonSet
+          podSpec: {}
+    asserts:
+      - documentIndex: *daemonSetDoc
+        equal:
+          path: metadata.namespace
+          value: ix-namespace
