@@ -8,7 +8,7 @@
     {{- $namespace = tpl $objectData.namespace $rootCtx -}}
   {{- end -}}
 
-  {{- if not (mustRegexMatch "^[a-z0-9]([a-z0-9]-?|-?[a-z0-9]){0,61}[a-z0-9]$" $namespace) -}}
+  {{- if not (and (mustRegexMatch "^[a-z0-9](-?[a-z0-9]-?)+[a-z0-9]$" $namespace) (le (len $namespace) 63)) -}}
     {{- fail (printf "%s - Namespace [%s] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters." $caller $namespace) -}}
   {{- end -}}
 
