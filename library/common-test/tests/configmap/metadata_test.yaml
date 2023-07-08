@@ -80,11 +80,11 @@ tests:
 
   - it: should pass with configmap created with namespace from tpl
     set:
-      namespace: some-namespace
+      key: some-namespace
       configmap:
         my-configmap1:
           enabled: true
-          namespace: "{{ .Values.namespace }}"
+          namespace: "{{ .Values.key }}"
           data:
             foo: bar
     asserts:
