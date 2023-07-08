@@ -2,6 +2,8 @@ global:
   ixChartContext:
     something: something
 
+namespace: ix-namespace
+
 workload:
   main:
     enabled: true
