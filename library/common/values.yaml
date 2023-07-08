@@ -59,6 +59,8 @@ fallbackDefaults:
       failureThreshold: 60
       successThreshold: 1
 
+# -- Explicitly set a namespace for this chart only
+namespace: ""
 
 # -- Image values
 image:

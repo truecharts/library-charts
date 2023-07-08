@@ -7,6 +7,11 @@
   {{- with $rootCtx.Values.global.namespace -}}
     {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}
+
+  {{- with $rootCtx.Values.namespace -}}
+    {{- $namespace = tpl . $rootCtx -}}
+  {{- end -}}
+
   {{- with $objectData.namespace -}}
     {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}
