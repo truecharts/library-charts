@@ -38,7 +38,7 @@ within the common library.
   {{- if $values.ingressClassName -}}
     
     {{- if $.Values.global.ixChartContext -}}
-      {{- $mddwrNamespace = (printf "ix-%s" $values.ingressClassName) -}}
+      {{- $mddwrNamespace = (printf "tc-system-%s" $values.ingressClassName) -}}
     {{- else -}}
       {{- $mddwrNamespace = $values.ingressClassName -}}
     {{- end -}}
