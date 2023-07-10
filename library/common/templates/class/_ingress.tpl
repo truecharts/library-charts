@@ -36,7 +36,6 @@ within the common library.
   {{- end -}}
 
   {{- if $values.ingressClassName -}}
-    
     {{- if $.Values.global.ixChartContext -}}
       {{- $mddwrNamespace = (printf "tc-system-%s" $values.ingressClassName) -}}
     {{- else -}}
