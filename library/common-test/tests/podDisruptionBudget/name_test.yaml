@@ -1,0 +1,37 @@
+suite: podDisruption name test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should generate correct name
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 1
+        my-pdb2:
+          enabled: true
+          maxUnavailable: 1
+    asserts:
+      - documentIndex: &pdbDoc 0
+        isKind:
+          of: PodDisruptionBudget
+      - documentIndex: *pdbDoc
+        isAPIVersion:
+          of: policy/v1beta1
+      - documentIndex: *pdbDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-my-pdb1
+      - documentIndex: &otherpdbDoc 1
+        isKind:
+          of: PodDisruptionBudget
+      - documentIndex: *otherpdbDoc
+        isAPIVersion:
+          of: policy/v1beta1
+      - documentIndex: *otherpdbDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-my-pdb2
