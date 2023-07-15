@@ -38,7 +38,7 @@ data:
       {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $objectData.customLabels) | trim) }}
         {{- . | nindent 6 }}
       {{- end -}}
-    {{- else }}
+    {{- else -}}
       {{- $selectedPod := fromJson (include "tc.v1.common.lib.helpers.getSelectedPodValues" (dict "rootCtx" $rootCtx "objectData" $objectData)) }}
       {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $selectedPod.shortName) | nindent 6 }}
     {{- end -}}
@@ -47,5 +47,8 @@ data:
   {{- end -}}
   {{- if hasKey "maxUnavailable" $objectData }}
   maxUnavailable: {{ $objectData.maxUnavailable }}
+  {{- end -}}
+  {{- with $objectData.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
   {{- end -}}
 {{- end -}}

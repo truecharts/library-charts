@@ -11,12 +11,11 @@ objectData:
   {{- $objectData := .objectData -}}
   {{- $caller := .caller -}}
 
-  {{- if and $objectData.labels (not (kindIs "map" $objectData.labels)) -}}
-    {{- fail (printf "%s - Expected <labels> to be a dictionary, but got [%v]" $caller (kindOf $objectData.labels)) -}}
-  {{- end -}}
-
-  {{- if and $objectData.annotations (not (kindIs "map" $objectData.annotations)) -}}
-    {{- fail (printf "%s - Expected <annotations> to be a dictionary, but got [%v]" $caller (kindOf $objectData.annotations)) -}}
+  {{- with $objectData.unhealthyPodEvictionPolicy -}}
+    {{- $policies := (list "IfHealthyBudget" "AlwaysAllow") -}}
+    {{- if not (mustHas . $policies) -}}
+      {{- fail (printf "Pod Disruption Budget - Expected <unhealthyPodEvictionPolicy> to be one of [%s], but got [%s]" (join ", " $policies) .) -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $keys := (list "minAvailable" "maxUnavailable") -}}
