@@ -449,9 +449,9 @@ tests:
               - name: TZ
                 value: UTC
               - name: UMASK
-                value: "002"
+                value: "0022"
               - name: UMASK_SET
-                value: "002"
+                value: "0022"
               - name: PUID
                 value: "200000514"
               - name: USER_ID
