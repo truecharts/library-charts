@@ -171,6 +171,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: VAR13
+            value: "100.40"
 
   # Failures
   - it: it should fail invalid ref

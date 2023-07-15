@@ -452,8 +452,6 @@ tests:
                 value: "002"
               - name: UMASK_SET
                 value: "002"
-              - name: NVIDIA_VISIBLE_DEVICES
-                value: "void"
               - name: PUID
                 value: "200000514"
               - name: USER_ID
