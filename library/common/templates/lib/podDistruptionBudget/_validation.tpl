@@ -17,13 +17,19 @@ objectData:
     {{- end -}}
   {{- end -}}
 
+  {{- $hasKey := false -}}
   {{- $keys := (list "minAvailable" "maxUnavailable") -}}
   {{- range $key := $keys -}}
     {{- if hasKey $objectData $key -}}
+      {{- $hasKey = true -}}
       {{- if kindIs "invalid" (get $objectData $key) -}}
         {{- fail (printf "Pod Disruption Budget - Expected the defined key [%v] in <podDisruptionBudget.%s> to not be empty" $key $objectData.shortName) -}}
       {{- end -}}
     {{- end -}}
+  {{- end -}}
+
+  {{- if not $hasKey -}}
+    {{- fail (printf "Pod Disruption Budget - Expected at least one of [%s] to be defined in <podDisruptionBudget.%s>" (join ", " $keys) $objectData.shortName) -}}
   {{- end -}}
 
 {{- end -}}

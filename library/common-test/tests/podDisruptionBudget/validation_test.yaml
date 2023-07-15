@@ -28,6 +28,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          minAvailable: 1
           namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
     asserts:
       - failedTemplate:
@@ -41,6 +42,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          minAvailable: 1
           namespace: my-namespace
     asserts:
       - failedTemplate:
@@ -96,6 +98,15 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Expected the defined key [maxUnavailable] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty
+
+  - it: should fail without at least one key defined
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected at least one of [minAvailable, maxUnavailable] to be defined in <podDisruptionBudget.my-poddisruptionbudget>
 
   - it: should fail with empty enabled
     set:
