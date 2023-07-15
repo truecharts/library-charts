@@ -23,6 +23,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -68,6 +70,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           namespace: some-namespace
           minAvailable: 1
     asserts:
@@ -82,6 +86,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           namespace: "{{ .Values.key }}"
           maxUnavailable: 1
     asserts:
@@ -98,6 +104,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           minAvailable: 1
     asserts:
       - documentIndex: *pdbDoc
@@ -114,6 +122,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           minAvailable: 1
     asserts:
       - documentIndex: *pdbDoc
@@ -130,6 +140,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           minAvailable: 1
     asserts:
       - documentIndex: *pdbDoc

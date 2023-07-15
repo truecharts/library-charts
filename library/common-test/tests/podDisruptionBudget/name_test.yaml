@@ -10,9 +10,13 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           minAvailable: 1
         my-pdb2:
           enabled: true
+          customLabels:
+            label1: value1
           maxUnavailable: 1
     asserts:
       - documentIndex: &pdbDoc 0

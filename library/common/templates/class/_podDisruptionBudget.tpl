@@ -43,12 +43,12 @@ data:
       {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $selectedPod.shortName) | nindent 6 }}
     {{- end -}}
   {{- if hasKey $objectData "minAvailable" }}
-  minAvailable: {{ $objectData.minAvailable }}
+  minAvailable: {{ tpl (toString $objectData.minAvailable) $rootCtx }}
   {{- end -}}
   {{- if hasKey $objectData "maxUnavailable" }}
-  maxUnavailable: {{ $objectData.maxUnavailable }}
+  maxUnavailable: {{ tpl (toString $objectData.maxUnavailable) $rootCtx }}
   {{- end -}}
   {{- with $objectData.unhealthyPodEvictionPolicy }}
-  unhealthyPodEvictionPolicy: {{ . }}
+  unhealthyPodEvictionPolicy: {{ tpl . $rootCtx }}
   {{- end -}}
 {{- end -}}

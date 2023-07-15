@@ -8,6 +8,7 @@ objectData:
 */}}
 
 {{- define "tc.v1.common.lib.podDisruptionBudget.validation" -}}
+  {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
   {{- if and $objectData.targetSelector (not (kindIs "string" $objectData.targetSelector)) -}}
@@ -24,7 +25,7 @@ objectData:
 
   {{- with $objectData.unhealthyPodEvictionPolicy -}}
     {{- $policies := (list "IfHealthyBudget" "AlwaysAllow") -}}
-    {{- if not (mustHas . $policies) -}}
+    {{- if not (mustHas (tpl . $rootCtx) $policies) -}}
       {{- fail (printf "Pod Disruption Budget - Expected <unhealthyPodEvictionPolicy> to be one of [%s], but got [%s]" (join ", " $policies) .) -}}
     {{- end -}}
   {{- end -}}

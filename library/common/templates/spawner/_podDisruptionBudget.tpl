@@ -46,7 +46,7 @@
       {{- $_ := set $objectData "name" $objectName -}}
       {{- $_ := set $objectData "shortName" $name -}}
 
-      {{- include "tc.v1.common.lib.podDisruptionBudget.validation" (dict "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.podDisruptionBudget.validation" (dict "objectData" $objectData "rootCtx" $) -}}
 
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.podDisruptionBudget" (dict "rootCtx" $ "objectData" $objectData) -}}
