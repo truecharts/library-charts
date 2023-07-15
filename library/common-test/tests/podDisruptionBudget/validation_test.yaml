@@ -29,6 +29,7 @@ tests:
         my-poddisruptionbudget:
           enabled: true
           minAvailable: 1
+          targetSelector: my-pod
           namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
     asserts:
       - failedTemplate:
@@ -43,6 +44,7 @@ tests:
         my-poddisruptionbudget:
           enabled: true
           minAvailable: 1
+          targetSelector: my-pod
           namespace: my-namespace
     asserts:
       - failedTemplate:
@@ -53,6 +55,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
           labels: "not a dict"
     asserts:
       - failedTemplate:
@@ -63,6 +66,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
           annotations: "not a dict"
     asserts:
       - failedTemplate:
@@ -74,6 +78,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
           unhealthyPodEvictionPolicy: "not valid"
     asserts:
       - failedTemplate:
@@ -84,6 +89,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
           minAvailable:
     asserts:
       - failedTemplate:
@@ -94,6 +100,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
           maxUnavailable:
     asserts:
       - failedTemplate:
@@ -104,6 +111,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled: true
+          targetSelector: my-pod
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Expected at least one of [minAvailable, maxUnavailable] to be defined in <podDisruptionBudget.my-poddisruptionbudget>
@@ -113,6 +121,7 @@ tests:
       podDisruptionBudget:
         my-poddisruptionbudget:
           enabled:
+          targetSelector: my-pod
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Expected the defined key [enabled] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty
@@ -127,3 +136,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Expected <targetSelector> to be [string], but got [map]
+
+  - it: should fail without either targetSelector or customLabels
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected <targetSelector> or <customLabels> to be defined in <podDisruptionBudget.my-poddisruptionbudget>

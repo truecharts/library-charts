@@ -59,3 +59,44 @@ tests:
         equal:
           path: data.unhealthyPodEvictionPolicy
           value: IfHealthyBudget
+
+  - it: should create custom labels for selector
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 1
+          customLabels:
+            label1: value1
+            label2: value2
+    asserts:
+      - documentIndex: *pdbDoc
+        equal:
+          path: data.selector.matchLabels
+          value:
+            label1: value1
+            label2: value2
+  - it: should create labels for the selector pod
+    set:
+      workload:
+        my-pod:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 1
+          targetSelector: my-pod
+    asserts:
+      - documentIndex: &pdbDoc 1
+        isKind:
+          of: PodDisruptionBudget
+      - documentIndex: *pdbDoc
+        equal:
+          path: data.selector.matchLabels
+          value:
+            pod.name: my-pod
+            app.kubernetes.io/name: common-test
+            app.kubernetes.io/instance: test-release-name

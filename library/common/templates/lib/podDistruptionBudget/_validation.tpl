@@ -14,6 +14,10 @@ objectData:
     {{- fail (printf "Pod Disruption Budget - Expected <targetSelector> to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
   {{- end -}}
 
+  {{- if and (not $objectData.targetSelector) (not $objectData.customLabels) -}}
+    {{- fail (printf "Pod Disruption Budget - Expected <targetSelector> or <customLabels> to be defined in <podDisruptionBudget.%s>" $objectData.shortName) -}}
+  {{- end -}}
+
   {{- with $objectData.unhealthyPodEvictionPolicy -}}
     {{- $policies := (list "IfHealthyBudget" "AlwaysAllow") -}}
     {{- if not (mustHas . $policies) -}}
