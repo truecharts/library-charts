@@ -164,6 +164,7 @@ tests:
         my-poddisruptionbudget:
           enabled: true
           targetSelector: my-pod
+          minAvailable: 1
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Selected pod [my-pod] is not defined
