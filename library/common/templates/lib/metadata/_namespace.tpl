@@ -24,7 +24,7 @@
   {{- if $rootCtx.Values.global.ixChartContext -}}
     {{- if not (hasPrefix "ix-" $namespace) -}}
       {{/* This is only to be used on CI that do not run in SCALE so we can skip the failure */}}
-      {{- if not .Values.global.ixChartContext.ci -}}
+      {{- if not $rootCtx.Values.global.ixChartContext.ci -}}
         {{- fail (printf "%s - Namespace [%v] expected to have [ix-] prefix when installed in TrueNAS SCALE" $caller $namespace) -}}
       {{- end -}}
     {{- end -}}
