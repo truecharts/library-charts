@@ -15,7 +15,11 @@ objectData:
   {{- end -}}
 
   {{- if and (not $objectData.targetSelector) (not $objectData.customLabels) -}}
-    {{- fail (printf "Pod Disruption Budget - Expected <targetSelector> or <customLabels> to be defined in <podDisruptionBudget.%s>" $objectData.shortName) -}}
+    {{- fail (printf "Pod Disruption Budget - Expected one of [targetSelector, customLabels] to be defined in <podDisruptionBudget.%s>" $objectData.shortName) -}}
+  {{- end -}}
+
+  {{- if and $objectData.targetSelector $objectData.customLabels -}}
+    {{- fail (printf "Pod Disruption Budget - Expected only one of [targetSelector, customLabels] to be defined in <podDisruptionBudget.%s>" $objectData.shortName) -}}
   {{- end -}}
 
   {{- with $objectData.unhealthyPodEvictionPolicy -}}

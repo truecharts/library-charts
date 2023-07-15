@@ -144,4 +144,26 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: Pod Disruption Budget - Expected <targetSelector> or <customLabels> to be defined in <podDisruptionBudget.my-poddisruptionbudget>
+          errorMessage: Pod Disruption Budget - Expected one of [targetSelector, customLabels] to be defined in <podDisruptionBudget.my-poddisruptionbudget>
+
+  - it: should fail with both targetSelector and customLabels
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          targetSelector: my-pod
+          customLabels:
+            label1: label1
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected only one of [targetSelector, customLabels] to be defined in <podDisruptionBudget.my-poddisruptionbudget>
+
+  - it: should fail with selected pod that does not exist
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          targetSelector: my-pod
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Selected pod [my-pod] is not defined
