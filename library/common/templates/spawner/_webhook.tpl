@@ -50,9 +50,9 @@
       {{- $_ := set $objectData "shortName" $name -}}
 
       {{/* Call class to create the object */}}
-      {{- if eq $objectdata.type "validating" -}}
+      {{- if eq $objectData.type "validating" -}}
         {{- include "tc.v1.common.class.validatingwebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) -}}
-      {{- else if eq $objectdata.type "mutating" -}}
+      {{- else if eq $objectData.type "mutating" -}}
         {{- include "tc.v1.common.class.mutatingwebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- else -}}
         {{- fail (printf "WebhookConfiguration - Invalid [type] in <webhook.%s> " $name) -}}
