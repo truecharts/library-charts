@@ -49,13 +49,14 @@ tests:
 
   - it: should pass with percentage in keys
     set:
+      percentage: 50%
       podDisruptionBudget:
         my-pdb1:
           enabled: true
           customLabels:
             label1: value1
           minAvailable: 50%
-          maxUnavailable: 50%
+          maxUnavailable: "{{ .Values.percentage }}"
     asserts:
       - documentIndex: *pdbDoc
         isSubset:
