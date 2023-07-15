@@ -116,3 +116,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Pod Disruption Budget - Expected the defined key [enabled] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty
+
+  - it: should fail with pod targetSelector not a string
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          targetSelector:
+            pod: "not a string"
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected <targetSelector> to be [string], but got [map]

@@ -30,7 +30,7 @@ metadata:
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
-  {{- end -}}
+  {{- end }}
 data:
   selector:
     matchLabels:
@@ -39,13 +39,13 @@ data:
         {{- . | nindent 6 }}
       {{- end -}}
     {{- else -}}
-      {{- $selectedPod := fromJson (include "tc.v1.common.lib.helpers.getSelectedPodValues" (dict "rootCtx" $rootCtx "objectData" $objectData)) }}
-      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $ "objectType" "pod" "objectName" $selectedPod.shortName) | nindent 6 }}
+      {{- $selectedPod := fromJson (include "tc.v1.common.lib.helpers.getSelectedPodValues" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Pod Disruption Budget")) }}
+      {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $selectedPod.shortName) | nindent 6 }}
     {{- end -}}
-  {{- if hasKey "minAvailable" $objectData }}
+  {{- if hasKey $objectData "minAvailable" }}
   minAvailable: {{ $objectData.minAvailable }}
   {{- end -}}
-  {{- if hasKey "maxUnavailable" $objectData }}
+  {{- if hasKey $objectData "maxUnavailable" }}
   maxUnavailable: {{ $objectData.maxUnavailable }}
   {{- end -}}
   {{- with $objectData.unhealthyPodEvictionPolicy }}
