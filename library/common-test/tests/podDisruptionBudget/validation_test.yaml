@@ -1,0 +1,107 @@
+suite: podDisruptionBudget validation test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should fail with name longer than 63 characters
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget-super-long-name-that-is-longer-than-63-characters:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-my-poddisruptionbudget-super-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with name starting with underscore
+    set:
+      podDisruptionBudget:
+        _my-poddisruptionbudget:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-_my-poddisruptionbudget] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with namespace longer than 63 characters
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Namespace [my-extra-super-duper-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with namespace not starting with [ix-] in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          namespace: my-namespace
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Namespace [my-namespace] expected to have [ix-] prefix when installed in TrueNAS SCALE
+
+  - it: should fail with labels not a dict
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          labels: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected <labels> to be a dictionary, but got [string]
+
+  - it: should fail with annotations not a dict
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          annotations: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected <annotations> to be a dictionary, but got [string]
+
+  - it: should fail with not valid unhealthyPodEvictionPolicy
+    set:
+      configmap:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          unhealthyPodEvictionPolicy: "not valid"
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected <unhealthyPodEvictionPolicy> to be one of [IfHealthyBudget, AlwaysAllow], but got [not valid]
+
+  - it: should fail with empty minAvailable
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          minAvailable:
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected the defined key [minAvailable] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty
+
+  - it: should fail with empty maxUnavailable
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled: true
+          maxUnavailable:
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected the defined key [maxUnavailable] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty
+
+  - it: should fail with empty enabled
+    set:
+      podDisruptionBudget:
+        my-poddisruptionbudget:
+          enabled:
+    asserts:
+      - failedTemplate:
+          errorMessage: Pod Disruption Budget - Expected the defined key [enabled] in <podDisruptionBudget.my-poddisruptionbudget> to not be empty

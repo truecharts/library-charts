@@ -9,7 +9,6 @@ objectData:
 
 {{- define "tc.v1.common.lib.podDisruptionBudget.validation" -}}
   {{- $objectData := .objectData -}}
-  {{- $caller := .caller -}}
 
   {{- with $objectData.unhealthyPodEvictionPolicy -}}
     {{- $policies := (list "IfHealthyBudget" "AlwaysAllow") -}}
@@ -20,9 +19,9 @@ objectData:
 
   {{- $keys := (list "minAvailable" "maxUnavailable") -}}
   {{- range $key := $keys -}}
-    {{- if hasKey $key $objectData -}}
+    {{- if hasKey $objectData $key -}}
       {{- if kindIs "invalid" (get $objectData $key) -}}
-        {{- fail (printf "Pod Disruption Budget - Expected the defined key [%v] in <podDisruptionBudget.%s> to not be empty" $key $key) -}}
+        {{- fail (printf "Pod Disruption Budget - Expected the defined key [%v] in <podDisruptionBudget.%s> to not be empty" $key $objectData.shortName) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
