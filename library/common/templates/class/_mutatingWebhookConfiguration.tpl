@@ -1,6 +1,6 @@
 {{/* MutatingWebhookConfiguration Class */}}
 {{/* Call this template:
-{{ include "tc.v1.common.class.mutatingwebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) }}
+{{ include "tc.v1.common.class.mutatingWebhookConfiguration" (dict "rootCtx" $ "objectData" $objectData) }}
 
 rootCtx: The root context of the chart.
 objectData:
@@ -11,7 +11,7 @@ objectData:
   namespace: The namespace of the MutatingWebhookConfiguration. (Optional)
 */}}
 
-{{- define "tc.v1.common.class.MutatingWebhookConfiguration" -}}
+{{- define "tc.v1.common.class.mutatingWebhookConfiguration" -}}
 
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
@@ -20,6 +20,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: {{ $objectData.name }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CronJob") }}
   {{- $labels := (mustMerge ($objectData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
   labels:
@@ -30,10 +31,8 @@ metadata:
   annotations:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- with $objectData.namespace }}
-  namespace: {{ tpl . $rootCtx }}
-  {{- end }}
 webhooks:
+  {{/* TODO: Remove tpl and have actual checks */}}
   {{- tpl (toYaml $objectData.webhooks) $rootCtx | nindent 2 }}
   {{/* This comment is here to add a new line */}}
 {{- end -}}

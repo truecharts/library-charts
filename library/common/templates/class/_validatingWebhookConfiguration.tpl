@@ -1,17 +1,17 @@
-{{/* validatingwebhookconfiguration Class */}}
+{{/* ValidatingWebhookconfiguration Class */}}
 {{/* Call this template:
-{{ include "tc.v1.common.class.validatingwebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) }}
+{{ include "tc.v1.common.class.validatingWebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) }}
 
 rootCtx: The root context of the chart.
 objectData:
-  name: The name of the validatingwebhookconfiguration.
-  labels: The labels of the validatingwebhookconfiguration.
-  annotations: The annotations of the validatingwebhookconfiguration.
-  data: The data of the validatingwebhookconfiguration.
-  namespace: The namespace of the validatingwebhookconfiguration. (Optional)
+  name: The name of the validatingWebhookconfiguration.
+  labels: The labels of the validatingWebhookconfiguration.
+  annotations: The annotations of the validatingWebhookconfiguration.
+  data: The data of the validatingWebhookconfiguration.
+  namespace: The namespace of the validatingWebhookconfiguration. (Optional)
 */}}
 
-{{- define "tc.v1.common.class.validatingwebhookconfiguration" -}}
+{{- define "tc.v1.common.class.validatingWebhookconfiguration" -}}
 
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
@@ -20,6 +20,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: {{ $objectData.name }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CronJob") }}
   {{- $labels := (mustMerge ($objectData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
   labels:
@@ -30,10 +31,8 @@ metadata:
   annotations:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- with $objectData.namespace }}
-  namespace: {{ tpl . $rootCtx }}
-  {{- end }}
 webhooks:
+  {{/* TODO: Remove tpl and have actual checks */}}
   {{- tpl (toYaml $objectData.webhooks) $rootCtx | nindent 2 }}
   {{/* This comment is here to add a new line */}}
 {{- end -}}
