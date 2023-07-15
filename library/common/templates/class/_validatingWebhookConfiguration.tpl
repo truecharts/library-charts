@@ -32,7 +32,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end -}}
 webhooks:
-  {{/* TODO: Remove tpl and have actual checks */}}
+  {{/* TODO: Remove tpl and have actual checks and add tests */}}
   {{- tpl (toYaml $objectData.webhooks) $rootCtx | nindent 2 }}
   {{/* This comment is here to add a new line */}}
 {{- end -}}
