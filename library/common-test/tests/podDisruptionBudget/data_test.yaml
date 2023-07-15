@@ -1,0 +1,61 @@
+suite: podDisruptionBudget data test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should pass with zero in keys
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 0
+          maxUnavailable: 0
+    asserts:
+      - documentIndex: &pdbDoc 0
+        isKind:
+          of: PodDisruptionBudget
+      - documentIndex: *pdbDoc
+        isSubset:
+          path: data
+          content:
+            minAvailable: 0
+            maxUnavailable: 0
+
+  - it: should pass with minAvailable defined
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 1
+    asserts:
+      - documentIndex: *pdbDoc
+        equal:
+          path: data.minAvailable
+          value: 1
+
+  - it: should pass with maxUnavailable defined
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          maxUnavailable: 2
+    asserts:
+      - documentIndex: *pdbDoc
+        equal:
+          path: data.maxUnavailable
+          value: 2
+
+  - it: should pass with unhealthyPodEvictionPolicy defined
+    set:
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          minAvailable: 1
+          unhealthyPodEvictionPolicy: IfHealthyBudget
+    asserts:
+      - documentIndex: *pdbDoc
+        equal:
+          path: data.unhealthyPodEvictionPolicy
+          value: IfHealthyBudget
