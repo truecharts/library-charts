@@ -20,18 +20,18 @@ tests:
           of: PodDisruptionBudget
       - documentIndex: *pdbDoc
         isAPIVersion:
-          of: policy/v1beta1
+          of: policy/v1
       - documentIndex: *pdbDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test-my-pdb1
-      - documentIndex: &otherpdbDoc 1
+      - documentIndex: &otherPdbDoc 1
         isKind:
           of: PodDisruptionBudget
-      - documentIndex: *otherpdbDoc
+      - documentIndex: *otherPdbDoc
         isAPIVersion:
-          of: policy/v1beta1
-      - documentIndex: *otherpdbDoc
+          of: policy/v1
+      - documentIndex: *otherPdbDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test-my-pdb2
