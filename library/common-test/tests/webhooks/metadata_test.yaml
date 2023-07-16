@@ -24,12 +24,13 @@ tests:
         my-webhook1:
           enabled: true
           type: validating
-          webhooks:
+          webhooks: &webhooks
             - name: webhook1
               admissionReviewVersions:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
           labels:
             label1: "{{ .Values.label1 }}"
@@ -77,13 +78,7 @@ tests:
           enabled: true
           type: mutating
           namespace: some-namespace
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - documentIndex: *webhookDoc
         isKind:
@@ -101,13 +96,7 @@ tests:
           enabled: true
           type: mutating
           namespace: "{{ .Values.key }}"
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - documentIndex: *webhookDoc
         equal:
@@ -123,13 +112,7 @@ tests:
         my-webhook1:
           enabled: true
           type: validating
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - documentIndex: *webhookDoc
         equal:
@@ -152,6 +135,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - documentIndex: *webhookDoc
@@ -169,13 +153,7 @@ tests:
         my-webhook1:
           enabled: true
           type: mutating
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - documentIndex: *webhookDoc
         equal:

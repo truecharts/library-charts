@@ -25,9 +25,26 @@
       {{- end -}}
     {{- end -}}
 
-    {{/*TODO: clientConfig */}}
     {{- if not $webhook.clientConfig -}}
       {{- fail (printf "Webhook - Expected <clientConfig> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+    {{- end -}}
+
+    {{- with $webhook.clientConfig -}}
+      {{- if and .url .service -}}
+        {{- fail (printf "Webhook - Expected either <url> or <service> in <webhook.%v.%v> to be defined, but got both" $objectData.shortName $webhook.name) -}}
+      {{- end -}}
+
+      {{- $service := .service -}}
+
+      {{- if $service -}}
+        {{- if not $service.name -}}
+          {{- fail (printf "Webhook - Expected <service.name> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+        {{- end -}}
+
+        {{- if not $service.namespace -}}
+          {{- fail (printf "Webhook - Expected <service.namespace> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+        {{- end -}}
+      {{- end -}}
     {{- end -}}
 
     {{/*TODO: rules */}}

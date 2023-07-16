@@ -32,12 +32,13 @@ tests:
           enabled: true
           type: validating
           namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
-          webhooks:
+          webhooks: &webhooks
             - name: webhook1
               admissionReviewVersions:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -53,13 +54,7 @@ tests:
           enabled: true
           type: validating
           namespace: my-namespace
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - failedTemplate:
           errorMessage: Webhook - Namespace [my-namespace] expected to have [ix-] prefix when installed in TrueNAS SCALE
@@ -137,6 +132,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -155,6 +151,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -173,6 +170,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -191,6 +189,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -209,6 +208,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -227,6 +227,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -245,6 +246,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -263,6 +265,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -281,6 +284,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -299,6 +303,7 @@ tests:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
     asserts:
       - failedTemplate:
@@ -312,6 +317,61 @@ tests:
           type: validating
           webhooks:
             - name: webhook1
+              admissionReviewVersions:
+                - v1
     asserts:
       - failedTemplate:
           errorMessage: Webhook - Expected <clientConfig> in <webhook.my-webhook.webhook1> to not be empty
+
+  - it: should fail with both service and url defined
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig:
+                service:
+                  name: test
+                  namespace: test
+                url: http://test.com
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected either <url> or <service> in <webhook.my-webhook.webhook1> to be defined, but got both
+
+  - it: should fail without service name
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig:
+                service:
+                  namespace: test
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <service.name> in <webhook.my-webhook.webhook1> to not be empty
+
+  - it: should fail without service namespace
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig:
+                service:
+                  name: test
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <service.namespace> in <webhook.my-webhook.webhook1> to not be empty

@@ -11,23 +11,18 @@ tests:
         my-webhook1:
           enabled: true
           type: validating
-          webhooks:
+          webhooks: &webhooks
             - name: webhook1
               admissionReviewVersions:
                 - v1
               clientConfig:
                 service:
+                  name: test
                   namespace: test
         my-webhook2:
           enabled: true
           type: mutating
-          webhooks:
-            - name: webhook1
-              admissionReviewVersions:
-                - v1
-              clientConfig:
-                service:
-                  namespace: test
+          webhooks: *webhooks
     asserts:
       - documentIndex: &webhookValDoc 0
         isKind:
