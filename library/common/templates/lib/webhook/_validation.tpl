@@ -117,7 +117,7 @@
       {{- $policy := tpl $webhook.reinvocationPolicy $rootCtx -}}
       {{- $reinvPolicies := (list "Never" "IfNeeded") -}}
       {{- if not (mustHas $policy $reinvPolicies) -}}
-        {{- fail (printf "Webhook - Expected <reinvocationPolicy> in <webhook.%v.%v> to be one of [%s], but got [%v]" $objectData.shortName $webhookName (join ", " $reinvPolicies) $webhook.reinvocationPolicy) -}}
+        {{- fail (printf "Webhook - Expected <reinvocationPolicy> in <webhook.%v.%v> to be one of [%s], but got [%v]" $objectData.shortName $webhookName (join ", " $reinvPolicies) $policy) -}}
       {{- end -}}
     {{- end -}}
 
@@ -134,21 +134,16 @@
         {{- fail (printf "Webhook - Expected the defined key <timeoutSeconds> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhookName) -}}
       {{- end -}}
 
-      {{- $timeout := $webhook.timeoutSeconds -}}
-      {{- if (kindIs "string" $timeout)  -}}
-        {{- $timeout = tpl $webhook.timeoutSeconds $rootCtx -}}
+      {{- if not (mustHas (kindOf $webhook.timeoutSeconds) (list "int" "int64" "float64")) -}}
+        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be an integer, but got [%v]" $objectData.shortName $webhookName (kindOf $webhook.timeoutSeconds)) -}}
       {{- end -}}
 
-      {{- if not (mustHas (kindOf $timeout) (list "int" "int64" "float64")) -}}
-        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be an integer, but got [%v]" $objectData.shortName $webhookName (kindOf $timeout)) -}}
+      {{- if (lt (int $webhook.timeoutSeconds) 1) -}}
+        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be greater than 0, but got [%v]" $objectData.shortName $webhookName $webhook.timeoutSeconds) -}}
       {{- end -}}
 
-      {{- if (lt (int $timeout) 1) -}}
-        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be greater than 0, but got [%v]" $objectData.shortName $webhookName $timeout) -}}
-      {{- end -}}
-
-      {{- if (gt (int $timeout) 30) -}}
-        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be less than 30, but got [%v]" $objectData.shortName $webhookName $timeout) -}}
+      {{- if (gt (int $webhook.timeoutSeconds) 30) -}}
+        {{- fail (printf "Webhook - Expected <timeoutSeconds> in <webhook.%v.%v> to be less than 30, but got [%v]" $objectData.shortName $webhookName $webhook.timeoutSeconds) -}}
       {{- end -}}
     {{- end -}}
 

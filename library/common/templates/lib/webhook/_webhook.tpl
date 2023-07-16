@@ -1,7 +1,7 @@
 {{- define "tc.v1.common.lib.webhook" -}}
   {{- $webhook := .webhook -}}
   {{- $rootCtx := .rootCtx }}
-- name: {{ $webhook.name }}
+- name: {{ tpl $webhook.name $rootCtx }}
   {{- with $webhook.failurePolicy }}
   failurePolicy: {{ tpl . $rootCtx }}
   {{- end -}}
@@ -15,11 +15,7 @@
   sideEffects: {{ tpl . $rootCtx }}
   {{- end -}}
   {{- with $webhook.timeoutSeconds }}
-    {{- $timeout := . -}}
-    {{- if (kindIs "string" $timeout) -}}
-      {{- $timeout = tpl . $rootCtx -}}
-    {{- end }}
-  timeoutSeconds: {{ $timeout }}
+  timeoutSeconds: {{ . }}
   {{- end -}}
   {{- include "tc.v1.common.lib.webhook.admissionReviewVersions" (dict "rootCtx" $rootCtx "admissionReviewVersions" $webhook.admissionReviewVersions) | trim | nindent 2 -}}
   {{- include "tc.v1.common.lib.webhook.clientConfig" (dict "rootCtx" $rootCtx "clientConfig" $webhook.clientConfig) | trim | nindent 2 -}}
