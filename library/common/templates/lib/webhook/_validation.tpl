@@ -65,7 +65,31 @@
       {{- fail (printf "Webhook - Expected <rules> in <webhook.%v.%v> to be a list, but got [%v]" $objectData.shortName $webhook.name (kindOf $webhook.rules)) -}}
     {{- end -}}
 
-    {{/*TODO: validate rules */}}
+    {{- range $rule := $webhook.rules -}}
+      {{- if not $rule.apiGroups -}}
+        {{- fail (printf "Webhook - Expected <apiGroups> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+      {{- end -}}
+
+      {{- if not $rule.apiVersions -}}
+        {{- fail (printf "Webhook - Expected <apiVersions> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+      {{- end -}}
+
+      {{- if not $rule.operations -}}
+        {{- fail (printf "Webhook - Expected <operations> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+      {{- end -}}
+
+      {{- if not $rule.resources -}}
+        {{- fail (printf "Webhook - Expected <resources> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
+      {{- end -}}
+
+      {{- $scopes := (list "Cluster" "Namespaced" "*") -}}
+      {{- with $rule.scope -}}
+        {{- $scope := tpl . $rootCtx -}}
+        {{- if not (mustHas $scope $scopes) -}}
+          {{- fail (printf "Webhook - Expected <scope> in <webhook.%v.%v> to be one of [%s], but got [%v]" $objectData.shortName $webhook.name (join ", " $scopes) $scope) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
 
     {{- with $webhook.failurePolicy -}}
       {{- $policy := tpl . $rootCtx -}}

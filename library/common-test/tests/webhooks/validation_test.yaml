@@ -410,3 +410,90 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Webhook - Expected <rules> in <webhook.my-webhook.webhook1> to be a list, but got [string]
+
+  - it: should fail with empty apiGroups in rule
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig: *clientConfig
+              rules:
+                - apiVersions:
+                    - v1
+                  resources:
+                    - pods
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <apiGroups> in <webhook.my-webhook.webhook1> to not be empty
+
+  - it: should fail with empty apiVersions in rule
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig: *clientConfig
+              rules:
+                - apiVersions:
+                    - v1
+                  resources:
+                    - pods
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <apiGroups> in <webhook.my-webhook.webhook1> to not be empty
+
+  - it: should fail with empty operations in rule
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig: *clientConfig
+              rules:
+                - apiGroups:
+                    - ""
+                  apiVersions:
+                    - v1
+                  resources:
+                    - pods
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <operations> in <webhook.my-webhook.webhook1> to not be empty
+
+  - it: should fail with invalid scope
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks:
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig: *clientConfig
+              rules:
+                - apiGroups:
+                    - ""
+                  apiVersions:
+                    - v1
+                  resources:
+                    - pods
+                  operations:
+                    - CREATE
+                  scope: "not valid"
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <scope> in <webhook.my-webhook.webhook1> to be one of [Cluster, Namespaced, *], but got [not valid]

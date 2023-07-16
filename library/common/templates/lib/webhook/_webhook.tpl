@@ -21,13 +21,9 @@
     {{- end }}
   timeoutSeconds: {{ $timeout }}
   {{- end -}}
-  {{- include "tc.v1.common.lib.webhook.admissionReviewVersions" (dict "admissionReviewVersions" $webhook.admissionReviewVersions) | trim | nindent 2 -}}
-  {{- include "tc.v1.common.lib.webhook.clientConfig" (dict "clientConfig" $webhook.clientConfig) | trim | nindent 2 -}}
-  {{- with $webhook.rules }}
-  rules:
-  {{/* TODO: rules, dont use toYaml */}}
-    {{- tpl (toYaml $webhook.rules) $rootCtx | nindent 2 -}}
-  {{- end -}}
+  {{- include "tc.v1.common.lib.webhook.admissionReviewVersions" (dict "rootCtx" $rootCtx "admissionReviewVersions" $webhook.admissionReviewVersions) | trim | nindent 2 -}}
+  {{- include "tc.v1.common.lib.webhook.clientConfig" (dict "rootCtx" $rootCtx "clientConfig" $webhook.clientConfig) | trim | nindent 2 -}}
+  {{- include "tc.v1.common.lib.webhook.rules" (dict "rootCtx" $rootCtx "rules" $webhook.rules) | trim | nindent 2 -}}
   {{- with $webhook.namespaceSelector }}
   namespaceSelector:
     {{- tpl (toYaml $webhook.namespaceSelector) $rootCtx | nindent 2 -}}
