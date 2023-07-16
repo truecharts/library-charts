@@ -12,12 +12,22 @@ tests:
           enabled: true
           type: validating
           webhooks:
-            - FIXME
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig:
+                service:
+                  namespace: test
         my-webhook2:
           enabled: true
           type: mutating
           webhooks:
-            - FIXME
+            - name: webhook1
+              admissionReviewVersions:
+                - v1
+              clientConfig:
+                service:
+                  namespace: test
     asserts:
       - documentIndex: &webhookValDoc 0
         isKind:
