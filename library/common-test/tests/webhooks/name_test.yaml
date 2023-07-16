@@ -19,6 +19,15 @@ tests:
                 service:
                   name: test
                   namespace: test
+              rules:
+                - operations:
+                    - CREATE
+                  apiGroups:
+                    - ""
+                  apiVersions:
+                    - v1
+                  resources:
+                    - pods
         my-webhook2:
           enabled: true
           type: mutating

@@ -12,7 +12,22 @@ workload:
       containers:
         main:
           enabled: false
-
+# webhook:
+#   my-webhook:
+#     enabled: true
+#     type: validating
+#     webhooks:
+#       - name: webhook
+#         clientConfig:
+#           service:
+#             name: test
+#             namespace: test
+#         failurePolicy: Fail
+#         sideEffects: None
+#         matchPolicy: Equivalent
+#         timeoutSeconds: 30
+#         admissionReviewVersions:
+#           - v1
 service:
   main:
     enabled: false

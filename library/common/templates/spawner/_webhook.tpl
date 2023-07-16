@@ -47,7 +47,7 @@
       {{- $_ := set $objectData "name" $objectName -}}
       {{- $_ := set $objectData "shortName" $name -}}
 
-      {{- include "tc.v1.common.lib.webhook.validation" (dict "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.webhook.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{/* Call class to create the object */}}
       {{- if eq $objectData.type "validating" -}}
