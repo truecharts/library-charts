@@ -63,7 +63,7 @@
     {{- end -}}
 
     {{- if not (kindIs "slice" $webhook.rules) -}}
-      {{- fail (printf "Webhook - Expected <rules> in <webhook.%v.%v> to be a list, but got [%v]" $objectData.shortName $webhook.name (kindOf $objectData.rules)) -}}
+      {{- fail (printf "Webhook - Expected <rules> in <webhook.%v.%v> to be a list, but got [%v]" $objectData.shortName $webhook.name (kindOf $webhook.rules)) -}}
     {{- end -}}
 
     {{- with $webhook.failurePolicy -}}
