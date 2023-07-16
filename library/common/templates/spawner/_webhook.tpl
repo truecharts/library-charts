@@ -49,10 +49,11 @@
 
       {{- include "tc.v1.common.lib.webhook.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
+      {{- $type := tpl $objectData.type $ -}}
       {{/* Call class to create the object */}}
-      {{- if eq $objectData.type "validating" -}}
+      {{- if eq $type "validating" -}}
         {{- include "tc.v1.common.class.validatingWebhookconfiguration" (dict "rootCtx" $ "objectData" $objectData) -}}
-      {{- else if eq $objectData.type "mutating" -}}
+      {{- else if eq $type "mutating" -}}
         {{- include "tc.v1.common.class.mutatingWebhookConfiguration" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
 

@@ -26,10 +26,11 @@ tests:
       k17: v1beta
       k18: pods
       k19: configmaps
+      k20: mutating
       webhook:
         my-webhook1:
           enabled: true
-          type: mutating
+          type: "{{ .Values.k20 }}"
           webhooks:
             - name: "{{ .Values.k1 }}"
               failurePolicy: "{{ .Values.k8 }}"
