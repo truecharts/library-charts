@@ -1,0 +1,117 @@
+suite: webhook validation test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should fail with name longer than 63 characters
+    set:
+      webhook:
+        my-webhook-super-long-name-that-is-longer-than-63-characters:
+          enabled: true
+          type: validating
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-my-webhook-super-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with name starting with underscore
+    set:
+      webhook:
+        _my-webhook:
+          enabled: true
+          type: validating
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-_my-webhook] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with namespace longer than 63 characters
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
+          webhooks:
+            - FIXME
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Namespace [my-extra-super-duper-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with namespace not starting with [ix-] in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          namespace: my-namespace
+          webhooks:
+            - FIXME
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Namespace [my-namespace] expected to have [ix-] prefix when installed in TrueNAS SCALE
+
+  - it: should fail with labels not a dict
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          labels: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <labels> to be a dictionary, but got [string]
+
+  - it: should fail with annotations not a dict
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          annotations: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <annotations> to be a dictionary, but got [string]
+
+  - it: should fail with invalid type
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: "not valid"
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <type> in <webhook.my-webhook> to be one of [validating, mutating] but got [not valid]
+
+  - it: should fail without type
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type:
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <type> in <webhook.my-webhook> to be one of [validating, mutating] but got [<nil>]
+
+  - it: should fail with empty webhooks
+    set:
+      webhook:
+        my-webhook:
+          enabled: true
+          type: validating
+          webhooks: []
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected <webhooks> in <webhook.my-webhook> to be non-empty
+
+  - it: should fail with empty enabled
+    set:
+      webhook:
+        my-webhook:
+          enabled:
+    asserts:
+      - failedTemplate:
+          errorMessage: Webhook - Expected the defined key [enabled] in <webhook.my-webhook> to not be empty
