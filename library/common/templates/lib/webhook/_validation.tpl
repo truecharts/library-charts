@@ -57,7 +57,6 @@
       {{- end -}}
     {{- end -}}
 
-    {{/*TODO: rules */}}
     {{- if not $webhook.rules -}}
       {{- fail (printf "Webhook - Expected <rules> in <webhook.%v.%v> to not be empty" $objectData.shortName $webhook.name) -}}
     {{- end -}}
@@ -65,6 +64,8 @@
     {{- if not (kindIs "slice" $webhook.rules) -}}
       {{- fail (printf "Webhook - Expected <rules> in <webhook.%v.%v> to be a list, but got [%v]" $objectData.shortName $webhook.name (kindOf $webhook.rules)) -}}
     {{- end -}}
+
+    {{/*TODO: validate rules */}}
 
     {{- with $webhook.failurePolicy -}}
       {{- $policy := tpl . $rootCtx -}}

@@ -25,6 +25,7 @@
   {{- include "tc.v1.common.lib.webhook.clientConfig" (dict "clientConfig" $webhook.clientConfig) | trim | nindent 2 -}}
   {{- with $webhook.rules }}
   rules:
+  {{/* TODO: rules, dont use toYaml */}}
     {{- tpl (toYaml $webhook.rules) $rootCtx | nindent 2 -}}
   {{- end -}}
   {{- with $webhook.namespaceSelector }}
@@ -36,4 +37,3 @@
     {{- tpl (toYaml $webhook.objectSelector) $rootCtx | nindent 2 -}}
   {{- end -}}
 {{- end -}}
-{{/*TODO: rules */}}
