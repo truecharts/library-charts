@@ -207,7 +207,7 @@ jobs:
           fi
 
           if [[ "${{ matrix.values }}" =~ ingress.*-values.yaml ]]; then
-            # TODO: Install traefik
+            echo "TODO: Install traefik"
           fi
 
           if [[ "${{ matrix.values }}" =~ metrics.*-values.yaml ]]; then
