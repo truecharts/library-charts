@@ -200,6 +200,13 @@ jobs:
           tar -xvzf kail_${KAIL_VERSION}_linux_amd64.tar.gz
           chmod +x kail
 
+      - name: Prep Helm
+        run: |
+          helm repo add truecharts https://charts.truecharts.org
+          helm repo add truecharts-deps https://deps.truecharts.org
+          helm repo add truecharts-library https://library-charts.truecharts.org
+          helm repo update
+
       - name: Add Dependencies
         run: |
           if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
