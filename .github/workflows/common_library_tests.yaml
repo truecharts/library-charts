@@ -130,9 +130,10 @@ jobs:
           - metrics-values.yaml
           - cnpg-values.yaml
           - cnpg-multi-values.yaml
-          - manifest-values.yaml
-          - stagingmanifest-values.yaml
           - register-operator-values.yaml
+          # TODO: remove?
+          # - manifest-values.yaml
+          # - stagingmanifest-values.yaml
 
     steps:
       - name: Checkout
@@ -199,13 +200,19 @@ jobs:
           tar -xvzf kail_${KAIL_VERSION}_linux_amd64.tar.gz
           chmod +x kail
 
-        # Install some manifests to enable us to allow for testing cnpg, metrics and such
-      - name: Install manifests
+      - name: Add Dependencies
         run: |
-          kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.10/config/manifests/metallb-native.yaml --server-side --force-conflicts || echo "error fetching metallb manifest"
-          kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.20/releases/cnpg-1.20.0.yaml  --server-side --force-conflicts || echo "error fetching cnpg manifest"
-          kubectl apply -f  https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.65.2/bundle.yaml --server-side --force-conflicts || echo "error fetching prometheus operator manifest"
+          if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
+            helm install cloudnative-pg truecharts/cloudnative-pg --namespace cloudnative-pg --create-namespace --wait
+          fi
 
+          if [[ "${{ matrix.values }}" =~ ingress.*-values.yaml ]]; then
+            # TODO: Install traefik
+          fi
+
+          if [[ "${{ matrix.values }}" =~ metrics.*-values.yaml ]]; then
+            helm install prometheus-operator truecharts/prometheus-operator --namespace prometheus-operator --create-namespace --wait
+          fi
 
       - name: Run chart-testing (install)
         run: |
