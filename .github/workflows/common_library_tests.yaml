@@ -209,7 +209,7 @@ jobs:
 
       - name: Add Dependencies
         run: |
-          if [[ "${{ matrix.values }}" =~ (metrics|cpng).*-values.yaml ]]; then
+          if [[ "${{ matrix.values }}" =~ (metrics|cnpg).*-values.yaml ]]; then
             helm install prometheus-operator truecharts/prometheus-operator --namespace prometheus-operator --create-namespace --wait
           fi
           if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
