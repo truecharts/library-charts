@@ -217,7 +217,7 @@ jobs:
           fi
 
           if [[ "${{ matrix.values }}" =~ ingress.*-values.yaml ]]; then
-            echo "TODO: Install traefik"
+            helm install traefik truecharts/traefik --namespace traefik --create-namespace --wait
           fi
 
 
