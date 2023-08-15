@@ -131,9 +131,6 @@ jobs:
           - cnpg-values.yaml
           - cnpg-multi-values.yaml
           - register-operator-values.yaml
-          # TODO: remove?
-          # - manifest-values.yaml
-          # - stagingmanifest-values.yaml
 
     steps:
       - name: Checkout
@@ -220,7 +217,6 @@ jobs:
             helm install traefik truecharts/traefik --namespace traefik --create-namespace --wait
           fi
 
-
       - name: Run chart-testing (install)
         run: |
           # Move all ci values on a temp location (or skip if already moved from another matrix job)
@@ -288,7 +284,6 @@ jobs:
         with:
           fetch-depth: 1
 
-
       - name: build helm deps
         run: |
           cd library/common-test
@@ -305,7 +300,6 @@ jobs:
           cliArguments: '--ignore-missing-schemas --policy CommonBasic'
           isHelmChart: true
           helmArguments: '--values library/common-test/ci/${{ matrix.values }}'
-
 
   security-man:
     needs:
@@ -326,8 +320,6 @@ jobs:
           - metrics-values.yaml
           # - cnpg-values.yaml
           # - cnpg-multi-values.yaml
-          # - manifest-values.yaml
-          # - stagingmanifest-values.yaml
 
     steps:
       - name: Install Helm
@@ -339,7 +331,6 @@ jobs:
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
         with:
           fetch-depth: 1
-
 
       - name: build helm deps
         run: |
@@ -386,7 +377,6 @@ jobs:
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
         with:
           fetch-depth: 1
-
 
       - name: build helm deps
         run: |
