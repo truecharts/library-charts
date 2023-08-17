@@ -83,19 +83,14 @@ spec:
         key: custom-queries
     {{- end }}
 
-  {{- if or $values.cluster.nodeMaintenanceWindow $values.cluster.singleNode $rootCtx.Values.global.ixChartContext -}}
   nodeMaintenanceWindow:
+  {{- if $values.cluster.nodeMaintenanceWindow -}}
+      {{- toYaml $values.cluster.nodeMaintenanceWindow | nindent 6 }}
+  {{- else -}}
     {{- if or $rootCtx.Values.global.ixChartContext $values.cluster.singleNode -}}
-    {{- if not  $values.cluster.nodeMaintenanceWindow.inProgress -}}
     inProgress: true
-    {{- end -}}
-    {{- if not  $values.cluster.nodeMaintenanceWindow.reusePVC -}}
     reusePVC: true
     {{- end -}}
-    {{- end -}}
-    {{- with $values.cluster.nodeMaintenanceWindow }}
-      {{- toYaml . | nindent 6 }}
-    {{ end }}
   {{- end -}}
 
   {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $ "objectData" $values.cluster) | trim) }}

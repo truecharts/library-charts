@@ -47,11 +47,11 @@ spec:
   pgbouncer:
     poolMode: {{ $values.pooler.poolMode | default "session" }}
     parameters:
-      {{- if not $values.pooler.parameters.max_client_conn -}}
-      max_client_conn: "1000"
-      {{- end -}}
-      {{- if  not $values.pooler.parameters.default_pool_size -}}
-      default_pool_size: "10"
-      {{- end -}}
+    {{- if $values.pooler.parameters -}}
       {{- $values.pooler.parameters | toYaml | nindent 6 }}
+    {{- else -}}
+      max_client_conn: "1000"
+      default_pool_size: "10"
+      {{- $values.pooler.parameters | toYaml | nindent 6 }}
+    {{- end -}}
 {{- end -}}

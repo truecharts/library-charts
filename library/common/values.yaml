@@ -774,6 +774,9 @@ cnpg:
       # Number of instances
       instances: 2
 
+      # set to true on single-node clusers to allow PVCs to be kept on instance restart
+      singleNode: false
+
       storage:
         # size: 256Gi
         # storageClass: ""
