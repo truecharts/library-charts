@@ -50,14 +50,46 @@
 
     {{- end }}
 
-    {{- $azureBackupSecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.backups.azure.connectionString "storageAccount" $cnpgValues.backups.azure.storageAccount "storageKey" $cnpgValues.backups.azure.storageKey "storageSasToken" $cnpgValues.backups.azure.storageSasToken ) | fromYaml }}
-    {{- if $azureBackupSecret }}
-      {{- $_ := set $.Values.secret ( printf "%s-backup-azure-creds" $cnpgValues.shortName ) $azureBackupSecret }}
+    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "azure") }}
+      {{- $azureBackupSecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.backups.azure.connectionString "storageAccount" $cnpgValues.backups.azure.storageAccount "storageKey" $cnpgValues.backups.azure.storageKey "storageSasToken" $cnpgValues.backups.azure.storageSasToken ) | fromYaml }}
+      {{- if $azureBackupSecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-backup-azure-creds" $cnpgValues.shortName ) $azureBackupSecret }}
+      {{- end }}
     {{- end }}
 
-    {{- $azureRecoverySecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.recovery.azure.connectionString "storageAccount" $cnpgValues.recovery.azure.storageAccount "storageKey" $cnpgValues.recovery.azure.storageKey "storageSasToken" $cnpgValues.recovery.azure.storageSasToken ) | fromYaml }}
-    {{- if $azureRecoverySecret }}
-      {{- $_ := set $.Values.secret ( printf "%s-recovery-azure-creds" $cnpgValues.shortName ) $azureRecoverySecret }}
+    {{- if and (eq $cnpgValues.mode "recovery" ) (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "azure") }}
+      {{- $azureRecoverySecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.recovery.azure.connectionString "storageAccount" $cnpgValues.recovery.azure.storageAccount "storageKey" $cnpgValues.recovery.azure.storageKey "storageSasToken" $cnpgValues.recovery.azure.storageSasToken ) | fromYaml }}
+      {{- if $azureRecoverySecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-recovery-azure-creds" $cnpgValues.shortName ) $azureRecoverySecret }}
+      {{- end }}
+    {{- end }}
+
+    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "google") }}
+      {{- $googleBackupSecret := include "tc.v1.common.lib.cnpg.secret.google" (dict "applicationCredentials" $cnpgValues.backups.google.applicationCredentials ) | fromYaml }}
+      {{- if $googleBackupSecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-backup-google-creds" $cnpgValues.shortName ) $googleBackupSecret }}
+      {{- end }}
+    {{- end }}
+
+    {{- if and (eq $cnpgValues.mode "recovery" ) (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "google") }}
+      {{- $googleRecoverySecret := include "tc.v1.common.lib.cnpg.secret.google" (dict "applicationCredentials" $cnpgValues.recovery.google.applicationCredentials ) | fromYaml }}
+      {{- if $googleRecoverySecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-recovery-google-creds" $cnpgValues.shortName ) $googleRecoverySecret }}
+      {{- end }}
+    {{- end }}
+
+    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "s3") }}
+      {{- $s3BackupSecret := include "tc.v1.common.lib.cnpg.secret.s3" (dict "accessKey" $cnpgValues.backups.s3.accessKey "secretKey" $cnpgValues.backups.s3.secretKey ) | fromYaml }}
+      {{- if $s3BackupSecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-backup-s3-creds" $cnpgValues.shortName ) $s3BackupSecret }}
+      {{- end }}
+    {{- end -}}
+
+    {{- if and (eq $cnpgValues.mode "recovery" ) (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "s3") }}
+      {{- $s3RecoverySecret := include "tc.v1.common.lib.cnpg.secret.s3" (dict "accessKey" $cnpgValues.recovery.s3.accessKey "secretKey" $cnpgValues.recovery.s3.secretKey ) | fromYaml }}
+      {{- if $s3RecoverySecret }}
+        {{- $_ := set $.Values.secret ( printf "%s-recovery-s3-creds" $cnpgValues.shortName ) $s3RecoverySecret }}
+      {{- end }}
     {{- end }}
 
     {{- $dbPass := "" }}
