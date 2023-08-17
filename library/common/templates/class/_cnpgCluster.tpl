@@ -1,5 +1,5 @@
 {{- define "tc.v1.common.class.cnpg.cluster" -}}
-  {{- $values := .Values.cnpg -}}
+  {{- $values := $values.cnpg -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.cnpg -}}
@@ -45,37 +45,37 @@ spec:
   instances: {{ $values.cluster.instances | default 2 }}
 
   bootstrap:
-  {{- if eq .Values.mode "standalone" }}
+  {{- if eq $values.mode "standalone" }}
     initdb:
       database: {{ $values.database | default "app" }}
       owner: {{ $values.user | default "app" }}
       secret:
         name: {{ $cnpgClusterName }}-user
-      {{- range $key, $val := (omit .Values.cluster.initdb "postInitApplicationSQL" "database" "owner" "secret") }}
-        {{- $key | nindent 4 }}: {{ $val | toYaml }}
+      {{- range $key, $val := (omit $values.cluster.initdb "postInitApplicationSQL" "database" "owner" "secret") }}
+        {{- $key | nindent 6 }}: {{ $val | toYaml }}
       {{- end }}
       postInitApplicationSQL:
-        {{- range .Values.cluster.initdb.postInitApplicationSQL }}
+        {{- range $values.cluster.initdb.postInitApplicationSQL }}
           - {{ . }}
         {{- end -}}
-        {{- if eq .Values.type "postgis" }}
+        {{- if eq $values.type "postgis" }}
           - CREATE EXTENSION IF NOT EXISTS postgis;
           - CREATE EXTENSION IF NOT EXISTS postgis_topology;
           - CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
           - CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
-        {{- else if eq .Values.type "timescaledb" }}
+        {{- else if eq $values.type "timescaledb" }}
           - CREATE EXTENSION IF NOT EXISTS timescaledb;
         {{- end }}
-  {{- else if eq .Values.mode "recovery" }}
+  {{- else if eq $values.mode "recovery" }}
     recovery:
-      {{- with .Values.recovery.pitrTarget.time }}
+      {{- with $values.recovery.pitrTarget.time }}
       recoveryTarget:
         targetTime: {{ . }}
       {{- end }}
-      {{- if eq .Values.recovery.method "backup" }}
+      {{- if eq $values.recovery.method "backup" }}
       backup:
-        name: {{ .Values.recovery.backupName }}
-      {{- else if eq .Values.recovery.method "object_store" }}
+        name: {{ $values.recovery.backupName }}
+      {{- else if eq $values.recovery.method "object_store" }}
       source: objectStoreRecoveryCluster
       {{- end }}
       database: {{ $values.database | default "app" }}
@@ -86,13 +86,30 @@ spec:
   externalClusters:
     - name: objectStoreRecoveryCluster
       barmanObjectStore:
-        serverName: {{ .Values.recovery.serverName }}
-        {{- $d := dict "chartFullname" (include "cluster.fullname" .) "scope" .Values.recovery "secretSuffix" "-recovery" -}}
-        {{- include "cluster.barmanObjectStoreConfig" $d | nindent 4 }}
+        serverName: {{ $values.recovery.serverName }}
+        {{- $d1 := dict "chartFullname" $cnpgClusterName "scope" $values.recovery "secretSuffix" "-recovery" -}}
+        {{- include "cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
   {{-  else }}
     {{ fail "Invalid cluster mode!" }}
   {{- end }}
 
+
+backup:
+{{- if $values.backups.enabled }}
+  target: "prefer-standby"
+  retentionPolicy: {{ $values.backups.retentionPolicy }}
+  barmanObjectStore:
+    wal:
+      compression: gzip
+      encryption: AES256
+    data:
+      compression: gzip
+      encryption: AES256
+      jobs: {{ $values.backups.jobs | default 2 }}
+
+    {{- $d2 := dict "chartFullname" $cnpgClusterName "scope" $values.backups }}
+    {{- include "cluster.barmanObjectStoreConfig" $d2 | nindent 4 }}
+{{- end }}
 
   enableSuperuserAccess: {{ $values.cluster.enableSuperuserAccess | default "true" }}
 
