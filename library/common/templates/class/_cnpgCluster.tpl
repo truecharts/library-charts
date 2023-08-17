@@ -127,13 +127,15 @@ backup:
     {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.cluster.storage )) | trim }}
     storageClass: {{ . }}
     {{- end }}
-    size: {{ tpl ($values.cluster.storage.size | default $.Values.fallbackDefaults.vctSize) $ | quote }}
+    {{- $size := $values.cluster.storage.size | default $.Values.fallbackDefaults.vctSize -}}
+    size: {{ tpl ( $size ) $ | quote }}
 
   walStorage:
-    {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.cluster.storage )) | trim }}
+    {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.cluster.walStorage )) | trim }}
     storageClass: {{ . }}
     {{- end }}
-    size: {{ tpl ($values.cluster.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
+    {{- $walSize := $values.cluster.walStorage.size | default $.Values.fallbackDefaults.vctSize -}}
+    size: {{ tpl ( $walSize ) $ | quote }}
 
   monitoring:
     enablePodMonitor: {{ $monitoring }}
