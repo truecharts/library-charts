@@ -45,11 +45,54 @@ spec:
   instances: {{ $values.cluster.instances | default 2 }}
 
   bootstrap:
+  {{- if eq .Values.mode "standalone" }}
     initdb:
       database: {{ $values.database | default "app" }}
       owner: {{ $values.user | default "app" }}
       secret:
         name: {{ $cnpgClusterName }}-user
+      {{- range $key, $val := (omit .Values.cluster.initdb "postInitApplicationSQL" "database" "owner" "secret") }}
+        {{- $key | nindent 4 }}: {{ $val | toYaml }}
+      {{- end }}
+      postInitApplicationSQL:
+        {{- range .Values.cluster.initdb.postInitApplicationSQL }}
+          - {{ . }}
+        {{- end -}}
+        {{- if eq .Values.type "postgis" }}
+          - CREATE EXTENSION IF NOT EXISTS postgis;
+          - CREATE EXTENSION IF NOT EXISTS postgis_topology;
+          - CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
+          - CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
+        {{- else if eq .Values.type "timescaledb" }}
+          - CREATE EXTENSION IF NOT EXISTS timescaledb;
+        {{- end }}
+  {{- else if eq .Values.mode "recovery" }}
+    recovery:
+      {{- with .Values.recovery.pitrTarget.time }}
+      recoveryTarget:
+        targetTime: {{ . }}
+      {{- end }}
+      {{- if eq .Values.recovery.method "backup" }}
+      backup:
+        name: {{ .Values.recovery.backupName }}
+      {{- else if eq .Values.recovery.method "object_store" }}
+      source: objectStoreRecoveryCluster
+      {{- end }}
+      database: {{ $values.database | default "app" }}
+      owner: {{ $values.user | default "app" }}
+      secret:
+        name: {{ $cnpgClusterName }}-user
+
+  externalClusters:
+    - name: objectStoreRecoveryCluster
+      barmanObjectStore:
+        serverName: {{ .Values.recovery.serverName }}
+        {{- $d := dict "chartFullname" (include "cluster.fullname" .) "scope" .Values.recovery "secretSuffix" "-recovery" -}}
+        {{- include "cluster.barmanObjectStoreConfig" $d | nindent 4 }}
+  {{-  else }}
+    {{ fail "Invalid cluster mode!" }}
+  {{- end }}
+
 
   enableSuperuserAccess: {{ $values.cluster.enableSuperuserAccess | default "true" }}
 
@@ -87,7 +130,7 @@ spec:
   {{- if $values.cluster.nodeMaintenanceWindow -}}
       {{- toYaml $values.cluster.nodeMaintenanceWindow | nindent 6 }}
   {{- else -}}
-    {{- if or $rootCtx.Values.global.ixChartContext $values.cluster.singleNode -}}
+    {{- if or $.Values.global.ixChartContext $values.cluster.singleNode -}}
     inProgress: true
     reusePVC: true
     {{- end -}}
