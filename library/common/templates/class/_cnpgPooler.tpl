@@ -14,8 +14,10 @@
   {{- $cnpgPoolerLabels := $values.pooler.labels -}}
   {{- $cnpgPoolerAnnotations := $values.pooler.annotations -}}
   {{- $instances := $values.pooler.instances | default 2 -}}
+  {{- $hibernation := false -}}
   {{- if or $values.hibernate $.Values.global.stopAll -}}
     {{- $instances = 0 -}}
+    {{- $hibernation = true -}}
   {{- end }}
   {{- $type := $values.pooler.type | default "rw" -}}
 ---
