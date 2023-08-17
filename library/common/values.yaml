@@ -785,13 +785,8 @@ cnpg:
         # size: 256Gi
         # storageClass: ""
 
+      ## See .Values.resources for more info
       # resources:
-        # limits:
-        #   cpu: 2000m
-        #   memory: 8Gi
-        # requests:
-        #   cpu: 2000m
-        #   memory: 8Gi
 
       # Method to follow to upgrade the primary server during a rolling update procedure, after all replicas have been
       # successfully updated. It can be switchover (default) or in-place (restart).
