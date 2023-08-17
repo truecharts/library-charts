@@ -24,7 +24,7 @@
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $ }}
 kind: Pooler
 metadata:
-  name: {{ printf "%v-%v" $cnpgClusterName $type }}
+  name: {{ printf "%v-pooler-%v" $cnpgClusterName $type }}
   namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
   {{- $labels := (mustMerge ($cnpgPoolerLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
   labels:
