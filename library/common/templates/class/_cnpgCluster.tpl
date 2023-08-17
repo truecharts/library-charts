@@ -7,8 +7,10 @@
     {{- end -}}
   {{- end -}}
   {{- $cnpgClusterName := $values.name -}}
-  {{- $cnpgClusterLabels := $values.labels -}}
-  {{- $cnpgClusterAnnotations := $values.annotations -}}
+  {{- $cnpgLabels := $values.labels -}}
+  {{- $cnpgAnnotations := $values.annotations -}}
+  {{- $cnpgClusterLabels := $values.cluster.labels -}}
+  {{- $cnpgClusterAnnotations := $values.cluster.annotations -}}
   {{- $hibernation := "off" -}}
   {{- if or $values.hibernate $.Values.global.stopAll -}}
     {{- $hibernation = "on" -}}
@@ -19,20 +21,21 @@ kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
   namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
-  {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
+  {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
   labels:
     cnpg.io/reload: "on"
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
-  {{- $annotations := (mustMerge ($cnpgClusterAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) }}
+  {{- $annotations := (mustMerge ($cnpgClusterAnnotations | default dict) ($cnpgAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) }}
   annotations:
+    rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  instances: {{ $values.instances | default 2 }}
+  instances: {{ $values.cluster.instances | default 2 }}
 
   bootstrap:
     initdb:
@@ -41,43 +44,66 @@ spec:
       secret:
         name: {{ $cnpgClusterName }}-user
 
-  primaryUpdateStrategy: {{ $values.primaryUpdateStrategy | default "unsupervised" }}
+  enableSuperuserAccess: {{ $values.cluster.enableSuperuserAccess | default "true" }}
+
+  primaryUpdateStrategy: {{ $values.cluster.primaryUpdateStrategy | default "unsupervised" }}
+  primaryUpdateMethod: {{ $values.cluster.primaryUpdateMethod | default "switchover" }}
+
+  logLevel: {{ $values.cluster.logLevel }}
+
+  {{- with $values.cluster.certificates }}
+  certificates:
+    {{- toYaml . | nindent 4 }}
+  {{ end }}
 
   storage:
-    pvcTemplate:
-      {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.storage )) | trim }}
-      storageClassName: {{ . }}
-      {{- end }}
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
+    {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.cluster.storage )) | trim }}
+    storageClass: {{ . }}
+    {{- end }}
+    size: {{ tpl ($values.cluster.storage.size | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   walStorage:
-    pvcTemplate:
-      {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.storage )) | trim }}
-      storageClassName: {{ . }}
-      {{- end }}
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: {{ tpl ($values.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
+    {{- with (include "tc.v1.common.lib.storage.storageClassName" ( dict "rootCtx" $ "objectData" $values.cluster.storage )) | trim }}
+    storageClass: {{ . }}
+    {{- end }}
+    size: {{ tpl ($values.cluster.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   monitoring:
     enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
+    {{- if not (empty $values.cluster.monitoring.customQueries) }}
+    customQueriesConfigMap:
+      - name: {{ include "cluster.fullname" . }}-monitoring
+        key: custom-queries
+    {{- end }}
 
+  {{- if or $values.cluster.nodeMaintenanceWindow $values.cluster.singleNode $rootCtx.Values.global.ixChartContext -}}
   nodeMaintenanceWindow:
-    inProgress: false
+    {{- if or $rootCtx.Values.global.ixChartContext $values.cluster.singleNode -}}
+    {{- if not  $values.cluster.nodeMaintenanceWindow.inProgress -}}
+    inProgress: true
+    {{- end -}}
+    {{- if not  $values.cluster.nodeMaintenanceWindow.reusePVC -}}
     reusePVC: true
+    {{- end -}}
+    {{- end -}}
+    {{- with $values.cluster.nodeMaintenanceWindow }}
+      {{- toYaml . | nindent 6 }}
+    {{ end }}
+  {{- end -}}
 
-  {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $ "objectData" $values) | trim) }}
+  {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $ "objectData" $values.cluster) | trim) }}
   resources:
     {{- . | nindent 4 }}
   {{- end }}
 
   postgresql:
-    {{- tpl ( $values.postgresql | toYaml ) $ | nindent 4 }}
+    shared_preload_libraries:
+      {{- if eq $values.type "timescaledb" }}
+      - timescaledb
+      {{- end }}
+    {{- with $values.cluster.postgresql }}
+    parameters:
+      {{- toYaml . | nindent 6 }}
+    {{ end }}
 
 {{- end -}}

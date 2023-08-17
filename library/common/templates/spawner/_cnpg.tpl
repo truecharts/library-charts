@@ -40,7 +40,7 @@
       {{- include "tc.v1.common.class.cnpg.cluster" $ }}
 
       {{- $_ := set $cnpgValues.pooler "type" "rw" }}
-      {{- if not $cnpgValues.acceptRO }}
+      {{- if not $cnpgValues.pooler.acceptRO }}
       {{- include "tc.v1.common.class.cnpg.pooler" $ }}
       {{- else }}
       {{- include "tc.v1.common.class.cnpg.pooler" $ }}
@@ -49,7 +49,6 @@
       {{- end }}
 
     {{- end }}
-
 
     {{- $dbPass := "" }}
     {{- $dbprevious := lookup "v1" "Secret" $.Release.Namespace ( printf "%s-user" $cnpgValues.name ) }}
@@ -90,7 +89,7 @@
           {{- $poolermetrics :=  include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" ( printf "%s-rw" $cnpgValues.name) ) | fromYaml }}
 
           {{- $_ := set $.Values.metrics ( printf "cnpg-%s-rw" $cnpgValues.shortName ) $poolermetrics }}
-          {{- if $cnpgValues.acceptRO }}
+          {{- if $cnpgValues.pooler.acceptRO }}
             {{- $poolermetricsRO :=  include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" ( printf "%s-ro" $cnpgValues.name) ) | fromYaml }}
             {{- $_ := set $.Values.metrics ( printf "cnpg-%s-ro" $cnpgValues.shortName ) $poolermetricsRO }}
           {{- end }}
