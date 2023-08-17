@@ -50,6 +50,16 @@
 
     {{- end }}
 
+    {{- $azureBackupSecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.backups.azure.connectionString "storageAccount" $cnpgValues.backups.azure.storageAccount "storageKey" $cnpgValues.backups.azure.storageKey "storageSasToken" $cnpgValues.backups.azure.storageSasToken ) | fromYaml }}
+    {{- if $azureBackupSecret }}
+      {{- $_ := set $.Values.secret ( printf "%s-backup-azure-creds" $cnpgValues.shortName ) $azureBackupSecret }}
+    {{- end }}
+
+    {{- $azureRecoverySecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.recovery.azure.connectionString "storageAccount" $cnpgValues.recovery.azure.storageAccount "storageKey" $cnpgValues.recovery.azure.storageKey "storageSasToken" $cnpgValues.recovery.azure.storageSasToken ) | fromYaml }}
+    {{- if $azureRecoverySecret }}
+      {{- $_ := set $.Values.secret ( printf "%s-recovery-azure-creds" $cnpgValues.shortName ) $azureRecoverySecret }}
+    {{- end }}
+
     {{- $dbPass := "" }}
     {{- $dbprevious := lookup "v1" "Secret" $.Release.Namespace ( printf "%s-user" $cnpgValues.name ) }}
     {{- if or $enabled $dbprevious -}}
