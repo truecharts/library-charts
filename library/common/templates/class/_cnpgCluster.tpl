@@ -15,6 +15,13 @@
   {{- if or $values.hibernate $.Values.global.stopAll -}}
     {{- $hibernation = "on" -}}
   {{- end }}
+
+  {{- $monitoring := false -}}
+  {{- with $values.monitoring -}}
+    {{- if not (kindIs "invalid" .enablePodMonitor) -}}
+      {{- $monitoring = .enablePodMonitor -}}
+    {{- end -}}
+  {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
 kind: Cluster
@@ -69,7 +76,7 @@ spec:
     size: {{ tpl ($values.cluster.storage.walsize | default $.Values.fallbackDefaults.vctSize) $ | quote }}
 
   monitoring:
-    enablePodMonitor: {{ $values.monitoring.enablePodMonitor | default true }}
+    enablePodMonitor: {{ $monitoring }}
     {{- if not (empty $values.cluster.monitoring.customQueries) }}
     customQueriesConfigMap:
       - name: {{ include "cluster.fullname" . }}-monitoring
