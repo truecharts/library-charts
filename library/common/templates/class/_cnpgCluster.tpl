@@ -1,5 +1,5 @@
 {{- define "tc.v1.common.class.cnpg.cluster" -}}
-  {{- $values := $values.cnpg -}}
+  {{- $values := .Values.cnpg -}}
 
   {{- if hasKey . "ObjectValues" -}}
     {{- with .ObjectValues.cnpg -}}
