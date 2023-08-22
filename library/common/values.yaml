@@ -952,6 +952,11 @@ cnpg:
 
       retentionPolicy: "30d"
 
+      # - Manual list of backups
+      manual: []
+      # - today
+      # - beforeUpdate
+
     # Database cluster PgBouncer configuration
     pooler:
       # -- enable to create extra pgbouncer for readonly access

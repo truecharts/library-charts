@@ -56,8 +56,9 @@
       {{- $_ := set $.Values.configmap ( printf "%s-recoverystring" $cnpgValues.shortName ) $recConfig }}
     {{- end -}}
 
+    {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) }}
+
     {{- if $enabled -}}
-      {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) }}
       {{- include "tc.v1.common.class.cnpg.cluster" $ }}
 
       {{- $_ := set $cnpgValues.pooler "type" "rw" }}
@@ -69,6 +70,13 @@
       {{- include "tc.v1.common.class.cnpg.pooler" $ }}
       {{- end }}
 
+    {{- end }}
+
+    {{- range $name, $backup $cnpgValues.backups.manual }}
+      {{- $_ := set $cnpgValues "backupName" $name }}
+      {{- $_ := set $cnpgValues "backupLabels" $backup.labels }}
+      {{- $_ := set $cnpgValues "backupAnnotations" $backup.annotations }}
+      {{- include "tc.v1.common.class.cnpg.backup" $ }}
     {{- end }}
 
     {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "azure") }}
