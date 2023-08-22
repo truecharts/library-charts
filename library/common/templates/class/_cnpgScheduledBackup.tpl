@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.class.cnpg.backup" -}}
+{{- define "tc.v1.common.class.cnpg.scheduledbackup" -}}
   {{- $values := .Values.cnpg -}}
   {{- $backupValues := .Values.cnpg -}}
 
@@ -21,11 +21,11 @@
   {{- $cnpgbackupName := $values.backupName -}}
   {{- $cnpgLabels := $values.labels -}}
   {{- $cnpgAnnotations := $values.annotations -}}
-  {{- $cnpgbackupLabels := $values.backupLabels -}}
-  {{- $cnpgbackupAnnotations := $values.backupAnnotations -}}
+  {{- $cnpgbackupLabels := $values.backups.labels -}}
+  {{- $cnpgbackupAnnotations := $values.backups.annotations -}}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.backup.apiVersion" $ }}
-kind: Backup
+apiVersion: {{ include "tc.v1.common.capabilities.cnpg.scheduledbackup.apiVersion" $ }}
+kind: ScheduledBackup
 metadata:
   name: {{ printf "%v-backup-%v" $values.name $cnpgbackupName }}
   namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
@@ -43,4 +43,6 @@ metadata:
 spec:
   cluster:
     name: {{ $cnpgClusterName }}
+  schedule: {{ $values.backups.schedule }}
+  backupOwnerReference: {{ $values.backups.backupOwnerReference }}
 {{- end -}}
