@@ -6,7 +6,12 @@
       {{- $values = . -}}
     {{- end -}}
   {{- end -}}
+
   {{- $cnpgClusterName := $values.name -}}
+  {{- if and $cnpg.version ( ne $cnpg.version "legacy" ) -}}
+    {{- $cnpgClusterName = printf "$v-%v" $values.name $values.version -}}
+  {{- end -}}
+
   {{- $cnpgName := $values.cnpgName -}}
   {{- $cnpgPoolerName := $values.poolerName -}}
   {{- $cnpgLabels := $values.labels -}}

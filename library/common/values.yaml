@@ -760,6 +760,12 @@ cnpg:
     # * `postgis`
     type: postgresql
 
+    # Version of Postgresql to use, changes cluster naming scheme
+    # * `legacy`
+    # TODO: allow for selecting other versions
+    version: legacy
+
+
     # Cluster mode of operation. Available modes:
     # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
     # * `replica` - Creates a replica cluster from an existing CNPG cluster. # TODO

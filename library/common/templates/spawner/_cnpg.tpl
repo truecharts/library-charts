@@ -23,7 +23,6 @@
       {{- end -}}
     {{- end -}}
 
-
       {{- $cnpgValues := $cnpg }}
       {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
       {{- $_ := set $cnpgValues "shortName" $name }}
