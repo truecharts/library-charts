@@ -23,16 +23,38 @@
       {{- end -}}
     {{- end -}}
 
-      {{- $cnpgValues := $cnpg }}
-      {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
-      {{- $_ := set $cnpgValues "shortName" $name }}
+    {{- $cnpgValues := $cnpg }}
+    {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ }}
+    {{- $_ := set $cnpgValues "shortName" $name }}
 
-      {{/* set defaults */}}
-      {{- $_ := set $cnpgValues "nameOverride" ( printf "cnpg-%v" $name ) }}
+    {{/* set defaults */}}
+    {{- $_ := set $cnpgValues "nameOverride" ( printf "cnpg-%v" $name ) }}
 
-      {{- $cnpgName := printf "%v-%v" $cnpgName $cnpgValues.nameOverride }}
+    {{- $cnpgName := printf "%v-%v" $cnpgName $cnpgValues.nameOverride }}
 
-      {{- $_ := set $cnpgValues "name" $cnpgName }}
+    {{- $_ := set $cnpgValues "name" $cnpgName }}
+
+
+    ## Handle forceRecovery string
+    {{/* Initialize variables */}}
+    {{- $fetchname := printf "%s-recoverystring" $cnpgName -}}
+    {{- $recprevious := lookup "v1" "ConfigMap" .Release.Namespace $fetchname -}}
+    {{- $recValue := "" -}}
+
+    {{/* If there are previous secrets, fetch values and decrypt them */}}
+    {{- if $recprevious -}}
+      {{- $recValue = (index $recprevious.data "recoverystring") -}}
+    {{- else if $cnpgValues.forceRecovery -}}
+      {{- $recValue = randAlphaNum 5 -}}
+    {{- end -}}
+
+
+
+    {{- if $recValue -}}
+      {{- $_ := set $cnpgValues "recValue" $recValue -}}
+      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoverystring" $recValue ) | fromYaml }}
+      {{- $_ := set $.Values.configmap ( printf "%s-recoverystring" $cnpgValues.shortName ) $recConfig }}
+    {{- end -}}
 
     {{- if $enabled -}}
       {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) }}

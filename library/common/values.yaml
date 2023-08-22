@@ -755,6 +755,10 @@ cnpg:
     # -- Puts the cnpg cluster in hibernation mode
     hibernate: false
 
+    # -- Destroys the current cluster to forge a new cluster or recovery operation
+    # ABSOLUTELY DESTRUCTIVE
+    forceRecovery: false
+
     # Type of the CNPG database. Available types:
     # * `postgresql`
     # * `postgis`

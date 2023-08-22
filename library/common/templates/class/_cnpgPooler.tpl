@@ -12,6 +12,10 @@
     {{- $cnpgClusterName = printf "$v-%v" $values.name $values.version -}}
   {{- end -}}
 
+  {{- if $values.recValue -}}
+    {{- $cnpgClusterName = printf "$v-%v" cnpgClusterName $values.recValue -}}
+  {{- end -}}
+
   {{- $cnpgName := $values.cnpgName -}}
   {{- $cnpgPoolerName := $values.poolerName -}}
   {{- $cnpgLabels := $values.labels -}}
