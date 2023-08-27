@@ -4,6 +4,7 @@
 */}}
 
 {{- define "tc.v1.common.spawner.pvc" -}}
+  {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
   {{- range $name, $persistence := .Values.persistence -}}
 
@@ -21,7 +22,7 @@
       {{/* Only spawn PVC if it's enabled and type of "pvc" */}}
       {{- if and (eq "pvc" $objectData.type) (not $objectData.existingClaim) -}}
 
-        {{- $objectName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
+        {{- $objectName := (printf "%s-%s" $fullname $name) -}}
         {{/* Perform validations */}}
         {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
 
