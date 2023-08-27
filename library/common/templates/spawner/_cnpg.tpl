@@ -41,7 +41,7 @@
     {{- $recValue := "" -}}
 
     {{/* If there are previous configmap, fetch value */}}
-    {{- $recPrevious := (lookup "v1" "ConfigMap" .Release.Namespace $fetchname) -}}
+    {{- $recPrevious := (lookup "v1" "ConfigMap" $.Release.Namespace $fetchname) -}}
     {{- if $recPrevious -}}
       {{- $recValue = (index $recPrevious.data "recoverystring") -}}
     {{- else if $objectData.forceRecovery -}}
