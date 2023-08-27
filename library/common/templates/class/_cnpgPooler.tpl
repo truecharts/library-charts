@@ -14,8 +14,8 @@
 
   {{- $cnpgLabels := $objectData.labels -}}
   {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgPoolerLabels := $objectData.pooler.labels -}}
-  {{- $cnpgPoolerAnnotations := $objectData.pooler.annotations -}}
+  {{- $cnpgPoolerLabels := ($objectData.pooler | default dict).labels -}}
+  {{- $cnpgPoolerAnnotations := ($objectData.pooler | default dict).annotations -}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}

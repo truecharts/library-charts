@@ -16,8 +16,8 @@
   {{- $cnpgBackupName := $objectData.backupName -}}
   {{- $cnpgLabels := $objectData.labels -}}
   {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgBackupLabels := $objectData.backups.labels -}}
-  {{- $cnpgBackupAnnotations := $objectData.backups.annotations -}}
+  {{- $cnpgBackupLabels := ($objectData.backups | default dict).labels -}}
+  {{- $cnpgBackupAnnotations := ($objectData.backups | default dict).annotations -}}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.ScheduledBackup.apiVersion" $ }}
 kind: ScheduledBackup

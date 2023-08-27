@@ -14,8 +14,8 @@
 
   {{- $cnpgLabels := $objectData.labels -}}
   {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgClusterLabels := $objectData.cluster.labels -}}
-  {{- $cnpgClusterAnnotations := $objectData.cluster.annotations -}}
+  {{- $cnpgClusterLabels := ($objectData.cluster | default dict).labels -}}
+  {{- $cnpgClusterAnnotations := ($objectData.cluster | default dict).annotations -}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
     {{- $hibernation = "on" -}}
