@@ -86,18 +86,18 @@
         {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.backaups.provider) -}}
       {{- end -}}
 
-      {{- if eq $cnpgValues.backups.provider "azure" -}}
+      {{- if eq $objectData.backups.provider "azure" -}}
         {{- with (include "tc.v1.common.lib.cnpg.secret.azure" (dict "creds" $objectData.backups.azure) | fromYaml) -}}
           {{- $_ := set $.Values.secret (printf "%s-backup-azure-creds" $objectData.shortName) . -}}
       {{- end -}}
 
-      {{- if eq $cnpgValues.backups.provider "google" -}}
+      {{- if eq $objectData.backups.provider "google" -}}
         {{- with (include "tc.v1.common.lib.cnpg.secret.google" (dict "creds" $objectData.backups.google) | fromYaml) -}}
           {{- $_ := set $.Values.secret (printf "%s-backup-google-creds" $objectData.shortName) . -}}
         {{- end -}}
       {{- end -}}
 
-      {{- if eq $cnpgValues.backups.provider "s3" -}}
+      {{- if eq $objectData.backups.provider "s3" -}}
         {{- with (include "tc.v1.common.lib.cnpg.secret.s3" (dict "creds" $objectData.backups.s3) | fromYaml) -}}
           {{- $_ := set $.Values.secret (printf "%s-backup-s3-creds" $objectData.shortName) . -}}
         {{- end -}}
@@ -123,15 +123,15 @@
         {{- end -}}
       {{- end -}}
 
-      {{- if eq $cnpgValues.recovery.provider "google" -}}
+      {{- if eq $objectData.recovery.provider "google" -}}
         {{- with (include "tc.v1.common.lib.cnpg.secret.google" (dict "creds" $objectData.recovery.google) | fromYaml) -}}
           {{- $_ := set $.Values.secret (printf "%s-recovery-google-creds" $objectData.shortName) . -}}
         {{- end -}}
       {{- end -}}
 
-      {{- if eq $cnpgValues.recovery.provider "s3" -}}
-        {{- with (include "tc.v1.common.lib.cnpg.secret.s3" (dict "creds" $cnpgValues.recovery.s3) | fromYaml) -}}
-          {{- $_ := set $.Values.secret (printf "%s-recovery-s3-creds" $cnpgValues.shortName) . -}}
+      {{- if eq $objectData.recovery.provider "s3" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.s3" (dict "creds" $objectData.recovery.s3) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-recovery-s3-creds" $objectData.shortName) . -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
@@ -144,12 +144,12 @@
     {{- if or $enabled $dbPass -}}
 
       {{- if not $dbPass -}}
-        {{- $dbPass = $cnpgValues.password | default (randAlphaNum 62) -}}
+        {{- $dbPass = $objectData.password | default (randAlphaNum 62) -}}
       {{- end -}}
 
       {{/* Inject the required secrets */}}
       {{- $creds := dict -}}
-      {{- $_ := set $creds "std" ((printf "postgresql://%v:%v@%v-rw:5432/%v" $cnpgValues.user $dbPass $objectData.name $objectData.database) | quote) -}}
+      {{- $_ := set $creds "std" ((printf "postgresql://%v:%v@%v-rw:5432/%v" $objectData.user $dbPass $objectData.name $objectData.database) | quote) -}}
       {{- $_ := set $creds "nossl" ((printf "postgresql://%v:%v@%v-rw:5432/%v?sslmode=disable" $objectData.user $dbPass $objectData.name $objectData.database) | quote) -}}
       {{- $_ := set $creds "porthost" ((printf "%s-rw:5432" $objectData.name) | quote) -}}
       {{- $_ := set $creds "host" ((printf "%s-rw" $objectData.name) | quote) -}}
