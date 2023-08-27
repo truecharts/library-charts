@@ -41,8 +41,9 @@
     {{- $recValue := "" -}}
 
     {{/* If there are previous configmap, fetch value */}}
-    {{- with (lookup "v1" "ConfigMap" .Release.Namespace $fetchname) -}}
-      {{- $recValue = (index .data "recoverystring") -}}
+    {{- $recPrevious := (lookup "v1" "ConfigMap" .Release.Namespace $fetchname) -}}
+    {{- if $recPrevious -}}
+      {{- $recValue = (index $recPrevious.data "recoverystring") -}}
     {{- else if $objectData.forceRecovery -}}
       {{- $recValue = randAlphaNum 5 -}}
     {{- end -}}
