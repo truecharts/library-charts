@@ -18,7 +18,7 @@
 
       {{- $objectName := $fullname $ -}}
       {{- if not $objectData.primary -}}
-        {{- $objectName = (printf "%s-%s" $fullname $ $name) -}}
+        {{- $objectName = (printf "%s-%s" $fullname $name) -}}
       {{- end -}}
 
       {{/* Perform validations */}}
