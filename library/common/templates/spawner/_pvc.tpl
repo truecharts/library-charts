@@ -19,7 +19,7 @@
       {{- include "tc.v1.common.lib.persistence.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Persistence") -}}
 
-      {{/* Only spawn PVC if it's enabled and type of "pvc" */}}
+      {{/* Only spawn PVC if its enabled and type of "pvc" */}}
       {{- if and (eq "pvc" $objectData.type) (not $objectData.existingClaim) -}}
 
         {{- $objectName := (printf "%s-%s" $fullname $name) -}}
