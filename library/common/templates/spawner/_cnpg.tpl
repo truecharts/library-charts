@@ -1,5 +1,8 @@
 {{/* Renders the cnpg objects required by the chart */}}
 {{- define "tc.v1.common.spawner.cnpg" -}}
+
+  {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
+
   {{/* Generate named cnpges as required */}}
   {{- range $name, $cnpg := $.Values.cnpg -}}
 
@@ -23,101 +26,107 @@
       {{- end -}}
     {{- end -}}
 
-    {{- $cnpgValues := $cnpg -}}
-    {{- $cnpgName := include "tc.v1.common.lib.chart.names.fullname" $ -}}
-    {{- $_ := set $cnpgValues "shortName" $name -}}
+      {{/* Create a copy */}}
+    {{- $objectData := mustDeepCopy $cnpg -}}
+    {{- $objectName := printf "%s-cnpg-%s" $fullname $name -}}
 
-    {{/* Set defaults */}}
-    {{- $_ := set $cnpgValues "nameOverride" (printf "cnpg-%v" $name) -}}
-
-    {{- $cnpgName := printf "%v-%v" $cnpgName $cnpgValues.nameOverride -}}
-
-    {{- $_ := set $cnpgValues "name" $cnpgName -}}
+      {{/* Set the name */}}
+    {{- $_ := set $objectData "name" $objectName -}}
+      {{/* Short name is the one that defined on the chart*/}}
+    {{- $_ := set $objectData "shortName" $name -}}
 
 
-    ## Handle forceRecovery string
+    {{/* Handle forceRecovery string */}}
+
     {{/* Initialize variables */}}
-    {{- $fetchname := printf "%s-recoverystring" $cnpgName -}}
-    {{- $recprevious := lookup "v1" "ConfigMap" .Release.Namespace $fetchname -}}
+    {{- $fetchname := printf "%s-recoverystring" $objectName -}}
     {{- $recValue := "" -}}
 
-    {{/* If there are previous secrets, fetch values and decrypt them */}}
-    {{- if $recprevious -}}
-      {{- $recValue = (index $recprevious.data "recoverystring") -}}
-    {{- else if $cnpgValues.forceRecovery -}}
+    {{/* If there are previous configmap, fetch value */}}
+    {{- with (lookup "v1" "ConfigMap" .Release.Namespace $fetchname) -}}
+      {{- $recValue = (index .data "recoverystring") -}}
+    {{- else if $objectData.forceRecovery -}}
       {{- $recValue = randAlphaNum 5 -}}
     {{- end -}}
 
     {{- if $recValue -}}
-      {{- $_ := set $cnpgValues "recValue" $recValue -}}
+      {{- $_ := set $objectData "recValue" $recValue -}}
       {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoverystring" $recValue) | fromYaml -}}
-      {{- $_ := set $.Values.configmap (printf "%s-recoverystring" $cnpgValues.shortName) $recConfig -}}
+      {{- $_ := set $.Values.configmap (printf "%s-recoverystring" $objectData.shortName) $recConfig -}}
     {{- end -}}
 
-    {{- $_ := set $ "ObjectValues" (dict "cnpg" $cnpgValues) -}}
-
-    {{- if $enabled --}}
+    {{- if $enabled -}}
+      # TODO: Pass the correct data to ALL includes as we not create a "deep copy" of the object
       {{- include "tc.v1.common.class.cnpg.cluster" $ -}}
 
-      {{- $_ := set $cnpgValues.pooler "type" "rw" -}}
-      {{- if not $cnpgValues.pooler.acceptRO -}}
+      {{- $_ := set $objectData.pooler "type" "rw" -}}
+      {{- if not $objectData.pooler.acceptRO -}}
         {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
       {{- else -}}
         {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
-        {{- $_ := set $cnpgValues.pooler "type" "ro" -}}
+        {{- $_ := set $objectData.pooler "type" "ro" -}}
         {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
       {{- end -}}
     {{- end -}}
 
-    {{- range $name, $backup $cnpgValues.backups.manual -}}
-      {{- $_ := set $cnpgValues "backupName" $name -}}
-      {{- $_ := set $cnpgValues "backupLabels" $backup.labels -}}
-      {{- $_ := set $cnpgValues "backupAnnotations" $backup.annotations -}}
+    {{- range $name, $backup := $objectData.backups.manual -}}
+      {{- $_ := set $objectData "backupName" $name -}}
+      {{- $_ := set $objectData "backupLabels" $backup.labels -}}
+      {{- $_ := set $objectData "backupAnnotations" $backup.annotations -}}
       {{- include "tc.v1.common.class.cnpg.backup" $ -}}
     {{- end -}}
 
-    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "azure") -}}
-      {{- $azureBackupSecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.backups.azure.connectionString "storageAccount" $cnpgValues.backups.azure.storageAccount "storageKey" $cnpgValues.backups.azure.storageKey "storageSasToken" $cnpgValues.backups.azure.storageSasToken) | fromYaml -}}
-      {{- if $azureBackupSecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-backup-azure-creds" $cnpgValues.shortName) $azureBackupSecret -}}
+    {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
+
+
+    {{- if $objectData.backups.enabled -}}
+      {{- if not (mustHas $objectData.backups.provider $validProviders) -}}
+        {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]", (join "," $validProviders) $objectData.backaups.provider) -}}
+      {{- end -}}
+
+      {{- if eq $cnpgValues.backups.provider "azure" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.azure" (dict "creds" $objectData.backups.azure) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-backup-azure-creds" $objectData.shortName) . -}}
+      {{- end -}}
+
+      {{- if eq $cnpgValues.backups.provider "google" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.google" (dict "creds" $objectData.backups.google) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-backup-google-creds" $objectData.shortName) . -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if eq $cnpgValues.backups.provider "s3" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.s3" (dict "creds" $objectData.backups.s3) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-backup-s3-creds" $objectData.shortName) . -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
 
-    {{- if and (eq $cnpgValues.mode "recovery") (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "azure") -}}
-      {{- $azureRecoverySecret := include "tc.v1.common.lib.cnpg.secret.azure" (dict "connectionString" $cnpgValues.recovery.azure.connectionString "storageAccount" $cnpgValues.recovery.azure.storageAccount "storageKey" $cnpgValues.recovery.azure.storageKey "storageSasToken" $cnpgValues.recovery.azure.storageSasToken) | fromYaml -}}
-      {{- if $azureRecoverySecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-recovery-azure-creds" $cnpgValues.shortName) $azureRecoverySecret -}}
+    {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "obect_store") -}}
+      {{- if not (mustHas $objectData.recovery.provider $validProviders) -}}
+        {{- fail (printf "CNPG - Expected <recovery.provider> to be one of [%s], but got [%s]", (join "," $validProviders) $objectData.recovery.provider) -}}
+      {{- end -}}
+
+      {{- if eq $objectData.recovery.provider "azure" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.azure" (dict "creds" $objectData.recovery.azure) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-recovery-azure-creds" $objectData.shortName) . -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if eq $cnpgValues.recovery.provider "google" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.google" (dict "creds" $objectData.recovery.google) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-recovery-google-creds" $objectData.shortName) . -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if eq $cnpgValues.recovery.provider "s3" -}}
+        {{- with (include "tc.v1.common.lib.cnpg.secret.s3" (dict "creds" $cnpgValues.recovery.s3) | fromYaml) -}}
+          {{- $_ := set $.Values.secret (printf "%s-recovery-s3-creds" $cnpgValues.shortName) . -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
 
-    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "google") -}}
-      {{- $googleBackupSecret := include "tc.v1.common.lib.cnpg.secret.google" (dict "applicationCredentials" $cnpgValues.backups.google.applicationCredentials) | fromYaml -}}
-      {{- if $googleBackupSecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-backup-google-creds" $cnpgValues.shortName) $googleBackupSecret -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if and (eq $cnpgValues.mode "recovery") (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "google") -}}
-      {{- $googleRecoverySecret := include "tc.v1.common.lib.cnpg.secret.google" (dict "applicationCredentials" $cnpgValues.recovery.google.applicationCredentials) | fromYaml -}}
-      {{- if $googleRecoverySecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-recovery-google-creds" $cnpgValues.shortName) $googleRecoverySecret -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if and $cnpgValues.backups.enabled (eq $cnpgValues.backups.provider "s3") -}}
-      {{- $s3BackupSecret := include "tc.v1.common.lib.cnpg.secret.s3" (dict "accessKey" $cnpgValues.backups.s3.accessKey "secretKey" $cnpgValues.backups.s3.secretKey) | fromYaml -}}
-      {{- if $s3BackupSecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-backup-s3-creds" $cnpgValues.shortName) $s3BackupSecret -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if and (eq $cnpgValues.mode "recovery") (eq $cnpgValues.recovery.method "object_store") (eq $cnpgValues.recovery.provider "s3") -}}
-      {{- $s3RecoverySecret := include "tc.v1.common.lib.cnpg.secret.s3" (dict "accessKey" $cnpgValues.recovery.s3.accessKey "secretKey" $cnpgValues.recovery.s3.secretKey) | fromYaml -}}
-      {{- if $s3RecoverySecret -}}
-        {{- $_ := set $.Values.secret (printf "%s-recovery-s3-creds" $cnpgValues.shortName) $s3RecoverySecret -}}
-      {{- end -}}
-    {{- end -}}
-
+    # FIXME: --> checkpoint <--
     {{- $dbPass := "" -}}
     {{- $dbprevious := lookup "v1" "Secret" $.Release.Namespace (printf "%s-user" $cnpgValues.name) -}}
     {{- if or $enabled $dbprevious -}}
