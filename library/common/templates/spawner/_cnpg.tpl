@@ -70,8 +70,7 @@
       {{- $_ := set $objectData "backupName" $name -}}
       {{- $_ := set $objectData "backupLabels" $backup.labels -}}
       {{- $_ := set $objectData "backupAnnotations" $backup.annotations -}}
-      # FIXME: Pass the correct data to ALL includes as we not create a "deep copy" of the object
-      {{- include "tc.v1.common.class.cnpg.backup" $ -}}
+      {{- include "tc.v1.common.class.cnpg.backup" (dict "rootCtx" $ "objectData" $objectData) -}}
     {{- end -}}
 
     {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
