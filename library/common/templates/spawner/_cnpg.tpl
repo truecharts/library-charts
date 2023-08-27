@@ -54,8 +54,7 @@
     {{- end -}}
 
     {{- if $enabled -}}
-      # FIXME: Pass the correct data to ALL includes as we not create a "deep copy" of the object
-      {{- include "tc.v1.common.class.cnpg.cluster" $ -}}
+      {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
@@ -71,6 +70,7 @@
       {{- $_ := set $objectData "backupName" $name -}}
       {{- $_ := set $objectData "backupLabels" $backup.labels -}}
       {{- $_ := set $objectData "backupAnnotations" $backup.annotations -}}
+      # FIXME: Pass the correct data to ALL includes as we not create a "deep copy" of the object
       {{- include "tc.v1.common.class.cnpg.backup" $ -}}
     {{- end -}}
 
