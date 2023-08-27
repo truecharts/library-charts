@@ -16,7 +16,7 @@
       {{/* Create a copy of the configmap */}}
       {{- $objectData := (mustDeepCopy $serviceAccount) -}}
 
-      {{- $objectName := $fullname $ -}}
+      {{- $objectName := $fullname -}}
       {{- if not $objectData.primary -}}
         {{- $objectName = (printf "%s-%s" $fullname $name) -}}
       {{- end -}}
