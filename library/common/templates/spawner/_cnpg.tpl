@@ -58,13 +58,13 @@
       {{- include "tc.v1.common.class.cnpg.cluster" $ -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
-      {{- if not $objectData.pooler.acceptRO -}}
-        {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
-      {{- else -}}
-        {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
+      {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
+
+      {{- if $objectData.pooler.acceptRO -}}
         {{- $_ := set $objectData.pooler "type" "ro" -}}
-        {{- include "tc.v1.common.class.cnpg.pooler" $ -}}
+        {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
+
     {{- end -}}
 
     {{- range $name, $backup := $objectData.backups.manual -}}
@@ -75,6 +75,11 @@
     {{- end -}}
 
     {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
+
+    {{/* Make sure the keys exist before we try to access them */}}
+    {{- if not (hasKey $objectData "backups") -}}
+      {{- $_ := set $objectData "backups" (dict "provider" "") -}}
+    {{- end -}}
 
     {{- if $objectData.backups.enabled -}}
       {{- if not (mustHas $objectData.backups.provider $validProviders) -}}
@@ -97,6 +102,14 @@
           {{- $_ := set $.Values.secret (printf "%s-backup-s3-creds" $objectData.shortName) . -}}
         {{- end -}}
       {{- end -}}
+    {{- end -}}
+
+    {{- if not (hasKey $objectData "mode") -}}
+      {{- $_ := set $objectData "mode" "" -}}
+    {{- end -}}
+
+    {{- if not (hasKey $objectData "recovery") -}}
+      {{- $_ := set $objectData "recovery" (dict "method" "") -}}
     {{- end -}}
 
     {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "obect_store") -}}
