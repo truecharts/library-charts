@@ -1,51 +1,45 @@
 {{- define "tc.v1.common.class.cnpg.pooler" -}}
-  {{- $values := .Values.cnpg -}}
+  {{- $rootCtx := .rootCtx -}}
+  {{- $objectData := .objectData -}}
 
-  {{- if hasKey . "ObjectValues" -}}
-    {{- with .ObjectValues.cnpg -}}
-      {{- $values = . -}}
-    {{- end -}}
+  {{- $cnpgClusterName := $objectData.name -}}
+
+  {{- if and $objectData.version (ne $objectData.version "legacy") -}}
+    {{- $cnpgClusterName = printf "%v-%v" $objectData.name $objectData.version -}}
   {{- end -}}
 
-  {{- $cnpgClusterName := $values.name -}}
-  {{- if and $cnpg.version ( ne $cnpg.version "legacy" ) -}}
-    {{- $cnpgClusterName = printf "$v-%v" $values.name $values.version -}}
+  {{- if $objectData.recValue -}}
+    {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
   {{- end -}}
 
-  {{- if $values.recValue -}}
-    {{- $cnpgClusterName = printf "$v-%v" cnpgClusterName $values.recValue -}}
-  {{- end -}}
-
-  {{- $cnpgName := $values.cnpgName -}}
-  {{- $cnpgPoolerName := $values.poolerName -}}
-  {{- $cnpgLabels := $values.labels -}}
-  {{- $cnpgAnnotations := $values.annotations -}}
-  {{- $cnpgPoolerLabels := $values.pooler.labels -}}
-  {{- $cnpgPoolerAnnotations := $values.pooler.annotations -}}
-  {{- $instances := $values.pooler.instances | default 2 -}}
+  {{- $cnpgLabels := $objectData.labels -}}
+  {{- $cnpgAnnotations := $objectData.annotations -}}
+  {{- $cnpgPoolerLabels := $objectData.pooler.labels -}}
+  {{- $cnpgPoolerAnnotations := $objectData.pooler.annotations -}}
+  {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
-  {{- if or $values.hibernate $.Values.global.stopAll -}}
+  {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
     {{- $instances = 0 -}}
     {{- $hibernation = "on" -}}
-  {{- end }}
-  {{- $type := $values.pooler.type | default "rw" -}}
+  {{- end -}}
+  {{- $type := $objectData.pooler.type | default "rw" }}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $ }}
+apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $rootCtx }}
 kind: Pooler
 metadata:
-  name: {{ printf "%v-pooler-%v" $values.name $type }}
-  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
-  {{- $labels := (mustMerge ($cnpgPoolerLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
+  name: {{ printf "%v-pooler-%v" $objectData.name $type }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
   labels:
     cnpg.io/reload: "on"
-  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
+  {{- $labels := (mustMerge ($cnpgPoolerLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
-  {{- end }}
-  {{- $annotations := (mustMerge ($cnpgPoolerAnnotations | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) }}
+  {{- end -}}
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
-  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "annotations" $annotations) | trim) }}
+  {{- $annotations := (mustMerge ($cnpgPoolerAnnotations | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
 spec:
@@ -54,9 +48,8 @@ spec:
   instances: {{ $instances }}
   type: {{ $type }}
   pgbouncer:
-    poolMode: {{ $values.pooler.poolMode | default "session" }}
-    {{- $parameters := $values.pooler.parameters | default dict -}}
-    {{- with $parameters -}}
+    poolMode: {{ $objectData.pooler.poolMode | default "session" }}
+    {{- with $objectData.pooler.parameters | default dict -}}
     parameters:
       {{- . | toYaml | nindent 6 }}
     {{ end }}
