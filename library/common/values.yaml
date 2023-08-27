@@ -325,7 +325,7 @@ netshootImage:
 
 tailscaleImage:
   repository: tccr.io/truecharts/tailscale
-  tag: v1.44.0@sha256:124f3cd161b3036cb77162c7f08d4291432ed2e7046ed75a3c40fdd75d1bc1d3
+  tag: v1.48.1@sha256:3b395cb934b5a74c4d55872b7e794ce3858c6c59d9dfb31548792a317314daf3
   pullPolicy: IfNotPresent
 
 codeserverImage:
