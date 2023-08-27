@@ -83,7 +83,7 @@
 
     {{- if $objectData.backups.enabled -}}
       {{- if not (mustHas $objectData.backups.provider $validProviders) -}}
-        {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]", (join "," $validProviders) $objectData.backaups.provider) -}}
+        {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.backaups.provider) -}}
       {{- end -}}
 
       {{- if eq $cnpgValues.backups.provider "azure" -}}
