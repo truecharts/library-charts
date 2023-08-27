@@ -47,7 +47,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  instances: {{ $objectData.cluster.instances | default 2 }}
+  instances: {{ ($objectData.cluster | default dict).instances | default 2 }}
   bootstrap:
   {{- if eq $objectData.mode "standalone" }}
     initdb:
@@ -96,7 +96,6 @@ spec:
   {{- else -}}
     {{- fail "CNPG Cluster - Invalid cluster mode" -}}
   {{- end }}
-
 
 {{- if $objectData.backups.enabled }}
 backup:
