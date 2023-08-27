@@ -114,7 +114,7 @@
 
     {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "obect_store") -}}
       {{- if not (mustHas $objectData.recovery.provider $validProviders) -}}
-        {{- fail (printf "CNPG - Expected <recovery.provider> to be one of [%s], but got [%s]", (join "," $validProviders) $objectData.recovery.provider) -}}
+        {{- fail (printf "CNPG - Expected <recovery.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.recovery.provider) -}}
       {{- end -}}
 
       {{- if eq $objectData.recovery.provider "azure" -}}
