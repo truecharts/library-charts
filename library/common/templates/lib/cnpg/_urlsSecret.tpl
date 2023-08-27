@@ -1,14 +1,10 @@
 {{- define "tc.v1.common.lib.cnpg.secret.urls" -}}
-{{- $std := .std }}
-{{- $nossl := .nossl }}
-{{- $porthost := .porthost }}
-{{- $host := .host }}
-{{- $jdbc := .jdbc }}
+{{- $creds := .creds }}
 enabled: true
 data:
-  std: {{ $std }}
-  nossl: {{ $nossl }}
-  porthost: {{ $porthost }}
-  host: {{ $host }}
-  jdbc: {{ $jdbc }}
+  std: {{ $creds.std }}
+  nossl: {{ $creds.nossl }}
+  porthost: {{ $creds.porthost }}
+  host: {{ $creds.host }}
+  jdbc: {{ $creds.jdbc }}
 {{- end -}}
