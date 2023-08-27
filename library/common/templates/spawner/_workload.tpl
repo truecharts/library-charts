@@ -3,7 +3,6 @@
 {{ include "tc.v1.common.spawner.workload" $ -}}
 */}}
 
-
 {{- define "tc.v1.common.spawner.workload" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
