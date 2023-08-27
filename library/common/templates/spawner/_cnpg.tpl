@@ -30,9 +30,9 @@
     {{- $objectData := mustDeepCopy $cnpg -}}
     {{- $objectName := printf "%s-cnpg-%s" $fullname $name -}}
 
-      {{/* Set the name */}}
+    {{/* Set the name */}}
     {{- $_ := set $objectData "name" $objectName -}}
-      {{/* Short name is the one that defined on the chart*/}}
+    {{/* Short name is the one that defined on the chart*/}}
     {{- $_ := set $objectData "shortName" $name -}}
 
     {{/* Handle forceRecovery string */}}
@@ -64,7 +64,6 @@
         {{- $_ := set $objectData.pooler "type" "ro" -}}
         {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
-
     {{- end -}}
 
     {{- range $name, $backup := $objectData.backups.manual -}}
@@ -89,6 +88,7 @@
       {{- if eq $objectData.backups.provider "azure" -}}
         {{- with (include "tc.v1.common.lib.cnpg.secret.azure" (dict "creds" $objectData.backups.azure) | fromYaml) -}}
           {{- $_ := set $.Values.secret (printf "%s-backup-azure-creds" $objectData.shortName) . -}}
+        {{- end -}}
       {{- end -}}
 
       {{- if eq $objectData.backups.provider "google" -}}
