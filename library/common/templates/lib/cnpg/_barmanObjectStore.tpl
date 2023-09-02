@@ -8,7 +8,7 @@
     {{- if not .scope.s3.region -}}
       {{- fail "CNPG Barman - You need to specify S3 region when <endpointURL> is empty" -}}
     {{- end -}}
-    {{- $endpointUrl = (printf "https://s3.%s.amazonaws.com", .scope.s3.region) -}}
+    {{- $endpointUrl = (printf "https://s3.%s.amazonaws.com" .scope.s3.region) -}}
   {{- end -}}
 
   {{- if not $destPath -}}

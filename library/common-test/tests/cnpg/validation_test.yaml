@@ -1,0 +1,29 @@
+suite: cnpg validation test
+templates:
+  - common.yaml
+release:
+  namespace: cnpg-test
+tests:
+  - it: should fail with empty enabled
+    set:
+      cnpg:
+        mypg:
+          enabled:
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected the defined key [enabled] in <cnpg.mypg> to not be empty
+
+  - it: should fail with invalid backup provider
+    set:
+      cnpg:
+        mypg:
+          enabled: true
+          mode: standalone
+          cluster: {}
+          pooler: {}
+          backups:
+            enabled: true
+            provider: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected <backups.provider> to be one of [azure, google, object_store, s3], but got [invalid]

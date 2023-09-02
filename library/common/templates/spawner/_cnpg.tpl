@@ -11,7 +11,7 @@
       {{- if not (kindIs "invalid" $cnpg.enabled) -}}
         {{- $enabled = $cnpg.enabled -}}
       {{- else -}}
-        {{- fail (printf "cnpg - Expected the defined key [enabled] in <cnpg.%s> to not be empty" $name) -}}
+        {{- fail (printf "CNPG - Expected the defined key [enabled] in <cnpg.%s> to not be empty" $name) -}}
       {{- end -}}
     {{- end -}}
 
@@ -55,8 +55,19 @@
     {{- end -}}
 
     {{- if $enabled -}}
-      {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
+      {{- if not (hasKey $objectData "cluster") -}}
+        {{- $_ := set $objectData "cluster" dict -}}
+      {{- end -}}
 
+      {{- if not (hasKey $objectData "backups") -}}
+        {{- $_ := set $objectData "backups" (dict "provider" "") -}}
+      {{- end -}}
+
+      {{- if not (hasKey $objectData "pooler") -}}
+        {{- $_ := set $objectData "pooler" dict -}}
+      {{- end -}}
+
+      {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- $_ := set $objectData.pooler "type" "rw" -}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
@@ -74,15 +85,9 @@
     {{- end -}}
 
     {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
-
-    {{/* Make sure the keys exist before we try to access them */}}
-    {{- if not (hasKey $objectData "backups") -}}
-      {{- $_ := set $objectData "backups" (dict "provider" "") -}}
-    {{- end -}}
-
     {{- if $objectData.backups.enabled -}}
       {{- if not (mustHas $objectData.backups.provider $validProviders) -}}
-        {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.backaups.provider) -}}
+        {{- fail (printf "CNPG - Expected <backups.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.backups.provider) -}}
       {{- end -}}
 
       {{- if eq $objectData.backups.provider "azure" -}}
@@ -161,6 +166,10 @@
 
       {{- with (include "tc.v1.common.lib.cnpg.secret.urls" (dict "creds" $creds) | fromYaml) -}}
         {{- $_ := set $.Values.secret (printf "cnpg-%s-urls" $objectData.shortName) . -}}
+      {{- end -}}
+
+      {{- if not (hasKey $cnpg "creds") -}}
+        {{- $_ := set $cnpg "creds" dict -}}
       {{- end -}}
 
       {{/* We need to mutate the actual (cnpg) values here not the copy */}}

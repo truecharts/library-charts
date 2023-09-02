@@ -12,6 +12,11 @@
     {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
   {{- end -}}
 
+  {{- $validModes := (list "standalone" "recovery") -}}
+  {{- if not (mustHas $objectData.mode $validModes) -}}
+    {{- fail (printf "CNPG Cluster - Expected cluster mode to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
+  {{- end -}}
+
   {{- $cnpgLabels := $objectData.labels -}}
   {{- $cnpgAnnotations := $objectData.annotations -}}
   {{- $cnpgClusterLabels := ($objectData.cluster | default dict).labels -}}
@@ -28,12 +33,23 @@
     {{- end -}}
   {{- end -}}
 
-  {{- $instances := 2 -}}
-  {{- with $objectData.cluster -}}
-    {{-- if .instances -}}
-      {{- $instances = .instances -}}
-    {{- end -}}
-  {{- end }}
+  {{- $initDB := $objectData.cluster.initdb | default dict -}}
+  {{- $instances := $objectData.cluster.instances | default 2 -}}
+  {{- $size := $rootCtx.Values.fallbackDefaults.vctSize -}}
+  {{- with ($objectData.cluster.storage |default dict).size -}}
+    {{- $size := . -}}
+  {{- end -}}
+
+  {{- $walSize := $rootCtx.Values.fallbackDefaults.vctSize -}}
+  {{- with ($objectData.cluster.walStorage | default dict).size -}}
+    {{- $walSize := . -}}
+  {{- end -}}
+
+  {{- $customQueries := dict -}}
+  {{- with ($objectData.cluster.monitoring | default dict).customQueries -}}
+    {{- $customQueries := . -}}
+  {{- end -}}
+
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $rootCtx }}
 kind: Cluster
@@ -62,11 +78,11 @@ spec:
       owner: {{ $objectData.user | default "app" }}
       secret:
         name: {{ printf "%s-user" $cnpgClusterName }}
-      {{- range $key, $val := (omit $objectData.cluster.initdb "postInitApplicationSQL" "database" "owner" "secret") }}
+      {{- range $key, $val := (omit $initDB "postInitApplicationSQL" "database" "owner" "secret") }}
         {{- $key | nindent 6 }}: {{ $val | toYaml }}
       {{- end }}
       postInitApplicationSQL:
-        {{- range $objectData.cluster.initdb.postInitApplicationSQL }}
+        {{- range $initDB.postInitApplicationSQL }}
           - {{ . }}
         {{- end -}}
         {{- if eq $objectData.type "postgis" }}
@@ -99,8 +115,6 @@ spec:
         serverName: {{ $objectData.recovery.serverName }}
         {{- $d1 := dict "chartFullname" $cnpgClusterName "scope" $objectData.recovery "secretSuffix" "-recovery" -}}
         {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
-  {{- else -}}
-    {{- fail "CNPG Cluster - Invalid cluster mode" -}}
   {{- end -}}
 {{- if $objectData.backups.enabled }}
 backup:
@@ -128,19 +142,17 @@ backup:
   storage:
     {{- with (include "tc.v1.common.lib.storage.storageClassName" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.storage)) | trim }}
     storageClass: {{ . }}
-    {{- end -}}
-    {{- $size := $objectData.cluster.storage.size | default $rootCtx.Values.fallbackDefaults.vctSize -}}
+    {{- end }}
     size: {{ tpl $size $rootCtx | quote }}
   walStorage:
     {{- with (include "tc.v1.common.lib.storage.storageClassName" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.walStorage)) | trim }}
     storageClass: {{ . }}
-    {{- end -}}
-    {{- $walSize := $objectData.cluster.walStorage.size | default $rootCtx.Values.fallbackDefaults.vctSize }}
+    {{- end }}
     size: {{ tpl $walSize $rootCtx | quote }}
 
   monitoring:
     enablePodMonitor: {{ $monitoring }}
-    {{- if $objectData.cluster.monitoring.customQueries }}
+    {{- if $customQueries }}
     customQueriesConfigMap:
       - name: {{ printf "%s-monitoring" (include "cluster.fullname" .) }}
         key: custom-queries
