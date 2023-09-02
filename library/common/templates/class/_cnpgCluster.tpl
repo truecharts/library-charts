@@ -82,7 +82,7 @@ spec:
       {{- with $objectData.recovery.pitrTarget.time }}
       recoveryTarget:
         targetTime: {{ . }}
-      {{- end }}
+      {{- end -}}
       {{- if eq $objectData.recovery.method "backup" }}
       backup:
         name: {{ $objectData.recovery.backupName }}
@@ -93,7 +93,6 @@ spec:
       owner: {{ $objectData.user | default "app" }}
       secret:
         name: {{ printf "%s-user" $cnpgClusterName }}
-
   externalClusters:
     - name: objectStoreRecoveryCluster
       barmanObjectStore:
@@ -102,8 +101,7 @@ spec:
         {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
   {{- else -}}
     {{- fail "CNPG Cluster - Invalid cluster mode" -}}
-  {{- end }}
-
+  {{- end -}}
 {{- if $objectData.backups.enabled }}
 backup:
   target: "prefer-standby"
@@ -117,9 +115,8 @@ backup:
       encryption: AES256
       jobs: {{ $objectData.backups.jobs | default 2 }}
     {{- $d2 := dict "chartFullname" $cnpgClusterName "scope" $objectData.backups -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d2 | nindent 4 }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d2 | nindent 4 -}}
 {{- end }}
-
   enableSuperuserAccess: {{ $objectData.cluster.enableSuperuserAccess | default "true" }}
   primaryUpdateStrategy: {{ $objectData.cluster.primaryUpdateStrategy | default "unsupervised" }}
   primaryUpdateMethod: {{ $objectData.cluster.primaryUpdateMethod | default "switchover" }}
@@ -150,7 +147,7 @@ backup:
     {{- end }}
   nodeMaintenanceWindow:
   {{- if $objectData.cluster.nodeMaintenanceWindow -}}
-      {{- toYaml $objectData.cluster.nodeMaintenanceWindow | nindent 6 }}
+    {{- toYaml $objectData.cluster.nodeMaintenanceWindow | nindent 6 -}}
   {{- else -}}
     {{- if or $rootCtx.Values.global.ixChartContext $objectData.cluster.singleNode }}
     inProgress: true

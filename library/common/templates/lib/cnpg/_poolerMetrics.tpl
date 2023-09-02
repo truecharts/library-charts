@@ -6,4 +6,4 @@ selector:
     cnpg.io/poolerName: {{ .poolerName }}
 endpoints:
 - port: metrics
-{{- end }}
+{{- end -}}
