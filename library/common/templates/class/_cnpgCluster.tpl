@@ -26,6 +26,13 @@
     {{- if not (kindIs "invalid" .enablePodMonitor) -}}
       {{- $monitoring = .enablePodMonitor -}}
     {{- end -}}
+  {{- end -}}
+
+  {{- $instances := 2 -}}
+  {{- with $objectData.cluster -}}
+    {{-- if .instances -}}
+      {{- $instances = .instances -}}
+    {{- end -}}
   {{- end }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $rootCtx }}
@@ -47,7 +54,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  instances: {{ ($objectData.cluster | default dict).instances | default 2 }}
+  instances: {{ $instances }}
   bootstrap:
   {{- if eq $objectData.mode "standalone" }}
     initdb:
@@ -92,7 +99,7 @@ spec:
       barmanObjectStore:
         serverName: {{ $objectData.recovery.serverName }}
         {{- $d1 := dict "chartFullname" $cnpgClusterName "scope" $objectData.recovery "secretSuffix" "-recovery" -}}
-        {{- include "cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
+        {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
   {{- else -}}
     {{- fail "CNPG Cluster - Invalid cluster mode" -}}
   {{- end }}
@@ -110,7 +117,7 @@ backup:
       encryption: AES256
       jobs: {{ $objectData.backups.jobs | default 2 }}
     {{- $d2 := dict "chartFullname" $cnpgClusterName "scope" $objectData.backups -}}
-    {{- include "cluster.barmanObjectStoreConfig" $d2 | nindent 4 }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d2 | nindent 4 }}
 {{- end }}
 
   enableSuperuserAccess: {{ $objectData.cluster.enableSuperuserAccess | default "true" }}
