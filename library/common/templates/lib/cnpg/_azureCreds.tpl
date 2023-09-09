@@ -2,7 +2,7 @@
 {{- $creds := .creds -}}
 {{- $reqKeys := (list "connectionString" "storageAccount" "storageKey" "storageSasToken") -}}
 {{- range $r := $reqKeys -}}
-  {{- if get $creds $r -}}
+  {{- if not (get $creds $r) -}}
     {{- fail (printf "CNPG - Azure Creds requires [%s] to be defined and non-empty" $r) -}}
   {{- end -}}
 {{- end }}

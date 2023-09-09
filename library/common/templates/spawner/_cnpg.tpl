@@ -55,19 +55,36 @@
     {{- end -}}
 
     {{- if $enabled -}}
+      {{- $validModes := (list "standalone" "replica" "recovery") -}}
+      {{- if not (mustHas $objectData.mode $validModes) -}}
+        {{- fail (printf "CNPG - Expected mode to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
+      {{- end -}}
+
       {{- if not (hasKey $objectData "cluster") -}}
-        {{- $_ := set $objectData "cluster" dict -}}
+        {{- fail "CNPG - Expected [cluster] key to exist." -}}
       {{- end -}}
 
-      {{- if not (hasKey $objectData "backups") -}}
-        {{- $_ := set $objectData "backups" (dict "provider" "") -}}
-      {{- end -}}
-
+      {{/* If pooler key is no defined, create it so we dont get nil pointers */}}
       {{- if not (hasKey $objectData "pooler") -}}
         {{- $_ := set $objectData "pooler" dict -}}
       {{- end -}}
 
+      {{/* If backups key is no defined, create it so we dont get nil pointers */}}
+      {{- if not (hasKey $objectData "backups") -}}
+        {{- $_ := set $objectData "backups" (dict "provider" "") -}}
+      {{- end -}}
+
+      {{/* If recovery key is no defined, create it so we dont get nil pointers */}}
+      {{- if not (hasKey $objectData "recovery") -}}
+        {{- $_ := set $objectData "recovery" (dict "method" "") -}}
+      {{- end -}}
+
+      {{- if not (hasKey $objectData.recovery "pitrTarget") -}}
+        {{- $_ := set $objectData.recovery "pitrTarget" dict -}}
+      {{- end -}}
+
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
+
       {{- $_ := set $objectData.pooler "type" "rw" -}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
@@ -78,6 +95,9 @@
     {{- end -}}
 
     {{- range $name, $backup := $objectData.backups.manual -}}
+      {{/* FIXME: I dont understand this here, we loop over manual backups
+      and each time we overwrite the $objectData.backupName etc.
+      So at the end backupName will have the name of the last manual backup. */}}
       {{- $_ := set $objectData "backupName" $name -}}
       {{- $_ := set $objectData "backupLabels" $backup.labels -}}
       {{- $_ := set $objectData "backupAnnotations" $backup.annotations -}}
@@ -109,15 +129,12 @@
       {{- end -}}
     {{- end -}}
 
-    {{- if not (hasKey $objectData "mode") -}}
-      {{- $_ := set $objectData "mode" "" -}}
+    {{- $validMethods := (list "object_store" "backup" "pg_basebackup") -}}
+    {{- if and $objectData.recovery.method (not (mustHas $objectData.recovery.method $validMethods)) -}}
+      {{- fail (printf "CNPG - Expected <recovery.method> to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.recovery.method) -}}
     {{- end -}}
 
-    {{- if not (hasKey $objectData "recovery") -}}
-      {{- $_ := set $objectData "recovery" (dict "method" "") -}}
-    {{- end -}}
-
-    {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "obect_store") -}}
+    {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "object_store") -}}
       {{- if not (mustHas $objectData.recovery.provider $validProviders) -}}
         {{- fail (printf "CNPG - Expected <recovery.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.recovery.provider) -}}
       {{- end -}}

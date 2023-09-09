@@ -2,7 +2,7 @@
 {{- $creds := .creds -}}
 {{- $reqKeys := (list "accessKey" "secretKey") -}}
 {{- range $r := $reqKeys -}}
-  {{- if get $creds $r -}}
+  {{- if not (get $creds $r) -}}
     {{- fail (printf "CNPG - S3 Creds requires [%s] to be defined and non-empty" $r) -}}
   {{- end -}}
 {{- end }}
