@@ -12,11 +12,6 @@
     {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
   {{- end -}}
 
-  {{- $validModes := (list "standalone" "recovery") -}}
-  {{- if not (mustHas $objectData.mode $validModes) -}}
-    {{- fail (printf "CNPG Cluster - Expected cluster mode to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
-  {{- end -}}
-
   {{- $cnpgLabels := $objectData.labels | default dict -}}
   {{- $cnpgAnnotations := $objectData.annotations | default dict -}}
   {{- $cnpgClusterLabels := $objectData.cluster.labels | default dict -}}

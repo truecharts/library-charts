@@ -12,10 +12,10 @@
     {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
   {{- end -}}
 
-  {{- $cnpgLabels := $objectData.labels -}}
-  {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgPoolerLabels := ($objectData.pooler | default dict).labels -}}
-  {{- $cnpgPoolerAnnotations := ($objectData.pooler | default dict).annotations -}}
+  {{- $cnpgLabels := $objectData.labels | default dict -}}
+  {{- $cnpgAnnotations := $objectData.annotations | default dict -}}
+  {{- $cnpgPoolerLabels := $objectData.pooler.label | default dict -}}
+  {{- $cnpgPoolerAnnotations := $objectData.pooler.annotation | default dict -}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
@@ -31,14 +31,14 @@ metadata:
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
   labels:
     cnpg.io/reload: "on"
-  {{- $labels := (mustMerge ($cnpgPoolerLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- $labels := (mustMerge $cnpgPoolerLabels $cnpgLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end -}}
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
-  {{- $annotations := (mustMerge ($cnpgPoolerAnnotations | default dict) ($cnpgAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- $annotations := (mustMerge $cnpgPoolerAnnotations $cnpgAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
