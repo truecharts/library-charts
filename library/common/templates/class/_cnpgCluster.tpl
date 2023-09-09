@@ -17,10 +17,10 @@
     {{- fail (printf "CNPG Cluster - Expected cluster mode to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
   {{- end -}}
 
-  {{- $cnpgLabels := $objectData.labels -}}
-  {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgClusterLabels := ($objectData.cluster | default dict).labels -}}
-  {{- $cnpgClusterAnnotations := ($objectData.cluster | default dict).annotations -}}
+  {{- $cnpgLabels := $objectData.labels | default dict -}}
+  {{- $cnpgAnnotations := $objectData.annotations | default dict -}}
+  {{- $cnpgClusterLabels := $objectData.cluster.labels | default dict -}}
+  {{- $cnpgClusterAnnotations := $objectData.cluster.annotations | default dict -}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
     {{- $hibernation = "on" -}}
@@ -33,20 +33,20 @@
     {{- end -}}
   {{- end -}}
 
-  {{- $initDB := $objectData.cluster.initdb | default dict -}}
+  {{- $initDB := $objectData.cluster.initdb -}}
   {{- $instances := $objectData.cluster.instances | default 2 -}}
   {{- $size := $rootCtx.Values.fallbackDefaults.vctSize -}}
-  {{- with ($objectData.cluster.storage |default dict).size -}}
+  {{- with $objectData.cluster.storage.size -}}
     {{- $size := . -}}
   {{- end -}}
 
   {{- $walSize := $rootCtx.Values.fallbackDefaults.vctSize -}}
-  {{- with ($objectData.cluster.walStorage | default dict).size -}}
+  {{- with $objectData.cluster.walStorage.size -}}
     {{- $walSize := . -}}
   {{- end -}}
 
   {{- $customQueries := dict -}}
-  {{- with ($objectData.cluster.monitoring | default dict).customQueries -}}
+  {{- with $objectData.cluster.monitoring.customQueries -}}
     {{- $customQueries := . -}}
   {{- end -}}
 
@@ -58,14 +58,14 @@ metadata:
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
   labels:
     cnpg.io/reload: "on"
-  {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) ($cnpgLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- $labels := (mustMerge $cnpgClusterLabels $cnpgLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
-  {{- $annotations := (mustMerge ($cnpgClusterAnnotations | default dict) ($cnpgAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- $annotations := (mustMerge $cnpgClusterAnnotations $cnpgAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}

@@ -64,24 +64,9 @@
         {{- fail "CNPG - Expected [cluster] key to exist." -}}
       {{- end -}}
 
-      {{/* If pooler key is no defined, create it so we dont get nil pointers */}}
-      {{- if not (hasKey $objectData "pooler") -}}
-        {{- $_ := set $objectData "pooler" dict -}}
-      {{- end -}}
-
-      {{/* If backups key is no defined, create it so we dont get nil pointers */}}
-      {{- if not (hasKey $objectData "backups") -}}
-        {{- $_ := set $objectData "backups" (dict "provider" "") -}}
-      {{- end -}}
-
-      {{/* If recovery key is no defined, create it so we dont get nil pointers */}}
-      {{- if not (hasKey $objectData "recovery") -}}
-        {{- $_ := set $objectData "recovery" (dict "method" "") -}}
-      {{- end -}}
-
-      {{- if not (hasKey $objectData.recovery "pitrTarget") -}}
-        {{- $_ := set $objectData.recovery "pitrTarget" dict -}}
-      {{- end -}}
+      {{/* Checks some optional keys that exist and if not, sets them to empty dicts.
+          This is to avoid nil pointers in later checks */}}
+      {{- include "tc.v1.common.lib.cnpg.fix.missing.keys" (dict "objectData" $objectData) -}}
 
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
@@ -149,18 +134,16 @@
       {{- $_ := set $cnpg.creds "host" $creds.host -}}
       {{- $_ := set $cnpg.creds "jdbc" $creds.jdbc -}}
 
-      {{- if $objectData.monitoring -}}
-        {{- if $objectData.monitoring.enablePodMonitor -}}
+      {{- if $objectData.monitoring.enablePodMonitor -}}
 
-          {{- $poolerMetrics := include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" (printf "%s-rw" $objectData.name)) | fromYaml -}}
-          {{- $_ := set $.Values.metrics (printf "cnpg-%s-rw" $objectData.shortName) $poolerMetrics -}}
+        {{- $poolerMetrics := include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" (printf "%s-rw" $objectData.name)) | fromYaml -}}
+        {{- $_ := set $.Values.metrics (printf "cnpg-%s-rw" $objectData.shortName) $poolerMetrics -}}
 
-          {{- if $objectData.pooler.acceptRO -}}
-            {{- $poolerMetricsRO := include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" (printf "%s-ro" $objectData.name)) | fromYaml -}}
-            {{- $_ := set $.Values.metrics (printf "cnpg-%s-ro" $objectData.shortName) $poolerMetricsRO -}}
-          {{- end -}}
-
+        {{- if $objectData.pooler.acceptRO -}}
+          {{- $poolerMetricsRO := include "tc.v1.common.lib.cnpg.metrics.pooler" (dict "poolerName" (printf "%s-ro" $objectData.name)) | fromYaml -}}
+          {{- $_ := set $.Values.metrics (printf "cnpg-%s-ro" $objectData.shortName) $poolerMetricsRO -}}
         {{- end -}}
+
       {{- end -}}
 
     {{- end -}}
