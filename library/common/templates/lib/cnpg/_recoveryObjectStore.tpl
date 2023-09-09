@@ -9,7 +9,7 @@
 
   {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "object_store") -}}
     {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
-    {{- $provider := $objectData.recovery.provicer -}}
+    {{- $provider := $objectData.recovery.provider -}}
     {{- if not (mustHas $provider $validProviders) -}}
       {{- fail (printf "CNPG - Expected <recovery.provider> to be one of [%s], but got [%s]" (join ", " $validProviders) $provider) -}}
     {{- end -}}
