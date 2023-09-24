@@ -286,6 +286,40 @@ args:
     echo "ClickHouse - accepting connections"
 {{- end -}}
 
+{{- define "tc.v1.common.lib.deps.wait.elasticsearch" -}}
+enabled: true
+type: system
+imageSelector: wgetImage
+securityContext:
+  runAsUser: 568
+  runAsGroup: 0
+  readOnlyRootFilesystem: false
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    add: []
+    drop:
+      - ALL
+resources:
+  requests:
+    cpu: 10m
+    memory: 50Mi
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+
+command:
+  - "/bin/sh"
+args:
+  - "-c"
+  - |
+    echo "Executing DB waits..."
+    until curl --fail "${SOLR_HOST}":9200/_cat/health; do
+      echo "Elasticsearch is not responding... Sleeping 2 seconds..."
+      sleep 2
+    done
+{{- end -}}
+
 {{- define "tc.v1.common.lib.deps.wait.solr" -}}
 enabled: true
 type: system
