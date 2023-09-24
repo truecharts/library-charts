@@ -47,6 +47,18 @@
     {{- end -}}
   {{- end -}}
 
+  {{- if .Values.elasticsearch.enabled -}}
+    {{- $container := include "tc.v1.common.lib.deps.wait.elasticsearch" $ | fromYaml -}}
+    {{- if $container -}}
+      {{- range .Values.workload -}}
+        {{- if not (hasKey .podSpec "initContainers") -}}
+          {{- $_ := set .podSpec "initContainers" dict -}}
+        {{- end -}}
+      {{- $_ := set .podSpec.initContainers "elasticsearch-wait" $container -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
   {{- if .Values.solr.enabled -}}
     {{- $container := include "tc.v1.common.lib.deps.wait.solr" $ | fromYaml -}}
     {{- if $container -}}
