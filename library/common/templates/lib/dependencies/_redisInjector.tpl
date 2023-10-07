@@ -22,8 +22,8 @@ This template generates a random password and ensures it persists across updates
   {{/* Prepare data */}}
   {{- $dbHost := printf "%v-%v" .Release.Name "redis" -}}
   {{- $portHost := printf "%v:6379" $dbHost -}}
-  {{- $url = printf "redis://%v:%v@%v/%v" $redisUser $dbPass $portHost $dbIndex -}}
-  {{- $hostPass = printf "%v:%v@%v" $redisUser $dbPass $dbHost -}}
+  {{- $url := printf "redis://%v:%v@%v/%v" $redisUser $dbPass $portHost $dbIndex -}}
+  {{- $hostPass := printf "%v:%v@%v" $redisUser $dbPass $dbHost -}}
 
   {{/* Append some values to redis.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.redis.creds "redisPassword" ($dbPass | quote) -}}
