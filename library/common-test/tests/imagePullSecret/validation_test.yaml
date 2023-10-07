@@ -131,12 +131,12 @@ tests:
       - failedTemplate:
           errorMessage: Image Pull Secret - Expected non-empty <email>
 
-  - it: should fail with namespace longer than 253 characters
+  - it: should fail with namespace longer than 63 characters
     set:
       imagePullSecret:
         my-secret1:
           enabled: true
-          namespace: my-extra-super-duper-long-name-that-is-longer-than-253-characters
+          namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
           data:
             registry: reg
             username: user
@@ -144,7 +144,7 @@ tests:
             email: mail
     asserts:
       - failedTemplate:
-          errorMessage: Secret - Namespace [my-extra-super-duper-long-name-that-is-longer-than-253-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 253 characters.
+          errorMessage: Secret - Namespace [my-extra-super-duper-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
 
   - it: should fail with namespace not starting with [ix-] in TrueNAS SCALE
     set:
