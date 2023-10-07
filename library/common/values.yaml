@@ -267,7 +267,7 @@ scaleGPU: []
 notes:
   header: |
     # Welcome to using <{{ .Chart.Name }}>.
-    Thank you for choosing TrueCharts for your apps.
+    Thank you for installing <{{ .Chart.Name }}> by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
     ## Using <{{ .Chart.Name }}>
