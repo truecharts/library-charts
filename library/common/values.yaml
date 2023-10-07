@@ -266,19 +266,18 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Welcome to using <{{ .Chart.Name }}>.
-    Thank you for choosing TrueCharts for your apps.
+notes:
+  header: |
+    # Thank you for installing <{{ .Chart.Name }}> by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
-    ## Using <{{ .Chart.Name }}>
-    {{- if .Values.iXPortals -}}
+    {{- if .Values.iXPortals }}
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
     
     {{- range .Values.iXPortals }}
     - {{ toYaml . }}
     {{- end -}}
-    
     {{- end -}}
     ## <{{ .Chart.Name }}> Sources
    {{- range .Chart.Sources }}
@@ -286,7 +285,7 @@ notes:
     {{- if .Chart.Annotations.docs}}
     ## <{{ .Chart.Name }}> Sources
     {{- .Chart.Annotations.docs}}
-        {{- end -}}
+    {{- end -}}
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
