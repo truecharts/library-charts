@@ -16,20 +16,14 @@ This template generates a random password and ensures it persists across updates
   {{- end -}}
 
   {{- $redisUser := .Values.redis.redisUsername -}}
+  {{- if not $redisUser -}}{{/* If you try to print a nil value it will print as <nil> */}}
+    {{- $redisUser = "" -}}
+  {{- end -}}
   {{/* Prepare data */}}
   {{- $dbHost := printf "%v-%v" .Release.Name "redis" -}}
   {{- $portHost := printf "%v:6379" $dbHost -}}
-
-  {{- $url := "" -}}
-  {{- $hostPass := "" -}}
-  {{- if $redisUser -}}
-    {{- $url = printf "redis://%v:%v@%v/%v" $redisUser $dbPass $portHost $dbIndex -}}
-    {{- $hostPass = printf "%v:%v@%v" $redisUser $dbPass $dbHost -}}
-  {{- else -}}
-    {{- $url = printf "redis://:%v/%v" $portHost $dbIndex -}}
-    {{- $hostPass = printf ":%v@%v" $dbPass $dbHost -}}
-  {{- end -}}
-
+  {{- $url = printf "redis://%v:%v@%v/%v" $redisUser $dbPass $portHost $dbIndex -}}
+  {{- $hostPass = printf "%v:%v@%v" $redisUser $dbPass $dbHost -}}
 
   {{/* Append some values to redis.creds, so apps using the dep, can use them */}}
   {{- $_ := set .Values.redis.creds "redisPassword" ($dbPass | quote) -}}
