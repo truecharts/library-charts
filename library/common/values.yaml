@@ -267,7 +267,7 @@ scaleGPU: []
 notes:
   header: |
     # Welcome to using <{{ .Chart.Name }}>.
-    Thank you for installing thank you for choosing TrueCharts
+    Thank you for choosing TrueCharts for your apps.
   # custom: "{{ toYaml $.Values }}"
   custom: |
     ## Using <{{ .Chart.Name }}>
@@ -280,10 +280,17 @@ notes:
     {{- end -}}
     
     {{- end -}}
+    ## <{{ .Chart.Name }}> Sources
+   {{- range .Chart.Sources }}
+    {{- end -}}
+    {{- if .Chart.Annotations.docs}}
+    ## <{{ .Chart.Name }}> Sources
+    {{- .Chart.Annotations.docs}}
+        {{- end -}}
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
-    https://truecharts.com
+    https://truecharts.org
 
     OpenSource can only exist with your help, please consider supporting TrueCharts:
     https://truecharts.org/sponsor
