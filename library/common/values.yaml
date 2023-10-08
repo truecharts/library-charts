@@ -270,7 +270,6 @@ notes:
   # custom: "{{ toYaml $.Values }}"
   custom: |
     {{- if .Values.iXPortals }}
-
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
     
