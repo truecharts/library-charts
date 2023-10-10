@@ -6,10 +6,6 @@
   {{- range $name, $ingress := $ingresses -}}
     {{- if $ingress.enabled -}}
       {{- $_ := set $enabledIngresses $name . -}}
-      {{- if $ingress.corsEnabled -}}
-        {{- $newMiddlewares :=  list "tc-opencors-chain" }}
-        {{- $_ := set .Values.ingress.main "fixedMiddlewares" $newMiddlewares -}}
-      {{- end -}}
     {{- end -}}
   {{- end -}}
 
@@ -24,4 +20,10 @@
     {{- $result = keys $enabledIngresses | first -}}
   {{- end -}}
   {{- $result -}}
+
+  {{/* If CORS has been enabled use the opencors chain rather than the default chain */}}
+  {{- if $ingresses.main.corsEnabled -}}
+    {{- $newMiddlewares :=  list "tc-opencors-chain" }}
+    {{- $_ := set .Values.ingress.main "fixedMiddlewares" $newMiddlewares -}}
+  {{- end -}}
 {{- end -}}
