@@ -20,5 +20,4 @@
     {{- $result = keys $enabledIngresses | first -}}
   {{- end -}}
   {{- $result -}}
-
 {{- end -}}
