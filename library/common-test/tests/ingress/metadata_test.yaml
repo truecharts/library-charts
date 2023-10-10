@@ -83,7 +83,7 @@ tests:
           path: metadata.annotations
           value:
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            traefik.ingress.kubernetes.io/router.middlewares: tc-opencors-chain@kubernetescrd
+            traefik.ingress.kubernetes.io/router.middlewares: tc-system-tc-opencors-chain@kubernetescrd
 
       - documentIndex: *ingressDocument
         equal:
