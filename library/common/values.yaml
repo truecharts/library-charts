@@ -458,6 +458,9 @@ ingress:
     # Requires Kubernetes >=1.19
     ingressClassName:  # "nginx"
 
+    # Enable or disable CORS Requests to the ingress
+    corsEnabled: false
+
     ## Configure the hosts for the ingress
     hosts:
       -  # -- Host address. Helm template can be passed.
