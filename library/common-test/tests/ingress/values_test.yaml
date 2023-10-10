@@ -141,3 +141,33 @@ tests:
         equal:
           path: spec.rules[0].http.paths[0].path
           value: "/test-release-name.path"
+
+  - it: ingress with cors should pass
+    set:
+      operator:
+        verify:
+          enabled: false
+      service:
+        main:
+          enabled: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 12345
+      workload:
+        my-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      ingress.main.enabled: true
+      ingress.main.corsEnabled: true
+    asserts:
+      - documentIndex: &ingressDocument 2
+        isKind:
+          of: Ingress
+      - documentIndex: *ingressDocument
+        equal:
+          path: spec.fixedMiddlewares[0]
+          value: "tc-opencors-chain"
