@@ -46,7 +46,7 @@ within the common library.
 
   {{/* If cors is enabled, replace the default fixedMiddleware with the opencors chain */}}
   {{- if $values.corsEnabled -}}
-    {{- $values.fixedMiddlewares := list "tc-opencors-chain" -}}
+    {{- $_ := set $values "fixedMiddlewares" list "tc-opencors-chain" -}}
   {{- end -}}
 
   {{- $fixedMiddlewares := "" -}}
