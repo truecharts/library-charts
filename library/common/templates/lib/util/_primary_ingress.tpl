@@ -6,6 +6,10 @@
   {{- range $name, $ingress := $ingresses -}}
     {{- if $ingress.enabled -}}
       {{- $_ := set $enabledIngresses $name . -}}
+      {{- if $ingress.corsEnabled -}}
+        {{- $newMiddlewares :=  list "tc-opencors-chain" }}
+        {{- $_ := set .Values.ingress.main "fixedMiddlewares" $newMiddlewares -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
