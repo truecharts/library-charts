@@ -44,20 +44,20 @@ within the common library.
     {{- end -}}
   {{- end -}}
 
-  {{/* If cors is enabled, replace the default fixedMiddleware with the opencors chain */}}
-  {{- if $values.corsEnabled -}}
-    {{- $_ := set $values "fixedMiddlewares" list "tc-opencors-chain" -}}
-  {{- end -}}
-
   {{- $fixedMiddlewares := "" -}}
   {{- if $values.enableFixedMiddlewares -}}
-  {{- range $index, $fixedMiddleware := $values.fixedMiddlewares -}}
-      {{- if $index -}}
-        {{- $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
-      {{- else -}}
-        {{- $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
-      {{- end -}}
-  {{- end -}}
+    {{/* If cors is enabled, replace the default fixedMiddleware with the opencors chain */}}
+    {{- if $values.allowCors -}}
+      {{- $_ := set $values "fixedMiddlewares" list "tc-opencors-chain" -}}
+    {{- end -}}
+
+    {{- range $index, $fixedMiddleware := $values.fixedMiddlewares -}}
+        {{- if $index -}}
+          {{- $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+        {{- else -}}
+          {{- $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+        {{- end -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $middlewares := "" -}}
