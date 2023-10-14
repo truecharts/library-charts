@@ -284,9 +284,11 @@ notes:
     - {{ . }}
     {{- end -}}
 
-    {{- with .Chart.Annotations.docs }}
-    [See more for [{{ $.Chart.Name }}] at [{{ . }}]
-    {{- end -}}
+    {{- $link := .Chart.Annotations.docs -}}
+    {{- if not $link -}}
+      {{- $link = .Chart.Home -}}
+    {{- end }}
+    [See more for [{{ $.Chart.Name }}] at [{{ .Chart.Annotations.docs }}]
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
