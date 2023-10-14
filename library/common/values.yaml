@@ -288,7 +288,7 @@ notes:
     {{- if not $link -}}
       {{- $link = .Chart.Home -}}
     {{- end }}
-    [See more for [{{ $.Chart.Name }}] at [{{ .Chart.Annotations.docs }}]
+    [See more for [{{ $.Chart.Name }}] at [{{ $link }}]
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
