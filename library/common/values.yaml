@@ -283,9 +283,8 @@ notes:
     {{- range .Chart.Sources }}
     - {{ . }}
     {{- end -}}
-
-    {{- with .Chart.Annotations.docs }}
-    [See more for {{ $.Chart.Name }} on TrueCharts website]({{ . }})
+    
+    [See more for [{{ $.Chart.Name }}] at [{{ $.Chart.Home }}]
     {{- end }}
   footer: |
     ## Documentation
