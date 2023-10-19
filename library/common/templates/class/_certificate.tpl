@@ -30,5 +30,5 @@ spec:
     group: cert-manager.io
   secretTemplate:
   {{- $secretTemplate := ($certificateSecretTemplate | default dict) }}
-  {{- $secretTemplate | nindent 4 }}
+  {{- $secretTemplate | toYaml | nindent 4 }}
 {{- end -}}
