@@ -7,6 +7,7 @@ within the common library.
 {{- $name := .name -}}
 {{- $hosts := .hosts -}}
 {{- $certificateIssuer := .certificateIssuer }}
+{{- $certificateSecretTemplate := .secretTemplate -}}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cert-manager.certificate.apiVersion" $ }}
 kind: Certificate
@@ -27,6 +28,7 @@ spec:
     name: {{ tpl $certificateIssuer $root | quote }}
     kind: ClusterIssuer
     group: cert-manager.io
-
-
+  secretTemplate:
+  {{- $secretTemplate := ($certificateSecretTemplate | default dict) }}
+  {{- $secretTemplate | nindent 4 }}
 {{- end -}}
