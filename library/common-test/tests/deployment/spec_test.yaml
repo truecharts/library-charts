@@ -131,3 +131,24 @@ tests:
           path: spec
           content:
             replicas: 0
+
+  - it: should set replicas to 0 on ixChartContext - isStopped
+    set:
+      global:
+        namespace: ix-something
+        ixChartContext:
+          storageClassName: some-storage-class
+          isStopped: true
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          replicas: 2
+          podSpec: {}
+    asserts:
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec
+          content:
+            replicas: 0

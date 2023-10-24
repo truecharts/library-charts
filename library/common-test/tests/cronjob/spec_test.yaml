@@ -124,3 +124,27 @@ tests:
             schedule: "*/5 * * * *"
             timeZone: UTC
             suspend: true
+
+  - it: should set suspend to true on ixChartContext - isStopped
+    set:
+      global:
+        namespace: ix-something
+        ixChartContext:
+          storageClassName: some-storage-class
+          isStopped: true
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "*/5 * * * *"
+          suspend: false
+          podSpec: {}
+    asserts:
+      - documentIndex: *cronJobDoc
+        isSubset:
+          path: spec
+          content:
+            schedule: "*/5 * * * *"
+            timeZone: UTC
+            suspend: true

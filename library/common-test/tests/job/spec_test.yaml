@@ -91,3 +91,24 @@ tests:
           path: spec
           content:
             parallelism: 0
+
+  - it: should set parallelism to 0 on ixChartContext - isStopped
+    set:
+      global:
+        namespace: ix-something
+        ixChartContext:
+          storageClassName: some-storage-class
+          isStopped: true
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Job
+          parallelism: 3
+          podSpec: {}
+    asserts:
+      - documentIndex: *jobDoc
+        isSubset:
+          path: spec
+          content:
+            parallelism: 0
