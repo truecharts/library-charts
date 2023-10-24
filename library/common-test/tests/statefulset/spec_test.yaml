@@ -148,7 +148,7 @@ tests:
           content:
             replicas: 0
 
-  - it: should set replicas to 0 on ixChartContext - isStopped
+  - it: should set replicas to 0 on ixChartContext - isStopped (true)
     set:
       global:
         namespace: ix-something
@@ -168,3 +168,24 @@ tests:
           path: spec
           content:
             replicas: 0
+
+  - it: should not set replicas to 0 on ixChartContext - isStopped (false)
+    set:
+      global:
+        namespace: ix-something
+        ixChartContext:
+          storageClassName: some-storage-class
+          isStopped: false
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: StatefulSet
+          replicas: 2
+          podSpec: {}
+    asserts:
+      - documentIndex: *statefulSetDoc
+        isSubset:
+          path: spec
+          content:
+            replicas: 2
