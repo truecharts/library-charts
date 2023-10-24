@@ -152,7 +152,7 @@ tests:
         isSubset:
           path: metadata.annotations
           content:
-            cnpg.io/hibernation: "on"
+            cnpg.io/hibernation: "off"
       - documentIndex: &poolerDoc 1
         isKind:
           of: Pooler
