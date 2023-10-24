@@ -6,8 +6,8 @@ within the common library.
 {{- $root := .root -}}
 {{- $name := .name -}}
 {{- $hosts := .hosts -}}
-{{- $certificateIssuer := .certificateIssuer }}
-{{- $certificateSecretTemplate := .secretTemplate -}}
+{{- $certificateIssuer := .certificateIssuer -}}
+{{- $certificateSecretTemplate := .secretTemplate }}
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.cert-manager.certificate.apiVersion" $ }}
 kind: Certificate
