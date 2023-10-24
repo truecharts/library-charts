@@ -28,7 +28,7 @@ spec:
     name: {{ tpl $certificateIssuer $root | quote }}
     kind: ClusterIssuer
     group: cert-manager.io
-  {{ if $certificateSecretTemplate }}
+  {{- if $certificateSecretTemplate }}
   secretTemplate:
     {{- $certificateSecretTemplate | toYaml | nindent 4 }}
   {{- end -}}
