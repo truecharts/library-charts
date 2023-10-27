@@ -39,7 +39,7 @@ spec:
     {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $root "annotations" $annotations) | trim) }}
     annotations:
       {{- . | nindent 6 }}
-    {{- end }}
-  {{- end }}
+    {{- end -}}
+  {{- end -}}
 
 {{- end -}}
