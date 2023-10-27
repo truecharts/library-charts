@@ -32,13 +32,13 @@ spec:
   secretTemplate:
     {{- $labels := (mustMerge ($certificateSecretTemplate.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $root | fromYaml)) -}}
     {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $root "labels" $labels) | trim) }}
-  labels:
-      {{- . | nindent 4 }}
+    labels:
+      {{- . | nindent 6 }}
     {{- end -}}
     {{- $annotations := (mustMerge ($certificateSecretTemplate.annotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $root | fromYaml)) -}}
     {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $root "annotations" $annotations) | trim) }}
-  annotations:
-      {{- . | nindent 4 }}
+    annotations:
+      {{- . | nindent 6 }}
     {{- end }}
   {{- end }}
 
