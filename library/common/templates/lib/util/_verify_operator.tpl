@@ -25,13 +25,14 @@
 
     {{- $clusterCertificate := false -}}
     {{- if $.Values.clusterCertificates -}}
-    {{- range $opName := $.Values.clusterCertificates.certificates -}}
-      {{- if .enabled -}}
-        {{- $clusterCertificate = true -}}
+      {{- range $opName := $.Values.clusterCertificates.certificates -}}
+        {{- if .enabled -}}
+          {{- $clusterCertificate = true -}}
+        {{- end -}}
       {{- end -}}
-    {{- end -}}
-    {{- if $clusterCertificate -}}
-      {{- $operatorList = mustAppend $operatorList "kubernetes-reflector" -}}
+      {{- if $clusterCertificate -}}
+        {{- $operatorList = mustAppend $operatorList "kubernetes-reflector" -}}
+      {{- end -}}
     {{- end -}}
 
     {{- $metrics := false -}}
