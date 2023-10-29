@@ -12,6 +12,6 @@
         {{- $_ := set $rootCtx.Values "ingress" dict -}}
       {{- end -}}
 
-      {{- $_ := set $rootCtx.Values.ingress $name $persistenceValues -}}
+      {{- $_ := set $rootCtx.Values.ingress $name $ingressValues -}}
   {{- end -}}
 {{- end -}}
