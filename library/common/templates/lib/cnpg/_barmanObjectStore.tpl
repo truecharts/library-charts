@@ -1,6 +1,6 @@
 {{- define "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" -}}
 
-{{- $chartFullName := .chartFullName -}}
+{{- $chartFullname := .chartFullname -}}
 {{- $destPath := .scope.destinationPath -}}
 {{- $endpointUrl := .scope.endpointURL -}}
 
