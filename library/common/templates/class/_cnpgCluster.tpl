@@ -10,7 +10,7 @@
   {{- $clusterLabels := $objectData.cluster.labels | default dict -}}
   {{- $clusterLabels = mustMerge $clusterLabels $objLabels -}}
 
-  {{- $objAnnotations := $objectDatr.annotations | default dict -}}
+  {{- $objAnnotations := $objectData.annotations | default dict -}}
   {{- $clusterAnnotations := $objectData.cluster.annotations | default dict -}}
   {{- $clusterAnnotations = mustMerge $clusterAnnotations $objAnnotations -}}
 
