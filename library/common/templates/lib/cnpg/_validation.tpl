@@ -1,10 +1,6 @@
 {{- define "tc.v1.common.lib.cnpg.validation" -}}
   {{- $objectData := .objectData -}}
 
-  {{- if not (hasKey $objectData "pooler") -}}
-    {{- fail "CNPG - Expected [pooler] key to exist" -}}
-  {{- end -}}
-
   {{- $validTypes := (list "postgresql" "postgis" "timescaledb") -}}
   {{- if not (mustHas $objectData.type $validTypes) -}}
     {{- fail (printf "CNPG - Expected [type] to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
@@ -55,6 +51,10 @@
 
 {{- define "tc.v1.common.lib.cnpg.pooler.validation" -}}
   {{- $objectData := .objectData -}}
+
+  {{- if not (hasKey $objectData "pooler") -}}
+    {{- fail "CNPG - Expected [pooler] key to exist" -}}
+  {{- end -}}
 
   {{- $validTypes := (list "rw" "ro") -}}
   {{- if not (mustHas $objectData.pooler.type $validTypes) -}}

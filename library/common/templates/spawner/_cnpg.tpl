@@ -63,8 +63,12 @@
           This is to avoid nil pointers in later checks */}}
       {{- include "tc.v1.common.lib.cnpg.fix.missing.keys" (dict "objectData" $objectData) -}}
 
-      {{/* Create the Cluster object  */}}
+      {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
+
+      {{- if not (hasKey $objectData "pooler") -}} {{/* No required values from user */}}
+        {{- $_ := set $objectData "pooler" dict -}}
+      {{- end -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
       {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("objectData" $objectData) -}}
