@@ -43,6 +43,7 @@ initdb:
   {{- end -}}
 {{- end -}}
 
+{{/* Recovery Template, called when mode is recovery */}}
 {{- define "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" }}
   {{- $objectData := .objectData -}}
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
@@ -67,6 +68,7 @@ recovery:
   {{- end -}}
 {{- end -}}
 
+{{/* Recovery from externalClusters Template, called when mode is recovery */}}
 {{- define "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" }}
   {{- $objectData := .objectData -}}
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}

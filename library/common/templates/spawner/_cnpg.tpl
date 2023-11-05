@@ -71,7 +71,7 @@
       {{- end -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
-      {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.cnpg.pooler.validation" (dict "objectData" $objectData) -}}
       {{/* Create the RW Pooler object  */}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
