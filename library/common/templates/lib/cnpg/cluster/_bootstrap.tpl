@@ -18,7 +18,6 @@ initdb:
     {{ $k }}: {{ $v | quote }}
   {{- end -}}
 
-
   {{- $postInitApplicationSQL := list -}}
   {{- if $objectData.initdb -}}
     {{- $postInitApplicationSQL = $objectData.initdb.postInitApplicationSQL | default list -}}
