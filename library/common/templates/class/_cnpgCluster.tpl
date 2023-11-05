@@ -6,10 +6,13 @@
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
   {{/* Metadata */}}
-  {{- $clusterLabels := dict -}}
-  {{- $clusterLabels = mustMerge $clusterLabels $objectData.labels $objectData.cluster.labels -}}
-  {{- $clusterAnnotations := dict -}}
-  {{- $clusterAnnotations = mustMerge $clusterAnnotations $objectData.annotations $objectData.cluster.annotations -}}
+  {{- $objLabels := $objectData.labels | default dict -}}
+  {{- $clusterLabels := $objectData.cluster.labels | default dict -}}
+  {{- $clusterLabels = mustMerge $clusterLabels $objLabels -}}
+
+  {{- $objAnnotations := $objectDatr.annotations | default dict -}}
+  {{- $clusterAnnotations := $objectData.cluster.annotations | default dict -}}
+  {{- $clusterAnnotations = mustMerge $clusterAnnotations $objAnnotations -}}
 
   {{/* Stop All */}}
   {{- $hibernation := "off" -}}

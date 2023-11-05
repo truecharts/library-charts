@@ -7,13 +7,13 @@
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
   {{/* Metadata */}}
-  {{- $poolerLabels := dict -}}
-  {{- $poolerLabels = mustMerge $poolerLabels
-                  ($objectData.labels | default dict)
-                  ($objectData.pooler.labels | default dict) -}}
-  {{- $poolerAnnotations := dict -}}
-  {{- $poolerAnnotations = mustMerge $poolerAnnotations $objectData.annotations $objectData.pooler.annotations -}}
+  {{- $objLabels := $objectData.labels | default dict -}}
+  {{- $poolerLabels := $objectData.pooler.labels | default dict -}}
+  {{- $poolerLabels = mustMerge $poolerLabels $objLabels -}}
 
+  {{- $objAnnotations := $objectDatr.annotations | default dict -}}
+  {{- $poolerAnnotations := $objectData.pooler.annotations | default dict -}}
+  {{- $poolerAnnotations = mustMerge $poolerAnnotations $objAnnotations -}}
   {{/* Stop All */}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
