@@ -11,7 +11,7 @@
     {{- fail (printf "CNPG - Expected [mode] to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
   {{- end -}}
 
-  {{- $requiredKeys := (list "database" "user" "password") -}}
+  {{- $requiredKeys := (list "database" "user") -}}
   {{- range $key := $requiredKeys -}}
     {{- if not (get $objectData $key) -}}
       {{- fail (printf "CNPG - Expected a non empty [%s] key" $key) -}}
