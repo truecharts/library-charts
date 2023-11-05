@@ -4,7 +4,7 @@
 
   {{/* Naming */}}
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
-  {{- $backupName := printf "%v-backup-%v" $objectData.name $objectData.backupName -}}
+  {{- $backupName := printf "%v-backup-%v" $objectData.name $objectData.schedData.name -}}
 
   {{/* Metadata */}}
   {{- $objLabels := $objectData.labels | default dict -}}
@@ -34,9 +34,6 @@ metadata:
 spec:
   cluster:
     name: {{ $cnpgClusterName }}
-  {{/* FIXME: We probably need to create a new ScheduledBackup for each backup entry
-  under cnpg.main.backpus.scheduledBackups */}}
-  {{- include "tc.v1.common.lib.cnpg.cluster.backup.validation" (dict "objectData" $objectData) }}
-  schedule: {{ $objectData.backups.schedule }}
-  backupOwnerReference: {{ $objectData.backups.backupOwnerReference }}
+  schedule: {{ $objectData.schedData.schedule }}
+  backupOwnerReference: {{ $objectData.schedData.backupOwnerReference }}
 {{- end -}}

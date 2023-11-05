@@ -93,6 +93,7 @@
 
     {{- if $objectData.backups.enabled -}}
       {{- include "tc.v1.common.lib.cnpg.spawner.backup" (dict "objectData" $objectData "rootCtx" $) -}}
+      {{- include "tc.v1.common.lib.cnpg.spawner.scheduledBackups" (dict "objectData" $objectData "rootCtx" $) -}}
     {{- end -}}
 
     {{- include "tc.v1.common.lib.cnpg.spawner.recovery.objectStore" (dict "objectData" $objectData "rootCtx" $) -}}
