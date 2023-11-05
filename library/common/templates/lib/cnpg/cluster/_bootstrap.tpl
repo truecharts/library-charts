@@ -6,7 +6,7 @@
   {{- if $objectData.initdb -}}
     {{- $keysToDrop := (list "postInitApplicationSQL" "database" "owner" "secret") -}}
     {{- range $key := $keysToDrop -}}
-      {{- $initdb = omit ($objectData.initdb $keys) -}}
+      {{- $initdb = omit ($objectData.initdb $key) -}}
     {{- end -}}
   {{- end }}
 initdb:
