@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.lib.cnpg.fix.missing.keys" -}}
+{{- define "tc.v1.common.lib.cnpg.setDefaultKeys" -}}
   {{- $objectData := .objectData -}}
 
   {{/* Cluster */}}
