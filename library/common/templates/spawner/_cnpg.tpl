@@ -57,11 +57,10 @@
     {{- end -}}
 
     {{- if $enabled -}}
-      {{- include "tc.v1.common.lib.cnpg.validation" (dict "objectData" $objectData) -}}
-
-      {{/* TODO: Checks some optional keys that exist and if not, sets them to empty dicts.
-          This is to avoid nil pointers in later checks */}}
+      {{/* Sets some default values if none given */}}
       {{- include "tc.v1.common.lib.cnpg.setDefaultKeys" (dict "objectData" $objectData) -}}
+
+      {{- include "tc.v1.common.lib.cnpg.validation" (dict "objectData" $objectData) -}}
 
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
