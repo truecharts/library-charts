@@ -266,26 +266,36 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Welcome to using <{{ .Chart.Name }}>.
-    Thank you for installing thank you for choosing TrueCharts
+    # Thank you for installing [{{ .Chart.Name }}] by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
-    ## Using <{{ .Chart.Name }}>
-    {{- if .Values.iXPortals -}}
+    {{- if .Values.iXPortals }}
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
-    {{- range .Values.iXPortals -}}
+
+    {{- range .Values.iXPortals }}
+    - {{ toYaml . }}
+    {{- end -}}
+    {{- end }}
+
+    ## [{{ .Chart.Name }}] Sources
+
+    {{- range .Chart.Sources }}
     - {{ . }}
     {{- end -}}
-    {{- end -}}
+
+    {{- $link := .Chart.Annotations.docs -}}
+    {{- if not $link -}}
+      {{- $link = .Chart.Home -}}
+    {{- end }}
+    [See more for [{{ $.Chart.Name }}] at [{{ $link }}]
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
-    https://truecharts.com
+    https://truecharts.org
 
     OpenSource can only exist with your help, please consider supporting TrueCharts:
     https://truecharts.org/sponsor
-
 
 # -- iXsystems prototype values.yaml based portals
 iXPortals: []
@@ -315,7 +325,7 @@ APPURL: ""
 
 gluetunImage:
   repository: tccr.io/truecharts/gluetun
-  tag: v3.35.0@sha256:d86c128a3b480b6de94c81928e1007390fc0722eb4be8cd087c5c292fbec7a5b
+  tag: v3.36.0@sha256:0cd36b27fcfc21b9ab738a594a8e477e94e42fd7c2a52539615bb2c8cac2d75e
   pullPolicy: IfNotPresent
 
 netshootImage:
@@ -325,22 +335,22 @@ netshootImage:
 
 tailscaleImage:
   repository: tccr.io/truecharts/tailscale
-  tag: v1.48.1@sha256:53e5c5f8fca62664ad4404ebfb0fb6280404ad3a12c75d28afdbcdc5393b42a5
+  tag: v1.52.0@sha256:806efacf7c05d3fd2c8ac3ca9606f58469022f56e62f20a3e9ad136174d0e27f
   pullPolicy: IfNotPresent
 
 codeserverImage:
   repository: tccr.io/truecharts/code-server
-  tag: v4.16.0@sha256:5ea1c9c44636422ca8e3b8dfffcdbe1a95c6ff80a01e553d24a51e5431c72ce7
+  tag: v4.18.0@sha256:e59861c2753490910c08bc3db5ea09234c9a80a3fcbac810621084c7178ce4b0
   pullPolicy: IfNotPresent
 
 alpineImage:
   repository: tccr.io/truecharts/alpine
-  tag: v3.18.2@sha256:a661597195a991150580f4915018663dd18bc36f5fef1e88e00c7a3e7b93e127
+  tag: v3.18.4@sha256:17cd77e25d3fa829d168caec4db7bb5b52ceeb935d8ca0d1180de6f615553dc4
   pullPolicy: IfNotPresent
 
 scratchImage:
   repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:1a9a10a0a5f5cb5fe4b30ac6d9c56ff87ad47f3f3490bafb6938fc155230131b
+  tag: latest@sha256:7f821eeb99d04ac248c47f79cfbcc2482651fea48aff9ec5d2ba0ba34f1f5531
   pullPolicy: IfNotPresent
 
 kubectlImage:
@@ -449,6 +459,9 @@ ingress:
     # -- Set the ingressClass that is used for this ingress.
     # Requires Kubernetes >=1.19
     ingressClassName:  # "nginx"
+
+    # Enable or disable CORS Requests to the ingress
+    allowCors: false
 
     ## Configure the hosts for the ingress
     hosts:

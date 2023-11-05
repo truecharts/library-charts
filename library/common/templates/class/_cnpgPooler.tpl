@@ -18,7 +18,7 @@
   {{- $cnpgPoolerAnnotations := $objectData.pooler.annotation | default dict -}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
-  {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
+  {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $instances = 0 -}}
     {{- $hibernation = "on" -}}
   {{- end -}}

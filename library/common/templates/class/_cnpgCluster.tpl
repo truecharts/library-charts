@@ -17,7 +17,7 @@
   {{- $cnpgClusterLabels := $objectData.cluster.labels | default dict -}}
   {{- $cnpgClusterAnnotations := $objectData.cluster.annotations | default dict -}}
   {{- $hibernation := "off" -}}
-  {{- if or $objectData.hibernate $rootCtx.Values.global.stopAll -}}
+  {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $hibernation = "on" -}}
   {{- end -}}
 
