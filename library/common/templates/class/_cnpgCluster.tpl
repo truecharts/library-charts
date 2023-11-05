@@ -7,9 +7,13 @@
 
   {{/* Metadata */}}
   {{- $clusterLabels := dict -}}
-  {{- $clusterLabels = mustMerge $clusterLabels $objectData.labels $objectData.cluster.labels -}}
+  {{- $clusterLabels = mustMerge $clusterLabels
+                    ($objectData.labels | default dict)
+                    ($objectData.cluster.labels | default dict) -}}
   {{- $clusterAnnotations := dict -}}
-  {{- $clusterAnnotations = mustMerge $clusterAnnotations $objectData.annotations $objectData.cluster.annotations -}}
+  {{- $clusterAnnotations = mustMerge $clusterAnnotations
+                    ($objectData.annotations | default dict)
+                    ($objectData.cluster.annotations | default dict) -}}
 
   {{/* Stop All */}}
   {{- $hibernation := "off" -}}

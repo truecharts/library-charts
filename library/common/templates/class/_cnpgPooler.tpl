@@ -8,7 +8,9 @@
 
   {{/* Metadata */}}
   {{- $poolerLabels := dict -}}
-  {{- $poolerLabels = mustMerge $poolerLabels $objectData.labels $objectData.pooler.labels -}}
+  {{- $poolerLabels = mustMerge $poolerLabels
+                  ($objectData.labels | default dict)
+                  ($objectData.pooler.labels | default dict) -}}
   {{- $poolerAnnotations := dict -}}
   {{- $poolerAnnotations = mustMerge $poolerAnnotations $objectData.annotations $objectData.pooler.annotations -}}
 
