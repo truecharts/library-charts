@@ -83,7 +83,7 @@
   {{- end -}}
 {{- end -}}
 
-{{- define "tc.v1.common.lib.cnpg.cluster.backup.validation" -}}
+{{- define "tc.v1.common.lib.cnpg.backup.validation" -}}
   {{- $objectData := .objectData -}}
   {{/* FIXME: The path is not correct need to address the FIXME: in scheduledBackup class first */}}
   {{- if not $objectData.scheduledBackups.name -}}
