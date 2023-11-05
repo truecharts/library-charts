@@ -3,7 +3,7 @@
 
   {{- $validTypes := (list "postgresql" "postgis" "timescaledb") -}}
   {{- if not (mustHas $objectData.type $validTypes) -}}
-    {{- fail (printf "CNPG - Expected [type] to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
+    {{- fail (printf "CNPG - Expected [type] to be one of [%s], but got [%s]" (join ", " $validTypes) $objectData.mode) -}}
   {{- end -}}
 
   {{- $validModes := (list "standalone" "replica" "recovery") -}}
