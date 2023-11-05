@@ -63,11 +63,11 @@ metadata:
 spec:
   instances: {{ $instances }}
   bootstrap:
-  {{- if eq $objectData.mode "standalone" }}
-    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "objectData" $objectData) | indent 4 -}}
-  {{- else if eq $objectData.mode "recovery" }}
-    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | indent 4 -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | indent 2 -}}
+  {{- if eq $objectData.mode "standalone" -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "objectData" $objectData) | nindent 4 -}}
+  {{- else if eq $objectData.mode "recovery" -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
 {{/* TODO: Cleanup-Check */}}
 {{- if $objectData.backups.enabled }}

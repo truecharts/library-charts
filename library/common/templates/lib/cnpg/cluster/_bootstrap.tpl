@@ -74,6 +74,6 @@ externalClusters:
     barmanObjectStore:
       serverName: {{ $objectData.recovery.serverName }}
       {{- $data := dict "chartFullname" $cnpgClusterName "scope" $objectData.recovery "secretSuffix" "-recovery" -}}
-      {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $data | nindent 6 }}
+      {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $data | nindent 6 -}}
   {{- end -}}
 {{- end -}}
