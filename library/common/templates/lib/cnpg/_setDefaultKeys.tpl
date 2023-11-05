@@ -44,22 +44,19 @@
     {{- $_ := set $objectData.backups "target" "prefer-standby" -}}
   {{- end -}}
 
+  {{/* Cluster Monitoring */}}
+  {{- if not (hasKey $objectData.cluster "monitoring") -}}
+    {{- $_ := set $objectData.cluster "monitoring" dict -}}
+  {{- end -}}
+
   {{/* Pooler */}}
   {{- if not (hasKey $objectData "pooler") -}}
     {{- $_ := set $objectData "pooler" dict -}}
   {{- end -}}
 
-
-
-
-
+  {{/* Monitoring */}}
   {{- if not (hasKey $objectData "monitoring") -}}
     {{- $_ := set $objectData "monitoring" dict -}}
   {{- end -}}
-
-  {{- if not (hasKey $objectData.cluster "monitoring") -}}
-    {{- $_ := set $objectData.cluster "monitoring" dict -}}
-  {{- end -}}
-
 
 {{- end -}}
