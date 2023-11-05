@@ -6,12 +6,12 @@
     {{- $_ := set $objectData "cluster" dict -}}
   {{- end -}}
 
-  {{- if not (hasKey $objectData.type) -}}
+  {{- if not (hasKey $objectData "type") -}}
     {{- $_ := set $objectData "type" "postgresql" -}}
   {{- end -}}
 
-  {{- if not (hasKey $objectData.mode) -}}
-    {{- $_ := set $objectData "type" "standalone" -}}
+  {{- if not (hasKey $objectData "mode") -}}
+    {{- $_ := set $objectData "mode" "standalone" -}}
   {{- end -}}
 
   {{/* Pooler */}}
