@@ -2,34 +2,31 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- $cnpgClusterName := $objectData.name -}}
+  {{/* Naming */}}
+  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
+  {{- $backupName := printf "%v-backup-%v" $objectData.name $objectData.backupName -}}
 
-  {{- if and $objectData.version (ne $objectData.version "legacy") -}}
-    {{- $cnpgClusterName = printf "%v-%v" $objectData.name $objectData.version -}}
-  {{- end -}}
+  {{/* Metadata */}}
+  {{- $objLabels := $objectData.labels | default dict -}}
+  {{- $backupLabels := $objectData.backups.labels | default dict -}}
+  {{- $backupLabels = mustMerge $backupLabels $objLabels -}}
 
-  {{- if $objectData.recValue -}}
-    {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
-  {{- end -}}
-
-  {{- $cnpgBackupName := $objectData.backupName -}}
-  {{- $cnpgLabels := $objectData.labels -}}
-  {{- $cnpgAnnotations := $objectData.annotations -}}
-  {{- $cnpgBackupLabels := $objectData.backups.labels | default dict -}}
-  {{- $cnpgBackupAnnotations := $objectData.backups.annotations | default dict -}}
+  {{- $objAnnotations := $objectData.annotations | default dict -}}
+  {{- $backupAnnotations := $objectData.backups.annotations | default dict -}}
+  {{- $backupAnnotations = mustMerge $backupAnnotations $objAnnotations }}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.ScheduledBackup.apiVersion" $ }}
+apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: {{ printf "%v-backup-%v" $objectData.name $cnpgBackupName }}
+  name: {{ $backupName }}
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
   labels:
     cnpg.io/cluster: {{ $cnpgClusterName }}
-  {{- $labels := (mustMerge $cnpgBackupLabels $cnpgLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- $labels := (mustMerge $backupLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge $cnpgBackupAnnotations $cnpgAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- $annotations := (mustMerge $backupAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
   annotations:
     {{- . | nindent 4 }}
@@ -37,6 +34,9 @@ metadata:
 spec:
   cluster:
     name: {{ $cnpgClusterName }}
+  {{/* FIXME: We probably need to create a new ScheduledBackup for each backup entry
+  under cnpg.main.backpus.scheduledBackups */}}
+  {{- include "tc.v1.common.lib.cnpg.cluster.backup.validation" (dict "objectData" $objectData) }}
   schedule: {{ $objectData.backups.schedule }}
   backupOwnerReference: {{ $objectData.backups.backupOwnerReference }}
 {{- end -}}

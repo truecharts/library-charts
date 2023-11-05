@@ -82,3 +82,20 @@
 
   {{- end -}}
 {{- end -}}
+
+{{- define "tc.v1.common.lib.cnpg.cluster.backup.validation" -}}
+  {{- $objectData := .objectData -}}
+  {{/* FIXME: The path is not correct need to address the FIXME: in scheduledBackup class first */}}
+  {{- if not $objectData.scheduledBackups.name -}}
+    {{- fail "CNPG Scheduled Backups - Expected non empty [name]" -}}
+  {{- end -}}
+
+  {{- if not $objectData.scheduledBackups.schedule -}}
+    {{- fail "CNPG Scheduled Backups - Expected non empty [schedule]" -}}
+  {{- end -}}
+
+  {{- if not $objectData.scheduledBackups.backupOwnerReference -}}
+    {{- fail "CNPG Scheduled Backups - Expected non empty [backupOwnerReference]" -}}
+  {{- end -}}
+
+{{- end -}}
