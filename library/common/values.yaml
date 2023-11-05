@@ -757,9 +757,9 @@ addons:
     env: {}
 
 
-##
-# This section contains some-preconfig for frequently used dependencies
-##
+##########################################################################
+# This section contains some pre-config for frequently used dependencies #
+##########################################################################
 
 cnpg:
   main:
@@ -767,6 +767,9 @@ cnpg:
     primary: true
     # -- Puts the cnpg cluster in hibernation mode
     hibernate: false
+    # Additional Labels and annotations for all cnpg objects
+    labels: {}
+    annotations: {}
 
     # -- Destroys the current cluster to forge a new cluster or recovery operation
     # ABSOLUTELY DESTRUCTIVE
@@ -782,33 +785,31 @@ cnpg:
     # TODO: allow for selecting other versions
     version: legacy
 
-
     # Cluster mode of operation. Available modes:
     # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
     # * `replica` - Creates a replica cluster from an existing CNPG cluster. # TODO
     # * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup.
     mode: standalone
 
-
+    # Database details
     database: "app"
     user: "app"
     password: ""
 
-    labels: {}
-    annotations: {}
-
     # Database cluster configuration
     cluster:
+      # Additional Labels and annotations for cnpg cluster
+      labels: {}
+      annotations: {}
+
       # Number of instances
       instances: 2
 
-      # set to true on single-node clusers to allow PVCs to be kept on instance restart
+      # set to true on single-node clusters to allow PVCs to be kept on instance restart
       singleNode: false
-
       storage:
         size: 256Gi
         # storageClass: ""
-
       walStorage:
         size: 256Gi
         # storageClass: ""
@@ -831,7 +832,7 @@ cnpg:
       primaryUpdateStrategy: unsupervised
 
       # The instances' log level, one of the following values: error, warning, info (default), debug, trace
-      logLevel: "info"
+      logLevel: info
 
       # The configuration for the CA and related certificates
       # See: https://cloudnative-pg.io/documentation/current/api_reference/#CertificatesConfiguration
@@ -867,9 +868,6 @@ cnpg:
         # postInitSQL:
         #   - CREATE EXTENSION IF NOT EXISTS vector;
 
-      labels: {}
-      annotations: {}
-
     # Recovery settings if the chosen mode is `recovery`.
     recovery:
       ##
@@ -884,11 +882,9 @@ cnpg:
       pitrTarget:
         time: "" # Time in RFC3339 format
 
-      ##
       # Backup Recovery Method
       backupName: "" # Name of the backup to recover from. Required if method is `backup`.
 
-      ##
       # Object Store Recovery Method
       clusterName: ""
       # Overrides the provider specific default endpoint. Defaults to:
@@ -921,7 +917,6 @@ cnpg:
         gkeEnvironment: false
         applicationCredentials: ""
 
-    ###
     # Database cluster backup configuration
     backups:
       enabled: false # You need to configure backups manually, so backups are disabled by default.
@@ -995,7 +990,7 @@ cnpg:
 # @default -- See below
 redis:
   enabled: false
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
+  # -- can be used to make an easy accessible note which URLS to use to access the DB.
   creds: {}
   manifestManager:
     enabled: false

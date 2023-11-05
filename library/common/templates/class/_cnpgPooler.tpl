@@ -2,43 +2,49 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
+  {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("rootCtx" $rootCtx "objectData" $objectData) -}}
+
+  {{/* Naming */}}
+  {{- $poolerName := printf "%s-pooler-%s" $objectData.name $objectData.pooler.type -}}
   {{- $cnpgClusterName := $objectData.name -}}
-
+  {{/* Append version to the cluster name if available */}}
   {{- if and $objectData.version (ne $objectData.version "legacy") -}}
-    {{- $cnpgClusterName = printf "%v-%v" $objectData.name $objectData.version -}}
+    {{- $cnpgClusterName = printf "%s-%v" $objectData.name $objectData.version -}}
   {{- end -}}
-
+  {{/* Append the recovery string to the cluster name if available */}}
   {{- if $objectData.recValue -}}
-    {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
+    {{- $cnpgClusterName = printf "%s-%s" $cnpgClusterName $objectData.recValue -}}
   {{- end -}}
 
-  {{- $cnpgLabels := $objectData.labels | default dict -}}
-  {{- $cnpgAnnotations := $objectData.annotations | default dict -}}
-  {{- $cnpgPoolerLabels := $objectData.pooler.label | default dict -}}
-  {{- $cnpgPoolerAnnotations := $objectData.pooler.annotation | default dict -}}
+  {{/* Metadata */}}
+  {{- $poolerLabels := dict -}}
+  {{- $poolerLabels = mustMerge $poolerLabels $objectData.labels $objectData.pooler.labels -}}
+  {{- $poolerAnnotations := dict -}}
+  {{- $poolerAnnotations = mustMerge $poolerAnnotations $objectData.annotations $objectData.pooler.annotations -}}
+
+  {{/* Stop All */}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $instances = 0 -}}
     {{- $hibernation = "on" -}}
-  {{- end -}}
-  {{- $type := $objectData.pooler.type | default "rw" }}
+  {{- end }}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $rootCtx }}
+apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
 metadata:
-  name: {{ printf "%v-pooler-%v" $objectData.name $type }}
+  name: {{ $poolerName }}
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
   labels:
     cnpg.io/reload: "on"
-  {{- $labels := (mustMerge $cnpgPoolerLabels $cnpgLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- $labels := (mustMerge $poolerLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
-  {{- end -}}
+  {{- end }}
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
-  {{- $annotations := (mustMerge $cnpgPoolerAnnotations $cnpgAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- $annotations := (mustMerge $poolerAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
@@ -46,11 +52,14 @@ spec:
   cluster:
     name: {{ $cnpgClusterName }}
   instances: {{ $instances }}
-  type: {{ $type }}
+  type: {{ $objectData.pooler.type }}
   pgbouncer:
     poolMode: {{ $objectData.pooler.poolMode | default "session" }}
-    {{- with $objectData.pooler.parameters | default dict -}}
+    {{/* https://cloudnative-pg.io/documentation/1.15/connection_pooling/#pgbouncer-configuration-options */}}
+    {{- with $objectData.pooler.parameters }}
     parameters:
-      {{- . | toYaml | nindent 6 }}
-    {{ end }}
+      {{- range $key, $value := . }}
+      {{ $key }}: {{ include "tc.v1.common.helper.makeIntOrNoop" $value | quote }}
+      {{- end -}}
+    {{- end -}}
 {{- end -}}
