@@ -18,7 +18,11 @@ initdb:
     {{ $k }}: {{ $v | quote }}
   {{- end -}}
 
-  {{- $postInitApplicationSQL := $objectData.initdb.postInitApplicationSQL -}}
+
+  {{- $postInitApplicationSQL := list -}}
+  {{- if $objectData.initdb -}}
+    {{- $postInitApplicationSQL = $objectData.initdb.postInitApplicationSQL | default list -}}
+  {{- end -}}
   {{- if eq $objectData.type "postgis" -}}
     {{- $postInitApplicationSQL = concat $postInitApplicationSQL (list
       "CREATE EXTENSION IF NOT EXISTS postgis;"
