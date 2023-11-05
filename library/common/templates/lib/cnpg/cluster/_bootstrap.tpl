@@ -14,7 +14,7 @@ initdb:
     name: {{ printf "%s-user" $cnpgClusterName }}
   database: {{ $objectData.database }}
   owner: {{ $objectData.user }}
-  {{- range $k, $v := $initDB }}
+  {{- range $k, $v := $initdb }}
     {{ $key }}: {{ $val | quote }}
   {{- end -}}
 
