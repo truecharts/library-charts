@@ -52,7 +52,6 @@
     {{- if $recValue -}}
       {{- $_ := set $objectData "recValue" $recValue -}}
       {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoverystring" $recValue) | fromYaml -}}
-      {{/* FIXME: Replace this with a configmap class call */}}
       {{- $_ := set $.Values.configmap (printf "%s-recoverystring" $objectData.shortName) $recConfig -}}
     {{- end -}}
 
@@ -60,7 +59,10 @@
       {{/* Sets some default values if none given */}}
       {{- include "tc.v1.common.lib.cnpg.setDefaultKeys" (dict "objectData" $objectData) -}}
 
+      {{/* Validate the object */}}
       {{- include "tc.v1.common.lib.cnpg.validation" (dict "objectData" $objectData) -}}
+      {{/* Validate backup here as it used in Cluster too */}}
+      {{- include "tc.v1.common.lib.cnpg.cluster.backup.validation" (dict "objectData" $objectData) -}}
 
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
@@ -114,12 +116,10 @@
       {{- $_ := set $creds "host" ((printf "%s-rw" $objectData.name) | quote) -}}
       {{- $_ := set $creds "jdbc" ((printf "jdbc:postgresql://%v-rw:5432/%v" $objectData.name $objectData.database) | quote) -}}
 
-      {{/* FIXME: Replace this with a secret class call */}}
       {{- with (include "tc.v1.common.lib.cnpg.secret.user" (dict "values" $objectData "dbPass" $dbPass) | fromYaml) -}}
         {{- $_ := set $.Values.secret (printf "cnpg-%s-user" $objectData.shortName) . -}}
       {{- end -}}
 
-      {{/* FIXME: Replace this with a secret class call */}}
       {{- with (include "tc.v1.common.lib.cnpg.secret.urls" (dict "creds" $creds) | fromYaml) -}}
         {{- $_ := set $.Values.secret (printf "cnpg-%s-urls" $objectData.shortName) . -}}
       {{- end -}}

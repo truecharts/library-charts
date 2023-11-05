@@ -22,7 +22,6 @@
     {{- $instances = 0 -}}
   {{- end -}}
 
-  {{/* TODO: Cleanup-Check */}}
   {{- $monitoring := false -}}
   {{- with $objectData.monitoring -}}
     {{- if not (kindIs "invalid" .enablePodMonitor) -}}
@@ -72,22 +71,10 @@ spec:
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
-{{/* TODO: Cleanup-Check */}}
 {{- if $objectData.backups.enabled }}
-backup:
-  target: "prefer-standby"
-  retentionPolicy: {{ $objectData.backups.retentionPolicy }}
-  barmanObjectStore:
-    wal:
-      compression: gzip
-      encryption: AES256
-    data:
-      compression: gzip
-      encryption: AES256
-      jobs: {{ $objectData.backups.jobs | default 2 }}
-    {{- $d2 := dict "chartFullname" $cnpgClusterName "scope" $objectData.backups -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d2 | nindent 4 -}}
+  {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
 {{- end }}
+{{/* TODO: Cleanup-Checkpoint */}}
   enableSuperuserAccess: {{ $objectData.cluster.enableSuperuserAccess | default "true" }}
   primaryUpdateStrategy: {{ $objectData.cluster.primaryUpdateStrategy | default "unsupervised" }}
   primaryUpdateMethod: {{ $objectData.cluster.primaryUpdateMethod | default "switchover" }}
@@ -106,7 +93,6 @@ backup:
     storageClass: {{ . }}
     {{- end }}
     size: {{ tpl $walSize $rootCtx | quote }}
-
   monitoring:
     enablePodMonitor: {{ $monitoring }}
     {{- if $customQueries }}

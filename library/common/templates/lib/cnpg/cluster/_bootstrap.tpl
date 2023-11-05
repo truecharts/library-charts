@@ -3,10 +3,10 @@
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
   {{- $initdb := dict -}}
-  {{- if $objectData.initdb -}}
+  {{- if $objectData.cluster.initdb -}}
     {{- $keysToDrop := (list "postInitApplicationSQL" "database" "owner" "secret") -}}
     {{- range $key := $keysToDrop -}}
-      {{- $initdb = omit ($objectData.initdb $key) -}}
+      {{- $initdb = omit ($objectData.cluster.initdb $key) -}}
     {{- end -}}
   {{- end }}
 initdb:
@@ -19,8 +19,8 @@ initdb:
   {{- end -}}
 
   {{- $postInitApplicationSQL := list -}}
-  {{- if $objectData.initdb -}}
-    {{- $postInitApplicationSQL = $objectData.initdb.postInitApplicationSQL | default list -}}
+  {{- if $objectData.cluster.initdb -}}
+    {{- $postInitApplicationSQL = $objectData.cluster.initdb.postInitApplicationSQL | default list -}}
   {{- end -}}
   {{- if eq $objectData.type "postgis" -}}
     {{- $postInitApplicationSQL = concat $postInitApplicationSQL (list

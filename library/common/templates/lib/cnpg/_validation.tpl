@@ -26,9 +26,9 @@
     {{- fail "CNPG Cluster Recovery - Expected [recovery] key to exist" -}}
   {{- end -}}
 
-  {{- $validMethods := (list "backup" "object_store") -}}
+  {{- $validMethods := (list "backup" "object_store" "pg_basebackup") -}}
   {{- if not (mustHas $objectData.recovery.method $validMethods) -}}
-    {{- fail (printf "CNPG Cluster Recovery  - Expected [method] to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.recovery.method) -}}
+    {{- fail (printf "CNPG Cluster Recovery - Expected [method] to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.recovery.method) -}}
   {{- end -}}
 
   {{- if eq $objectData.recovery.method "backup" -}}
@@ -58,5 +58,27 @@
     {{- if not (mustHas $objectData.pooler.poolMode $validPgModes) -}}
       {{- fail (printf "CNPG Pooler - Expected pooler [poolMode] to be one one of [%s], but got [%s]" (join ", " $validPgModes) $objectData.pooler.poolMode) -}}
     {{- end -}}
-  {{- end  -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "tc.v1.common.lib.cnpg.cluster.backup.validation" -}}
+  {{- $objectData := .objectData -}}
+
+  {{- if $objectData.backups.enabled -}}
+    {{- $validProviders := (list "azure" "google" "object_store" "s3") -}}
+    {{- if not (mustHas $objectData.backups.provider $validProviders) -}}
+      {{- fail (printf "CNPG Backup - Expected [backups.provider] to be one of [%s], but got [%s]" (join ", " $validProviders) $objectData.backups.provider) -}}
+    {{- end -}}
+
+    {{- $regexPolicy := "^[1-9][0-9]*[dwm]$" -}} {{/* Copied from upstream */}}
+    {{- if not (mustRegexMatch $regexPolicy $objectData.backups.retentionPolicy) -}}
+      {{- fail (printf "CNPG Backup - Expected [backups.retentionPolicy] to match regex [%s], got [%s]" $regexPolicy $objectData.backups.retentionPolicy) -}}
+    {{- end -}}
+
+    {{- $validTargets := (list "primary" "prefer-standby") -}}
+    {{- if not (mustHas $objectData.backups.target $validTargets) -}}
+      {{- fail (printf "CNPG Backup - Expected [backups.target] to be one of [%s], but got [%s]" (join ", " $validTargets) $objectData.backups.target) -}}
+    {{- end -}}
+
+  {{- end -}}
 {{- end -}}
