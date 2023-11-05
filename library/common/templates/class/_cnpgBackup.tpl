@@ -14,7 +14,7 @@
   {{- $backupAnnotations := $objectData.backupsAnnotations | default dict -}}
   {{- $backupAnnotations = mustMerge $backupAnnotations $objAnnotations }}
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.backup.apiVersion" $ }}
+apiVersion: postgresql.cnpg.io/v1
 kind: Backup
 metadata:
   name: {{ $backupName }}
