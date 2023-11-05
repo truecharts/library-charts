@@ -15,7 +15,7 @@ initdb:
   database: {{ $objectData.database }}
   owner: {{ $objectData.user }}
   {{- range $k, $v := $initdb }}
-    {{ $key }}: {{ $val | quote }}
+    {{ $k }}: {{ $v | quote }}
   {{- end -}}
 
   {{- $postInitApplicationSQL := $objectData.initdb.postInitApplicationSQL -}}
