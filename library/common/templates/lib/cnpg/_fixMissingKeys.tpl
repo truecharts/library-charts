@@ -11,8 +11,7 @@
     {{- $_ := set $objectData "backups" (dict "provider" "") -}}
   {{- end -}}
 
-  {{/* If recovery key is no defined, create it so we dont get nil pointers */}}
-  {{- if not (hasKey $objectData "recovery") -}}
+  {{/* If recovery key is no defined, create it so we dont get nil pointers
     {{- $_ := set $objectData "recovery" (dict "method" "") -}}
   {{- end -}}
 
@@ -34,5 +33,5 @@
 
   {{- if not (hasKey $objectData.cluster "initdb") -}}
     {{- $_ := set $objectData.cluster "initdb" dict -}}
-  {{- end -}}
+  {{- end -}}*/}}
 {{- end -}}
