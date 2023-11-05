@@ -13,10 +13,13 @@
 
   {{/* Stop All */}}
   {{- $hibernation := "off" -}}
+  {{- $instances := $objectData.cluster.instances | default 2 -}}
   {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $hibernation = "on" -}}
+    {{- $instances = 0 -}}
   {{- end -}}
 
+  {{/* TODO: Cleanup-Check */}}
   {{- $monitoring := false -}}
   {{- with $objectData.monitoring -}}
     {{- if not (kindIs "invalid" .enablePodMonitor) -}}
@@ -24,8 +27,6 @@
     {{- end -}}
   {{- end -}}
 
-  {{- $initDB := $objectData.cluster.initdb -}}
-  {{- $instances := $objectData.cluster.instances | default 2 -}}
   {{- $size := $rootCtx.Values.fallbackDefaults.vctSize -}}
   {{- with $objectData.cluster.storage.size -}}
     {{- $size := . -}}
@@ -39,8 +40,7 @@
   {{- $customQueries := dict -}}
   {{- with $objectData.cluster.monitoring.customQueries -}}
     {{- $customQueries := . -}}
-  {{- end -}}
-
+  {{- end }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -69,7 +69,7 @@ spec:
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | indent 4 -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | indent 2 -}}
   {{- end -}}
-{{/* TODO: Cleanup */}}
+{{/* TODO: Cleanup-Check */}}
 {{- if $objectData.backups.enabled }}
 backup:
   target: "prefer-standby"
