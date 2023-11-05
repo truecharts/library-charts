@@ -34,11 +34,6 @@
 {{- end -}}
 
 {{/* Return the appropriate apiVersion for Cert-Manager certificates */}}
-{{- define "tc.v1.common.capabilities.cnpg.cluster.apiVersion" -}}
-  {{- print "postgresql.cnpg.io/v1" -}}
-{{- end -}}
-
-{{/* Return the appropriate apiVersion for Cert-Manager certificates */}}
 {{- define "tc.v1.common.capabilities.cnpg.ScheduledBackup.apiVersion" -}}
   {{- print "postgresql.cnpg.io/v1" -}}
 {{- end -}}

@@ -1,5 +1,6 @@
 {{- define "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" -}}
 
+{{- $chartFullName := .chartFullName -}}
 {{- $destPath := .scope.destinationPath -}}
 {{- $endpointUrl := .scope.endpointURL -}}
 
@@ -22,10 +23,10 @@
   {{- end }}
   s3Credentials:
     accessKeyId:
-      name: {{ printf "%s-backup-s3%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_KEY_ID
     secretAccessKey:
-      name: {{ printf "%s-backup-s3%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_SECRET_KEY
 {{- else if eq .scope.provider "azure" -}}
   {{- if or (not (hasKey .scope "azure")) (not .scope.azure) -}}
@@ -39,16 +40,16 @@
   {{- end }}
   azureCredentials:
     connectionString:
-      name: {{ printf "%s-backup-azure%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: AZURE_CONNECTION_STRING
     storageAccount:
-      name: {{ printf "%s-backup-azure%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: AZURE_STORAGE_ACCOUNT
     storageKey:
-      name: {{ printf "%s-backup-azure%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: AZURE_STORAGE_KEY
     storageSasToken:
-      name: {{ printf "%s-backup-azure%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: AZURE_STORAGE_SAS_TOKEN
 {{- else if eq .scope.provider "google" -}}
   {{- if or (not (hasKey .scope "google")) (not .scope.google) -}}
@@ -63,11 +64,9 @@
   googleCredentials:
     gkeEnvironment: {{ .scope.google.gkeEnvironment }}
     applicationCredentials:
-      name: {{ printf "%s-backup-google%s-creds" .chartFullname .secretSuffix }}
+      name: {{ printf "%s-backup-google%s-creds" $chartFullname .secretSuffix }}
       key: APPLICATION_CREDENTIALS
-{{- end -}}
-
+{{- end }}
   endpointURL: {{ $endpointUrl }}
   destinationPath: {{ $destPath }}
-
 {{- end -}}

@@ -6,11 +6,6 @@
     {{- $_ := set $objectData "monitoring" dict -}}
   {{- end -}}
 
-  {{/* If pooler key is no defined, create it so we dont get nil pointers */}}
-  {{- if not (hasKey $objectData "pooler") -}}
-    {{- $_ := set $objectData "pooler" dict -}}
-  {{- end -}}
-
   {{/* If backups key is no defined, create it so we dont get nil pointers */}}
   {{- if not (hasKey $objectData "backups") -}}
     {{- $_ := set $objectData "backups" (dict "provider" "") -}}

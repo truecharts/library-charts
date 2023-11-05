@@ -2,20 +2,16 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- $cnpgClusterName := $objectData.name -}}
+  {{/* Naming */}}
+  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
-  {{- if and $objectData.version (ne $objectData.version "legacy") -}}
-    {{- $cnpgClusterName = printf "%v-%v" $objectData.name $objectData.version -}}
-  {{- end -}}
+  {{/* Metadata */}}
+  {{- $clusterLabels := dict -}}
+  {{- $clusterLabels = mustMerge $clusterLabels $objectData.labels $objectData.cluster.labels -}}
+  {{- $clusterAnnotations := dict -}}
+  {{- $clusterAnnotations = mustMerge $clusterAnnotations $objectData.annotations $objectData.cluster.annotations -}}
 
-  {{- if $objectData.recValue -}}
-    {{- $cnpgClusterName = printf "%v-%v" $cnpgClusterName $objectData.recValue -}}
-  {{- end -}}
-
-  {{- $cnpgLabels := $objectData.labels | default dict -}}
-  {{- $cnpgAnnotations := $objectData.annotations | default dict -}}
-  {{- $cnpgClusterLabels := $objectData.cluster.labels | default dict -}}
-  {{- $cnpgClusterAnnotations := $objectData.cluster.annotations | default dict -}}
+  {{/* Stop All */}}
   {{- $hibernation := "off" -}}
   {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $hibernation = "on" -}}
@@ -46,21 +42,21 @@
   {{- end -}}
 
 ---
-apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $rootCtx }}
+apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Pooler") }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Cluster") }}
   labels:
     cnpg.io/reload: "on"
-  {{- $labels := (mustMerge $cnpgClusterLabels $cnpgLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+  {{- $labels := (mustMerge $clusterLabels (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
     cnpg.io/hibernation: {{ $hibernation | quote }}
-  {{- $annotations := (mustMerge $cnpgClusterAnnotations $cnpgAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  {{- $annotations := (mustMerge $clusterAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
@@ -68,49 +64,12 @@ spec:
   instances: {{ $instances }}
   bootstrap:
   {{- if eq $objectData.mode "standalone" }}
-    initdb:
-      database: {{ $objectData.database | default "app" }}
-      owner: {{ $objectData.user | default "app" }}
-      secret:
-        name: {{ printf "%s-user" $cnpgClusterName }}
-      {{- range $key, $val := (omit $initDB "postInitApplicationSQL" "database" "owner" "secret") }}
-        {{- $key | nindent 6 }}: {{ $val | toYaml }}
-      {{- end }}
-      postInitApplicationSQL:
-        {{- range $initDB.postInitApplicationSQL }}
-          - {{ . }}
-        {{- end -}}
-        {{- if eq $objectData.type "postgis" }}
-          - CREATE EXTENSION IF NOT EXISTS postgis;
-          - CREATE EXTENSION IF NOT EXISTS postgis_topology;
-          - CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
-          - CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
-        {{- else if eq $objectData.type "timescaledb" }}
-          - CREATE EXTENSION IF NOT EXISTS timescaledb;
-        {{- end }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "objectData" $objectData) | indent 4 -}}
   {{- else if eq $objectData.mode "recovery" }}
-    recovery:
-      {{- with $objectData.recovery.pitrTarget.time }}
-      recoveryTarget:
-        targetTime: {{ . }}
-      {{- end -}}
-      {{- if eq $objectData.recovery.method "backup" }}
-      backup:
-        name: {{ $objectData.recovery.backupName }}
-      {{- else if eq $objectData.recovery.method "object_store" }}
-      source: objectStoreRecoveryCluster
-      {{- end }}
-      database: {{ $objectData.database | default "app" }}
-      owner: {{ $objectData.user | default "app" }}
-      secret:
-        name: {{ printf "%s-user" $cnpgClusterName }}
-  externalClusters:
-    - name: objectStoreRecoveryCluster
-      barmanObjectStore:
-        serverName: {{ $objectData.recovery.serverName }}
-        {{- $d1 := dict "chartFullname" $cnpgClusterName "scope" $objectData.recovery "secretSuffix" "-recovery" -}}
-        {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $d1 | nindent 8 }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | indent 4 -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | indent 2 -}}
   {{- end -}}
+{{/* TODO: Cleanup */}}
 {{- if $objectData.backups.enabled }}
 backup:
   target: "prefer-standby"

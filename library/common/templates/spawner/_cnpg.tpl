@@ -41,48 +41,45 @@
     {{- $recValue := "" -}}
 
     {{/* If there are previous configmap, fetch value */}}
-    {{- $recPrevious := (lookup "v1" "ConfigMap" $.Release.Namespace $fetchname) -}}
-    {{- if $recPrevious -}}
-      {{- $recValue = (index $recPrevious.data "recoverystring") -}}
-    {{- else if $objectData.forceRecovery -}}
+    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $fetchname) -}}
+      {{- $recValue = (index .data "recoverystring") -}}
+    {{- end -}}
+
+    {{- if $objectData.forceRecovery -}}
       {{- $recValue = randAlphaNum 5 -}}
     {{- end -}}
 
     {{- if $recValue -}}
       {{- $_ := set $objectData "recValue" $recValue -}}
       {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoverystring" $recValue) | fromYaml -}}
+      {{/* FIXME: Replace this with a configmap class call */}}
       {{- $_ := set $.Values.configmap (printf "%s-recoverystring" $objectData.shortName) $recConfig -}}
     {{- end -}}
 
     {{- if $enabled -}}
-      {{- $validModes := (list "standalone" "replica" "recovery") -}}
-      {{- if not (mustHas $objectData.mode $validModes) -}}
-        {{- fail (printf "CNPG - Expected mode to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
-      {{- end -}}
+      {{- include "tc.v1.common.lib.cnpg.validation" (dict "objectData" $objectData) -}}
 
-      {{- if not (hasKey $objectData "cluster") -}}
-        {{- fail "CNPG - Expected [cluster] key to exist." -}}
-      {{- end -}}
-
-      {{/* Checks some optional keys that exist and if not, sets them to empty dicts.
+      {{/* TODO: Checks some optional keys that exist and if not, sets them to empty dicts.
           This is to avoid nil pointers in later checks */}}
       {{- include "tc.v1.common.lib.cnpg.fix.missing.keys" (dict "objectData" $objectData) -}}
 
+      {{/* Create the Cluster object  */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
+      {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("objectData" $objectData) -}}
+      {{/* Create the RW Pooler object  */}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{- if $objectData.pooler.acceptRO -}}
         {{- $_ := set $objectData.pooler "type" "ro" -}}
+        {{/* Create the RO Pooler object  */}}
+        {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("objectData" $objectData) -}}
         {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
     {{- end -}}
 
     {{- range $name, $backup := $objectData.backups.manual -}}
-      {{/* FIXME: I dont understand this here, we loop over manual backups
-      and each time we overwrite the $objectData.backupName etc.
-      So at the end backupName will have the name of the last manual backup. */}}
       {{- $_ := set $objectData "backupName" $name -}}
       {{- $_ := set $objectData "backupLabels" $backup.labels -}}
       {{- $_ := set $objectData "backupAnnotations" $backup.annotations -}}
@@ -114,10 +111,12 @@
       {{- $_ := set $creds "host" ((printf "%s-rw" $objectData.name) | quote) -}}
       {{- $_ := set $creds "jdbc" ((printf "jdbc:postgresql://%v-rw:5432/%v" $objectData.name $objectData.database) | quote) -}}
 
+      {{/* FIXME: Replace this with a secret class call */}}
       {{- with (include "tc.v1.common.lib.cnpg.secret.user" (dict "values" $objectData "dbPass" $dbPass) | fromYaml) -}}
         {{- $_ := set $.Values.secret (printf "cnpg-%s-user" $objectData.shortName) . -}}
       {{- end -}}
 
+      {{/* FIXME: Replace this with a secret class call */}}
       {{- with (include "tc.v1.common.lib.cnpg.secret.urls" (dict "creds" $creds) | fromYaml) -}}
         {{- $_ := set $.Values.secret (printf "cnpg-%s-urls" $objectData.shortName) . -}}
       {{- end -}}
