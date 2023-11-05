@@ -17,10 +17,6 @@
       {{- fail (printf "CNPG - Expected a non empty [%s] key") -}}
     {{- end -}}
   {{- end -}}
-
-  {{- if not (hasKey $objectData "cluster") -}}
-    {{- fail "CNPG - Expected [cluster] key to exist" -}}
-  {{- end -}}
 {{- end -}}
 
 {{- define "tc.v1.common.lib.cnpg.cluster.recovery.validation" -}}
@@ -51,10 +47,6 @@
 
 {{- define "tc.v1.common.lib.cnpg.pooler.validation" -}}
   {{- $objectData := .objectData -}}
-
-  {{- if not (hasKey $objectData "pooler") -}}
-    {{- fail "CNPG - Expected [pooler] key to exist" -}}
-  {{- end -}}
 
   {{- $validTypes := (list "rw" "ro") -}}
   {{- if not (mustHas $objectData.pooler.type $validTypes) -}}

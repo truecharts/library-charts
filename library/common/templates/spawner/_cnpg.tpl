@@ -61,7 +61,7 @@
 
       {{/* TODO: Checks some optional keys that exist and if not, sets them to empty dicts.
           This is to avoid nil pointers in later checks */}}
-      {{- include "tc.v1.common.lib.cnpg.fix.missing.keys" (dict "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.cnpg.setDefaultKeys" (dict "objectData" $objectData) -}}
 
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
