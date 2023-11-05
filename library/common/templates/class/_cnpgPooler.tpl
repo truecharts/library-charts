@@ -11,7 +11,7 @@
   {{- $poolerLabels := $objectData.pooler.labels | default dict -}}
   {{- $poolerLabels = mustMerge $poolerLabels $objLabels -}}
 
-  {{- $objAnnotations := $objectDatr.annotations | default dict -}}
+  {{- $objAnnotations := $objectData.annotations | default dict -}}
   {{- $poolerAnnotations := $objectData.pooler.annotations | default dict -}}
   {{- $poolerAnnotations = mustMerge $poolerAnnotations $objAnnotations -}}
   {{/* Stop All */}}
