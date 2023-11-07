@@ -213,8 +213,8 @@ jobs:
           if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
             helm install cloudnative-pg truecharts/cloudnative-pg --namespace cloudnative-pg --create-namespace --wait
           fi
-
           if [[ "${{ matrix.values }}" =~ ingress.*-values.yaml ]]; then
+            helm install cert-manager truecharts/cert-manager --namespace cert-manager --create-namespace --wait
             helm install traefik truecharts/traefik --namespace traefik --create-namespace --wait
           fi
 
