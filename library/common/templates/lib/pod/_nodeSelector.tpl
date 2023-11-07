@@ -20,20 +20,14 @@ objectData: The object data to be used to render the Pod.
     {{- $selectors = . -}}
   {{- end -}}
 
-  {{- if $selectors.kubernetes.io/arch -}}
-    {{- if eq  $selectors.kubernetes.io/arch "" -}}
-      {{- $_ := unset $selectors "kubernetes.io/arch" -}}
-    {{- end -}}
-  {{- end -}}
-
   {{- if and (include "tc.v1.common.lib.util.stopAll" $rootCtx) (eq $objectData.type "DaemonSet") }}
 "non-existing": "true"
   {{ else }}
     {{- range $k, $v := $selectors -}}
       {{- if not $v -}}
-        {{- fail (printf "Expected non-empty value on <nodeSelector> [%s] key." $k) -}}
-      {{- end }}
+      {{- else }}
 {{ $k }}: {{ tpl $v $rootCtx }}
+      {{- end -}}
     {{- end -}}
   {{ end }}
 {{- end -}}
