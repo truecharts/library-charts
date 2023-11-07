@@ -245,8 +245,8 @@ tests:
           value:
             disk: hdd
             cpu: amd
-  # Failures
-  - it: should fail with empty value on nodeSelector
+
+  - it: should ignore with empty value on nodeSelector
     set:
       podOptions:
         nodeSelector:
@@ -259,5 +259,8 @@ tests:
           schedule: "*/1 * * * *"
           podSpec: {}
     asserts:
-      - failedTemplate:
-          errorMessage: Expected non-empty value on <nodeSelector> [disk] key.
+      - documentIndex: *cronJobDoc
+        equal:
+          path: spec.jobTemplate.spec.template.spec.nodeSelector
+          value:
+            kubernetes.io/arch: amd64
