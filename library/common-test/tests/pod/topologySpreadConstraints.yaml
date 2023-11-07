@@ -1,0 +1,133 @@
+suite: pod topologySpreadConstraints test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should pass with empty topologySpreadConstraints
+    set:
+      podOptions:
+        topologySpreadConstraints: {}
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "*/1 * * * *"
+          podSpec: {}
+    asserts:
+      - documentIndex: &cronJobDoc 0
+        isKind:
+          of: CronJob
+      - documentIndex: *cronJobDoc
+        isNull:
+          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+
+  - it: should pass defaults with empty topologySpreadConstraints on Deployment
+    set:
+      podOptions:
+        topologySpreadConstraints: {}
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+    asserts:
+      - documentIndex: *cronJobDoc
+        equal:
+          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          value:
+            - maxSkew: 1
+              whenUnsatisfiable: ScheduleAnyway
+              topologyKey: "truecharts.org/rack"
+              labelSelector:
+                matchLabels:
+                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+            - maxSkew: 1
+              whenUnsatisfiable: ScheduleAnyway
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+
+  - it: should pass with topologySpreadConstraints from "global"
+    set:
+      podOptions:
+        topologySpreadConstraints:
+          - maxSkew: 1
+            whenUnsatisfiable: ScheduleAnyway
+            topologyKey: "truecharts.org/test"
+            labelSelector:
+              matchLabels:
+                {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+            nodeAffinityPolicy: Honor
+            nodeTaintsPolicy: Honor
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "*/1 * * * *"
+          podSpec: {}
+    asserts:
+      - documentIndex: *cronJobDoc
+        equal:
+          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          value:
+            - maxSkew: 1
+              whenUnsatisfiable: ScheduleAnyway
+              topologyKey: "truecharts.org/test"
+              labelSelector:
+                matchLabels:
+                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+
+
+  - it: should pass with topologySpreadConstraints from "pod"
+    set:
+      podOptions:
+        topologySpreadConstraints:
+          - maxSkew: 1
+            whenUnsatisfiable: ScheduleAnyway
+            topologyKey: "truecharts.org/test1"
+            labelSelector:
+              matchLabels:
+                {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+            nodeAffinityPolicy: Honor
+            nodeTaintsPolicy: Honor
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: CronJob
+          schedule: "*/1 * * * *"
+          podSpec:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                whenUnsatisfiable: ScheduleAnyway
+                topologyKey: "truecharts.org/test2"
+                labelSelector:
+                  matchLabels:
+                    {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                nodeAffinityPolicy: Honor
+                nodeTaintsPolicy: Honor
+    asserts:
+      - documentIndex: *cronJobDoc
+        equal:
+          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          value:
+            - maxSkew: 1
+              whenUnsatisfiable: ScheduleAnyway
+              topologyKey: "truecharts.org/test2"
+              labelSelector:
+                matchLabels:
+                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
