@@ -43,16 +43,14 @@ tests:
               whenUnsatisfiable: ScheduleAnyway
               topologyKey: "truecharts.org/rack"
               labelSelector:
-                matchLabels:
-                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                matchLabels: {}
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
               topologyKey: "kubernetes.io/hostname"
               labelSelector:
-                matchLabels:
-                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                matchLabels: {}
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
 
@@ -64,8 +62,7 @@ tests:
             whenUnsatisfiable: ScheduleAnyway
             topologyKey: "truecharts.org/test"
             labelSelector:
-              matchLabels:
-                {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              matchLabels: {}
             nodeAffinityPolicy: Honor
             nodeTaintsPolicy: Honor
       workload:
@@ -84,8 +81,7 @@ tests:
               whenUnsatisfiable: ScheduleAnyway
               topologyKey: "truecharts.org/test"
               labelSelector:
-                matchLabels:
-                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                matchLabels: {}
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
 
@@ -98,8 +94,7 @@ tests:
             whenUnsatisfiable: ScheduleAnyway
             topologyKey: "truecharts.org/test1"
             labelSelector:
-              matchLabels:
-                {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+              matchLabels: {}
             nodeAffinityPolicy: Honor
             nodeTaintsPolicy: Honor
       workload:
@@ -114,8 +109,7 @@ tests:
                 whenUnsatisfiable: ScheduleAnyway
                 topologyKey: "truecharts.org/test2"
                 labelSelector:
-                  matchLabels:
-                    {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                  matchLabels: {}
                 nodeAffinityPolicy: Honor
                 nodeTaintsPolicy: Honor
     asserts:
@@ -127,7 +121,6 @@ tests:
               whenUnsatisfiable: ScheduleAnyway
               topologyKey: "truecharts.org/test2"
               labelSelector:
-                matchLabels:
-                  {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
+                matchLabels: {}
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
