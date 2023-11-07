@@ -138,7 +138,8 @@ podOptions:
       - name: ndots
         value: "1"
   hostAliases: []
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/arch: "amd64"
   tolerations: []
   schedulerName: ""
   priorityClassName: ""
