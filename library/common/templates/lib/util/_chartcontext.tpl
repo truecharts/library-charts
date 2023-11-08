@@ -85,8 +85,10 @@
         {{- $entrypoint = $selectedIngress.entrypoint -}}
       {{- end -}}
       {{- if $traefikportalhook -}}
-        {{- if (index $traefikportalhook.data $entrypoint) -}}
-          {{- $port = (index $traefikportalhook.data $entrypoint) -}}
+        {{- if (get $traefikportalhook.data $entrypoint) -}}
+          {{- $port = (get $traefikportalhook.data $entrypoint) -}}
+        {{- else if $traefikportalhook.data.websecure -}}
+          {{- $port =  $traefikportalhook.data.websecure -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
