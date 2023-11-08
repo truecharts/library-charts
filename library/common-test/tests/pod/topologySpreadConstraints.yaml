@@ -13,15 +13,15 @@ tests:
         workload-name1:
           enabled: true
           primary: true
-          type: Deployment
+          type: DaemonSet
           podSpec: {}
     asserts:
-      - documentIndex: &deploymentDoc 0
+      - documentIndex: &daemonSetDoc 0
         isKind:
-          of: CronJob
-      - documentIndex: *deploymentDoc
+          of: Deployment
+      - documentIndex: *daemonSetDoc
         isNull:
-          path: spec.topologySpreadConstraints
+          path: spec.template.spec.topologySpreadConstraints
 
   - it: should pass defaults with empty topologySpreadConstraints on Deployment
     set:
@@ -36,7 +36,7 @@ tests:
     asserts:
       - documentIndex: *deploymentDoc
         equal:
-          path: spec.topologySpreadConstraints
+          path: spec.template.spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
@@ -73,7 +73,7 @@ tests:
     asserts:
       - documentIndex: *deploymentDoc
         equal:
-          path: spec.topologySpreadConstraints
+          path: spec.template.spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
@@ -112,7 +112,7 @@ tests:
     asserts:
       - documentIndex: *deploymentDoc
         equal:
-          path: spec.topologySpreadConstraints
+          path: spec.template.spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
