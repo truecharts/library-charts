@@ -41,6 +41,7 @@
       {{- with (index $selectedIngress.hosts 0) -}}
          {{- $host = .host -}}
       {{- end -}}
+
       {{/* Get the port for the ingress entrypoint */}}
 
       {{- $namespace := "tc-system" -}}
@@ -77,7 +78,9 @@
         {{- end -}}
 
         {{/* use the first available portalhook */}}
-        {{- $traefikportalhook = index $portalHooks 0 -}}
+        {{- if $portalHooks -}} 
+          {{- $traefikportalhook = index $portalHooks 0 -}}
+        {{- end -}}
       {{- end -}}
 
       {{- $entrypoint := "websecure" -}}
