@@ -76,11 +76,8 @@
           {{- end -}}
         {{- end -}}
 
-        {{/* If there is only one portalhook, use it */}}
-        {{- if eq (len $portalHooks) 1 -}}
-          {{- $traefikportalhook = index $portalHooks 0 -}}
-        {{- end -}}
-        {{/* else??? */}}
+        {{/* use the first available portalhook */}}
+        {{- $traefikportalhook = index $portalHooks 0 -}}
       {{- end -}}
 
       {{- $entrypoint := "websecure" -}}
