@@ -71,8 +71,10 @@
           {{- $hookData := (get $hook "data") -}}
           {{- if $hookData -}}
             {{/* Filter portalhook-* */}}
-            {{- if hasPrefix $hookData.metadata.name "portalhook-" -}}
-              {{- $portalHooks = mustAppend $portalHooks $hook -}}
+            {{- if and $hook.metadata $hook.metadata.name -}}
+              {{- if hasPrefix $hookData.metadata.name "portalhook-" -}}
+                {{- $portalHooks = mustAppend $portalHooks $hook -}}
+              {{- end -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}
