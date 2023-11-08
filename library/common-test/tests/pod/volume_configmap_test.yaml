@@ -1,6 +1,9 @@
 suite: pod configmap volume test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with configmap volume
     set:
@@ -33,7 +36,7 @@ tests:
           content:
             name: conf-vol
             configMap:
-              name: release-name-common-test-some-object-name
+              name: test-release-name-common-test-some-object-name
               defaultMode: 0777
               optional: false
 
@@ -71,7 +74,7 @@ tests:
           content:
             name: conf-vol
             configMap:
-              name: release-name-common-test-some-object-name
+              name: test-release-name-common-test-some-object-name
               defaultMode: 0777
               optional: false
               items:
@@ -132,7 +135,7 @@ tests:
           content:
             name: configmap-vol
             configMap:
-              name: release-name-common-test-some-non-existent-object
+              name: test-release-name-common-test-some-non-existent-object
               optional: true
 
 # Failures

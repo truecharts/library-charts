@@ -36,7 +36,7 @@ within the common library.
   {{- end -}}
 
   {{- if $values.ingressClassName -}}
-    
+
     {{- if $.Values.global.ixChartContext -}}
       {{- $mddwrNamespace = (printf "ix-%s" $values.ingressClassName) -}}
     {{- else -}}
@@ -46,13 +46,20 @@ within the common library.
 
   {{- $fixedMiddlewares := "" -}}
   {{- if $values.enableFixedMiddlewares -}}
-  {{- range $index, $fixedMiddleware := $values.fixedMiddlewares -}}
-      {{- if $index -}}
-        {{- $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
-      {{- else -}}
-        {{- $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
-      {{- end -}}
-  {{- end -}}
+
+    {{/* If cors is enabled, replace the default fixedMiddleware with the opencors chain */}}
+    {{- if $values.allowCors -}}
+      {{- $corsMiddlewares := list "tc-opencors-chain" }}
+      {{- $_ := set $values "fixedMiddlewares" $corsMiddlewares -}}
+    {{- end -}}
+
+    {{- range $index, $fixedMiddleware := $values.fixedMiddlewares -}}
+        {{- if $index -}}
+          {{- $fixedMiddlewares = ( printf "%v, %v-%v@%v" $fixedMiddlewares $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+        {{- else -}}
+          {{- $fixedMiddlewares = ( printf "%v-%v@%v" $mddwrNamespace $fixedMiddleware "kubernetescrd" ) -}}
+        {{- end -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $middlewares := "" -}}
@@ -74,6 +81,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.ingress.apiVersion" $ }}
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
+  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
   {{- $labels := (mustMerge ($ingressLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
@@ -116,6 +124,8 @@ spec:
         {{- $_ := set $cert "id" $tlsValues.scaleCert }}
         {{- $_ := set $cert "nameOverride" $tlsName }}
       secretName: {{ printf "%s-tls-%v" (include "tc.v1.common.lib.chart.names.fullname" $) $index }}
+      {{- else if .clusterCertificate }}
+      secretName: clusterissuer-templated-{{ tpl .clusterCertificate $ }}
       {{- else if .secretName }}
       secretName: {{ tpl .secretName $ | quote }}
       {{- end -}}

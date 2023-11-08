@@ -3,6 +3,9 @@ templates:
   - common.yaml
 chart:
   appVersion: &appVer v9.9.9
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with rbac created with labels and annotations
     set:
@@ -77,17 +80,25 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
             g_label2: global_label2
             label1: label1
             label2: label2
+      - documentIndex: *roleDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *roleDoc
+        equal:
+          path: metadata.namespace
+          value: test-release-namespace
       - documentIndex: &roleBindingDoc 2
         isKind:
           of: RoleBinding
@@ -104,17 +115,25 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
             g_label2: global_label2
             label1: label1
             label2: label2
+      - documentIndex: *roleBindingDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *roleBindingDoc
+        equal:
+          path: metadata.namespace
+          value: test-release-namespace
       - documentIndex: &clusterRoleDoc 3
         isKind:
           of: ClusterRole
@@ -131,11 +150,11 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
@@ -158,14 +177,136 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
             g_label2: global_label2
             label1: label1
             label2: label2
+
+  - it: should pass with role/rolebinding created with object namespace from tpl
+    set:
+      key: some-namespace
+      serviceAccount:
+        my-sa1:
+          enabled: true
+          primary: true
+          namespace: "{{ .Values.key }}"
+      rbac:
+        my-rbac1:
+          enabled: true
+          primary: true
+          namespace: "{{ .Values.key }}"
+          rules:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - get
+    asserts:
+      - documentIndex: &roleDoc 1
+        equal:
+          path: metadata.namespace
+          value: some-namespace
+      - documentIndex: &roleBindingDoc 1
+        equal:
+          path: metadata.namespace
+          value: some-namespace
+
+  - it: should pass with role/rolebinding created with global namespace from tpl
+    set:
+      key: global-namespace
+      global:
+        namespace: "{{ .Values.key }}"
+      serviceAccount:
+        my-sa1:
+          enabled: true
+          primary: true
+      rbac:
+        my-rbac1:
+          enabled: true
+          primary: true
+          rules:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - get
+    asserts:
+      - documentIndex: *roleDoc
+        equal:
+          path: metadata.namespace
+          value: global-namespace
+      - documentIndex: *roleBindingDoc
+        equal:
+          path: metadata.namespace
+          value: global-namespace
+
+  - it: should pass with role/rolebinding created with root namespace from tpl
+    set:
+      key: local-namespace
+      namespace: "{{ .Values.key }}"
+      global:
+        namespace: global-namespace
+      serviceAccount:
+        my-sa1:
+          enabled: true
+          primary: true
+      rbac:
+        my-rbac1:
+          enabled: true
+          primary: true
+          rules:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - get
+    asserts:
+      - documentIndex: *roleDoc
+        equal:
+          path: metadata.namespace
+          value: local-namespace
+      - documentIndex: *roleBindingDoc
+        equal:
+          path: metadata.namespace
+          value: local-namespace
+
+  - it: should pass with role/rolebinding created with namespace in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      namespace: ix-namespace
+      serviceAccount:
+        my-sa1:
+          enabled: true
+          primary: true
+      rbac:
+        my-rbac1:
+          enabled: true
+          primary: true
+          rules:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - get
+    asserts:
+      - documentIndex: *roleDoc
+        equal:
+          path: metadata.namespace
+          value: ix-namespace
+      - documentIndex: *roleBindingDoc
+        equal:
+          path: metadata.namespace
+          value: ix-namespace

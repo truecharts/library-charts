@@ -4,6 +4,7 @@
 */}}
 
 {{- define "tc.v1.common.spawner.secret" -}}
+  {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
   {{- range $name, $secret := .Values.secret -}}
 
@@ -32,15 +33,15 @@
       {{/* Create a copy of the secret */}}
       {{- $objectData := (mustDeepCopy $secret) -}}
 
-      {{- $objectName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $) $name) -}}
+      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
           {{- $objectName = $name -}}
         {{- end -}}
       {{- end -}}
 
-      {{/* Perform validations */}}
-      {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
+      {{/* Perform validations */}} {{/* Secrets have a max name length of 253 */}}
+      {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
       {{- include "tc.v1.common.lib.secret.validation" (dict "objectData" $objectData) -}}
       {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Secret") -}}
 

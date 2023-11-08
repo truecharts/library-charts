@@ -1,6 +1,9 @@
 suite: pvc data name test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should create pvc
     set:
@@ -19,7 +22,7 @@ tests:
       - documentIndex: *pvcDoc
         equal:
           path: metadata.name
-          value: release-name-common-test-my-volume1
+          value: test-release-name-common-test-my-volume1
       - documentIndex: *pvcDoc
         equal:
           path: spec.accessModes
@@ -174,6 +177,7 @@ tests:
   - it: should create pvc with storageClass set "SCALE-ZFS" and within ixChartContext
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"
@@ -194,6 +198,7 @@ tests:
   - it: should create pvc with storageClass not set and within ixChartContext
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"

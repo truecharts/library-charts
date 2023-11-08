@@ -1,9 +1,15 @@
 suite: ingress values
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: default should pass
     set:
+      operator:
+        verify:
+          enabled: false
       service:
         main:
           enabled: true
@@ -34,6 +40,9 @@ tests:
 
   - it: custom host and path should pass
     set:
+      operator:
+        verify:
+          enabled: false
       service:
         main:
           enabled: true
@@ -69,6 +78,9 @@ tests:
 
   - it: host with template should pass
     set:
+      operator:
+        verify:
+          enabled: false
       service:
         main:
           enabled: true
@@ -94,10 +106,13 @@ tests:
       - documentIndex: *ingressDocument
         equal:
           path: spec.rules[0].host
-          value: RELEASE-NAME.hostname
+          value: test-release-name.hostname
 
   - it: path with template should pass
     set:
+      operator:
+        verify:
+          enabled: false
       service:
         main:
           enabled: true
@@ -125,4 +140,4 @@ tests:
       - documentIndex: *ingressDocument
         equal:
           path: spec.rules[0].http.paths[0].path
-          value: "/RELEASE-NAME.path"
+          value: "/test-release-name.path"

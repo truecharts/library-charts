@@ -12,22 +12,24 @@
 {{- range $name, $mount := .Values.persistence -}}
   {{- if and $mount.enabled $mount.autoPermissions -}}
     {{/* If autoPermissions is enabled...*/}}
-    {{- if or $mount.autoPermissions.chown $mount.autoPermissions.chmod -}}
-      {{- $type := $.Values.fallbackDefaults.persistenceType -}}
-      {{- if $mount.type -}}
-        {{- $type = $mount.type -}}
-      {{- end -}}
+    {{- if $mount.autoPermissions.enabled -}}
+      {{- if or $mount.autoPermissions.chown $mount.autoPermissions.chmod -}}
+        {{- $type := $.Values.fallbackDefaults.persistenceType -}}
+        {{- if $mount.type -}}
+          {{- $type = $mount.type -}}
+        {{- end -}}
 
-      {{- if not (mustHas $type $permAllowedTypes) -}}
-        {{- fail (printf "Auto Permissions - Allowed persistent types for auto permissions are [%v], but got [%v] on [%v]" (join ", " $permAllowedTypes) $type $name) -}}
-      {{- end -}}
+        {{- if not (mustHas $type $permAllowedTypes) -}}
+          {{- fail (printf "Auto Permissions - Allowed persistent types for auto permissions are [%v], but got [%v] on [%v]" (join ", " $permAllowedTypes) $type $name) -}}
+        {{- end -}}
 
-      {{- if $mount.readOnly -}}
-        {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically on [%v] with readOnly enabled" $name) -}}
-      {{- end -}}
+        {{- if $mount.readOnly -}}
+          {{- fail (printf "Auto Permissions - You cannot change permissions/ownership automatically on [%v] with readOnly enabled" $name) -}}
+        {{- end -}}
 
-      {{/* Add some data regarding what actions to perform */}}
-      {{- $_ := set $mounts $name $mount.autoPermissions -}}
+        {{/* Add some data regarding what actions to perform */}}
+        {{- $_ := set $mounts $name $mount.autoPermissions -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -118,7 +120,7 @@ podSpec:
             {{- if $vol.chown }}
               echo "Automatically correcting ownership for {{ $mountPath }}..."
               before=$(stat -c "%u:%g" {{ $mountPath }})
-                {{- if $.Values.ixChartContext }}{{/* TODO: Add user here too? */}}
+                {{- if $.Values.global.ixChartContext }}{{/* TODO: Add user here too? */}}
                   /usr/sbin/nfs4xdr_winacl -a chown -G {{ $group }} {{ $r | lower }} -c "{{ $mountPath }}" -p "{{ $mountPath }}" || echo "Failed setting ownership using winacl..."
                 {{- else }}
                   chown {{ $r }} -f {{ $user }}:{{ $group }} {{ $mountPath }} || echo "Failed setting ownership using chown..."

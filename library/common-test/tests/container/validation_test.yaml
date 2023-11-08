@@ -1,6 +1,9 @@
 suite: container validation test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should fail with more than one primary container on a workload
     set:

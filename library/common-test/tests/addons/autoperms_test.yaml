@@ -1,6 +1,9 @@
 suite: auto perms test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should render permissions job
     set:
@@ -15,6 +18,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -24,6 +28,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: false
@@ -33,6 +38,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chmod: 770
           mountPath: /test3
           hostPath: /testhost3
@@ -40,6 +46,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
           mountPath: /test4
           hostPath: /testhost4
@@ -56,6 +63,7 @@ tests:
           mountPath: /test6
           hostPath: /testhost6
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -65,6 +73,7 @@ tests:
           enabled: true
           type: emptyDir
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -75,8 +84,18 @@ tests:
           server: 1.1.1.1
           path: /share
           autoPermissions:
+            enabled: true
             chown: true
           mountPath: /test9
+        # Should not show up, without enabled true
+        test10:
+          type: hostPath
+          hostPath: /testhost10
+          autoPermissions:
+            enabled: true
+            chown: true
+          mountPath: /test10
+
     asserts:
       - documentIndex: &jobDoc 0
         isKind:
@@ -308,8 +327,10 @@ tests:
           primary: true
           type: Deployment
           podSpec: {}
-      ixChartContext:
-        some: context
+      global:
+        namespace: ix-namespace
+        ixChartContext:
+          some: context
       ixVolumes:
         - hostPath: /mnt/pool/ix-applications/test
       persistence:
@@ -317,6 +338,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -326,6 +348,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: false
@@ -335,6 +358,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chmod: 770
           mountPath: /test3
           hostPath: /testhost3
@@ -342,6 +366,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
           mountPath: /test4
           hostPath: /testhost4
@@ -358,6 +383,7 @@ tests:
           mountPath: /test6
           hostPath: /testhost6
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -367,6 +393,7 @@ tests:
           enabled: true
           type: emptyDir
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -376,6 +403,7 @@ tests:
           type: ixVolume
           datasetName: test
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -386,8 +414,16 @@ tests:
           server: 1.1.1.1
           path: /share
           autoPermissions:
+            enabled: true
             chown: true
           mountPath: /test9
+        # Should not show up, without enabled true
+        test10:
+          type: ixVolume
+          datasetName: test
+          autoPermissions:
+            chown: true
+          mountPath: /test10
     asserts:
       - documentIndex: *jobDoc
         isKind:
@@ -662,6 +698,7 @@ tests:
           enabled: true
           type: hostPath
           autoPermissions:
+            enabled: true
             chown: true
             chmod: 770
             recursive: true
@@ -710,6 +747,7 @@ tests:
           type: device
           hostPath: /test
           autoPermissions:
+            enabled: true
             chown: true
     asserts:
       - failedTemplate:
@@ -730,6 +768,7 @@ tests:
           hostPath: /test
           readOnly: true
           autoPermissions:
+            enabled: true
             chmod: 770
     asserts:
       - failedTemplate:

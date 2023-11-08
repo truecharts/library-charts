@@ -1,6 +1,9 @@
 suite: rbac data test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with rules and subjects added with tpl and primary rbac/sa
     set:
@@ -49,7 +52,7 @@ tests:
       - documentIndex: *roleDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *roleDoc
         equal:
           path: rules
@@ -72,14 +75,14 @@ tests:
       - documentIndex: *roleBinding
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *roleBinding
         equal:
           path: subjects
           value:
             - kind: ServiceAccount
-              name: release-name-common-test
-              namespace: NAMESPACE
+              name: test-release-name-common-test
+              namespace: test-release-namespace
             - kind: a-kind
               name: a-name
               apiGroup: rbac.authorization.k8s.io
@@ -144,7 +147,7 @@ tests:
       - documentIndex: *clusterRoleDoc
         equal:
           path: metadata.name
-          value: release-name-common-test-my-rbac2
+          value: test-release-name-common-test-my-rbac2
       - documentIndex: *clusterRoleDoc
         equal:
           path: rules
@@ -167,17 +170,17 @@ tests:
       - documentIndex: *clusterRoleBinding
         equal:
           path: metadata.name
-          value: release-name-common-test-my-rbac2
+          value: test-release-name-common-test-my-rbac2
       - documentIndex: *clusterRoleBinding
         equal:
           path: subjects
           value:
             - kind: ServiceAccount
-              name: release-name-common-test-my-other-sa
-              namespace: NAMESPACE
+              name: test-release-name-common-test-my-other-sa
+              namespace: test-release-namespace
             - kind: ServiceAccount
-              name: release-name-common-test
-              namespace: NAMESPACE
+              name: test-release-name-common-test
+              namespace: test-release-namespace
             - apiGroup: rbac.authorization.k8s.io
               kind: a-kind
               name: a-name
@@ -223,7 +226,7 @@ tests:
       - documentIndex: *roleDoc
         equal:
           path: metadata.name
-          value: release-name-common-test-my-rbac3
+          value: test-release-name-common-test-my-rbac3
       - documentIndex: *roleDoc
         equal:
           path: rules
@@ -240,11 +243,11 @@ tests:
       - documentIndex: *roleBinding
         equal:
           path: metadata.name
-          value: release-name-common-test-my-rbac3
+          value: test-release-name-common-test-my-rbac3
       - documentIndex: *roleBinding
         equal:
           path: subjects
           value:
             - kind: ServiceAccount
-              name: release-name-common-test-my-other-sa
-              namespace: NAMESPACE
+              name: test-release-name-common-test-my-other-sa
+              namespace: test-release-namespace

@@ -1,9 +1,15 @@
 suite: cnpg custom conf test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with custom-conf
     set:
+      operator:
+        verify:
+          enabled: false
       cnpg:
         main:
           enabled: true

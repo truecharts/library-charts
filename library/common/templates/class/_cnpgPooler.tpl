@@ -12,7 +12,7 @@
   {{- $cnpgClusterLabels := $values.labels -}}
   {{- $cnpgClusterAnnotations := $values.annotations -}}
   {{- $instances := $values.pooler.instances | default 2 -}}
-  {{- if or $values.hibernate $.Values.global.stopAll -}}
+  {{- if or $values.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $instances = 0 -}}
   {{- end }}
 ---
@@ -20,6 +20,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.cnpg.pooler.apiVersion" $ }}
 kind: Pooler
 metadata:
   name: {{ printf "%v-%v" $cnpgClusterName $values.pooler.type }}
+  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
 spec:
   cluster:
     name: {{ $cnpgClusterName }}

@@ -1,6 +1,9 @@
 suite: service list test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with type LoadBalancer from serviceList with name
     set:
@@ -35,7 +38,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -49,7 +52,7 @@ tests:
               protocol: TCP
               targetPort: 12345
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload
       - documentIndex: &otherServiceDoc 2
@@ -61,7 +64,7 @@ tests:
       - documentIndex: *otherServiceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test-my-service2
+          value: test-release-name-common-test-my-service2
       - documentIndex: *otherServiceDoc
         equal:
           path: spec
@@ -75,7 +78,7 @@ tests:
               protocol: TCP
               targetPort: 12345
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload
 
@@ -103,7 +106,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -117,7 +120,7 @@ tests:
               protocol: TCP
               targetPort: 12345
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload
 
@@ -145,7 +148,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -158,7 +161,7 @@ tests:
               protocol: TCP
               targetPort: 12345
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload
 
@@ -193,7 +196,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -214,7 +217,7 @@ tests:
               protocol: TCP
               targetPort: 12346
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload
 
@@ -250,7 +253,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -271,6 +274,6 @@ tests:
               protocol: TCP
               targetPort: 12346
             selector:
-              app.kubernetes.io/instance: RELEASE-NAME
+              app.kubernetes.io/instance: test-release-name
               app.kubernetes.io/name: common-test
               pod.name: my-workload

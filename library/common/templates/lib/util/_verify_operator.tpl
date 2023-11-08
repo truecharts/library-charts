@@ -4,9 +4,9 @@
     {{- $operatorList := .Values.operator.verify.additionalOperators -}}
 
     {{- $cnpg := false -}}
-    {{- range $opName := .Values.cnpg -}}
+    {{- range $opName := $.Values.cnpg -}}
       {{- if .enabled -}}
-        {{- $cnpg := true -}}
+        {{- $cnpg = true -}}
       {{- end -}}
     {{- end -}}
     {{- if $cnpg -}}
@@ -14,19 +14,31 @@
     {{- end -}}
 
     {{- $ingress := false -}}
-    {{- range $opName := .Values.ingress -}}
+    {{- range $opName := $.Values.ingress -}}
       {{- if .enabled -}}
-        {{- $ingress := true -}}
+        {{- $ingress = true -}}
       {{- end -}}
     {{- end -}}
     {{- if $ingress -}}
       {{- $operatorList = mustAppend $operatorList "traefik" -}}
     {{- end -}}
 
+    {{- $clusterCertificate := false -}}
+    {{- if $.Values.clusterCertificates -}}
+      {{- range $opName := $.Values.clusterCertificates.certificates -}}
+        {{- if .enabled -}}
+          {{- $clusterCertificate = true -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if $clusterCertificate -}}
+        {{- $operatorList = mustAppend $operatorList "kubernetes-reflector" -}}
+      {{- end -}}
+    {{- end -}}
+
     {{- $metrics := false -}}
-    {{- range $opName := .Values.metrics -}}
+    {{- range $opName := $.Values.metrics -}}
       {{- if .enabled -}}
-        {{- $metrics := true -}}
+        {{- $metrics = true -}}
       {{- end -}}
     {{- end -}}
     {{- if $metrics -}}
@@ -40,7 +52,7 @@
       {{- if eq $fetchedOpData "false" -}}
         {{/* Fail only if explicitly asked */}}
         {{- if $.Values.operator.verify.failOnError -}}
-          {{- fail (printf "Operator [%s] have to be installed first" $opName) -}}
+          {{- fail (printf "Operator [%s] has to be installed first" $opName) -}}
         {{- end -}}
       {{/* If $fetchedOpData is not false, we should have JSON data */}}
       {{- else -}}

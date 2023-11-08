@@ -1,6 +1,9 @@
 suite: container envFixed test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should create the correct fixed envs
     set:
@@ -370,6 +373,7 @@ tests:
     set:
       image: *image
       global:
+        namespace: ix-namespace
         ixChartContext:
           some: value
       workload:
@@ -404,6 +408,62 @@ tests:
                 value: "0022"
               - name: NVIDIA_VISIBLE_DEVICES
                 value: "void"
+              - name: S6_READ_ONLY_ROOT
+                value: "1"
+
+  - it: should create the correct fixed envs with large int values
+    set:
+      image: *image
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            securityContext:
+              fsGroup: 100000514
+            containers:
+              container-name1:
+                enabled: true
+                primary: true
+                imageSelector: image
+                probes: *probes
+                fixedEnv:
+                  PUID: 200000514
+                securityContext:
+                  runAsUser: 0
+                  runAsGroup: 0
+                  runAsNonRoot: false
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        isAPIVersion:
+          of: apps/v1
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec.template.spec.containers[0]
+          content:
+            env:
+              - name: TZ
+                value: UTC
+              - name: UMASK
+                value: "0022"
+              - name: UMASK_SET
+                value: "0022"
+              - name: PUID
+                value: "200000514"
+              - name: USER_ID
+                value: "200000514"
+              - name: UID
+                value: "200000514"
+              - name: PGID
+                value: "100000514"
+              - name: GROUP_ID
+                value: "100000514"
+              - name: GID
+                value: "100000514"
               - name: S6_READ_ONLY_ROOT
                 value: "1"
 

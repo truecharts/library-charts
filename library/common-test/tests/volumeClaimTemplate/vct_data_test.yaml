@@ -1,6 +1,9 @@
-suite: volumeClaimTemplates data name test
+suite: volumeClaimTemplates data test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should create vct
     set:
@@ -183,6 +186,7 @@ tests:
   - it: should create vct with storageClass set "SCALE-ZFS" and within ixChartContext
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"
@@ -209,6 +213,7 @@ tests:
   - it: should create pvc with storageClass not set and within ixChartContext
     set:
       global:
+        namespace: ix-namespace
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"

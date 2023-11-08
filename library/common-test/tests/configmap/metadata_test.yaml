@@ -3,6 +3,9 @@ templates:
   - common.yaml
 chart:
   appVersion: &appVer v9.9.9
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with configmap created with labels and annotations
     set:
@@ -45,11 +48,11 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
@@ -57,8 +60,9 @@ tests:
             label1: label1
             label2: label2
       - documentIndex: *configMapDoc
-        isNull:
+        equal:
           path: metadata.namespace
+          value: test-release-namespace
 
   - it: should pass with configmap created with namespace
     set:
@@ -74,13 +78,13 @@ tests:
           path: metadata.namespace
           value: some-namespace
 
-  - it: should pass with configmap created with namespace from tpl
+  - it: should pass with configmap created with object namespace from tpl
     set:
-      namespace: some-namespace
+      key: some-namespace
       configmap:
         my-configmap1:
           enabled: true
-          namespace: "{{ .Values.namespace }}"
+          namespace: "{{ .Values.key }}"
           data:
             foo: bar
     asserts:
@@ -88,3 +92,53 @@ tests:
         equal:
           path: metadata.namespace
           value: some-namespace
+
+  - it: should pass with configmap created with namespace from global with tpl
+    set:
+      key: global-namespace
+      global:
+        namespace: "{{ .Values.key }}"
+      configmap:
+        my-configmap1:
+          enabled: true
+          data:
+            foo: bar
+    asserts:
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.namespace
+          value: global-namespace
+
+  - it: should pass with configmap created with namespace from root with tpl
+    set:
+      key: local-namespace
+      namespace: "{{ .Values.key }}"
+      global:
+        namespace: global-namespace
+      configmap:
+        my-configmap1:
+          enabled: true
+          data:
+            foo: bar
+    asserts:
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.namespace
+          value: local-namespace
+
+  - it: should pass with configmap created with namespace in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      namespace: ix-namespace
+      configmap:
+        my-configmap1:
+          enabled: true
+          data:
+            foo: bar
+    asserts:
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.namespace
+          value: ix-namespace

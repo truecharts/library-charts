@@ -10,7 +10,7 @@
   {{- $cnpgClusterLabels := $values.labels -}}
   {{- $cnpgClusterAnnotations := $values.annotations -}}
   {{- $hibernation := "off" -}}
-  {{- if or $values.hibernate $.Values.global.stopAll -}}
+  {{- if or $values.hibernate (include "tc.v1.common.lib.util.stopAll" $) -}}
     {{- $hibernation = "on" -}}
   {{- end }}
 ---
@@ -18,6 +18,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.cnpg.cluster.apiVersion" $ }}
 kind: Cluster
 metadata:
   name: {{ $cnpgClusterName }}
+  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
   {{- $labels := (mustMerge ($cnpgClusterLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) }}
   labels:
     cnpg.io/reload: "on"

@@ -1,6 +1,9 @@
 suite: container volumeMounts test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with shared volume on multiple workloads and containers with targetSelectAll
     set:

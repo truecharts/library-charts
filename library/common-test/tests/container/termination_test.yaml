@@ -1,6 +1,9 @@
 suite: container termination test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with termination set
     set:

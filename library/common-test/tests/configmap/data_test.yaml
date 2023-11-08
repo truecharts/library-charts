@@ -1,6 +1,9 @@
 suite: configmap data test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with key-value data
     set:

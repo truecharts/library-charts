@@ -1,6 +1,9 @@
 suite: container lifecycle test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with lifecycle
     set:

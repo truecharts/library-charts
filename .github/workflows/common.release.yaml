@@ -13,10 +13,10 @@ on:
 
 jobs:
   release-charts:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       with:
         token: ${{ secrets.BOT_TOKEN }}
         ref: main
@@ -30,8 +30,8 @@ jobs:
     - name: Install Helm
       uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # tag=v3
       with:
-        version: v3.5.4
-        
+        version: v3.9.4
+
     # Optional step if GPG signing is used
     - name: Prepare GPG key
       run: |
@@ -48,7 +48,7 @@ jobs:
         GPG_PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"
 
     - name: Run chart-releaser
-      uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # tag=v1.5.0
+      uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0
       with:
         charts_dir: library
         config: cr.yaml

@@ -1,6 +1,9 @@
 suite: service externalName test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with type externalName
     set:
@@ -25,7 +28,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec
@@ -57,7 +60,7 @@ tests:
       - documentIndex: *serviceDoc
         equal:
           path: metadata.name
-          value: release-name-common-test
+          value: test-release-name-common-test
       - documentIndex: *serviceDoc
         equal:
           path: spec

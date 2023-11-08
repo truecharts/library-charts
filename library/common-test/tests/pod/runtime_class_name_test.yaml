@@ -1,6 +1,9 @@
 suite: pod runtime class name test
 templates:
   - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with empty runtimeClassName
     set:
@@ -82,6 +85,7 @@ tests:
             workload-name3:
               - container-name1
       global:
+        namespace: ix-namespace
         ixChartContext:
           addNvidiaRuntimeClass: true
           nvidiaRuntimeClassName: ix-runtime
@@ -132,6 +136,7 @@ tests:
         - gpu:
             key: 0
       global:
+        namespace: ix-namespace
         ixChartContext:
           addNvidiaRuntimeClass: true
           nvidiaRuntimeClassName: ix-runtime
@@ -152,6 +157,7 @@ tests:
         - gpu:
             key: value
       global:
+        namespace: ix-namespace
         ixChartContext:
           addNvidiaRuntimeClass: true
           nvidiaRuntimeClassName: ix-runtime
@@ -191,6 +197,7 @@ tests:
             workload-name1:
               - container-name1
       global:
+        namespace: ix-namespace
         ixChartContext:
           addNvidiaRuntimeClass: true
           nvidiaRuntimeClassName: ix-runtime

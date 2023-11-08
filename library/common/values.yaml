@@ -4,6 +4,9 @@ global:
   labels: {}
   # -- Set additional global annotations
   annotations: {}
+  # -- Set a global namespace
+  # TODO: Currently some objects do not support this
+  namespace: ""
   # -- Adds metalLB annotations to services
   addMetalLBAnnotations: true
   # -- Adds traefik annotations to services
@@ -56,13 +59,15 @@ fallbackDefaults:
       failureThreshold: 60
       successThreshold: 1
 
+# -- Explicitly set a namespace for this chart only
+namespace: ""
 
 # -- Image values
 image:
   # -- Image repository
   repository: tccr.io/truecharts/whoami
   # -- Image tag
-  tag: 1.9.0@sha256:ff8dfff3c266af64aa7a6653c0b7f2c51fd6c0608335997af1d334aac3e19798
+  tag: v1.10.1@sha256:36d22e4b8a154919b819bd7283531783eca9076972e8fc631649bb7eade770d9
   # -- Image pull policy
   pullPolicy: IfNotPresent
 
@@ -261,26 +266,36 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Welcome to using <{{ .Chart.Name }}>.
-    Thank you for installing thank you for choosing TrueCharts
+    # Thank you for installing [{{ .Chart.Name }}] by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
-    ## Using <{{ .Chart.Name }}>
-    {{- if .Values.iXPortals -}}
+    {{- if .Values.iXPortals }}
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
-    {{- range .Values.iXPortals -}}
+
+    {{- range .Values.iXPortals }}
+    - {{ toYaml . }}
+    {{- end -}}
+    {{- end }}
+
+    ## [{{ .Chart.Name }}] Sources
+
+    {{- range .Chart.Sources }}
     - {{ . }}
     {{- end -}}
-    {{- end -}}
+
+    {{- $link := .Chart.Annotations.docs -}}
+    {{- if not $link -}}
+      {{- $link = .Chart.Home -}}
+    {{- end }}
+    [See more for [{{ $.Chart.Name }}] at [{{ $link }}]
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
-    https://truecharts.com
+    https://truecharts.org
 
     OpenSource can only exist with your help, please consider supporting TrueCharts:
     https://truecharts.org/sponsor
-
 
 # -- iXsystems prototype values.yaml based portals
 iXPortals: []
@@ -308,17 +323,9 @@ portal:
 # -- Set by "open" portal, used for some applications internally.
 APPURL: ""
 
-# -- Used to inject our own operator manifests into SCALE
-manifestManager:
-  enabled: true
-  staging: false
-  install: true
-  check: true
-  delete: false
-
 gluetunImage:
   repository: tccr.io/truecharts/gluetun
-  tag: v3.34.3@sha256:62c263676259843160e1c6e2c8b75ed86582c939b61a8c012fd3ec5c82beae9b
+  tag: v3.36.0@sha256:0cd36b27fcfc21b9ab738a594a8e477e94e42fd7c2a52539615bb2c8cac2d75e
   pullPolicy: IfNotPresent
 
 netshootImage:
@@ -328,22 +335,22 @@ netshootImage:
 
 tailscaleImage:
   repository: tccr.io/truecharts/tailscale
-  tag: v1.42.0@sha256:d29d3f96acd24c14c231da4d28de5f77744d605151c39609d5bdf4245a157c39
+  tag: v1.52.0@sha256:806efacf7c05d3fd2c8ac3ca9606f58469022f56e62f20a3e9ad136174d0e27f
   pullPolicy: IfNotPresent
 
 codeserverImage:
   repository: tccr.io/truecharts/code-server
-  tag: v4.13.0@sha256:3eae79348586a725993cc26bc71b5ba20736f93e78f735e8c51fa63e75f5fcae
+  tag: v4.18.0@sha256:e59861c2753490910c08bc3db5ea09234c9a80a3fcbac810621084c7178ce4b0
   pullPolicy: IfNotPresent
 
 alpineImage:
   repository: tccr.io/truecharts/alpine
-  tag: v3.18.0@sha256:2042d13cae39c99cbac39447b686e7ad34509e32424efdf3ff9e2b324b6e6b34
+  tag: v3.18.4@sha256:17cd77e25d3fa829d168caec4db7bb5b52ceeb935d8ca0d1180de6f615553dc4
   pullPolicy: IfNotPresent
 
 scratchImage:
   repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:60efd806894fa4959708abf5ff7386bc67ffc7ca0d2e76a4fc5212591f2b37e3
+  tag: latest@sha256:7f821eeb99d04ac248c47f79cfbcc2482651fea48aff9ec5d2ba0ba34f1f5531
   pullPolicy: IfNotPresent
 
 kubectlImage:
@@ -453,6 +460,9 @@ ingress:
     # Requires Kubernetes >=1.19
     ingressClassName:  # "nginx"
 
+    # Enable or disable CORS Requests to the ingress
+    allowCors: false
+
     ## Configure the hosts for the ingress
     hosts:
       -  # -- Host address. Helm template can be passed.
@@ -527,6 +537,26 @@ route:
               type: PathPrefix
               value: /
 
+podDisruptionBudget:
+  main:
+    enabled: false
+    # -- Custom Selector Labels
+    # customLabels:
+    #   customKey: customValue
+    targetSelector: main
+    minAvailable: 1
+    maxUnavailable: 1
+
+webhook:
+  validating:
+    enabled: false
+    type: validating
+    webhooks: []
+  mutating:
+    enabled: false
+    type: mutating
+    webhooks: []
+
 metrics:
   main:
     enabled: false
@@ -565,8 +595,7 @@ operator:
   verify:
     enabled: true
     # -- Makes non-found operators hard-failing
-    ## TODO: set to true
-    failOnError: false
+    failOnError: true
     # -- a list of extra operators to check for
     additionalOperators: []
   ## -- used as a datastore when a metallb operator is found.

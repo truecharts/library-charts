@@ -3,6 +3,9 @@ templates:
   - common.yaml
 chart:
   appVersion: &appVer v9.9.9
+release:
+  name: test-release-name
+  namespace: test-release-namespace
 tests:
   - it: should pass with job created with labels and annotations
     set:
@@ -52,11 +55,11 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
             app.kubernetes.io/name: common-test
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             g_label1: global_label1
@@ -69,8 +72,8 @@ tests:
           value:
             pod.name: workload-name
             app: common-test-1.0.0
-            release: RELEASE-NAME
-            app.kubernetes.io/instance: RELEASE-NAME
+            release: test-release-name
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: common-test
             app.kubernetes.io/version: v9.9.9
@@ -84,3 +87,80 @@ tests:
         matchRegex:
           path: spec.template.metadata.annotations.rollme
           pattern: '^[0-9a-zA-Z]{5}$'
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.namespace
+          value: test-release-namespace
+
+  - it: should pass with Job created with object namespace from tpl
+    set:
+      key: some-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Job
+          namespace: "{{ .Values.key }}"
+          podSpec: {}
+    asserts:
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.namespace
+          value: some-namespace
+
+  - it: should pass with Job created with global namespace from tpl
+    set:
+      key: global-namespace
+      global:
+        namespace: "{{ .Values.key }}"
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Job
+          podSpec: {}
+    asserts:
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.namespace
+          value: global-namespace
+
+  - it: should pass with Job created with root namespace from tpl
+    set:
+      key: local-namespace
+      namespace: "{{ .Values.key }}"
+      global:
+        namespace: global-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Job
+          podSpec: {}
+    asserts:
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.namespace
+          value: local-namespace
+
+  - it: should pass with Job created with namespace in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      namespace: ix-namespace
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Job
+          podSpec: {}
+    asserts:
+      - documentIndex: *jobDoc
+        equal:
+          path: metadata.namespace
+          value: ix-namespace
