@@ -78,7 +78,7 @@
         {{- end -}}
 
         {{/* use the first available portalhook */}}
-        {{- if $portalHooks -}} 
+        {{- if $portalHooks -}}
           {{- $traefikportalhook = index $portalHooks 0 -}}
         {{- end -}}
       {{- end -}}
