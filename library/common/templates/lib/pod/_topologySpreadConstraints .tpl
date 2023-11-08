@@ -39,6 +39,6 @@ objectData: The object data to be used to render the Pod.
   nodeTaintsPolicy: Honor
   {{ end }}
   {{- range $v := $constraints -}}
-- {{ tpl $v $rootCtx }}
+- {{ $v }}
   {{- end -}}
 {{- end -}}
