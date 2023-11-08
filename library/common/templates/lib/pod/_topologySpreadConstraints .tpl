@@ -39,7 +39,7 @@ objectData: The object data to be used to render the Pod.
   nodeAffinityPolicy: Honor
   nodeTaintsPolicy: Honor
   {{- end -}}
-  {{- with $constraints -}}
+  {{- with $constraints -}} {{/* TODO: Template this, so we can add some validation around easy to make mistakes. Low Prio */}}
     {{- . | toYaml | nindent 0 }}
   {{- end -}}
 {{- end -}}
