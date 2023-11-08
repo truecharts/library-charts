@@ -34,6 +34,9 @@ tests:
           type: Deployment
           podSpec: {}
     asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
       - documentIndex: *deploymentDoc
         equal:
           path: spec.template.spec.topologySpreadConstraints
