@@ -13,16 +13,15 @@ tests:
         workload-name1:
           enabled: true
           primary: true
-          type: CronJob
-          schedule: "*/1 * * * *"
+          type: Deployment
           podSpec: {}
     asserts:
-      - documentIndex: &cronJobDoc 0
+      - documentIndex: &deploymentDoc 0
         isKind:
           of: CronJob
-      - documentIndex: *cronJobDoc
+      - documentIndex: *deploymentDoc
         isNull:
-          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          path: spec.topologySpreadConstraints
 
   - it: should pass defaults with empty topologySpreadConstraints on Deployment
     set:
@@ -35,9 +34,9 @@ tests:
           type: Deployment
           podSpec: {}
     asserts:
-      - documentIndex: *cronJobDoc
+      - documentIndex: *deploymentDoc
         equal:
-          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          path: spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
@@ -69,13 +68,12 @@ tests:
         workload-name1:
           enabled: true
           primary: true
-          type: CronJob
-          schedule: "*/1 * * * *"
+          type: Deployment
           podSpec: {}
     asserts:
-      - documentIndex: *cronJobDoc
+      - documentIndex: *deploymentDoc
         equal:
-          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          path: spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
@@ -101,8 +99,7 @@ tests:
         workload-name1:
           enabled: true
           primary: true
-          type: CronJob
-          schedule: "*/1 * * * *"
+          type: Deployment
           podSpec:
             topologySpreadConstraints:
               - maxSkew: 1
@@ -113,9 +110,9 @@ tests:
                 nodeAffinityPolicy: Honor
                 nodeTaintsPolicy: Honor
     asserts:
-      - documentIndex: *cronJobDoc
+      - documentIndex: *deploymentDoc
         equal:
-          path: spec.jobTemplate.spec.template.spec.topologySpreadConstraints
+          path: spec.topologySpreadConstraints
           value:
             - maxSkew: 1
               whenUnsatisfiable: ScheduleAnyway
