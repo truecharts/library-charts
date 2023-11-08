@@ -18,7 +18,7 @@ tests:
     asserts:
       - documentIndex: &daemonSetDoc 0
         isKind:
-          of: Deployment
+          of: DaemonSet
       - documentIndex: *daemonSetDoc
         isNull:
           path: spec.template.spec.topologySpreadConstraints
@@ -41,26 +41,26 @@ tests:
         equal:
           path: spec.template.spec.topologySpreadConstraints
           value:
-            - maxSkew: 1
-              whenUnsatisfiable: ScheduleAnyway
-              topologyKey: "truecharts.org/rack"
-              labelSelector:
+            - labelSelector:
                 matchLabels:
-                  pod.name: release-name-common-test
+                  app.kubernetes.io/instance: test-release-name
                   app.kubernetes.io/name: common-test
-                  app.kubernetes.io/instance: release-name
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
-            - maxSkew: 1
+              topologyKey: truecharts.org/rack
               whenUnsatisfiable: ScheduleAnyway
-              topologyKey: "kubernetes.io/hostname"
-              labelSelector:
+            - labelSelector:
                 matchLabels:
-                  pod.name: release-name-common-test
+                  app.kubernetes.io/instance: test-release-name
                   app.kubernetes.io/name: common-test
-                  app.kubernetes.io/instance: release-name
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
 
   - it: should pass with topologySpreadConstraints from "global"
     set:
@@ -84,13 +84,33 @@ tests:
         equal:
           path: spec.template.spec.topologySpreadConstraints
           value:
-            - maxSkew: 1
-              whenUnsatisfiable: ScheduleAnyway
-              topologyKey: "truecharts.org/test"
-              labelSelector:
-                matchLabels: {}
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: test-release-name
+                  app.kubernetes.io/name: common-test
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
+              topologyKey: truecharts.org/rack
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: test-release-name
+                  app.kubernetes.io/name: common-test
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels: {}
+              maxSkew: 1
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+              topologyKey: truecharts.org/test
+              whenUnsatisfiable: ScheduleAnyway
 
 
   - it: should pass with topologySpreadConstraints from "pod"
@@ -123,10 +143,30 @@ tests:
         equal:
           path: spec.template.spec.topologySpreadConstraints
           value:
-            - maxSkew: 1
-              whenUnsatisfiable: ScheduleAnyway
-              topologyKey: "truecharts.org/test2"
-              labelSelector:
-                matchLabels: {}
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: test-release-name
+                  app.kubernetes.io/name: common-test
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
               nodeAffinityPolicy: Honor
               nodeTaintsPolicy: Honor
+              topologyKey: truecharts.org/rack
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: test-release-name
+                  app.kubernetes.io/name: common-test
+                  pod.name: test-release-name-common-test
+              maxSkew: 1
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels: {}
+              maxSkew: 1
+              nodeAffinityPolicy: Honor
+              nodeTaintsPolicy: Honor
+              topologyKey: truecharts.org/test2
+              whenUnsatisfiable: ScheduleAnyway
