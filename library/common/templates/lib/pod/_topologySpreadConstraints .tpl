@@ -20,7 +20,7 @@ objectData: The object data to be used to render the Pod.
     {{- $constraints = . -}}
   {{- end -}}
 
-  {{- if and ( or ( eq $objectData.type "Deployment" ) ( eq $objectData.type "StatefulSet" )) $rootCtx.Values.podOptions.defaultSpread }}
+  {{- if and ( or ( eq $objectData.type "Deployment" ) ( eq $objectData.type "StatefulSet" )) $rootCtx.Values.podOptions.defaultSpread -}}
 - maxSkew: 1
   whenUnsatisfiable: ScheduleAnyway
   topologyKey: "truecharts.org/rack"
@@ -37,8 +37,8 @@ objectData: The object data to be used to render the Pod.
       {{- include "tc.v1.common.lib.metadata.selectorLabels" (dict "rootCtx" $rootCtx "objectType" "pod" "objectName" $objectData.name) | indent 6 }}
   nodeAffinityPolicy: Honor
   nodeTaintsPolicy: Honor
-  {{ end }}
-  {{- range $v := $constraints -}}
-- {{ $v }}
   {{- end -}}
+  {{ with $constraints }}
+{{ . | toYaml | indent 0 }}
+  {{ end }}
 {{- end -}}
