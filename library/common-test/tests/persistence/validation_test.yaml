@@ -43,7 +43,7 @@ tests:
           type: not-a-type
     asserts:
       - failedTemplate:
-          errorMessage: Persistence - Expected <type> to be one of [pvc, emptyDir, nfs, hostPath, ixVolume, secret, configmap, device], but got [not-a-type]
+          errorMessage: Persistence - Expected <type> to be one of [pvc, vct, emptyDir, nfs, hostPath, ixVolume, secret, configmap, device], but got [not-a-type]
 
   - it: should fail with invalid accessMode
     set:
@@ -157,3 +157,231 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Persistent Volume Claim - Namespace [my-namespace] expected to have [ix-] prefix when installed in TrueNAS SCALE
+
+
+  - it: should fail without server on nfs-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           share: "/someshare"
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Expected <server> to be non-empty
+
+  - it: should fail without share on nfs-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Expected <share> to be non-empty
+
+  - it: should fail without server on smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected <server> to be non-empty
+
+  - it: should fail without share on smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected <share> to be non-empty
+
+  - it: should fail without CSI when in ixChartContext on smb-pv-pvc
+    set:
+      global:
+        ixChartContext: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Not supported CSI
+
+  - it: should fail without CSI when in ixChartContext on nfs-pv-pvc
+    set:
+      global:
+        ixChartContext: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           share: "/someshare"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Not supported CSI
+
+  - it: should fail without username smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected <username> to be non-empty
+
+  - it: should fail without password on smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "someserver"
+           username: "someuser"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected <password> to be non-empty
+
+  - it: should fail with server starting with // on smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "//someserver"
+           username: "someuser"
+           password: "someuserpoassword"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Did not expect <server> to start with [//]
+
+  - it: should fail with share starting with / on smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "/someshare"
+           server: "someserver"
+           username: "someuser"
+           password: "someuserpoassword"
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Did not expect <share> to start with [/]
+
+  - it: should fail without share starting with / on nfs-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           share: "/someshare"
+           server: "someserver"
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Expected <share> to start with [/]
+
+  - it: should fail with empty key on mountOptions in nfs-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           share: "/someshare"
+           server: "someserver"
+          mountOptions:
+            - key: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Expected key in <mountOptions> to be non-empty
+
+  - it: should fail with empty key on mountOptions in smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "someserver"
+           username: "someuser"
+           password: "someuserpoassword"
+          mountOptions:
+            - key: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected key in <mountOptions> to be non-empty
+
+  - it: should fail with item in mountOptions not a map in smb-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "smb"
+           share: "someshare"
+           server: "someserver"
+           username: "someuser"
+           password: "someuserpoassword"
+          mountOptions:
+            - not-a-map
+    asserts:
+      - failedTemplate:
+          errorMessage: SMB CSI - Expected <mountOption> item to be a dict, but got [string]
+
+  - it: should fail with item in mountOptions not a map in nfs-pv-pvc
+    set:
+      persistence:
+        volume1:
+          enabled: true
+          type: pvc
+          static:
+           mode: "nfs"
+           share: "/someshare"
+           server: "someserver"
+          mountOptions:
+            - not-a-map
+    asserts:
+      - failedTemplate:
+          errorMessage: NFS CSI - Expected <mountOption> item to be a dict, but got [string]

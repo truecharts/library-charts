@@ -1,4 +1,4 @@
-suite: volumeClaimTemplates metadata test
+suite: persistence metadata test
 templates:
   - common.yaml
 chart:
@@ -16,9 +16,10 @@ tests:
           g_label1: global_label1
         annotations:
           g_annotation1: global_annotation1
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -40,13 +41,13 @@ tests:
           of: apps/v1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].metadata.annotations
+          path: spec.persistence[0].metadata.annotations
           value:
             annotation1: annotation1
             annotation2: annotation2
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].metadata.labels
+          path: spec.persistence[0].metadata.labels
           value:
             label1: label1
             label2: label2

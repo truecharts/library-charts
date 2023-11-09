@@ -1,16 +1,16 @@
-{{/* PVC Validation */}}
+{{/* Persistence Validation */}}
 {{/* Call this template:
 {{ include "tc.v1.common.lib.persistence.validation" (dict "objectData" $objectData) -}}
 objectData:
   rootCtx: The root context of the chart.
-  objectData: The pvc object.
+  objectData: The persistence object.
 */}}
 
 {{- define "tc.v1.common.lib.persistence.validation" -}}
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- $types := (list "pvc" "emptyDir" "nfs" "hostPath" "ixVolume" "secret" "configmap" "device") -}}
+  {{- $types := (list "pvc" "vct" "emptyDir" "nfs" "hostPath" "ixVolume" "secret" "configmap" "device") -}}
   {{- if not (mustHas $objectData.type $types) -}}
     {{- fail (printf "Persistence - Expected <type> to be one of [%s], but got [%s]" (join ", " $types) $objectData.type) -}}
   {{- end -}}

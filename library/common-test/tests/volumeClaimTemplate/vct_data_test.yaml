@@ -1,4 +1,4 @@
-suite: volumeClaimTemplates data test
+suite: persistence data test
 templates:
   - common.yaml
 release:
@@ -7,9 +7,10 @@ release:
 tests:
   - it: should create vct
     set:
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
       workload:
         main:
@@ -26,27 +27,28 @@ tests:
           of: apps/v1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].metadata.name
+          path: spec.persistence[0].metadata.name
           value: my-volume1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.accessModes
+          path: spec.persistence[0].spec.accessModes
           value:
             - ReadWriteOnce
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          path: spec.persistence[0].spec.resources.requests.storage
           value: 100Gi
       - documentIndex: *statefulSetDoc
         isNull:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
 
   - it: should create vct with accessModes set as string
     set:
       some_mode: ReadWriteMany
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           accessModes: "{{ .Values.some_mode }}"
       workload:
@@ -61,16 +63,17 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.accessModes
+          path: spec.persistence[0].spec.accessModes
           value:
             - ReadWriteMany
 
   - it: should create pvc with accessModes set as list
     set:
       some_mode: ReadWriteMany
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           accessModes:
             - "{{ .Values.some_mode }}"
@@ -87,16 +90,17 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.accessModes
+          path: spec.persistence[0].spec.accessModes
           value:
             - ReadWriteMany
             - ReadWriteOnce
 
   - it: should create pvc with size set
     set:
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           size: 20Gi
       workload:
@@ -111,15 +115,16 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          path: spec.persistence[0].spec.resources.requests.storage
           value: 20Gi
 
   - it: should create vct with storageClass set "-"
     set:
       some_storage_class: "-"
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           storageClass: "{{ .Values.some_storage_class }}"
       workload:
@@ -134,15 +139,16 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
           value: ""
 
   - it: should create vct with storageClass set
     set:
       some_storage_class: some-storage-class
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           storageClass: "{{ .Values.some_storage_class }}"
       workload:
@@ -157,16 +163,17 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
           value: some-storage-class
 
   - it: should create vct with storageClass not set, but have fallbackDefaults set
     set:
       fallbackDefaults:
         storageClass: some-storage-class
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
       workload:
         main:
@@ -180,7 +187,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
           value: some-storage-class
 
   - it: should create vct with storageClass set "SCALE-ZFS" and within ixChartContext
@@ -190,9 +197,10 @@ tests:
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
           storageClass: "{{ .Values.some_storage_class }}"
       workload:
@@ -207,7 +215,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
           value: ix-storage-class-releasename
 
   - it: should create pvc with storageClass not set and within ixChartContext
@@ -217,9 +225,10 @@ tests:
         ixChartContext:
           storageClassName: ix-storage-class-releasename
       some_storage_class: "SCALE-ZFS"
-      volumeClaimTemplates:
+      persistence:
         my-volume1:
           enabled: true
+          type: vct
           mountPath: /some/path
       workload:
         main:
@@ -233,5 +242,5 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          path: spec.persistence[0].spec.storageClassName
           value: ix-storage-class-releasename
