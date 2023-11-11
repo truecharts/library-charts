@@ -12,7 +12,11 @@ objectData:
 {{- define "tc.v1.common.class.priorityclass" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData }}
+  {{- $objectData := .objectData -}}
+  {{- $globalDefault := false -}}
+  {{- if not (kindIs "invalid" $objectData.globalDefault) -}}
+    {{- $globalDefault = $objectData.globalDefault -}}
+  {{- end }}
 ---
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
@@ -30,7 +34,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 value: {{ $objectData.value | default 1000000 }}
-preemptionPolicy: Never{{ $objectData.preemptionPolicy | default "PreemptLowerPriority" }}
-globalDefault: {{ $objectData.globalDefault | default false }}
-description: {{ $objectData.description | default "No description given"}}
+preemptionPolicy: {{ $objectData.preemptionPolicy | default "PreemptLowerPriority" }}
+globalDefault: {{ $globalDefault }}
+description: {{ $objectData.description | default "No description given" }}
 {{- end -}}

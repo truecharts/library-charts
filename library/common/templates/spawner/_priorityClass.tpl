@@ -6,14 +6,14 @@
 {{- define "tc.v1.common.spawner.priorityclass" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $name, $priorityclass := .Values.priorityclass -}}
+  {{- range $name, $priorityclass := .Values.priorityClass -}}
 
     {{- $enabled := false -}}
     {{- if hasKey $priorityclass "enabled" -}}
       {{- if not (kindIs "invalid" $priorityclass.enabled) -}}
         {{- $enabled = $priorityclass.enabled -}}
       {{- else -}}
-        {{- fail (printf "priorityclass - Expected the defined key [enabled] in <priorityclass.%s> to not be empty" $name) -}}
+        {{- fail (printf "Priority Class - Expected the defined key [enabled] in <priorityclass.%s> to not be empty" $name) -}}
       {{- end -}}
     {{- end -}}
 
@@ -49,6 +49,8 @@
       {{- $_ := set $objectData "name" $objectName -}}
       {{- $_ := set $objectData "shortName" $name -}}
 
+      {{/* Validate */}}
+      {{- include "tc.v1.common.lib.priorityclass.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.priorityclass" (dict "rootCtx" $ "objectData" $objectData) -}}
 
