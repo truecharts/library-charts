@@ -561,7 +561,7 @@ webhook:
     type: mutating
     webhooks: []
 
-# # -- create storageClasses on demand
+
 # priorityClass:
 #   example:
 #     provisioner: some.provisioner.io
@@ -570,6 +570,17 @@ webhook:
 #     preemptionPolicy: PreemptLowerPriority
 #     globalDefault: false
 #     description: "some description"
+
+# # -- create storageClasses on demand
+# storageClass:
+#   example:
+#     provisioner: some.provisioner.io
+#     enabled: true
+#     parameters: {}
+#     reclaimPolicy: retain
+#     allowVolumeExpansion: true
+#     volumeBindingMode: Immediate
+#     mountOptions: []
 
 metrics:
   main:
