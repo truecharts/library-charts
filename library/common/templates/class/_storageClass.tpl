@@ -32,12 +32,12 @@ provisioner: {{ $objectData.provisioner }}
 {{- with $objectData.parameters -}}
 parameters:
   {{- tpl (toYaml .) $rootCtx | nindent 2 }}
-{{- end -}}
+{{- end }}
 reclaimPolicy: {{ $objectData.reclaimPolicy | default "retain" }}
 allowVolumeExpansion: {{ $objectData.allowVolumeExpansion | default true }}
 {{- with $objectData.mountOptions -}}
 mountOptions:
   {{- tpl (toYaml .) $rootCtx | nindent 2 }}
-{{- end -}}
+{{- end }}
 volumeBindingMode: {{ $objectData.volumeBindingMode | default "Immediate" }}
 {{- end -}}
