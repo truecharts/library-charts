@@ -6,7 +6,7 @@
 {{- define "tc.v1.common.spawner.storageclass" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $name, $storageclass := .Values.storageclass -}}
+  {{- range $name, $storageclass := .Values.storageClass -}}
 
     {{- $enabled := false -}}
     {{- if hasKey $storageclass "enabled" -}}
