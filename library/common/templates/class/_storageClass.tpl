@@ -35,14 +35,19 @@ metadata:
   {{- end }}
 provisioner: {{ $objectData.provisioner }}
 {{- with $objectData.parameters }}
-parameters:
-  {{- tpl (toYaml .) $rootCtx | nindent 2 }}
+parameters: {{/* TODO: */}}
+  {{- range $k, $v := . -}}
+    {{- $val := tpl $v $rootCtx }}
+  {{ $k }}: {{ include "tc.v1.common.helper.makeIntOrNoop" $val | quote }}
+  {{- end -}}
 {{- end }}
 reclaimPolicy: {{ $objectData.reclaimPolicy | default "Retain" }}
 allowVolumeExpansion: {{ $allowVolExpand }}
 {{- with $objectData.mountOptions }}
 mountOptions:
-  {{- tpl (toYaml .) $rootCtx | nindent 2 }}
+  {{- range $opt := . }}
+  - {{ tpl $opt $rootCtx }}
+  {{- end -}}
 {{- end }}
 volumeBindingMode: {{ $objectData.volumeBindingMode | default "Immediate" }}
 {{- end -}}
