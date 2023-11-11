@@ -12,7 +12,12 @@ objectData:
 {{- define "tc.v1.common.class.storageclass" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData }}
+  {{- $objectData := .objectData -}}
+
+  {{- $allowVolExpand := true -}}
+  {{- if not (kindIs "invalid" $objectData.allowVolumeExpansion) -}}
+    {{- $allowVolExpand = $objectData.allowVolumeExpansion -}}
+  {{- end }}
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -29,13 +34,13 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 provisioner: {{ $objectData.provisioner }}
-{{- with $objectData.parameters -}}
+{{- with $objectData.parameters }}
 parameters:
   {{- tpl (toYaml .) $rootCtx | nindent 2 }}
 {{- end }}
 reclaimPolicy: {{ $objectData.reclaimPolicy | default "Retain" }}
-allowVolumeExpansion: {{ $objectData.allowVolumeExpansion | default true }}
-{{- with $objectData.mountOptions -}}
+allowVolumeExpansion: {{ $allowVolExpand }}
+{{- with $objectData.mountOptions }}
 mountOptions:
   {{- tpl (toYaml .) $rootCtx | nindent 2 }}
 {{- end }}

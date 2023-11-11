@@ -2,6 +2,10 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
+  {{- if not $objectData.provisioner -}}
+    {{- fail "Storage Class - Expected non-empty [provisioner]" -}}
+  {{- end -}}
+
   {{- $validPolicies := (list "Retain" "Delete") -}}
   {{- if $objectData.reclaimPolicy -}}
     {{- if not (mustHas $objectData.reclaimPolicy $validPolicies) -}}
