@@ -1,0 +1,58 @@
+suite: storageClass name test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should generate correct spec
+    set:
+      storageClass:
+        example1:
+          enabled: true
+          provisioner: some.provisioner.io
+    asserts:
+      - documentIndex: &storageClassDoc 0
+        isKind:
+          of: StorageClass
+      - documentIndex: *storageClassDoc
+        isAPIVersion:
+          of: storage.k8s.io/v1
+      - documentIndex: *storageClassDoc
+        equal:
+          path: provisioner
+          value: some.provisioner.io
+      - documentIndex: *storageClassDoc
+        equal:
+          path: reclaimPolicy
+          value: Retain
+      - documentIndex: *storageClassDoc
+        equal:
+          path: allowVolumeExpansion
+          value: true
+      - documentIndex: *storageClassDoc
+        equal:
+          path: volumeBindingMode
+          value: Immediate
+
+# Failures
+  - it: should fail with invalid reclaimPolicy
+    set:
+      storageClass:
+        example1:
+          enabled: true
+          provisioner: some.provisioner.io
+          reclaimPolicy: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: Storage Class - Expected [reclaimPolicy] to be one of [Retain, Delete], but got [invalid]
+  - it: should fail with invalid volumeBindingMode
+    set:
+      storageClass:
+        example1:
+          enabled: true
+          provisioner: some.provisioner.io
+          volumeBindingMode: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: Storage Class - Expected [volumeBindingMode] to be one of [WaitForFirstConsumer, Immediate], but got [invalid]

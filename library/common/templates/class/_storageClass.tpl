@@ -33,7 +33,7 @@ provisioner: {{ $objectData.provisioner }}
 parameters:
   {{- tpl (toYaml .) $rootCtx | nindent 2 }}
 {{- end }}
-reclaimPolicy: {{ $objectData.reclaimPolicy | default "retain" }}
+reclaimPolicy: {{ $objectData.reclaimPolicy | default "Retain" }}
 allowVolumeExpansion: {{ $objectData.allowVolumeExpansion | default true }}
 {{- with $objectData.mountOptions -}}
 mountOptions:

@@ -49,6 +49,8 @@
       {{- $_ := set $objectData "name" $objectName -}}
       {{- $_ := set $objectData "shortName" $name -}}
 
+      {{/* Validate */}}
+      {{- include "tc.v1.common.lib.storageclass.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.storageclass" (dict "rootCtx" $ "objectData" $objectData) -}}
 
