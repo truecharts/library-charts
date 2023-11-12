@@ -52,7 +52,7 @@ objectData: The object data to be used to render the Pod.
       {{- . | nindent 6 }}
     {{- end }}
   spec:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $vctValues) | indent 4 }}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $vctValues) | trim | nindent 4 }}
       {{- end -}}
     {{- end -}}
   {{- end -}}

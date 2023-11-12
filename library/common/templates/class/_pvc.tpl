@@ -47,5 +47,5 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- (include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData)) | indent 2 }}
+  {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData) | trim | nindent 2 }}
 {{- end -}}

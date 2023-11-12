@@ -9,7 +9,7 @@ objectData: The object data to be used to render the Pod.
 {{- $objectData := .objectData }}
 
 accessModes:
-  {{- include "tc.v1.common.lib.pvc.accessModes" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "PVC") | trim | nindent 4 }}
+  {{- include "tc.v1.common.lib.pvc.accessModes" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "PVC") | trim | nindent 2 }}
 resources:
   requests:
     storage: {{ $objectData.size | default $rootCtx.Values.fallbackDefaults.pvcSize }}
