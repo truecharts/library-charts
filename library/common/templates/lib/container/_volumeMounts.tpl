@@ -32,20 +32,20 @@ objectData: The object data to be used to render the container.
     {{- $_ := set $volMount "mountPropagation" (tpl $volMount.mountPropagation $rootCtx) -}}
 
     {{- if not $volMount.mountPath -}}
-      {{- fail (printf "%s - Expected non-empty <mountPath>" (camelcase $volMount.key)) -}}
+      {{- fail (printf "Persistence - Expected non-empty <mountPath>") -}}
     {{- end -}}
 
     {{- if not (hasPrefix "/" $volMount.mountPath) -}}
-      {{- fail (printf "%s - Expected <mountPath> to start with a forward slash [/]" (camelcase $volMount.key)) -}}
+      {{- fail (printf "Persistence - Expected <mountPath> to start with a forward slash [/]") -}}
     {{- end -}}
 
     {{- $propagationTypes := (list "None" "HostToContainer" "Bidirectional") -}}
     {{- if and $volMount.mountPropagation (not (mustHas $volMount.mountPropagation $propagationTypes)) -}}
-      {{- fail (printf "%s - Expected <mountPropagation> to be one of [%s], but got [%s]" (camelcase $volMount.key) (join ", " $propagationTypes) $volMount.mountPropagation) -}}
+      {{- fail (printf "Persistence - Expected <mountPropagation> to be one of [%s], but got [%s]" (join ", " $propagationTypes) $volMount.mountPropagation) -}}
     {{- end -}}
 
     {{- if not (kindIs "bool" $volMount.readOnly) -}}
-      {{- fail (printf "%s - Expected <readOnly> to be [boolean], but got [%s]" (camelcase $volMount.key) (kindOf $volMount.readOnly)) -}}
+      {{- fail (printf "Persistence - Expected <readOnly> to be [boolean], but got [%s]" (kindOf $volMount.readOnly)) -}}
     {{- end }}
 - name: {{ $volMount.name }}
   mountPath: {{ $volMount.mountPath }}
