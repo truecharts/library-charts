@@ -1,4 +1,4 @@
-suite: persistence validation test
+suite: volumeClaimTemplates validation test
 templates:
   - common.yaml
 release:
@@ -54,7 +54,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: PVC - Expected <targetSelector> to be [dict], but got [string]
+          errorMessage: Volume Claim Templates - Expected <targetSelector> to be [dict], but got [string]
 
   - it: should fail without storageClassName in ixChartContext
     set:
