@@ -34,8 +34,8 @@ objectData:
     {{- fail "SMB CSI - Did not expect <share> to start with [/]" -}}
   {{- end -}}
 
-  {{/* TODO: Allow only specific opts? / set specific opts by default? */}}
-  {{- $validOpts := list -}}
+  {{/* TODO: Allow only specific opts? / set specific opts by default?
+  {{- $validOpts := list -}} */}}
   {{- range $opt := $objectData.mountOptions -}}
     {{- if not (kindIs "map" $opt) -}}
       {{- fail (printf "SMB CSI - Expected <mountOption> item to be a dict, but got [%s]" (kindOf $opt)) -}}

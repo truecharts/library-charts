@@ -19,7 +19,7 @@ objectData:
   {{- $objectData := .objectData -}}
 
   {{- $retain := $rootCtx.Values.fallbackDefaults.pvcRetain -}}
-  {{- if (kindIs "bool" $objectData.retain) -}}
+  {{- if not (kindIs "invalid" $objectData.retain) -}}
     {{- $retain = $objectData.retain -}}
   {{- end -}}
 

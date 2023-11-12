@@ -13,6 +13,7 @@ objectData: The object data to be used to render the container.
   {{- $codeServerIgnoredTypes := (list "configmap" "secret" "vct") -}}
 
   {{- range $persistenceName, $persistenceValues := $rootCtx.Values.persistence -}}
+    {{/* TLDR: Enabled + Not VCT without STS */}}
     {{- if and $persistenceValues.enabled (not (and (eq $persistenceValues.type "vct") (ne $objectData.podType "StatefulSet"))) -}}
       {{/* Dont try to mount configmap/sercet/vct to codeserver */}}
       {{- if not (and (eq $objectData.shortName "codeserver") (mustHas $persistenceValues.type $codeServerIgnoredTypes)) -}}
@@ -103,11 +104,11 @@ objectData: The object data to be used to render the container.
     {{- if mustHas $objectData.podShortName ($persistenceValues.targetSelector | keys) -}}
       {{- $selectorValues := (get $persistenceValues.targetSelector $objectData.podShortName) -}}
       {{- if not (kindIs "map" $selectorValues) -}}
-        {{- fail (printf "%s - Expected <targetSelector.%s> to be a [dict], but got [%s]" "persistence" $objectData.podShortName (kindOf $selectorValues)) -}}
+        {{- fail (printf "Persistence - Expected <targetSelector.%s> to be a [dict], but got [%s]" $objectData.podShortName (kindOf $selectorValues)) -}}
       {{- end -}}
 
       {{- if not $selectorValues -}}
-        {{- fail (printf "%s - Expected non-empty <targetSelector.%s>" "persistence" $objectData.podShortName) -}}
+        {{- fail (printf "Persistence - Expected non-empty <targetSelector.%s>" $objectData.podShortName) -}}
       {{- end -}}
 
       {{/* If container is selected */}}

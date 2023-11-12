@@ -1,4 +1,4 @@
-{{/* Returns Persitant Volume Claim name*/}}
+{{/* Returns Persitent Volume Claim name*/}}
 {{/* Call this template:
 {{ include "tc.v1.common.lib.storage.pvc.name" (dict "rootCtx" $ "objectName" $objectName "objectData" $objectData) }}
 objectName: the base name of the object without any alteration or sanitation
@@ -30,7 +30,7 @@ objectData: The object data to be used to render the Pod.
       {{- end -}}
 
     {{- else if eq $objectData.static.mode "custom" -}}
-      {{- $hashValues = (printf "%s-%s" $size $objectData.csi) -}}
+      {{- $hashValues = (printf "%s-%v" $size $objectData.csi) -}}
     {{- end -}}
   {{- end -}}
 
@@ -39,13 +39,13 @@ objectData: The object data to be used to render the Pod.
     {{- $hashValues = (printf "%s-%s-%s" $hashValues $objectData.dataSource.kind $objectData.dataSource.name) -}}
   {{- end -}}
 
+  {{- $objectName = $renderedName -}}
   {{- if $hashValues -}}
     {{- $hash := adler32sum $hashValues -}}
     {{- $objectName = (printf "%s-%v" $renderedName $hash) -}}
-  {{- else -}}
-    {{- $objectName = $renderedName -}}
   {{- end -}}
 
+  {{/* Return the new objectName */}}
   {{- $objectName -}}
 
 {{- end -}}

@@ -26,12 +26,11 @@
         {{- $_ := set $objectData "name" (include "tc.v1.common.lib.storage.pvc.name" (dict "rootCtx" $ "objectName" $name "objectData" $objectData)) -}}
         {{- $_ := set $objectData "shortName" $name -}}
 
-        {{- if and $objectData.static $objectData.static.mode ( ne $objectData.static.mode "disabled" ) -}}
-          {{- $_ := set $objectData "storageClass" ( $objectData.storageClass | default $objectData.name ) -}}
+        {{- if and $objectData.static $objectData.static.mode (ne $objectData.static.mode "disabled") -}}
+          {{- $_ := set $objectData "storageClass" ($objectData.storageClass | default $objectData.name) -}}
           {{- $_ := set $objectData "volumeName" $objectData.name -}}
 
           {{- if eq $objectData.static.mode "smb" -}}
-
             {{/* Validate SMB CSI */}}
             {{- include "tc.v1.common.lib.storage.smbCSI.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
@@ -69,7 +68,7 @@
 
         {{- else if $objectData.volumeName -}}
 
-          {{- $_ := set $objectData "storageClass" ( $objectData.storageClass | default $objectData.name ) -}}
+          {{- $_ := set $objectData "storageClass" ($objectData.storageClass | default $objectData.name) -}}
 
         {{- end -}}
 

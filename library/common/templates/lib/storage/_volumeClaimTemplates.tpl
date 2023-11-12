@@ -10,7 +10,7 @@ objectData: The object data to be used to render the Pod.
 
   {{- range $name, $vctValues := $rootCtx.Values.persistence -}}
 
-    {{- if and $vctValues.enabled ( eq $vctValues.type "vct" ) -}}
+    {{- if and $vctValues.enabled (eq $vctValues.type "vct") -}}
       {{- $vct := (mustDeepCopy $vctValues) -}}
 
       {{- $selected := false -}}
