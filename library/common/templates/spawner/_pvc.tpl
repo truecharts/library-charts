@@ -35,7 +35,7 @@
             {{- include "tc.v1.common.lib.storage.smbCSI.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
             {{- $_ := set $objectData "provisioner" "smb.csi.k8s.io" -}}
-            {{- $_ := set $objectData "driver" "smb.csi.k8s.io" -}}
+            {{- $_ := set $objectData.static "driver" "smb.csi.k8s.io" -}}
 
             {{/* Create secret with creds */}}
             {{- $secretData := (dict
@@ -54,12 +54,12 @@
             {{- include "tc.v1.common.lib.storage.nfsCSI.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
             {{- $_ := set $objectData "provisioner" "nfs.csi.k8s.io" -}}
-            {{- $_ := set $objectData "driver" "nfs.csi.k8s.io" -}}
+            {{- $_ := set $objectData.static "driver" "nfs.csi.k8s.io" -}}
 
           {{- else if eq $objectData.static.mode "custom" -}}
 
             {{- $_ := set $objectData "provisioner" $objectData.static.provisioner -}}
-            {{- $_ := set $objectData "driver" $objectData.static.driver -}}
+            {{- $_ := set $objectData.static "driver" $objectData.static.driver -}}
 
           {{- end -}}
 
