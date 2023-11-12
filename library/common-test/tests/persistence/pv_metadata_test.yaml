@@ -25,9 +25,9 @@ tests:
           enabled: true
           type: pvc
           static:
-           mode: "nfs"
-           share: "someshare"
-           server: "someserver"
+            mode: nfs
+            share: /someshare
+            server: someserver
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -55,10 +55,10 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             app.kubernetes.io/name: common-test
@@ -74,9 +74,9 @@ tests:
           enabled: true
           type: pvc
           static:
-           mode: "nfs"
-           share: "someshare"
-           server: "someserver"
+            mode: nfs
+            share: /someshare
+            server: someserver
           retain: true
     asserts:
       - documentIndex: *pvDoc
@@ -93,10 +93,10 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             app.kubernetes.io/name: common-test
@@ -119,11 +119,11 @@ tests:
           enabled: true
           type: pvc
           static:
-           mode: "smb"
-           share: "someshare"
-           server: "someserver"
-           username: "someuser"
-           password: "someuserpoassword"
+            mode: smb
+            share: someshare
+            server: someserver
+            username: someuser
+            password: someuserpoassword
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -150,10 +150,10 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             app.kubernetes.io/name: common-test
@@ -181,10 +181,10 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             app.kubernetes.io/name: common-test
@@ -200,11 +200,11 @@ tests:
           enabled: true
           type: pvc
           static:
-           mode: "smb"
-           share: "someshare"
-           server: "someserver"
-           username: "someuser"
-           password: "someuserpoassword"
+            mode: smb
+            share: someshare
+            server: someserver
+            username: someuser
+            password: someuserpoassword
           retain: true
     asserts:
       - documentIndex: *secretDoc
@@ -230,10 +230,10 @@ tests:
           path: metadata.labels
           value:
             app: common-test-1.0.0
-            release: RELEASE-NAME
+            release: test-release-name
             helm-revision: "0"
             helm.sh/chart: common-test-1.0.0
-            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/version: *appVer
             app.kubernetes.io/name: common-test
