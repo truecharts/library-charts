@@ -37,11 +37,8 @@ objectData:
     {{- end -}}
   {{- end -}}
 
-  {{- if $objectData.targetSelector -}}
-    {{- $targetKind := kindOf $objectData.targetSelector -}}
-    {{- if not eq $targetKind "map" -}}
-      {{- fail (printf "Persistence - Expected <targetSelector> to be [dict], but got [%s]" (kindOf $objectData.targetSelector)) -}}
-    {{- end -}}
+  {{- if and $objectData.targetSelector (not (kindIs "map" $objectData.targetSelector)) -}}
+    {{- fail (printf "Persistence - Expected <targetSelector> to be [dict], but got [%s]" (kindOf $objectData.targetSelector)) -}}
   {{- end -}}
 
 {{- end -}}
