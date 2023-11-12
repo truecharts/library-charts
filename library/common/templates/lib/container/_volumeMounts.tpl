@@ -108,11 +108,11 @@ objectData: The object data to be used to render the container.
     {{- if mustHas $objectData.podShortName ($persistenceValues.targetSelector | keys) -}}
       {{- $selectorValues := (get $persistenceValues.targetSelector $objectData.podShortName) -}}
       {{- if not (kindIs "map" $selectorValues) -}}
-        {{- fail (printf "Persistence - Expected <targetSelector.%s> to be a [dict], but got [%s]" $objectData.podShortName (kindOf $selectorValues)) -}}
+        {{- fail (printf "Persistence - Expected [targetSelector.%s] to be a [dict], but got [%s]" $objectData.podShortName (kindOf $selectorValues)) -}}
       {{- end -}}
 
       {{- if not $selectorValues -}}
-        {{- fail (printf "Persistence - Expected non-empty <targetSelector.%s>" $objectData.podShortName) -}}
+        {{- fail (printf "Persistence - Expected non-empty [targetSelector.%s]" $objectData.podShortName) -}}
       {{- end -}}
 
       {{/* If container is selected */}}

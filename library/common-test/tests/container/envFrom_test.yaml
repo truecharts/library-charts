@@ -180,7 +180,7 @@ tests:
                       name: ""
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected non-empty <envFrom.configMapRef.name>
+          errorMessage: Container - Expected non-empty [envFrom.configMapRef.name]
 
   - it: it should fail with empty name in secretRef
     set:
@@ -202,7 +202,7 @@ tests:
                       name: ""
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected non-empty <envFrom.secretRef.name>
+          errorMessage: Container - Expected non-empty [envFrom.secretRef.name]
 
   - it: it should fail without defined configmap
     set:
@@ -282,4 +282,4 @@ tests:
                       name: '{{ printf "secret-name" }}'
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected the defined key [expandObjectName] in <envFrom.secretRef> to not be empty
+          errorMessage: Container - Expected the defined key [expandObjectName] in [envFrom.secretRef] to not be empty

@@ -21,7 +21,7 @@ objectData: The object data to be used to render the container.
     {{- range $ref := $refs -}}
       {{- with (get $envFrom $ref) -}}
         {{- if not .name -}}
-          {{- fail (printf "Container - Expected non-empty <envFrom.%s.name>" $ref) -}}
+          {{- fail (printf "Container - Expected non-empty [envFrom.%s.name]" $ref) -}}
         {{- end -}}
 
         {{- $objectName := tpl .name $rootCtx -}}
@@ -31,7 +31,7 @@ objectData: The object data to be used to render the container.
           {{- if not (kindIs "invalid" .expandObjectName) -}}
             {{- $expandName = .expandObjectName -}}
           {{- else -}}
-            {{- fail (printf "Container - Expected the defined key [expandObjectName] in <envFrom.%s> to not be empty" $ref) -}}
+            {{- fail (printf "Container - Expected the defined key [expandObjectName] in [envFrom.%s] to not be empty" $ref) -}}
           {{- end -}}
         {{- end -}}
 

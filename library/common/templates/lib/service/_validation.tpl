@@ -26,17 +26,17 @@ objectData:
         {{- $hasEnabledPort = true -}}
 
         {{- if and $port.targetSelector (not (kindIs "string" $port.targetSelector)) -}}
-          {{- fail (printf "Service - Expected <port.targetSelector> to be [string], but got [%s]" (kindOf $port.targetSelector)) -}}
+          {{- fail (printf "Service - Expected [port.targetSelector] to be [string], but got [%s]" (kindOf $port.targetSelector)) -}}
         {{- end -}}
 
         {{- if not $port.port -}}
-          {{- fail (printf "Service - Expected non-empty <port.port>") -}}
+          {{- fail (printf "Service - Expected non-empty [port.port]") -}}
         {{- end -}}
 
         {{- $protocolTypes := (list "tcp" "udp" "http" "https") -}}
         {{- if $port.protocol -}}
           {{- if not (mustHas (tpl $port.protocol $rootCtx) $protocolTypes) -}}
-            {{- fail (printf "Service - Expected <port.protocol> to be one of [%s] but got [%s]" (join ", " $protocolTypes) $port.protocol) -}}
+            {{- fail (printf "Service - Expected [port.protocol] to be one of [%s] but got [%s]" (join ", " $protocolTypes) $port.protocol) -}}
           {{- end -}}
         {{- end -}}
 

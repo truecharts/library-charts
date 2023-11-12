@@ -35,11 +35,11 @@ objectData: The object data to be used to render the container.
     {{ $key }}:
           {{- $obj := get $v $key -}}
           {{- if not $obj.name -}}
-            {{- fail (printf "Container - Expected non-empty <env.%s.name>" $key) -}}
+            {{- fail (printf "Container - Expected non-empty [env.%s.name]" $key) -}}
           {{- end -}}
 
           {{- if not $obj.key -}}
-            {{- fail (printf "Container - Expected non-empty <env.%s.key>" $key) -}}
+            {{- fail (printf "Container - Expected non-empty [env.%s.key]" $key) -}}
           {{- end }}
       key: {{ $obj.key | quote }}
 
@@ -50,7 +50,7 @@ objectData: The object data to be used to render the container.
             {{- if not (kindIs "invalid" $obj.expandObjectName) -}}
               {{- $expandName = $obj.expandObjectName -}}
             {{- else -}}
-              {{- fail (printf "Container - Expected the defined key [expandObjectName] in <env.%s> to not be empty" $k) -}}
+              {{- fail (printf "Container - Expected the defined key [expandObjectName] in [env.%s] to not be empty" $k) -}}
             {{- end -}}
           {{- end -}}
 
@@ -95,7 +95,7 @@ objectData: The object data to be used to render the container.
       {{- if hasKey $v "fieldRef" }}
     fieldRef:
         {{- if not $v.fieldRef.fieldPath -}}
-          {{- fail "Container - Expected non-empty <env.fieldRef.fieldPath>" -}}
+          {{- fail "Container - Expected non-empty [env.fieldRef.fieldPath]" -}}
         {{- end }}
       fieldPath: {{ $v.fieldRef.fieldPath | quote }}
         {{- if $v.fieldRef.apiVersion }}

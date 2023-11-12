@@ -59,10 +59,10 @@ objectData: The object data to be used to render the volume.
     items:
       {{- range . -}}
         {{- if not .key -}}
-          {{- fail "Persistence - Expected non-empty <items.key>" -}}
+          {{- fail "Persistence - Expected non-empty [items.key]" -}}
         {{- end -}}
         {{- if not .path -}}
-          {{- fail "Persistence - Expected non-empty <items.path>" -}}
+          {{- fail "Persistence - Expected non-empty [items.path]" -}}
         {{- end }}
     - key: {{ tpl .key $rootCtx }}
       path: {{ tpl .path $rootCtx }}

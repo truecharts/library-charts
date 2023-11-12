@@ -48,7 +48,7 @@ objectData: The object data to be used to render the Pod.
 
     {{- range $key := (list "nameservers" "searches" "options") -}}
       {{- if not (get $config $key) -}}
-        {{- fail (printf "Expected non-empty <dnsConfig.%s> with [dnsPolicy] set to [None]." $key) -}}
+        {{- fail (printf "Expected non-empty [dnsConfig.%s] with [dnsPolicy] set to [None]." $key) -}}
       {{- end -}}
     {{- end -}}
 
@@ -58,7 +58,7 @@ dnsPolicy: {{ $policy }}
 dnsConfig:
     {{- with $config.nameservers -}}
       {{- if gt (len .) 3 -}}
-        {{- fail (printf "Expected no more than [3] <dnsConfig.nameservers>, but got [%v]" (len .)) -}}
+        {{- fail (printf "Expected no more than [3] [dnsConfig.nameservers], but got [%v]" (len .)) -}}
       {{- end }}
   nameservers:
       {{- range . }}
@@ -68,7 +68,7 @@ dnsConfig:
 
     {{- with $config.searches -}}
       {{- if gt (len .) 6 -}}
-        {{- fail (printf "Expected no more than [6] <dnsConfig.searches>, but got [%v]" (len .)) -}}
+        {{- fail (printf "Expected no more than [6] [dnsConfig.searches], but got [%v]" (len .)) -}}
       {{- end }}
   searches:
       {{- range . }}

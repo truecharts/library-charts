@@ -813,7 +813,7 @@ tests:
             workload-name: string
     asserts:
       - failedTemplate:
-          errorMessage: Persistence - Expected <targetSelector.workload-name> to be a [dict], but got [string]
+          errorMessage: Persistence - Expected [targetSelector.workload-name] to be a [dict], but got [string]
 
   - it: should fail with empty targetSelect.workloadName
     set:
@@ -828,4 +828,4 @@ tests:
             workload-name: {}
     asserts:
       - failedTemplate:
-          errorMessage: Persistence - Expected non-empty <targetSelector.workload-name>
+          errorMessage: Persistence - Expected non-empty [targetSelector.workload-name]

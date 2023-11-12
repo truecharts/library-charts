@@ -17,7 +17,7 @@ objectData: The object data to be used to render the container.
 
   {{- range $key := $probeNames -}}
     {{- if not (get $objectData.probes $key) -}}
-      {{- fail (printf "Container - Expected <probes.%s> to be defined" $key) -}}
+      {{- fail (printf "Container - Expected [probes.%s] to be defined" $key) -}}
     {{- end -}}
   {{- end -}}
 

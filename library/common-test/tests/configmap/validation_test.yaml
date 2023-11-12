@@ -107,4 +107,4 @@ tests:
             foo: bar
     asserts:
       - failedTemplate:
-          errorMessage: ConfigMap - Expected the defined key [enabled] in <configmap.my-configmap> to not be empty
+          errorMessage: ConfigMap - Expected the defined key [enabled] in [configmap.my-configmap] to not be empty

@@ -74,7 +74,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: PVC - Expected non-empty <global.ixChartContext.storageClassName>
+          errorMessage: PVC - Expected non-empty [global.ixChartContext.storageClassName]
 
   - it: should fail without storageClassName in ixChartContext with SCALE-ZFS explicitly set
     set:
@@ -95,7 +95,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: PVC - Expected non-empty <global.ixChartContext.storageClassName> on [SCALE-ZFS] storageClass
+          errorMessage: PVC - Expected non-empty [global.ixChartContext.storageClassName] on [SCALE-ZFS] storageClass
 
   - it: should fail with invalid accessMode
     set:

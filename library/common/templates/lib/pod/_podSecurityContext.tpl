@@ -9,7 +9,7 @@ objectData: The object data to be used to render the Pod.
   {{- $objectData := .objectData -}}
 
   {{- if not $rootCtx.Values.securityContext.pod -}}
-    {{- fail "Pod - Expected non-empty <.Values.securityContext.pod>" -}}
+    {{- fail "Pod - Expected non-empty [.Values.securityContext.pod]" -}}
   {{- end -}}
 
   {{/* Initialize from the "global" option */}}

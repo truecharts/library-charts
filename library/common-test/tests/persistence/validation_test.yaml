@@ -68,7 +68,7 @@ tests:
           type: pvc
     asserts:
       - failedTemplate:
-          errorMessage: PVC - Expected non-empty <global.ixChartContext.storageClassName>
+          errorMessage: PVC - Expected non-empty [global.ixChartContext.storageClassName]
 
   - it: should fail without storageClassName in ixChartContext with SCALE-ZFS explicitly set
     set:
@@ -83,7 +83,7 @@ tests:
           storageClass: SCALE-ZFS
     asserts:
       - failedTemplate:
-          errorMessage: PVC - Expected non-empty <global.ixChartContext.storageClassName> on [SCALE-ZFS] storageClass
+          errorMessage: PVC - Expected non-empty [global.ixChartContext.storageClassName] on [SCALE-ZFS] storageClass
 
   - it: should fail with non-existent configmap
     set:

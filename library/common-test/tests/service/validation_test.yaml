@@ -134,7 +134,7 @@ tests:
                 container: not-a-string
     asserts:
       - failedTemplate:
-          errorMessage: Service - Expected <port.targetSelector> to be [string], but got [map]
+          errorMessage: Service - Expected [port.targetSelector] to be [string], but got [map]
 
   - it: should fail with selected pod not defined
     set:
@@ -194,7 +194,7 @@ tests:
               protocol: not-a-protocol
     asserts:
       - failedTemplate:
-          errorMessage: Service - Expected <port.protocol> to be one of [tcp, udp, http, https] but got [not-a-protocol]
+          errorMessage: Service - Expected [port.protocol] to be one of [tcp, udp, http, https] but got [not-a-protocol]
 
   - it: should fail without port number
     set:
@@ -209,7 +209,7 @@ tests:
               port:
     asserts:
       - failedTemplate:
-          errorMessage: Service - Expected non-empty <port.port>
+          errorMessage: Service - Expected non-empty [port.port]
 
   - it: should fail with invalid service type
     set:
@@ -424,7 +424,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: Service - Expected <sessionAffinityConfig.clientIP.timeoutSeconds> to be between [0 - 86400], but got [-1]
+          errorMessage: Service - Expected [sessionAffinityConfig.clientIP.timeoutSeconds] to be between [0 - 86400], but got [-1]
 
   - it: should fail without nodePort number on NodePort
     set:
@@ -496,7 +496,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: Service - Expected the defined key [expandObjectName] in <secret.service-name1> to not be empty
+          errorMessage: Service - Expected the defined key [expandObjectName] in [secret.service-name1] to not be empty
 
   - it: should fail with namespace longer than 63 characters
     set:

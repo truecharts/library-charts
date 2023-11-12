@@ -233,7 +233,7 @@ tests:
                     enabled: false
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected <probes.liveness> to be defined
+          errorMessage: Container - Expected [probes.liveness] to be defined
 
   - it: should fail without readiness defined
     set:
@@ -256,7 +256,7 @@ tests:
                     enabled: false
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected <probes.readiness> to be defined
+          errorMessage: Container - Expected [probes.readiness] to be defined
 
   - it: should fail without startup defined
     set:
@@ -279,7 +279,7 @@ tests:
                     enabled: false
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected <probes.startup> to be defined
+          errorMessage: Container - Expected [probes.startup] to be defined
 
   - it: should fail with invalid type
     set:
