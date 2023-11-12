@@ -160,7 +160,7 @@ tests:
               nameservers: []
     asserts:
       - failedTemplate:
-          errorMessage: Expected non-empty <dnsConfig.nameservers> with <dnsPolicy> set to [None].
+          errorMessage: Expected non-empty <dnsConfig.nameservers> with [dnsPolicy] set to [None].
 
   - it: should fail with dnsPolicy set to None and no searches
     set:
@@ -178,7 +178,7 @@ tests:
               searches: []
     asserts:
       - failedTemplate:
-          errorMessage: Expected non-empty <dnsConfig.searches> with <dnsPolicy> set to [None].
+          errorMessage: Expected non-empty <dnsConfig.searches> with [dnsPolicy] set to [None].
 
   - it: should fail with dnsPolicy set to None and no options
     set:
@@ -198,7 +198,7 @@ tests:
               options: []
     asserts:
       - failedTemplate:
-          errorMessage: Expected non-empty <dnsConfig.options> with <dnsPolicy> set to [None].
+          errorMessage: Expected non-empty <dnsConfig.options> with [dnsPolicy] set to [None].
 
   - it: should fail with more than 3 nameservers
     set:

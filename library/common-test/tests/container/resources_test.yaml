@@ -1016,7 +1016,7 @@ tests:
                 probes: *probes
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected non-empty <scaleGPU> <value>
+          errorMessage: Container - Expected non-empty [scaleGPU] [value]
 
   - it: should fail with no value in gpu
     set:
@@ -1041,4 +1041,4 @@ tests:
                 probes: *probes
     asserts:
       - failedTemplate:
-          errorMessage: Container - Expected non-empty <scaleGPU> <value>
+          errorMessage: Container - Expected non-empty [scaleGPU] [value]

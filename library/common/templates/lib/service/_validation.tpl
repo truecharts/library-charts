@@ -11,12 +11,12 @@ objectData:
   {{- $objectData := .objectData -}}
 
   {{- if and $objectData.targetSelector (not (kindIs "string" $objectData.targetSelector)) -}}
-    {{- fail (printf "Service - Expected <targetSelector> to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
+    {{- fail (printf "Service - Expected [targetSelector] to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
   {{- end -}}
 
   {{- $svcTypes := (list "ClusterIP" "LoadBalancer" "NodePort" "ExternalName" "ExternalIP") -}}
   {{- if and $objectData.type (not (mustHas $objectData.type $svcTypes)) -}}
-    {{- fail (printf "Service - Expected <type> to be one of [%s] but got [%s]" (join ", " $svcTypes) $objectData.type) -}}
+    {{- fail (printf "Service - Expected [type] to be one of [%s] but got [%s]" (join ", " $svcTypes) $objectData.type) -}}
   {{- end -}}
 
   {{- $hasEnabledPort := false -}}

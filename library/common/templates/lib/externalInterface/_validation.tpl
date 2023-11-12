@@ -8,15 +8,15 @@ objectData: The object data to validate that contains the external interface con
   {{- $objectData := .objectData -}}
 
   {{- if and $objectData.targetSelector (not (kindIs "slice" $objectData.targetSelector)) -}}
-    {{- fail (printf "External Interface - Expected <targetSelector> to be a [list], but got [%s]" (kindOf $objectData.targetSelector)) -}}
+    {{- fail (printf "External Interface - Expected [targetSelector] to be a [list], but got [%s]" (kindOf $objectData.targetSelector)) -}}
   {{- end -}}
 
   {{- if not $objectData.hostInterface -}}
-    {{- fail "External Interface - Expected non-empty <hostInterface>" -}}
+    {{- fail "External Interface - Expected non-empty [hostInterface]" -}}
   {{- end -}}
 
   {{- if not $objectData.ipam -}}
-    {{- fail "External Interface - Expected non-empty <ipam>" -}}
+    {{- fail "External Interface - Expected non-empty [ipam]" -}}
   {{- end -}}
 
   {{- if not $objectData.ipam.type -}}
@@ -40,11 +40,11 @@ objectData: The object data to validate that contains the external interface con
     {{- with $objectData.ipam.staticRoutes -}}
       {{- range . -}}
         {{- if not .destination -}}
-          {{- fail "External Interface - Expected non-empty <destination> in <ipam.staticRoutes>" -}}
+          {{- fail "External Interface - Expected non-empty [destination] in <ipam.staticRoutes>" -}}
         {{- end -}}
 
         {{- if not .gateway -}}
-          {{- fail "External Interface - Expected non-empty <gateway> in <ipam.staticRoutes>" -}}
+          {{- fail "External Interface - Expected non-empty [gateway] in <ipam.staticRoutes>" -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}

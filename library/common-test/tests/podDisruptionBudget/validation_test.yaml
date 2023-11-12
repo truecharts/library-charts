@@ -59,7 +59,7 @@ tests:
           labels: "not a dict"
     asserts:
       - failedTemplate:
-          errorMessage: Pod Disruption Budget - Expected <labels> to be a dictionary, but got [string]
+          errorMessage: Pod Disruption Budget - Expected [labels] to be a dictionary, but got [string]
 
   - it: should fail with annotations not a dict
     set:
@@ -70,7 +70,7 @@ tests:
           annotations: "not a dict"
     asserts:
       - failedTemplate:
-          errorMessage: Pod Disruption Budget - Expected <annotations> to be a dictionary, but got [string]
+          errorMessage: Pod Disruption Budget - Expected [annotations] to be a dictionary, but got [string]
 
   - it: should fail with not valid unhealthyPodEvictionPolicy
     set:
@@ -82,7 +82,7 @@ tests:
           unhealthyPodEvictionPolicy: "not valid"
     asserts:
       - failedTemplate:
-          errorMessage: Pod Disruption Budget - Expected <unhealthyPodEvictionPolicy> to be one of [IfHealthyBudget, AlwaysAllow], but got [not valid]
+          errorMessage: Pod Disruption Budget - Expected [unhealthyPodEvictionPolicy] to be one of [IfHealthyBudget, AlwaysAllow], but got [not valid]
 
   - it: should fail with empty minAvailable
     set:
@@ -135,7 +135,7 @@ tests:
             pod: "not a string"
     asserts:
       - failedTemplate:
-          errorMessage: Pod Disruption Budget - Expected <targetSelector> to be [string], but got [map]
+          errorMessage: Pod Disruption Budget - Expected [targetSelector] to be [string], but got [map]
 
   - it: should fail without either targetSelector or customLabels
     set:

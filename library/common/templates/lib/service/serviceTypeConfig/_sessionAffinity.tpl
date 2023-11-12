@@ -13,7 +13,7 @@ objectData: The service object data
     {{- $affinity := tpl . $rootCtx -}}
     {{- $affinities := (list "ClientIP" "None") -}}
     {{- if not (mustHas $affinity $affinities) -}}
-      {{- fail (printf "Service - Expected <sessionAffinity> to be one of [%s], but got [%s]" (join ", " $affinities) $affinity) -}}
+      {{- fail (printf "Service - Expected [sessionAffinity] to be one of [%s], but got [%s]" (join ", " $affinities) $affinity) -}}
     {{- end }}
 sessionAffinity: {{ $affinity }}
     {{- if eq $affinity "ClientIP" -}}

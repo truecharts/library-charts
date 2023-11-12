@@ -12,7 +12,7 @@ objectData:
   {{- $objectData := .objectData -}}
 
   {{- if and $objectData.targetSelector (not (kindIs "string" $objectData.targetSelector)) -}}
-    {{- fail (printf "Pod Disruption Budget - Expected <targetSelector> to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
+    {{- fail (printf "Pod Disruption Budget - Expected [targetSelector] to be [string], but got [%s]" (kindOf $objectData.targetSelector)) -}}
   {{- end -}}
 
   {{- if and (not $objectData.targetSelector) (not $objectData.customLabels) -}}
@@ -26,7 +26,7 @@ objectData:
   {{- with $objectData.unhealthyPodEvictionPolicy -}}
     {{- $policies := (list "IfHealthyBudget" "AlwaysAllow") -}}
     {{- if not (mustHas (tpl . $rootCtx) $policies) -}}
-      {{- fail (printf "Pod Disruption Budget - Expected <unhealthyPodEvictionPolicy> to be one of [%s], but got [%s]" (join ", " $policies) .) -}}
+      {{- fail (printf "Pod Disruption Budget - Expected [unhealthyPodEvictionPolicy] to be one of [%s], but got [%s]" (join ", " $policies) .) -}}
     {{- end -}}
   {{- end -}}
 

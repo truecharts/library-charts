@@ -40,7 +40,7 @@ objectData: The object data to be used to render the Pod.
 
   {{- $policies := (list "ClusterFirst" "ClusterFirstWithHostNet" "Default" "None") -}}
   {{- if not (mustHas $policy $policies) -}}
-    {{- fail (printf "Expected <dnsPolicy> to be one of [%s], but got [%s]" (join ", " $policies) $policy) -}}
+    {{- fail (printf "Expected [dnsPolicy] to be one of [%s], but got [%s]" (join ", " $policies) $policy) -}}
   {{- end -}}
 
   {{/* When policy is set to None all keys are required */}}
@@ -48,7 +48,7 @@ objectData: The object data to be used to render the Pod.
 
     {{- range $key := (list "nameservers" "searches" "options") -}}
       {{- if not (get $config $key) -}}
-        {{- fail (printf "Expected non-empty <dnsConfig.%s> with <dnsPolicy> set to [None]." $key) -}}
+        {{- fail (printf "Expected non-empty <dnsConfig.%s> with [dnsPolicy] set to [None]." $key) -}}
       {{- end -}}
     {{- end -}}
 
