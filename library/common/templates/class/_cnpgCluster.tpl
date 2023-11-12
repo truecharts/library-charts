@@ -84,15 +84,12 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   storage:
-    {{- with (include "tc.v1.common.lib.storage.storageClassName" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.storage)) | trim }}
-    storageClass: {{ . }}
-    {{- end }}
-    size: {{ tpl $size $rootCtx | quote }}
+    pvcTemplate:
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $values.storage) | trim | nindent 6 }}
+
   walStorage:
-    {{- with (include "tc.v1.common.lib.storage.storageClassName" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.walStorage)) | trim }}
-    storageClass: {{ . }}
-    {{- end }}
-    size: {{ tpl $walSize $rootCtx | quote }}
+    pvcTemplate:
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $values.walStorage) | trim | nindent 6 }}
   monitoring:
     enablePodMonitor: {{ $monitoring }}
     {{- if $customQueries }}

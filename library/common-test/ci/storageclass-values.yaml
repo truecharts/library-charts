@@ -13,7 +13,7 @@ workload:
   main:
     enabled: true
     primary: true
-    type: StatefulSet
+    type: Deployment
     podSpec:
       containers:
         main:
@@ -36,12 +36,30 @@ workload:
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
 
-persistence:
-  data:
-    mountPath: /data
-    type: vct
-    accessMode: "ReadWriteOnce"
-    size: 1Gi
+# -- create storageClasses on demand
+storageClass:
+  example1:
+    enabled: true
+    provisioner: some.provisioner.io
+  example2:
+    enabled: true
+    provisioner: some.provisioner.io
+    reclaimPolicy: retain
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+  example3:
+    enabled: true
+    provisioner: some.provisioner.io
+    parameters: {}
+    mountOptions: []
+  example4:
+    enabled: true
+    provisioner: some.provisioner.io
+    parameters: {}
+    reclaimPolicy: retain
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+    mountOptions: []
 
 manifestManager:
   enabled: false

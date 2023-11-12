@@ -13,7 +13,7 @@ workload:
   main:
     enabled: true
     primary: true
-    type: StatefulSet
+    type: Deployment
     podSpec:
       containers:
         main:
@@ -36,12 +36,15 @@ workload:
               type: http
               port: "{{ .Values.service.main.ports.main.port }}"
 
-persistence:
-  data:
-    mountPath: /data
-    type: vct
-    accessMode: "ReadWriteOnce"
-    size: 1Gi
+# -- create storageClasses on demand
+priorityClass:
+  example:
+    provisioner: some.provisioner.io
+    enabled: true
+    value: 1000000
+    preemptionPolicy: PreemptLowerPriority
+    globalDefault: false
+    description: "some description"
 
 manifestManager:
   enabled: false

@@ -222,6 +222,67 @@ persistence:
     mountPath: /dev/shm
     medium: Memory
     targetSelectAll: true
+#  vct:
+#    enabled: true
+#    type: vct
+#    mountPath: /shared
+#  dynamic-pvc:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#  dynamic-pvc-dataSource:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#    dataSource:
+#      kind: "PersistentVolumeClaim"
+#      name: "existingPVC"
+#  existing-claim:
+#    enabled: true
+#    type: pvc
+#    existingClaim: "someclaim"
+#    mountPath: /shared
+#    targetSelectAll: true
+#  existingpv-pvc:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#    volumeName: "somePV"
+#  static-nfs-pvc:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#    static:
+#      mode: nfs
+#      server: "/someserver"
+#      share: "someshare"
+#  static-smb-pvc:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#    static:
+#      mode: smb
+#      server: "/someserver"
+#      share: "someshare"
+#      domain: "somedomain"
+#      user: "someuser"
+#      password: "somepass"
+#  static-custom-pvc:
+#    enabled: true
+#    type: pvc
+#    mountPath: /shared
+#    targetSelectAll: true
+#    static:
+#      mode: custom
+#      provisioner: "some.provisioner"
+#      driver: "somedriver"
+#      # Custom CSI definition here
+#      csi: {}
 
 persistenceList: []
 
@@ -254,9 +315,6 @@ serviceAccount: {}
 
 # -- (docs/rbac.md)
 rbac: {}
-
-# -- (docs/volumeClaimTemplates) (StatefulSet only)
-volumeClaimTemplates: {}
 
 # -- (docs/scaleExternalInterface.md)
 scaleExternalInterface: []
@@ -561,6 +619,27 @@ webhook:
     type: mutating
     webhooks: []
 
+
+# priorityClass:
+#   example:
+#     provisioner: some.provisioner.io
+#     enabled: true
+#     value: 1000000
+#     preemptionPolicy: PreemptLowerPriority
+#     globalDefault: false
+#     description: "some description"
+
+# # -- create storageClasses on demand
+# storageClass:
+#   example:
+#     provisioner: some.provisioner.io
+#     enabled: true
+#     parameters: {}
+#     reclaimPolicy: retain
+#     allowVolumeExpansion: true
+#     volumeBindingMode: Immediate
+#     mountOptions: []
+
 metrics:
   main:
     enabled: false
@@ -811,12 +890,15 @@ cnpg:
 
       # set to true on single-node clusters to allow PVCs to be kept on instance restart
       singleNode: false
-      storage:
-        size: 256Gi
-        # storageClass: ""
-      walStorage:
-        size: 256Gi
-        # storageClass: ""
+      # # -- storage size for the data pvc's
+      # # Follows the same spec as .Values.Persistence type=PVC
+      # storage:
+      #   size: "256Gi"
+      # # -- storage size for the wal pvc's
+      # # Follows the same spec as .Values.Persistence type=PVC
+      # walStorage:
+      #   size: "256Gi"
+      # -- Gets scaled to 0 if hibernation is true
 
       ## See .Values.resources for more info
       # resources:
