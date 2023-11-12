@@ -215,7 +215,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.volumeClaimTemplate[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: ix-storage-class-releasename
 
   - it: should create pvc with storageClass not set and within ixChartContext
