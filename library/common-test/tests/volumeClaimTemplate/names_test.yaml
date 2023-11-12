@@ -1,4 +1,4 @@
-suite: persistence name test
+suite: volumeClaimTemplate name test
 templates:
   - common.yaml
 release:
@@ -29,9 +29,9 @@ tests:
           of: apps/v1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].metadata.name
-          value: my-volume1
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: test-release-name-common-test-my-volume1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[1].metadata.name
-          value: my-volume2
+          path: spec.volumeClaimTemplates[1].metadata.name
+          value: test-release-name-common-test-my-volume2

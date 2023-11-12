@@ -1,4 +1,4 @@
-suite: persistence metadata test
+suite: volumeClaimTemplate metadata test
 templates:
   - common.yaml
 chart:
@@ -41,13 +41,13 @@ tests:
           of: apps/v1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].metadata.annotations
+          path: spec.volumeClaimTemplates[0].metadata.annotations
           value:
             annotation1: annotation1
             annotation2: annotation2
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].metadata.labels
+          path: spec.volumeClaimTemplates[0].metadata.labels
           value:
             label1: label1
             label2: label2

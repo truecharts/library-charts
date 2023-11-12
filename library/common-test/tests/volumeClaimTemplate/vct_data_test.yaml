@@ -27,20 +27,20 @@ tests:
           of: apps/v1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].metadata.name
-          value: my-volume1
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: test-release-name-common-test-my-volume1
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.accessModes
+          path: spec.volumeClaimTemplates[0].spec.accessModes
           value:
             - ReadWriteOnce
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.resources.requests.storage
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
           value: 100Gi
       - documentIndex: *statefulSetDoc
         isNull:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
 
   - it: should create vct with accessModes set as string
     set:
@@ -63,7 +63,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.accessModes
+          path: spec.volumeClaimTemplates[0].spec.accessModes
           value:
             - ReadWriteMany
 
@@ -90,7 +90,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.accessModes
+          path: spec.volumeClaimTemplates[0].spec.accessModes
           value:
             - ReadWriteMany
             - ReadWriteOnce
@@ -115,7 +115,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.resources.requests.storage
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
           value: 20Gi
 
   - it: should create vct with storageClass set "-"
@@ -139,7 +139,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: ""
 
   - it: should create vct with storageClass set
@@ -163,7 +163,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: some-storage-class
 
   - it: should create vct with storageClass not set, but have fallbackDefaults set
@@ -187,7 +187,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: some-storage-class
 
   - it: should create vct with storageClass set "SCALE-ZFS" and within ixChartContext
@@ -242,5 +242,5 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: ix-storage-class-releasename
