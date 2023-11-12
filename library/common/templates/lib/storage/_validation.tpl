@@ -24,11 +24,11 @@ objectData:
 
   {{- if $objectData.dataSource -}}
     {{- if not $objectData.dataSource.name -}}
-      {{- fail "Persistence - Expected [dataSource.name] to be set" -}}
+      {{- fail "Persistence - Expected [dataSource.name] to be non-empty" -}}
     {{- end -}}
 
     {{- if not $objectData.dataSource.kind -}}
-      {{- fail "Persistence - Expected [dataSource.kind] to be set" -}}
+      {{- fail "Persistence - Expected [dataSource.kind] to be non-empty" -}}
     {{- end -}}
 
     {{- $validKinds := (list "VolumeSnapshot" "PersistentVolumeClaim") -}}
