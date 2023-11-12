@@ -54,7 +54,7 @@ tests:
           podSpec: {}
     asserts:
       - failedTemplate:
-          errorMessage: Volume Claim Templates - Expected <targetSelector> to be [dict], but got [string]
+          errorMessage: Persistence - Expected [targetSelector] to be [dict], but got [string]
 
   - it: should fail without storageClassName in ixChartContext
     set:
