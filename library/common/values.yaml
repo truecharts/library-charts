@@ -284,7 +284,6 @@ persistence:
 #      # Custom CSI definition here
 #      csi: {}
 
-
 persistenceList: []
 
 deviceList: []
