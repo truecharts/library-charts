@@ -1,4 +1,4 @@
-suite: persistence data test
+suite: volumeClaimTemplate data test
 templates:
   - common.yaml
 release:
@@ -215,7 +215,7 @@ tests:
           of: StatefulSet
       - documentIndex: *statefulSetDoc
         equal:
-          path: spec.persistence[0].spec.storageClassName
+          path: spec.volumeClaimTemplate[0].spec.storageClassName
           value: ix-storage-class-releasename
 
   - it: should create pvc with storageClass not set and within ixChartContext
