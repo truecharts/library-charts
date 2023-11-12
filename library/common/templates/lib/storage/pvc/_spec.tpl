@@ -6,13 +6,18 @@ objectData: The object data to be used to render the Pod.
 */}}
 {{- define "tc.v1.common.lib.storage.pvc.spec" -}}
 {{- $rootCtx := .rootCtx -}}
-{{- $objectData := .objectData }}
+{{- $objectData := .objectData -}}
+
+{{- $size := $rootCtx.Values.fallbackDefaults.pvcSize -}}
+{{- with $objectData.size -}}
+  {{- $size = tpl . $rootCtx -}}
+{{- end }}
 
 accessModes:
   {{- include "tc.v1.common.lib.pvc.accessModes" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "PVC") | trim | nindent 2 }}
 resources:
   requests:
-    storage: {{ $objectData.size | default $rootCtx.Values.fallbackDefaults.pvcSize }}
+    storage: {{ $size }}
   {{- with $objectData.volumeName }}
 volumeName: {{ tpl . $rootCtx }}
   {{- end -}}
