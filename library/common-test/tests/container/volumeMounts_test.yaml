@@ -637,9 +637,10 @@ tests:
                 primary: true
                 imageSelector: image
                 probes: *probes
-      volumeClaimTemplates:
+      persistence:
         vct-vol:
           enabled: true
+          type: vct
           size: 50Gi
           targetSelector:
             workload-name:
