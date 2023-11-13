@@ -34,7 +34,7 @@
       {{/* Create a copy of the volumesnapshotclass */}}
       {{- $objectData := (mustDeepCopy $volumesnapshotclass) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
+      {{- $objectName := "" -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
           {{- $objectName = $name -}}
