@@ -14,7 +14,7 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
   {{- $isDefault := dict -}}
-  {{- with $objectdata.isDefault -}}
+  {{- with $objectData.isDefault -}}
     {{- $isDefault := dict "snapshot.storage.kubernetes.io/is-default-class" . -}}
   {{- end -}}
 ---
@@ -33,9 +33,9 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 data:
-  driver: {{ $objectdata.driver }}
-  deletionPolicy: {{ $objectdata.deletionPolicy | default "Retain" }}
-  {{- with $objectdata.parameters -}}
+  driver: {{ $objectData.driver }}
+  deletionPolicy: {{ $objectData.deletionPolicy | default "Retain" }}
+  {{- with $objectData.parameters -}}
   parameters: {}
   {{- tpl (toYaml .) $rootCtx | nindent 4 }}
   {{- end -}}
