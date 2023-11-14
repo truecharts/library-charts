@@ -52,4 +52,7 @@
   {{/* Append database wait containers to pods */}}
   {{- include "tc.v1.common.lib.deps.wait" $ }}
 
+  {{/* Append namespace label job, if needed */}}
+  {{- include "tc.v1.common.lib.util.namespacelabel" $ }}
+
 {{- end -}}
