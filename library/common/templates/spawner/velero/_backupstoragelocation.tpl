@@ -13,7 +13,7 @@
       {{- if not (kindIs "invalid" $backupstoragelocation.enabled) -}}
         {{- $enabled = $backupstoragelocation.enabled -}}
       {{- else -}}
-        {{- fail (printf "backupstoragelocation - Expected the defined key [enabled] in [backupstoragelocation.%s] to not be empty" $volumesnapshotlocationname) -}}
+        {{- fail (printf "backupstoragelocation - Expected the defined key [enabled] in [backupstoragelocation.%s] to not be empty" $backupstoragelocation.name) -}}
       {{- end -}}
     {{- end -}}
 
@@ -34,10 +34,10 @@
       {{/* Create a copy of the backupstoragelocation */}}
       {{- $objectData := (mustDeepCopy $backupstoragelocation) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $volumesnapshotlocationname) -}}
+      {{- $objectName := (printf "%s-%s" $fullname $backupstoragelocation.name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $volumesnapshotlocationname -}}
+          {{- $objectName = $backupstoragelocation.name -}}
         {{- end -}}
       {{- end -}}
 
@@ -48,7 +48,7 @@
 
       {{/* Set the name of the backupstoragelocation */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $volumesnapshotlocationname -}}
+      {{- $_ := set $objectData "shortName" $backupstoragelocation.name -}}
 
       {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
       {{- $operator := index $.Values.operator "velero" -}}
