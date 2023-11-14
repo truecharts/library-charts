@@ -727,6 +727,10 @@ webhook:
 #   # default to ReadWrite, ReadOnly is used during migrations and restores.
 #   accessMode: ReadWrite
 #   credential:
+#     # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
+#     aws:
+#       id: fdgsdfghsdfgh
+#       key: dfgdfhsdfgh
 #     # name of the secret used by this backupStorageLocation.
 #     name:
 #     # name of key that contains the secret data to be used.
@@ -758,9 +762,13 @@ webhook:
 #   # provider is the name for the volume snapshot provider.
 #   provider:
 #   credential:
-#     # name of the secret used by this volumeSnapshotLocation.
+#     # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
+#     aws:
+#       id: fdgsdfghsdfgh
+#       key: dfgdfhsdfgh
+#     # name of the secret used by this volumeSnapshotLocation.  (Optional/Advanced)
 #     name:
-#     # name of key that contains the secret data to be used.
+#     # name of key that contains the secret data to be used.  (Optional/Advanced)
 #     key:
 #   # Additional provider-specific configuration. See link above
 #   # for details of required/optional fields for your provider.
