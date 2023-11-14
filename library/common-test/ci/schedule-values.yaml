@@ -40,16 +40,16 @@ manifestManager:
   enabled: false
 
 schedules:
- - name:
-   enabled: true
-   labels:
-     myenv: foo
-   annotations:
-     myenv: foo
-   schedule: "0 0 * * *"
-   useOwnerReferencesInBackup: false
-   template:
-     ttl: "240h"
-     storageLocation: default
-     includedNamespaces:
-     - foo
+  - name:
+    enabled: true
+    labels:
+      myenv: foo
+    annotations:
+      myenv: foo
+    schedule: "0 0 * * *"
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "240h"
+      storageLocation: default
+      includedNamespaces:
+      - foo
