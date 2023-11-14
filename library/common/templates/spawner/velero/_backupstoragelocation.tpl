@@ -6,14 +6,14 @@
 {{- define "tc.v1.common.spawner.velero.backupstoragelocation" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $name, $backupstoragelocation := .Values.backupstoragelocation -}}
+  {{- range $backupstoragelocation := .Values.backupstoragelocation -}}
 
     {{- $enabled := false -}}
     {{- if hasKey $backupstoragelocation "enabled" -}}
       {{- if not (kindIs "invalid" $backupstoragelocation.enabled) -}}
         {{- $enabled = $backupstoragelocation.enabled -}}
       {{- else -}}
-        {{- fail (printf "backupstoragelocation - Expected the defined key [enabled] in [backupstoragelocation.%s] to not be empty" $name) -}}
+        {{- fail (printf "backupstoragelocation - Expected the defined key [enabled] in [backupstoragelocation.%s] to not be empty" $volumesnapshotlocationname) -}}
       {{- end -}}
     {{- end -}}
 
@@ -34,10 +34,10 @@
       {{/* Create a copy of the backupstoragelocation */}}
       {{- $objectData := (mustDeepCopy $backupstoragelocation) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
+      {{- $objectName := (printf "%s-%s" $fullname $volumesnapshotlocationname) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $name -}}
+          {{- $objectName = $volumesnapshotlocationname -}}
         {{- end -}}
       {{- end -}}
 
@@ -48,7 +48,7 @@
 
       {{/* Set the name of the backupstoragelocation */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $name -}}
+      {{- $_ := set $objectData "shortName" $volumesnapshotlocationname -}}
 
       {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
       {{- $operator := index $.Values.operator "velero" -}}

@@ -6,14 +6,14 @@
 {{- define "tc.v1.common.spawner.velero.schedule" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $name, $schedule := .Values.schedule -}}
+  {{- range $schedule := .Values.schedule -}}
 
     {{- $enabled := false -}}
     {{- if hasKey $schedule "enabled" -}}
       {{- if not (kindIs "invalid" $schedule.enabled) -}}
         {{- $enabled = $schedule.enabled -}}
       {{- else -}}
-        {{- fail (printf "schedule - Expected the defined key [enabled] in [schedule.%s] to not be empty" $name) -}}
+        {{- fail (printf "schedule - Expected the defined key [enabled] in [schedule.%s] to not be empty" $schedule.name) -}}
       {{- end -}}
     {{- end -}}
 
@@ -34,10 +34,10 @@
       {{/* Create a copy of the schedule */}}
       {{- $objectData := (mustDeepCopy $schedule) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
+      {{- $objectName := (printf "%s-%s" $fullname $schedule.name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $name -}}
+          {{- $objectName = $schedule.name -}}
         {{- end -}}
       {{- end -}}
 
@@ -48,7 +48,7 @@
 
       {{/* Set the name of the schedule */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $name -}}
+      {{- $_ := set $objectData "shortName" $schedule.name -}}
 
       {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
       {{- $operator := index $.Values.operator "velero" -}}
