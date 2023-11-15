@@ -6,7 +6,7 @@
 {{- define "tc.v1.common.spawner.velero.volumesnapshotlocation" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $volumesnapshotlocation := .Values.volumesnapshotlocation -}}
+  {{- range $volumesnapshotlocation := .Values.volumeSnapshotLocation -}}
 
     {{- $enabled := false -}}
     {{- if hasKey $volumesnapshotlocation "enabled" -}}
@@ -57,22 +57,22 @@
       {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
       {{- $operator := index $.Values.operator "velero" -}}
       {{- $namespace := $operator.namespace | default ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "backupstoragelocation") ) -}}
-      {{- $_ := set $objectData.namespace $namespace -}}
+      {{- $_ := set $objectData "namespace" $namespace -}}
 
       {{/* Create secret with creds */}}
       {{- $creds := "" -}}
       {{- if and (eq $objectData.provider "aws") $objectData.credential.aws -}}
-        {{- $creds := printf "%v%v%v%v" "[default]\naws_access_key_id = " $objectData.credential.aws.id "\n aws_secret_access_key = " $objectData.credential.aws.accesskey -}}
+        {{- $creds = printf "%v%v%v%v" "[default]\naws_access_key_id = " $objectData.credential.aws.id "\naws_secret_access_key = " $objectData.credential.aws.key -}}
       {{- end -}}
       {{- $secretData := (dict
-                            "name" $objectData.name
+                            "name" ( printf "vsl-%s" $objectData.name )
                             "labels" ($objectData.labels | default dict)
                             "annotations" ($objectData.annotations | default dict)
                             "data" (dict "cloud" $creds )
                           ) -}}
       {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $secretData) -}}
 
-      {{- $_ := set $objectData.credential "name" ($objectData.credential.name | default $objectData.name)  -}}
+      {{- $_ := set $objectData.credential "name" ($objectData.credential.name | default ( printf "vsl-%s" $objectData.name ))  -}}
       {{- $_ := set $objectData.credential "key" ($objectData.credential.key | default "cloud") -}}
 
       {{/* Call class to create the object */}}

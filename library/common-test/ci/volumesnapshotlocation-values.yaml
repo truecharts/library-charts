@@ -45,6 +45,7 @@ manifestManager:
 volumeSnapshotLocation:
   # name is the name of the volume snapshot location where snapshots are being taken. Required.
 - name: test
+  enabled: true
   # provider is the name for the volume snapshot provider.
   provider: aws
   credential:
