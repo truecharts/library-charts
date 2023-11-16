@@ -36,7 +36,7 @@ objectData: The object data to be used to render the volume.
     {{- end -}}
     {{- if $size }}
     sizeLimit: {{ $size }}
-    {{- else if eq medium "Memory" }}
+    {{- else if eq $medium "Memory" }}
     sizeLimit: {{ $size | default $rootCtx.resources.limits.memory }}
     {{- end -}}
   {{- else }}
