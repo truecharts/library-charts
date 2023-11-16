@@ -10,7 +10,7 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-{{- if $objectData.integrations  $objectData.integrations.homepage $objectData.integrations.homepage.enabled -}}
+{{- if $objectData.integration  $objectData.integration.homepage $objectData.integration.homepage.enabled -}}
 gethomepage.dev/enabled: "true"
 gethomepage.dev/name: {{ $objectData.integrations.homepage.name | default ( camelcase $rootCtx.Chart.Name ) }}
 gethomepage.dev/description: {{ $objectData.integrations.homepage.description | default $rootCtx.Chart.Description }}

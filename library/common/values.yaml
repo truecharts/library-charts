@@ -477,7 +477,7 @@ ingress:
     enabled: false
 
     # -- Adds integrations to ingress
-#    integrations:
+#    integration:
 #      homepage:
 #        enabled: true
 #        # Default: chart name
