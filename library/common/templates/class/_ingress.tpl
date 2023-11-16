@@ -87,7 +87,7 @@ metadata:
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge ($ingressAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml)) }}
+  {{- $annotations := (mustMerge ($ingressAnnotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $ | fromYaml) (include "tc.v1.common.lib.ingress.integration.homepage" (dict "objectData" $objectData "rootCtx" $) | fromYaml)) }}
   annotations:
   {{- with $values.certificateIssuer }}
     cert-manager.io/cluster-issuer: {{ tpl ( toYaml . ) $ }}
