@@ -25,7 +25,7 @@ gethomepage.dev/pod-selector: ""
 gethomepage.dev/weight: {{ . }}
 {{- end -}}
 gethomepage.dev/widget.type: {{ $objectData.integrations.homepage.widget.type | default $rootCtx.Chart.Name }}
-{{- with (index $selectedIngress.hosts 0) -}}
+{{- with (index $objectData.hosts 0) -}}
 gethomepage.dev/widget.url: {{ $objectData.integrations.homepage.widget.url | default (printf "%v%v" .host ( .path | default "/")) }}
 {{- end -}}
 {{- range $$objectData.integrations.homepage.widget.custom -}}
