@@ -8,32 +8,46 @@ objectData: The object data to be used to render the volume.
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- if not $objectData.scsi.targetPortal -}}
+  {{- if not $objectData.iscsi -}}
+    {{- fail "Persitsence - Expected non-empty [iscsi] object on [iscsi] type" -}}
+  {{- end -}}
+
+  {{- $validFSTypes := (list "ext4" "xfs" "ntfs") -}}
+  {{- if and $objectData.iscsi.fsType (not (mustHas $objectData.iscsi.fsType $validFSTypes)) -}}
+    {{- fail (printf "Persistence - Expected [fsType] on [iscsi] type to be one of [%s], but got [%s]" (join ", " $validFSTypes) $objectData.iscsi.fsType) -}}
+  {{- end -}}
+
+  {{- if not $objectData.iscsi.targetPortal -}}
     {{- fail "Persistence - Expected non-empty [targetPortal] on [iscsi] type" -}}
   {{- end -}}
 
-  {{- if not $objectData.scsi.iqn -}}
+  {{- if not $objectData.iscsi.iqn -}}
     {{- fail "Persistence - Expected non-empty [iqn] on [iscsi] type" -}}
   {{- end -}}
 
-  {{- if not $objectData.scsi.lun -}}
+  {{- if (kindIs "invalid" $objectData.iscsi.lun) -}}
     {{- fail "Persistence - Expected non-empty [lun] on [iscsi] type" -}}
-  {{- end -}}
+  {{- end }}
+
 - name: {{ $objectData.shortName }}
   iscsi:
-    targetPortal: {{ $objectData.scsi.targetPortal }}
-    {{- with $objectData.scsi.portals -}}
+    targetPortal: {{ $objectData.iscsi.targetPortal }}
+    {{- with $objectData.iscsi.portals -}}
     portals:
-    {{- tpl (toYaml .) $rootCtx | nindent 4 }}
+      {{- range $portal := . }}
+      - {{ tpl $portal $rootCtx | quote }}
+      {{- end -}}
     {{- end -}}
-    iqn: {{ $objectData.scsi.iqn }}
-    lun: {{ $objectData.scsi.lun }}
-    {{- with $objectData.scsi.iscsiInterface -}}
+    iqn: {{ $objectData.iscsi.iqn }}
+    lun: {{ include "tc.v1.common.helper.makeIntOrNoop" $objectData.iscsi.lun }}
+    {{- with $objectData.iscsi.iscsiInterface -}}
     iscsiInterface: {{ . }}
     {{- end -}}
-    {{- with $objectData.scsi.fsType -}}
+    {{- with $objectData.iscsi.initiatorName -}}
+    initiatorName: {{ . }}
+    {{- end -}}
+    {{- with $objectData.iscsi.fsType -}}
     fsType: {{ . }}
     {{- end -}}
-    readOnly: {{ $objectData.scsi.targetPortal | default false }}
 {{/* TODO: add chap auth support */}}
 {{- end -}}
