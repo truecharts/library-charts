@@ -96,7 +96,8 @@ tests:
                 emptyDir:
                   medium: Memory
               - name: varlogs
-                emptyDir: {}
+                emptyDir:
+                  medium: Memory
               - name: varrun
                 emptyDir:
                   medium: Memory
