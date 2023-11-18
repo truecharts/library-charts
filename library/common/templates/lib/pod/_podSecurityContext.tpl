@@ -20,8 +20,6 @@ objectData: The object data to be used to render the Pod.
     {{- $secContext = mustMergeOverwrite $secContext . -}}
   {{- end -}}
 
-  {{- $hostUserRequired := true -}}
-
   {{- $gpuAdded := false -}}
   {{- range $GPUValues := $rootCtx.Values.scaleGPU -}}
     {{/* If there is a selector and pod is selected */}}
@@ -37,44 +35,47 @@ objectData: The object data to be used to render the Pod.
 
   {{- $deviceGroups := (list 5 10 20 24) -}}
   {{- $deviceAdded := false -}}
+  {{- $hostUserRequired := true -}}
   {{- $hostUserPersistence := (list "configmap" "secret" "emptyDir" "downwardAPI" "projected") -}}
+  {{- $podSelected := false -}}
 
   {{- range $persistenceName, $persistenceValues := $rootCtx.Values.persistence -}}
     {{- if $persistenceValues.enabled -}}
-      {{- if eq $persistenceValues.type "device" -}}
-        {{- if $persistenceValues.targetSelectAll -}}
-          {{- $deviceAdded = true -}}
-        {{- else if $persistenceValues.targetSelector -}}
-          {{- if mustHas $objectData.shortName ($persistenceValues.targetSelector | keys) -}}
-            {{- $deviceAdded = true -}}
-          {{- end -}}
-        {{- else if $objectData.podPrimary -}}
-          {{- $deviceAdded = true -}}
+      {{- if $persistenceValues.targetSelectAll -}}
+        {{- $podSelected = true -}}
+      {{- else if $persistenceValues.targetSelector -}}
+        {{- if mustHas $objectData.shortName ($persistenceValues.targetSelector | keys) -}}
+          {{- $podSelected = true -}}
         {{- end -}}
+      {{- else if $objectData.podPrimary -}}
+        {{- $podSelected = true -}}
       {{- end -}}
+    {{- end -}}
+
+    {{- if $podSelected -}}
+      {{- if eq $persistenceValues.type "device" -}}
+        {{- $deviceAdded = true -}}
+      {{- end -}}
+
       {{- if not (mustHas $persistenceValues.type $hostUserPersistence) -}}
-        {{- if $persistenceValues.targetSelectAll -}}
-          {{- $hostUserRequired = false -}}
-        {{- else if $persistenceValues.targetSelector -}}
-          {{- if mustHas $objectData.shortName ($persistenceValues.targetSelector | keys) -}}
-            {{- $hostUserRequired = false -}}
-          {{- end -}}
-        {{- else if $objectData.podPrimary -}}
-          {{- $hostUserRequired = false -}}
-        {{- end -}}
+        {{- $hostUserRequired = false -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
 
-
-  {{- $hostUserNamespaces := (list "hostIPC" "hostNetwork" "hostPID") -}}
-  {{- if or $secContext.hostIPC $secContext.hostNetwork $secContext.hostPID -}}
+  {{/* Make sure no host "things" are used */}}
+  {{- $hostNet := (eq (include "tc.v1.common.lib.pod.hostNetwork" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true") -}}
+  {{- $hostPID := (eq (include "tc.v1.common.lib.pod.hostPID" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true") -}}
+  {{- $hostIPC := (eq (include "tc.v1.common.lib.pod.hostIPC" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true") -}}
+  {{- if or $hostIPC $hostNet $hostPID -}}
     {{- $hostUserRequired = false -}}
   {{- end }}
 
   {{- range $containerName, $containerValues := $objectData.podSpec.containers -}}
-    {{- $secContextContainer := fromJson (include "tc.v1.common.lib.container.securityContext.calculate" (dict "rootCtx" $rootCtx "objectData" $containerValues)) }}
-    {{- if or $secContextContainer.allowPrivilegeEscalation $secContextContainer.privileged $secContextContainer.capabilities.add ( not $secContextContainer.readOnlyRootFilesystem ) ( not $secContextContainer.runAsNonRoot ) (lt $secContextContainer.runAsUser 1 ) (lt $secContextContainer.runAsGroup 1 ) -}}
+    {{- $secContContainer := fromJson (include "tc.v1.common.lib.container.securityContext.calculate" (dict "rootCtx" $rootCtx "objectData" $containerValues)) }}
+    {{- if or $secContContainer.allowPrivilegeEscalation $secContContainer.privileged $secContContainer.capabilities.add
+        (not $secContContainer.readOnlyRootFilesystem) (not $secContContainer.runAsNonRoot)
+        (lt $secContContainer.runAsUser 1) (lt $secContContainer.runAsGroup 1) -}}
       {{- $hostUserRequired = false -}}
     {{- end -}}
   {{- end -}}
@@ -146,9 +147,8 @@ sysctls:
 sysctls: []
   {{- end -}}
 
-  {{- if or $secContext.hostUser $hostUserRequired -}}
-hostUsers: true
-  {{- else -}}
-hostUsers: false
-  {{- end -}}
+  {{- if $secContext.hostUser -}}
+    {{- $hostUserRequired = true -}}
+  {{- end }}
+hostUsers: {{ $hostUserRequired }}
 {{- end -}}
