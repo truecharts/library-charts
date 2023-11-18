@@ -105,6 +105,7 @@ securityContext:
   # -- Pod security context for all pods
   # Can be overruled per pod
   pod:
+    hostUser: false
     fsGroup: 568
     fsGroupChangePolicy: OnRootMismatch
     supplementalGroups: []

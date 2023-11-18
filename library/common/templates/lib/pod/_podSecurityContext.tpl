@@ -20,6 +20,8 @@ objectData: The object data to be used to render the Pod.
     {{- $secContext = mustMergeOverwrite $secContext . -}}
   {{- end -}}
 
+  {{- $hostUserRequired := true -}}
+
   {{- $gpuAdded := false -}}
   {{- range $GPUValues := $rootCtx.Values.scaleGPU -}}
     {{/* If there is a selector and pod is selected */}}
@@ -35,6 +37,8 @@ objectData: The object data to be used to render the Pod.
 
   {{- $deviceGroups := (list 5 10 20 24) -}}
   {{- $deviceAdded := false -}}
+  {{- $hostUserPersistence := (list "configmap" "secret" "emptyDir" "downwardAPI" "projected") -}}
+
   {{- range $persistenceName, $persistenceValues := $rootCtx.Values.persistence -}}
     {{- if $persistenceValues.enabled -}}
       {{- if eq $persistenceValues.type "device" -}}
@@ -48,15 +52,41 @@ objectData: The object data to be used to render the Pod.
           {{- $deviceAdded = true -}}
         {{- end -}}
       {{- end -}}
+      {{- if not (mustHas $persistenceValues.type $hostUserPersistence) -}}
+        {{- if $persistenceValues.targetSelectAll -}}
+          {{- $hostUserRequired = false -}}
+        {{- else if $persistenceValues.targetSelector -}}
+          {{- if mustHas $objectData.shortName ($persistenceValues.targetSelector | keys) -}}
+            {{- $hostUserRequired = false -}}
+          {{- end -}}
+        {{- else if $objectData.podPrimary -}}
+          {{- $hostUserRequired = false -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+
+  {{- $hostUserNamespaces := (list "hostIPC" "hostNetwork" "hostPID") -}}
+  {{- if or $secContext.hostIPC $secContext.hostNetwork $secContext.hostPID -}}
+    {{- $hostUserRequired = false -}}
+  {{- end }}
+
+  {{- range $containerName, $containerValues := $objectData.podSpec.containers -}}
+    {{- $secContextContainer := fromJson (include "tc.v1.common.lib.container.securityContext.calculate" (dict "rootCtx" $rootCtx "objectData" $containerValues)) }}
+    {{- if or $secContextContainer.allowPrivilegeEscalation $secContextContainer.privileged $secContextContainer.capabilities.add ( not $secContextContainer.readOnlyRootFilesystem ) ( not $secContextContainer.runAsNonRoot ) (lt $secContextContainer.runAsUser 1 ) (lt $secContextContainer.runAsGroup 1 ) -}}
+      {{- $hostUserRequired = false -}}
     {{- end -}}
   {{- end -}}
 
   {{- if $gpuAdded -}}
     {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups (list 44 107)) -}}
+    {{- $hostUserRequired = false -}}
   {{- end -}}
 
   {{- if $deviceAdded -}}
     {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups $deviceGroups) -}}
+    {{- $hostUserRequired = false -}}
   {{- end -}}
 
   {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups (list 568)) -}}
@@ -101,6 +131,7 @@ supplementalGroups: []
   {{- end -}}
   {{- with $secContext.sysctls }}
 sysctls:
+    {{- $hostUserRequired = false -}}
     {{- range . }}
     {{- if not .name -}}
       {{- fail "Pod - Expected non-empty [name] in [sysctls]" -}}
@@ -113,5 +144,11 @@ sysctls:
     {{- end -}}
   {{- else }}
 sysctls: []
+  {{- end -}}
+
+  {{- if or $secContext.hostUser $hostUserRequired -}}
+hostUsers: true
+  {{- else -}}
+hostUsers: false
   {{- end -}}
 {{- end -}}
