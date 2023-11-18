@@ -75,7 +75,7 @@ objectData: The object data to be used to render the Pod.
     {{- $secContContainer := fromJson (include "tc.v1.common.lib.container.securityContext.calculate" (dict "rootCtx" $rootCtx "objectData" $containerValues)) }}
     {{- if or $secContContainer.allowPrivilegeEscalation $secContContainer.privileged $secContContainer.capabilities.add
         (not $secContContainer.readOnlyRootFilesystem) (not $secContContainer.runAsNonRoot)
-        (lt $secContContainer.runAsUser 1) (lt $secContContainer.runAsGroup 1) -}}
+        (lt ($secContContainer.runAsUser | int) 1) (lt ($secContContainer.runAsGroup | int) 1) -}}
       {{- $hostUserRequired = false -}}
     {{- end -}}
   {{- end -}}
