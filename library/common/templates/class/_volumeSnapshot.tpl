@@ -31,15 +31,15 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with $objectData.volumeSnapshotClassName -}}
+  {{- with $objectData.volumeSnapshotClassName }}
   volumeSnapshotClassName: {{ . }}
   {{- end -}}
   {{- if $objectData.source -}}
   source:
-    {{- with $objectData.source.persistentVolumeClaimName -}}
+    {{- with $objectData.source.persistentVolumeClaimName }}
     persistentVolumeClaimName: {{ . }}
     {{- end -}}
-    {{- with $objectData.source.volumeSnapshotContentName -}}
+    {{- with $objectData.source.volumeSnapshotContentName }}
     volumeSnapshotContentName: {{ . }}
     {{- end -}}
   {{- end -}}
