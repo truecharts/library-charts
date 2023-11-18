@@ -39,5 +39,5 @@
     {{- end -}}
   {{- end -}}
 
-  {{- $data -}}
+  {{- $data | toJson -}}
 {{- end -}}

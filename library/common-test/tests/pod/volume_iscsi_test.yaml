@@ -116,10 +116,10 @@ tests:
             iqn: some-iqn
             lun: 0
             authSession:
-              username: some-username
-              password: some-password
-              usernameInitiator: some-usernameInitiator
-              passwordInitiator: some-passwordInitiator
+              username: "{{ .Values.username }}"
+              password: "{{ .Values.password }}"
+              usernameInitiator: '{{ printf "%s%s" .Values.username "Initiator" }}'
+              passwordInitiator: '{{ printf "%s%s" .Values.password "Initiator" }}'
         iscsi-vol2:
           enabled: true
           type: iscsi
@@ -128,11 +128,11 @@ tests:
             targetPortal: some-targetPortal
             iqn: some-iqn
             lun: 0
-            discoverySession:
-              username: some-username
-              password: some-password
-              usernameInitiator: some-usernameInitiator
-              passwordInitiator: some-passwordInitiator
+            authDiscovery:
+              username: "{{ .Values.username }}"
+              password: "{{ .Values.password }}"
+              usernameInitiator: '{{ printf "%s%s" .Values.username "Initiator" }}'
+              passwordInitiator: '{{ printf "%s%s" .Values.password "Initiator" }}'
     asserts:
       - documentIndex: &deploymentDoc 0
         isKind:
@@ -151,44 +151,58 @@ tests:
               chapAuthSession: true
               secretRef:
                 name: test-release-name-common-test-iscsi-vol
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: iscsi-vol2
+            iscsi:
+              targetPortal: some-targetPortal
+              iqn: some-iqn
+              lun: 0
+              fsType: ext4
+              chapAuthDiscovery: true
+              chapAuthSession: false
+              secretRef:
+                name: test-release-name-common-test-iscsi-vol2
       - documentIndex: &secretDoc 1
         isKind:
           of: Secret
       - documentIndex: *secretDoc
         equal:
           path: metadata.name
-          content: test-release-name-common-test-iscsi-vol
+          value: test-release-name-common-test-iscsi-vol
       - documentIndex: *secretDoc
         equal:
           path: type
-          content: kubernetes.io/iscsi-chap
+          value: kubernetes.io/iscsi-chap
       - documentIndex: *secretDoc
         equal:
           path: stringData
           value:
-            node.session.auth.username: "{{ .Values.username }}"
-            node.session.auth.password: "{{ .Values.password }}"
-            node.session.auth.username_in: '{{ printf "%s%s".Values.username "Initiator" }}'
-            node.session.auth.password_in: '{{ printf "%s%s".Values.password "Initiator" }}'
+            node.session.auth.username: some-username
+            node.session.auth.password: some-password
+            node.session.auth.username_in: some-usernameInitiator
+            node.session.auth.password_in: some-passwordInitiator
       - documentIndex: &secretDoc 2
         isKind:
           of: Secret
       - documentIndex: *secretDoc
         equal:
           path: metadata.name
-          content: test-release-name-common-test-iscsi-vol2
+          value: test-release-name-common-test-iscsi-vol2
       - documentIndex: *secretDoc
         equal:
           path: type
-          content: kubernetes.io/iscsi-chap
+          value: kubernetes.io/iscsi-chap
       - documentIndex: *secretDoc
         equal:
           path: stringData
           value:
-            discovery.sendtargets.auth.username: "{{ .Values.username }}"
-            discovery.sendtargets.auth.password: "{{ .Values.password }}"
-            discovery.sendtargets.auth.username_in: '{{ printf "%s%s".Values.username "Initiator" }}'
-            discovery.sendtargets.auth.password_in: '{{ printf "%s%s".Values.password "Initiator" }}'
+            discovery.sendtargets.auth.username: some-username
+            discovery.sendtargets.auth.password: some-password
+            discovery.sendtargets.auth.username_in: some-usernameInitiator
+            discovery.sendtargets.auth.password_in: some-passwordInitiator
 
 # Failures
   - it: should fail without iscsi object in iscsi volume
