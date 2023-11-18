@@ -204,6 +204,7 @@ persistence:
     enabled: true
     type: emptyDir
     mountPath: /var/logs
+    medium: Memory
     targetSelectAll: true
   varrun:
     enabled: true
@@ -215,6 +216,7 @@ persistence:
     enabled: true
     type: emptyDir
     mountPath: /tmp
+    medium: Memory
     targetSelectAll: true
   devshm:
     enabled: true
@@ -222,6 +224,28 @@ persistence:
     mountPath: /dev/shm
     medium: Memory
     targetSelectAll: true
+#  iscsi:
+#    enabled: true
+#    type: iscsi
+#    mountPath: /dev/shm
+#    iscsi:
+#      targetPortal: 10.0.2.15:3260
+#      portals: ['10.0.2.16:3260', '10.0.2.17:3260'] #optional
+#      iqn: iqn.2001-04.com.example:storage.kube.sys1.xyz
+#      lun: 0
+#      fsType: ext4 #Optional
+#      iscsiInterface: default #Optional
+#      initiatorName: iqn.1994-05.com.redhat:node1 #Optional
+#      authSession:
+#        username: "someusername"
+#        password: "somepassword"
+#        usernameInitiator: "someusernameInitiator"
+#        passwordInitiator: "somepasswordInitiator"
+#      authDiscovery:
+#        username: "someusername"
+#        password: "somepassword"
+#        usernameInitiator: "someusernameInitiator"
+#        passwordInitiator: "somepasswordInitiator"
 #  vct:
 #    enabled: true
 #    type: vct
@@ -412,7 +436,7 @@ alpineImage:
 
 scratchImage:
   repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:7f821eeb99d04ac248c47f79cfbcc2482651fea48aff9ec5d2ba0ba34f1f5531
+  tag: latest@sha256:e7d1aaa6e29e7bcf3e3f13a8fc41803ca81b2614f72d11287ca4dcab4850bd99
   pullPolicy: IfNotPresent
 
 kubectlImage:
