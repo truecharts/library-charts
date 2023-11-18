@@ -1,5 +1,5 @@
 {{- define "tc.v1.common.lib.util.namespacelabel" -}}
-  {{- if or .Values.namespace.label .Values.global.namespace.label -}}
+  {{- if or .Values.namespace.name.label .Values.global.namespace.name.label -}}
     {{- $workload := include "tc.v1.common.lib.util.namespacelabel.workload" $ | fromYaml -}}
     {{- $rbac := include "tc.v1.common.lib.util.namespacelabel.rbac" $ | fromYaml -}}
     {{- $serviceaccount := include "tc.v1.common.lib.util.namespacelabel.serviceaccount" $ | fromYaml -}}
@@ -61,10 +61,10 @@ podSpec:
         - /bin/sh
         - -c
         - |
-          {{- range .Values.namespace.labels }}
+          {{- range .Values.namespace.name.labels }}
           kubectl label namespace {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "NamespaceLabel") }} {{ .key }}={{ .value }}
           {{- end }}
-          {{- range .Values.global.namespace.labels }}
+          {{- range .Values.global.namespace.name.labels }}
           kubectl label namespace {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "NamespaceLabel") }} {{ .key }}={{ .value }}
           {{- end }}
 {{- end -}}

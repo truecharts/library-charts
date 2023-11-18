@@ -5,11 +5,11 @@
 
   {{- $namespace := $rootCtx.Release.Namespace -}}
 
-  {{- with $rootCtx.Values.global.namespace -}}
+  {{- with $rootCtx.Values.global.namespace.name -}}
     {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}
 
-  {{- with $rootCtx.Values.namespace -}}
+  {{- with $rootCtx.Values.namespace.name -}}
     {{- $namespace = tpl . $rootCtx -}}
   {{- end -}}
 

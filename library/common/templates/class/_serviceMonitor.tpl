@@ -19,7 +19,7 @@ apiVersion: {{ include "tc.v1.common.capabilities.servicemonitor.apiVersion" $ }
 kind: ServiceMonitor
 metadata:
   name: {{ $servicemonitorName }}
-  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "serviceMonitor") }}
   {{- $labels := (mustMerge ($servicemonitorLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:

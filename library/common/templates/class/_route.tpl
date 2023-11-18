@@ -38,7 +38,7 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: {{ $routeKind }}
 metadata:
   name: {{ $fullName }}
-  namespace: {{ $.Values.namespace | default $.Values.global.namespace | default $.Release.Namespace }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "route") }}
   {{- $labels := (mustMerge ($routeLabels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $ | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $ "labels" $labels) | trim) }}
   labels:
