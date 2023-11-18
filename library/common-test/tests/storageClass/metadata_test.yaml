@@ -35,6 +35,9 @@ tests:
         isKind:
           of: StorageClass
       - documentIndex: *storageClassDoc
+        isAPIVersion:
+          of: storage.k8s.io/v1
+      - documentIndex: *storageClassDoc
         equal:
           path: metadata.annotations
           value:
