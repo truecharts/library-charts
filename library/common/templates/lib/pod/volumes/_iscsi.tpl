@@ -34,6 +34,15 @@ objectData: The object data to be used to render the volume.
   {{- $lun := $objectData.iscsi.lun -}}
   {{- if (kindIs "string" $lun) -}}
     {{- $lun = tpl $lun $rootCtx | float64 -}}
+  {{- end -}}
+
+  {{- $authSession := false -}}
+  {{- $authDiscovery := false -}}
+  {{- if (kindIs "boolean" $objectData.iscsi.authSession) -}}
+    {{- $authSession = $objectData.iscsi.authSession -}}
+  {{- end -}}
+  {{- if (kindIs "boolean" $objectData.iscsi.authDiscovery) -}}
+    {{- $authDiscovery = $objectData.iscsi.authDiscovery -}}
   {{- end }}
 
 - name: {{ $objectData.shortName }}
@@ -55,6 +64,11 @@ objectData: The object data to be used to render the volume.
     {{- end -}}
     {{- with $objectData.iscsi.fsType }}
     fsType: {{ tpl . $rootCtx }}
+    {{- end }}
+    chapAuthSession: {{ $authSession }}
+    chapAuthDiscovery: {{ $authDiscovery }}
+    {{- if or $authSession $authDiscovery }}
+    secretRef:
+        name: {{ $objectData.shortName }}
     {{- end -}}
-    {{/* TODO: add chap auth support */}}
 {{- end -}}

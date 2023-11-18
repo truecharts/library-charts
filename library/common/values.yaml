@@ -234,6 +234,17 @@ persistence:
 #      fsType: ext4 #Optional
 #      iscsiInterface: default #Optional
 #      initiatorName: iqn.1994-05.com.redhat:node1 #Optional
+#      authSession: false
+#      authDiscovery: false
+#      chap:
+#        sessionUsername:
+#        sessionPassword:
+#        sessionUsernameInitiator:
+#        sessionPasswordInitiator:
+#        discoveryUsername:
+#        discoveryPassword:
+#        discoveryUsernameInitiator:
+#        discoveryPasswordInitiator:
 #  vct:
 #    enabled: true
 #    type: vct
