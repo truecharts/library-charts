@@ -15,15 +15,15 @@ objectData:
   {{- end -}}
 
   {{- $sourceTypes := (list "volumeSnapshotContentName" "persistentVolumeClaimName") -}}
-  {{- $hasSource := false -}}
+  {{- $sourceCount := 0 -}}
   {{- range $t := $sourceTypes -}}
     {{- if (get $objectData.source $t) -}}
-      {{- $hasSource = true -}}
+      {{- $sourceCount = add1 $sourceCount -}}
     {{- end -}}
   {{- end -}}
 
-  {{- if not $hasSource -}}
-    {{- fail (printf "VolumeSnapshot - Expected at least one of [%s] to be non empty" (join ", " $sourceTypes)) -}}
+  {{- if ne $sourceCount 1 -}}
+    {{- fail (printf "VolumeSnapshot - Expected exactly one of the valid source types [%s]. Found [%d]" (join ", " $sourceTypes) $sourceCount) -}}
   {{- end -}}
 
 {{- end -}}

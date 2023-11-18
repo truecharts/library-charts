@@ -91,4 +91,16 @@ tests:
             invalid: invalid
     asserts:
       - failedTemplate:
-          errorMessage: VolumeSnapshot - Expected at least one of [volumeSnapshotContentName, persistentVolumeClaimName] to be non empty
+          errorMessage: VolumeSnapshot - Expected exactly one of the valid source types [volumeSnapshotContentName, persistentVolumeClaimName]. Found [0]
+
+  - it: should fail with more than one valid source
+    set:
+      volumeSnapshots:
+        - name: example1
+          enabled: true
+          source:
+            volumeSnapshotContentName: some-name
+            persistentVolumeClaimName: some-pvc-name
+    asserts:
+      - failedTemplate:
+          errorMessage: VolumeSnapshot - Expected exactly one of the valid source types [volumeSnapshotContentName, persistentVolumeClaimName]. Found [2]
