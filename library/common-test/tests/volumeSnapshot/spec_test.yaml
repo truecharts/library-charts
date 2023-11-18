@@ -113,4 +113,4 @@ tests:
           enabled:
     asserts:
       - failedTemplate:
-          errorMessage: Volume Snapshot - Expected the defined key [enabled] in [volumeSnapshots.class1] to not be empty
+          errorMessage: Volume Snapshot - Expected the defined key [enabled] in [volumeSnapshots.0] to not be empty
