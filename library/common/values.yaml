@@ -131,6 +131,7 @@ podOptions:
   enableServiceLinks: false
   hostNetwork: false
   hostPID: false
+  hostIPC: false
   shareProcessNamespace: false
   restartPolicy: Always
   dnsPolicy: ClusterFirst
