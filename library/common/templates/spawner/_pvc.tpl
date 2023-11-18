@@ -77,7 +77,7 @@
       {{- end -}}
 
       {{- if eq $objectData.type "iscsi" -}}
-        {{- if $objectData.iscsi.chap -}}
+        {{- if or $objectData.iscsi.authSession $objectData.iscsi.discoverySession -}}
           {{- $secretData := (dict
                                 "name" $objectData.name
                                 "labels" ($objectData.labels | default dict)

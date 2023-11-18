@@ -38,11 +38,11 @@ objectData: The object data to be used to render the volume.
 
   {{- $authSession := false -}}
   {{- $authDiscovery := false -}}
-  {{- if (kindIs "boolean" $objectData.iscsi.authSession) -}}
-    {{- $authSession = $objectData.iscsi.authSession -}}
+  {{- if $objectData.iscsi.authSession -}}
+    {{- $authSession = true -}}
   {{- end -}}
-  {{- if (kindIs "boolean" $objectData.iscsi.authDiscovery) -}}
-    {{- $authDiscovery = $objectData.iscsi.authDiscovery -}}
+  {{- if $objectData.iscsi.authDiscovery -}}
+    {{- $authDiscovery = true -}}
   {{- end }}
 
 - name: {{ $objectData.shortName }}
@@ -67,8 +67,9 @@ objectData: The object data to be used to render the volume.
     {{- end }}
     chapAuthSession: {{ $authSession }}
     chapAuthDiscovery: {{ $authDiscovery }}
-    {{- if or $authSession $authDiscovery }}
+    {{- if or $authSession $authDiscovery -}}
+      {{- $secretName := (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $rootCtx) $objectData.shortName) }}
     secretRef:
-        name: {{ $objectData.shortName }}
+        name: {{ $secretName }}
     {{- end -}}
 {{- end -}}

@@ -40,6 +40,8 @@ tests:
               iqn: some-iqn
               lun: 0
               fsType: ext4
+              chapAuthDiscovery: false
+              chapAuthSession: false
 
   - it: should pass with iscsi volume with extra options
     set:
@@ -91,6 +93,102 @@ tests:
               portals:
                 - some-targetPortal
                 - some-targetPortal2
+              chapAuthDiscovery: false
+              chapAuthSession: false
+
+  - it: should pass with iscsi volume with chap auth
+    set:
+      username: some-username
+      password: some-password
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        iscsi-vol:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: ext4
+            targetPortal: some-targetPortal
+            iqn: some-iqn
+            lun: 0
+            authSession:
+              username: some-username
+              password: some-password
+              usernameInitiator: some-usernameInitiator
+              passwordInitiator: some-passwordInitiator
+        iscsi-vol2:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: ext4
+            targetPortal: some-targetPortal
+            iqn: some-iqn
+            lun: 0
+            discoverySession:
+              username: some-username
+              password: some-password
+              usernameInitiator: some-usernameInitiator
+              passwordInitiator: some-passwordInitiator
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: iscsi-vol
+            iscsi:
+              targetPortal: some-targetPortal
+              iqn: some-iqn
+              lun: 0
+              fsType: ext4
+              chapAuthDiscovery: false
+              chapAuthSession: true
+              secretRef:
+                name: test-release-name-common-test-iscsi-vol
+      - documentIndex: &secretDoc 1
+        isKind:
+          of: Secret
+      - documentIndex: *secretDoc
+        equal:
+          path: metadata.name
+          content: test-release-name-common-test-iscsi-vol
+      - documentIndex: *secretDoc
+        equal:
+          path: type
+          content: kubernetes.io/iscsi-chap
+      - documentIndex: *secretDoc
+        equal:
+          path: stringData
+          value:
+            node.session.auth.username: "{{ .Values.username }}"
+            node.session.auth.password: "{{ .Values.password }}"
+            node.session.auth.username_in: '{{ printf "%s%s".Values.username "Initiator" }}'
+            node.session.auth.password_in: '{{ printf "%s%s".Values.password "Initiator" }}'
+      - documentIndex: &secretDoc 2
+        isKind:
+          of: Secret
+      - documentIndex: *secretDoc
+        equal:
+          path: metadata.name
+          content: test-release-name-common-test-iscsi-vol2
+      - documentIndex: *secretDoc
+        equal:
+          path: type
+          content: kubernetes.io/iscsi-chap
+      - documentIndex: *secretDoc
+        equal:
+          path: stringData
+          value:
+            discovery.sendtargets.auth.username: "{{ .Values.username }}"
+            discovery.sendtargets.auth.password: "{{ .Values.password }}"
+            discovery.sendtargets.auth.username_in: '{{ printf "%s%s".Values.username "Initiator" }}'
+            discovery.sendtargets.auth.password_in: '{{ printf "%s%s".Values.password "Initiator" }}'
 
 # Failures
   - it: should fail without iscsi object in iscsi volume
