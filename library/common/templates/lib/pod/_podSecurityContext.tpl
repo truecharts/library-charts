@@ -43,7 +43,7 @@ objectData: The object data to be used to render the Pod.
     {{- if $persistenceValues.enabled -}}
       {{- if $persistenceValues.targetSelectAll -}}
         {{- $podSelected = true -}}
-      {{- else if $persistenceValues.targetSelector -}}
+      {{- else if and $persistenceValues.targetSelector (kindIs "map" $persistenceValues.targetSelector) -}}
         {{- if mustHas $objectData.shortName ($persistenceValues.targetSelector | keys) -}}
           {{- $podSelected = true -}}
         {{- end -}}
