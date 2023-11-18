@@ -147,8 +147,6 @@ sysctls:
 sysctls: []
   {{- end -}}
 
-  {{- if $secContext.hostUser -}}
-    {{- $hostUserRequired = true -}}
-  {{- end }}
-hostUsers: {{ $hostUserRequired }}
+  {{/* Used by _hostUsers.tpl */}}
+  {{- $_ := set $objectData.podSpec "calculatedHostUsers" $hostUserRequired -}}
 {{- end -}}

@@ -51,6 +51,7 @@ tolerations:
   {{- end }}
 securityContext:
   {{- include "tc.v1.common.lib.pod.securityContext" (dict "rootCtx" $rootCtx "objectData" $objectData) | trim | nindent 2 }}
+hostUsers: {{ include "tc.v1.common.lib.pod.hostUsers" (dict "rootCtx" $rootCtx "objectData" $objectData) }}
   {{- if $objectData.podSpec.containers }}
 containers:
     {{- include "tc.v1.common.lib.pod.containerSpawner" (dict "rootCtx" $rootCtx "objectData" $objectData) | trim | nindent 2 -}}
