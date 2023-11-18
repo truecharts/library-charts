@@ -93,7 +93,8 @@ tests:
               - name: shared
                 emptyDir: {}
               - name: tmp
-                emptyDir: {}
+                emptyDir:
+                  medium: Memory
               - name: varlogs
                 emptyDir: {}
               - name: varrun
