@@ -13,10 +13,9 @@
       {{- if not (kindIs "invalid" $volumesnapshotclass.enabled) -}}
         {{- $enabled = $volumesnapshotclass.enabled -}}
       {{- else -}}
-        {{- fail (printf "volumesnapshotclass - Expected the defined key [enabled] in [volumesnapshotclass.%s] to not be empty" $name) -}}
+        {{- fail (printf "volumesnapshotclass - Expected the defined key [enabled] in [volumeSnapshotClass.%s] to not be empty" $name) -}}
       {{- end -}}
     {{- end -}}
-
 
     {{- if kindIs "string" $enabled -}}
       {{- $enabled = tpl $enabled $ -}}
@@ -44,7 +43,7 @@
       {{/* Perform validations */}} {{/* volumesnapshotclasss have a max name length of 253 */}}
       {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
       {{- include "tc.v1.common.lib.volumesnapshotclass.validation" (dict "objectData" $objectData) -}}
-      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "volumesnapshotclass") -}}
+      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Volume Snapshot Class") -}}
 
       {{/* Set the name of the volumesnapshotclass */}}
       {{- $_ := set $objectData "name" $objectName -}}

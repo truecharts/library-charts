@@ -12,14 +12,15 @@ objectData:
 {{- define "tc.v1.common.class.volumesnapshotclass" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData }}
-  {{- $isDefault := dict -}}
-  {{- with $objectData.isDefault -}}
-    {{- $isDefault := dict "snapshot.storage.kubernetes.io/is-default-class" . -}}
-  {{- end -}}
+  {{- $objectData := .objectData -}}
+
+  {{- $isDefault := false -}}
+  {{- if (kindIs "bool" $objectData.isDefault) -}}
+    {{- $isDefault = $objectData.isDefault  -}}
+  {{- end }}
 ---
 apiVersion: v1
-kind: volumesnapshotclass
+kind: VolumeSnapshotClass
 metadata:
   name: {{ $objectData.name }}
   {{- $labels := (mustMerge ($objectData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
@@ -27,16 +28,19 @@ metadata:
   labels:
     {{- . | nindent 4 }}
   {{- end -}}
-  {{- $annotations := (mustMerge ($objectData.annotations | default dict) $isDefault (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
-  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
+  {{- $annotations := (mustMerge ($objectData.annotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   annotations:
+    snapshot.storage.kubernetes.io/is-default-class: {{ $isDefault }}
+  {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
 data:
-  driver: {{ $objectData.driver }}
+  driver: {{ tpl $objectData.driver $rootCtx }}
   deletionPolicy: {{ $objectData.deletionPolicy | default "Retain" }}
-  {{- with $objectData.parameters -}}
-  parameters: {}
-  {{- tpl (toYaml .) $rootCtx | nindent 4 }}
+  {{- with $objectData.parameters }}
+  parameters:
+    {{- range $k, $v := . -}}
+    {{ tpl $k $rootCtx }}: {{ (tpl $v $rootCtx) | quote }}
+    {{- end -}}
   {{- end -}}
 {{- end -}}

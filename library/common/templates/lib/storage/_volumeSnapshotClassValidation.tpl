@@ -3,10 +3,13 @@
   {{- $objectData := .objectData -}}
 
   {{- $validPolicies := (list "Retain" "Delete") -}}
-  {{- if $objectData.reclaimPolicy -}}
-    {{- if not (mustHas $objectData.reclaimPolicy $validPolicies) -}}
-      {{- fail (printf "Storage Class - Expected [reclaimPolicy] to be one of [%s], but got [%s]" (join ", " $validPolicies) $objectData.reclaimPolicy) -}}
+  {{- if $objectData.deletionPolicy -}}
+    {{- if not (mustHas $objectData.deletionPolicy $validPolicies) -}}
+      {{- fail (printf "Volume Snapshot Class - Expected [deletionPolicy] to be one of [%s], but got [%s]" (join ", " $validPolicies) $objectData.reclaimPolicy) -}}
     {{- end -}}
   {{- end -}}
 
+  {{- if not $objectData.driver -}}
+    {{- fail "Volume Snapshot Class - Expected non empty [driver]" -}}
+  {{- end -}}
 {{- end -}}

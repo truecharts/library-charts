@@ -320,8 +320,8 @@ persistenceList: []
 
 deviceList: []
 
+volumeSnapshotClass: []
 volumeSnapshots: []
-
 # volumeSnapshots:
 #   - name: "mycustomsnapshot"
 #     volumeSnapshotClassName: "mycustomsnapshot" (optional)
