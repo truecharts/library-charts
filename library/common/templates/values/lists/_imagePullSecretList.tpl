@@ -3,7 +3,7 @@
 
   {{- range $idx, $imagePullSecretValues := $rootCtx.Values.imagePullSecretList -}}
 
-      {{- $name := (printf "pullSecret-list-%s" (toString $idx)) -}}
+      {{- $name := (printf "pullsecret-list-%s" (toString $idx)) -}}
 
       {{- with $imagePullSecretValues.name -}}
         {{- $name = . -}}
