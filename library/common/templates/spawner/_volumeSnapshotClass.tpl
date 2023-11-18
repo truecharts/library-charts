@@ -13,7 +13,7 @@
       {{- if not (kindIs "invalid" $volumesnapshotclass.enabled) -}}
         {{- $enabled = $volumesnapshotclass.enabled -}}
       {{- else -}}
-        {{- fail (printf "volumesnapshotclass - Expected the defined key [enabled] in [volumeSnapshotClass.%s] to not be empty" $name) -}}
+        {{- fail (printf "Volume Snapshot Class - Expected the defined key [enabled] in [volumeSnapshotClass.%s] to not be empty" $name) -}}
       {{- end -}}
     {{- end -}}
 
@@ -33,7 +33,7 @@
       {{/* Create a copy of the volumesnapshotclass */}}
       {{- $objectData := (mustDeepCopy $volumesnapshotclass) -}}
 
-      {{- $objectName := "" -}}
+      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
           {{- $objectName = $name -}}

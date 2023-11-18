@@ -11,7 +11,7 @@
       {{- $objectData := (mustDeepCopy $volumesnapshot) -}}
 
       {{- if not $objectData.name -}}
-        {{- fail "VolumeSnapshot - Expected non empty [name]" -}}
+        {{- fail "Volume Snapshot - Expected non empty [name]" -}}
       {{- end -}}
 
       {{- $objectName := (printf "%s-%s" $fullname $volumesnapshot.name) -}}
