@@ -34,7 +34,7 @@ spec:
   {{- with $objectData.volumeSnapshotClassName }}
   volumeSnapshotClassName: {{ . }}
   {{- end -}}
-  {{- if $objectData.source -}}
+  {{- if $objectData.source }}
   source:
     {{- with $objectData.source.persistentVolumeClaimName }}
     persistentVolumeClaimName: {{ . }}

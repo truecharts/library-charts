@@ -15,7 +15,7 @@ objectData:
   {{- end -}}
 
   {{- $sourceTypes := (list "volumeSnapshotContentName" "persistentVolumeClaimName") -}}
-  {{- $hasSource := false-}}
+  {{- $hasSource := false -}}
   {{- range $t := $sourceTypes -}}
     {{- if (get $objectData.source $t) -}}
       {{- $hasSource = true -}}

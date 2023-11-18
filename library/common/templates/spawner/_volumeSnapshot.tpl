@@ -10,6 +10,10 @@
       {{/* Create a copy of the volumesnapshot */}}
       {{- $objectData := (mustDeepCopy $volumesnapshot) -}}
 
+      {{- if not $objectData.name -}}
+        {{- fail "VolumeSnapshot - Expected non empty [name]" -}}
+      {{- end -}}
+
       {{- $objectName := (printf "%s-%s" $fullname $volumesnapshot.name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
