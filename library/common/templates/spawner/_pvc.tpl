@@ -85,13 +85,14 @@
 
           {{/* Perform validations */}} {{/* volumesnapshots have a max name length of 253 */}}
           {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $snapshotName "length" 253) -}}
-          {{- include "tc.v1.common.lib.volumesnapshot.validation" (dict "objectData" $volSnapData) -}}
           {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $volSnapData "caller" "PVC - VolumeSnapshot") -}}
 
           {{/* Set the name of the volumesnapshot */}}
-          {{- $_ := set $objectData "name" $snapshotName -}}
-          {{- $_ := set $objectData "shortName" $volSnap.name -}}
-          {{- $_ := set $objectData "persistentVolumeClaimName" $objectData.name -}}
+          {{- $_ := set $volSnapData "name" $snapshotName -}}
+          {{- $_ := set $volSnapData "shortName" $volSnap.name -}}
+          {{- $_ := set $volSnapData "source" (dict "persistentVolumeClaimName" $objectData.name) -}}
+
+          {{- include "tc.v1.common.lib.volumesnapshot.validation" (dict "objectData" $volSnapData) -}}
 
           {{/* Call class to create the object */}}
           {{- include "tc.v1.common.class.volumesnapshot" (dict "rootCtx" $ "objectData" $volSnapData) -}}
