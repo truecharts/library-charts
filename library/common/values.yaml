@@ -233,6 +233,7 @@ persistence:
 #      lun: 0
 #      fsType: ext4 #Optional
 #      iscsiInterface: default #Optional
+#      initiatorName: iqn.1994-05.com.redhat:node1 #Optional
 #  vct:
 #    enabled: true
 #    type: vct
