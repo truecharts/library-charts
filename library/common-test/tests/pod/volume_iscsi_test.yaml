@@ -1,0 +1,185 @@
+suite: pod iscsi volume test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should pass with iscsi volume
+    set:
+      some_lun: 0
+      some_iqn: some-iqn
+      some_targetPortal: some-targetPortal
+      some_fsType: ext4
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        iscsi-vol:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: "{{ .Values.some_fsType }}"
+            targetPortal: "{{ .Values.some_targetPortal }}"
+            iqn: "{{ .Values.some_iqn }}"
+            lun: "{{ .Values.some_lun }}"
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: iscsi-vol
+            iscsi:
+              targetPortal: some-targetPortal
+              iqn: some-iqn
+              lun: 0
+              fsType: ext4
+
+  - it: should pass with iscsi volume with extra options
+    set:
+      some_lun: 99999999999
+      some_iqn: some-iqn
+      some_targetPortal: some-targetPortal
+      some_fsType: ext4
+      some_initiatorName: some-initiatorName
+      some_interface: some-interface
+      some_portals:
+        - some-targetPortal
+        - some-targetPortal2
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        iscsi-vol:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: "{{ .Values.some_fsType }}"
+            targetPortal: "{{ .Values.some_targetPortal }}"
+            iqn: "{{ .Values.some_iqn }}"
+            lun: "{{ .Values.some_lun }}"
+            initiatorName: "{{ .Values.some_initiatorName }}"
+            iscsiInterface: "{{ .Values.some_interface }}"
+            portals:
+              - "{{ index .Values.some_portals 0 }}"
+              - "{{ index .Values.some_portals 1 }}"
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: iscsi-vol
+            iscsi:
+              targetPortal: some-targetPortal
+              iqn: some-iqn
+              lun: 99999999999
+              fsType: ext4
+              initiatorName: some-initiatorName
+              iscsiInterface: some-interface
+              portals:
+                - some-targetPortal
+                - some-targetPortal2
+
+# Failures
+  - it: should fail without iscsi object in iscsi volume
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: iscsi
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [iscsi] object on [iscsi] type
+
+  - it: should fail with invalid fsType in iscsi
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: some-fsType
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [fsType] on [iscsi] type to be one of [ext4, xfs, ntfs], but got [some-fsType]
+
+  - it: should fail without targetPortal in iscsi
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: ext4
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [targetPortal] on [iscsi] type
+
+  - it: should fail without iqn in iscsi
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: ext4
+            targetPortal: some-targetPortal
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [iqn] on [iscsi] type
+
+  - it: should fail without lun in iscsi
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: iscsi
+          iscsi:
+            fsType: ext4
+            targetPortal: some-targetPortal
+            iqn: some-iqn
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [lun] on [iscsi] type

@@ -9,12 +9,15 @@ objectData: The object data to be used to render the volume.
   {{- $objectData := .objectData -}}
 
   {{- if not $objectData.iscsi -}}
-    {{- fail "Persitsence - Expected non-empty [iscsi] object on [iscsi] type" -}}
+    {{- fail "Persistence - Expected non-empty [iscsi] object on [iscsi] type" -}}
   {{- end -}}
 
-  {{- $validFSTypes := (list "ext4" "xfs" "ntfs") -}}
-  {{- if and $objectData.iscsi.fsType (not (mustHas $objectData.iscsi.fsType $validFSTypes)) -}}
-    {{- fail (printf "Persistence - Expected [fsType] on [iscsi] type to be one of [%s], but got [%s]" (join ", " $validFSTypes) $objectData.iscsi.fsType) -}}
+  {{- with $objectData.iscsi.fsType -}}
+    {{- $validFSTypes := (list "ext4" "xfs" "ntfs") -}}
+    {{- $fsType := tpl . $rootCtx -}}
+    {{- if not (mustHas $fsType $validFSTypes) -}}
+      {{- fail (printf "Persistence - Expected [fsType] on [iscsi] type to be one of [%s], but got [%s]" (join ", " $validFSTypes) $fsType) -}}
+    {{- end -}}
   {{- end -}}
 
   {{- if not $objectData.iscsi.targetPortal -}}
@@ -27,27 +30,31 @@ objectData: The object data to be used to render the volume.
 
   {{- if (kindIs "invalid" $objectData.iscsi.lun) -}}
     {{- fail "Persistence - Expected non-empty [lun] on [iscsi] type" -}}
+  {{- end -}}
+  {{- $lun := $objectData.iscsi.lun -}}
+  {{- if (kindIs "string" $lun) -}}
+    {{- $lun = tpl $lun $rootCtx | float64 -}}
   {{- end }}
 
 - name: {{ $objectData.shortName }}
   iscsi:
-    targetPortal: {{ $objectData.iscsi.targetPortal }}
-    {{- with $objectData.iscsi.portals -}}
+    targetPortal: {{ tpl $objectData.iscsi.targetPortal $rootCtx }}
+    {{- with $objectData.iscsi.portals }}
     portals:
       {{- range $portal := . }}
       - {{ tpl $portal $rootCtx | quote }}
       {{- end -}}
+    {{- end }}
+    iqn: {{ tpl $objectData.iscsi.iqn $rootCtx }}
+    lun: {{ include "tc.v1.common.helper.makeIntOrNoop" $lun }}
+    {{- with $objectData.iscsi.iscsiInterface }}
+    iscsiInterface: {{ tpl . $rootCtx }}
     {{- end -}}
-    iqn: {{ $objectData.iscsi.iqn }}
-    lun: {{ include "tc.v1.common.helper.makeIntOrNoop" $objectData.iscsi.lun }}
-    {{- with $objectData.iscsi.iscsiInterface -}}
-    iscsiInterface: {{ . }}
+    {{- with $objectData.iscsi.initiatorName }}
+    initiatorName: {{ tpl .  $rootCtx }}
     {{- end -}}
-    {{- with $objectData.iscsi.initiatorName -}}
-    initiatorName: {{ . }}
+    {{- with $objectData.iscsi.fsType }}
+    fsType: {{ tpl . $rootCtx }}
     {{- end -}}
-    {{- with $objectData.iscsi.fsType -}}
-    fsType: {{ . }}
-    {{- end -}}
-{{/* TODO: add chap auth support */}}
+    {{/* TODO: add chap auth support */}}
 {{- end -}}
