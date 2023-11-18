@@ -9,7 +9,7 @@ objectData: The object data to be used to render the Pod.
   {{- $objectData := .objectData -}}
 
   {{- if not $rootCtx.Values.securityContext.pod -}}
-    {{- fail "Pod - Expected non-empty [.Values.securityContext.pod]" -}}
+    {{- fail "Pod - Expected non-empty [securityContext.pod]" -}}
   {{- end -}}
 
   {{/* Initialize from the "global" option */}}
@@ -35,7 +35,7 @@ objectData: The object data to be used to render the Pod.
 
   {{- $deviceGroups := (list 5 10 20 24) -}}
   {{- $deviceAdded := false -}}
-  {{- $hostUserRequired := true -}}
+  {{- $hostUsers := false -}}
   {{- $hostUserPersistence := (list "configmap" "secret" "emptyDir" "downwardAPI" "projected") -}}
   {{- $podSelected := false -}}
 
@@ -58,7 +58,7 @@ objectData: The object data to be used to render the Pod.
       {{- end -}}
 
       {{- if not (mustHas $persistenceValues.type $hostUserPersistence) -}}
-        {{- $hostUserRequired = false -}}
+        {{- $hostUsers = true -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -68,7 +68,7 @@ objectData: The object data to be used to render the Pod.
   {{- $hostPID := (eq (include "tc.v1.common.lib.pod.hostPID" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true") -}}
   {{- $hostIPC := (eq (include "tc.v1.common.lib.pod.hostIPC" (dict "rootCtx" $rootCtx "objectData" $objectData)) "true") -}}
   {{- if or $hostIPC $hostNet $hostPID -}}
-    {{- $hostUserRequired = false -}}
+    {{- $hostUsers = true -}}
   {{- end }}
 
   {{- range $containerName, $containerValues := $objectData.podSpec.containers -}}
@@ -76,18 +76,18 @@ objectData: The object data to be used to render the Pod.
     {{- if or $secContContainer.allowPrivilegeEscalation $secContContainer.privileged $secContContainer.capabilities.add
         (not $secContContainer.readOnlyRootFilesystem) (not $secContContainer.runAsNonRoot)
         (lt ($secContContainer.runAsUser | int) 1) (lt ($secContContainer.runAsGroup | int) 1) -}}
-      {{- $hostUserRequired = false -}}
+      {{- $hostUsers = true -}}
     {{- end -}}
   {{- end -}}
 
   {{- if $gpuAdded -}}
     {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups (list 44 107)) -}}
-    {{- $hostUserRequired = false -}}
+    {{- $hostUsers = true -}}
   {{- end -}}
 
   {{- if $deviceAdded -}}
     {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups $deviceGroups) -}}
-    {{- $hostUserRequired = false -}}
+    {{- $hostUsers = true -}}
   {{- end -}}
 
   {{- $_ := set $secContext "supplementalGroups" (concat $secContext.supplementalGroups (list 568)) -}}
@@ -132,7 +132,7 @@ supplementalGroups: []
   {{- end -}}
   {{- with $secContext.sysctls }}
 sysctls:
-    {{- $hostUserRequired = false -}}
+    {{- $hostUsers = true -}}
     {{- range . }}
     {{- if not .name -}}
       {{- fail "Pod - Expected non-empty [name] in [sysctls]" -}}
@@ -148,5 +148,5 @@ sysctls: []
   {{- end -}}
 
   {{/* Used by _hostUsers.tpl */}}
-  {{- $_ := set $objectData.podSpec "calculatedHostUsers" $hostUserRequired -}}
+  {{- $_ := set $objectData.podSpec "calculatedHostUsers" $hostUsers -}}
 {{- end -}}
