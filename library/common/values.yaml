@@ -375,7 +375,7 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Thank you for installing [{{ .Chart.Name }}] by TrueCharts.
+    # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
     {{- if .Values.iXPortals }}
@@ -387,7 +387,7 @@ notes:
     {{- end -}}
     {{- end }}
 
-    ## Sources for [{{ .Chart.Name }}]
+    ## Sources for {{ .Chart.Name }}
 
     {{- range .Chart.Sources }}
     - {{ . }}
