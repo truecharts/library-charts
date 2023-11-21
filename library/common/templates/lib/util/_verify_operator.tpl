@@ -19,6 +19,9 @@
         {{- $ingress = true -}}
       {{- end -}}
     {{- end -}}
+    {{- if $.Values.addons.codeserver.ingress.enabled -}}
+      {{- $ingress = true -}}
+    {{- end -}}
     {{- if $ingress -}}
       {{- $operatorList = mustAppend $operatorList "traefik" -}}
     {{- end -}}
