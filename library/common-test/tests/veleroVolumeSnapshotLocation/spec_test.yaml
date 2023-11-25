@@ -16,6 +16,20 @@ tests:
               id: my-id
               key: my-key
     asserts:
+      - documentIndex: &secretDoc 0
+        isKind:
+          of: Secret
+      - documentIndex: *secretDoc
+        isAPIVersion:
+          of: v1
+      - documentIndex: *secretDoc
+        equal:
+          path: stringData
+          value:
+            cloud: |-
+              [default]
+              aws_access_key_id=my-id
+              aws_secret_access_key=my-key
       - documentIndex: &volSnapLocDoc 1
         isKind:
           of: VolumeSnapshotLocation
@@ -42,6 +56,20 @@ tests:
               id: my-id
               key: my-key
     asserts:
+      - documentIndex: &secretDoc 0
+        isKind:
+          of: Secret
+      - documentIndex: *secretDoc
+        isAPIVersion:
+          of: v1
+      - documentIndex: *secretDoc
+        equal:
+          path: stringData
+          value:
+            cloud: |-
+              [default]
+              aws_access_key_id=my-id
+              aws_secret_access_key=my-key
       - documentIndex: &volSnapLocDoc 1
         isKind:
           of: VolumeSnapshotLocation
@@ -190,7 +218,7 @@ tests:
               key: my-key
     asserts:
       - failedTemplate:
-          errorMessage: Volume Snapshot Location - Expected non-empty [credential.aws.id] for [aws] provider
+          errorMessage: Velero Provider Secret - Expected non-empty [credential.aws|s3.id] for [aws|s3] provider
 
   - it: should fail without credential.aws.key with provider aws
     set:
@@ -203,4 +231,4 @@ tests:
               id: my-id
     asserts:
       - failedTemplate:
-          errorMessage: Volume Snapshot Location - Expected non-empty [credential.aws.key] for [aws] provider
+          errorMessage: Velero Provider Secret - Expected non-empty [credential.aws|s3.key] for [aws|s3] provider

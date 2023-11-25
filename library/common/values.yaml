@@ -717,14 +717,13 @@ backupStorageLocation: []
 # - name:
 #   # provider is the name for the backup storage location provider.
 #   provider:
-#   # bucket is the name of the bucket to store backups in. Required.
-#   bucket:
-#   # caCert defines a base64 encoded CA bundle to use when verifying TLS connections to the provider. Optional.
-#   caCert:
-#   # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
-#   prefix:
-#   # default indicates this location is the default backup storage location. Optional.
-#   default:
+#   objectStorage:
+#     # bucket is the name of the bucket to store backups in. Required.
+#     bucket:
+#     # caCert defines a base64 encoded CA bundle to use when verifying TLS connections to the provider. Optional.
+#     caCert:
+#     # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
+#     prefix:
 #   # validationFrequency defines how frequently Velero should validate the object storage. Optional.
 #   validationFrequency:
 #   # accessMode determines if velero can write to this backup storage location. Optional.

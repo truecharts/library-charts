@@ -6,17 +6,16 @@
 {{- define "tc.v1.common.spawner.velero.backupstoragelocation" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $backupstoragelocation := .Values.backupStorageLocation -}}
+  {{- range $backupStorageLoc := .Values.backupStorageLocation -}}
 
     {{- $enabled := false -}}
-    {{- if hasKey $backupstoragelocation "enabled" -}}
-      {{- if not (kindIs "invalid" $backupstoragelocation.enabled) -}}
-        {{- $enabled = $backupstoragelocation.enabled -}}
+    {{- if hasKey $backupStorageLoc "enabled" -}}
+      {{- if not (kindIs "invalid" $backupStorageLoc.enabled) -}}
+        {{- $enabled = $backupStorageLoc.enabled -}}
       {{- else -}}
-        {{- fail (printf "backupstoragelocation - Expected the defined key [enabled] in [backupstoragelocation.%s] to not be empty" $backupstoragelocation.name) -}}
+        {{- fail (printf "Backup Storage Location - Expected the defined key [enabled] in [backupStorageLocation.%s] to not be empty" $backupStorageLoc.name) -}}
       {{- end -}}
     {{- end -}}
-
 
     {{- if kindIs "string" $enabled -}}
       {{- $enabled = tpl $enabled $ -}}
@@ -32,44 +31,36 @@
     {{- if $enabled -}}
 
       {{/* Create a copy of the backupstoragelocation */}}
-      {{- $objectData := (mustDeepCopy $backupstoragelocation) -}}
+      {{- $objectData := (mustDeepCopy $backupStorageLoc) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $backupstoragelocation.name) -}}
+      {{- if not $backupStorageLoc.name -}}
+        {{- fail "Backup Storage Location - Expected non-empty [name]" -}}
+      {{- end -}}
+
+      {{- $objectName := (printf "%s-%s" $fullname $backupStorageLoc.name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $backupstoragelocation.name -}}
+          {{- $objectName = $backupStorageLoc.name -}}
         {{- end -}}
       {{- end -}}
 
+      {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
+      {{- $operator := index $.Values.operator "velero" -}}
+      {{- $namespace := $operator.namespace | default (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "Backup Storage Location")) -}}
+      {{- $_ := set $objectData "namespace" $namespace -}}
+
       {{/* Perform validations */}} {{/* backupstoragelocations have a max name length of 253 */}}
       {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
-      {{- include "tc.v1.common.lib.velero.backupstoragelocation.validation" (dict "objectData" $objectData) -}}
-      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "backupstoragelocation") -}}
+      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Backup Storage Location") -}}
 
       {{/* Set the name of the backupstoragelocation */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $backupstoragelocation.name -}}
+      {{- $_ := set $objectData "shortName" $backupStorageLoc.name -}}
 
-      {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
-      {{- $operator := index $.Values.operator "velero" -}}
-      {{- $namespace := $operator.namespace | default ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "backupstoragelocation") ) -}}
-      {{- $_ := set $objectData "namespace" $namespace -}}
+      {{/* Create secret with creds for provider, if the provider is not matched, it will skip creation */}}
+      {{- include "tc.v1.common.lib.velero.provider.secret" (dict "rootCtx" $ "objectData" $objectData "prefix" "bsl") -}}
 
-      {{/* Create secret with creds */}}
-      {{- $creds := "" -}}
-      {{- if and (eq $objectData.provider "aws") $objectData.credential.aws -}}
-        {{- $creds = printf "%v%v%v%v" "[default]\naws_access_key_id = " $objectData.credential.aws.id "\naws_secret_access_key = " $objectData.credential.aws.key -}}
-      {{- end -}}
-      {{- $secretData := (dict
-                            "name" ( printf "bsl-%s" $objectData.name )
-                            "labels" ($objectData.labels | default dict)
-                            "annotations" ($objectData.annotations | default dict)
-                            "data" (dict "cloud" $creds )
-                          ) -}}
-      {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $secretData) -}}
-
-      {{- $_ := set $objectData.credential "name" ($objectData.credential.name | default ( printf "bsl-%s" $objectData.name ))  -}}
-      {{- $_ := set $objectData.credential "key" ($objectData.credential.key | default "cloud") -}}
+      {{- include "tc.v1.common.lib.velero.backupstoragelocation.validation" (dict "objectData" $objectData) -}}
 
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.velero.backupstoragelocation" (dict "rootCtx" $ "objectData" $objectData) -}}

@@ -10,11 +10,9 @@
 
   {{- if and (eq $provider "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}
-    {{/* Map provider */}}
     {{- $_ := set $objectData "provider" "velero.io/aws" -}}
   {{- else if and (eq $provider "s3") $objectData.credential.s3 -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.s3) | fromYaml).data -}}
-    {{/* Map provider */}}
     {{- $_ := set $objectData "provider" "velero.io/aws" -}}
   {{- end -}}
 

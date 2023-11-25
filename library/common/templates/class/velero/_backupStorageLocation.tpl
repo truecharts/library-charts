@@ -31,37 +31,31 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if not (empty $objectData.credential) }}
-  credential:
-    {{- with $objectData.credential.name }}
-    name: {{ . }}
-    {{- end }}
-    {{- with $objectData.credential.key }}
-    key: {{ . }}
-    {{- end }}
-  {{- end }}
   provider: {{ $objectData.provider }}
-  accessMode: {{ $objectData.accessMode | default "ReadWrite" }}
-  {{- with $objectData.default }}
-  default: {{ . }}
-  {{- end }}
+  {{- with $objectData.credential }}
+  credential:
+    name: {{ .name }}
+    key: {{ .key }}
+  {{- end -}}
+  {{- with $objectData.config }}
+  config:
+    {{- range $k, $v := . }}
+    {{ $k }}: {{ tpl (toString $v) $rootCtx | quote }}
+    {{- end -}}
+  {{- end -}}
+  {{- with $objectData.backupSyncPeriod }}
+  backupSyncPeriod: {{ . }}
+  {{- end -}}
   {{- with $objectData.validationFrequency }}
   validationFrequency: {{ . }}
   {{- end }}
+  accessMode: {{ $objectData.accessMode | default "ReadWrite" }}
   objectStorage:
-    bucket: {{ $objectData.bucket | quote }}
-    {{- with $objectData.prefix }}
+    bucket: {{ $objectData.objectStorage.bucket | quote }}
+    {{- with $objectData.objectStorage.prefix }}
     prefix: {{ . | quote }}
-    {{- end }}
-    {{- with $objectData.caCert }}
+    {{- end -}}
+    {{- with $objectData.objectStorage.caCert }}
     caCert: {{ . }}
-    {{- end }}
-{{- with $objectData.config }}
-  config:
-{{- range $key, $value := . }}
-{{- $key | nindent 4 }}: {{ $value | quote }}
-{{- end }}
-{{- end }}
-
-
+    {{- end -}}
 {{- end -}}
