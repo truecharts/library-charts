@@ -7,7 +7,7 @@ release:
 tests:
   - it: should generate correct spec
     set:
-      volumeSnapshots:
+      volumeSnapshotsList:
         - name: example1
           enabled: true
           source:
