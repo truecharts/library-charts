@@ -119,6 +119,19 @@ tests:
               bool: "false"
 
   # Failures
+  - it: should fail without name
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          provider: aws
+          credential:
+            aws:
+              id: my-id
+              key: my-key
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [name]
+
   - it: should fail without provider
     set:
       volumeSnapshotLocation:
