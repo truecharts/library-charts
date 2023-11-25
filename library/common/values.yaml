@@ -762,33 +762,36 @@ backupStorageLocation: {}
 #
 # # Parameters for the VolumeSnapshotLocation(s). Configure multiple by adding other element(s) to the volumeSnapshotLocation slice.
 # # See https://velero.io/docs/v1.6/api-types/volumesnapshotlocation/
-volumeSnapshotLocation: []
+volumeSnapshotLocationList: []
+#   # name is the |name of the volume snapshot location where snapshots are being taken. Required.
+#   - name: name
+#   ...
+volumeSnapshotLocation: {}
 # volumeSnapshotLocation:
-#   # name is the name of the volume snapshot location where snapshots are being taken. Required.
-# - name:
-#   enabled: false
-#   # provider is the name for the volume snapshot provider.
-#   provider:
-#   credential:
-#     # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
-#     aws:
-#       id: fdgsdfghsdfgh
-#       key: dfgdfhsdfgh
-#     # name of the secret used by this volumeSnapshotLocation.  (Optional/Advanced)
-#     name:
-#     # name of key that contains the secret data to be used.  (Optional/Advanced)
-#     key:
-#   # Additional provider-specific configuration. See link above
-#   # for details of required/optional fields for your provider.
-#   config: {}
-# #    region:
-# #    apiTimeout:
-# #    resourceGroup:
-# #    The ID of the subscription where volume snapshots should be stored, if different from the cluster’s subscription. If specified, also requires `configuration.volumeSnapshotLocation.config.resourceGroup`to be set. (Azure only)
-# #    subscriptionId:
-# #    incremental:
-# #    snapshotLocation:
-# #    project:
+#   name:
+#     enabled: false
+#     # provider is the name for the volume snapshot provider.
+#     provider:
+#     credential:
+#       # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
+#       aws:
+#         id: fdgsdfghsdfgh
+#         key: dfgdfhsdfgh
+#       # name of the secret used by this volumeSnapshotLocation.  (Optional/Advanced)
+#       name:
+#       # name of key that contains the secret data to be used.  (Optional/Advanced)
+#       key:
+#     # Additional provider-specific configuration. See link above
+#     # for details of required/optional fields for your provider.
+#     config: {}
+#   #    region:
+#   #    apiTimeout:
+#   #    resourceGroup:
+#   #    The ID of the subscription where volume snapshots should be stored, if different from the cluster’s subscription. If specified, also requires `configuration.volumeSnapshotLocation.config.resourceGroup`to be set. (Azure only)
+#   #    subscriptionId:
+#   #    incremental:
+#   #    snapshotLocation:
+#   #    project:
 
 # Backup schedules to create.
 schedules: {}
