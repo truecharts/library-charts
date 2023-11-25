@@ -48,8 +48,9 @@ backupStorageLocation:
   enabled: true
   # provider is the name for the backup storage location provider.
   provider: aws
-  # bucket is the name of the bucket to store backups in. Required.
-  bucket: test
+  objectStorage:
+    # bucket is the name of the bucket to store backups in. Required.
+    bucket: test
   credential:
     # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
     aws:
