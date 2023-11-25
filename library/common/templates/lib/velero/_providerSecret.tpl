@@ -3,9 +3,14 @@
   {{- $objectData := .objectData -}}
 
   {{- $creds := "" -}} {{/* We can add additinal providers here, and only create the template for the data */}}
-  {{/* TODO: Provider should probably be velero.io/aws or we should map it  */}}
-  {{- if and (eq ($objectData.provider | toString) "aws") $objectData.credential.aws -}}
+
+  {{/* Make sure provider is a string */}}
+  {{- $provider := $objectData.provider | toString -}}
+
+  {{- if and (eq $provider "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}
+    {{/* Map provider */}}
+    {{- $_ := set $objectData "provider" "velero.io/aws" -}}
   {{- end -}}
 
   {{/* If we matched a provider, create the secret */}}
@@ -23,6 +28,7 @@
     {{/* Update the credential object with the name and key */}}
     {{- $_ := set $objectData.credential "name" (printf "vsl-%s" $objectData.name) -}}
     {{- $_ := set $objectData.credential "key" "cloud" -}}
+
   {{- end -}}
 
 {{- end -}}

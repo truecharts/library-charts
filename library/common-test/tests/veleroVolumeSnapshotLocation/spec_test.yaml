@@ -26,7 +26,7 @@ tests:
         equal:
           path: spec
           value:
-            provider: aws
+            provider: velero.io/aws
             credential:
               name: vsl-test-release-name-common-test-my-snap1
               key: cloud
@@ -83,7 +83,7 @@ tests:
         equal:
           path: spec
           value:
-            provider: aws
+            provider: velero.io/aws
             credential:
               name: vsl-test-release-name-common-test-my-snap1
               key: cloud
@@ -139,3 +139,29 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Volume Snapshot Location - Expected non-empty [credential.key]
+
+  - it: should fail without credential.aws.id with provider aws
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: aws
+          credential:
+            aws:
+              key: my-key
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [credential.aws.id] for [aws] provider
+
+  - it: should fail without credential.aws.key with provider aws
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: aws
+          credential:
+            aws:
+              id: my-id
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [credential.aws.key] for [aws] provider
