@@ -7,7 +7,7 @@ release:
   name: test-release-name
   namespace: test-release-namespace
 tests:
-  - it: should pass with storageClass created with labels and annotations
+  - it: should pass with volumeSnapshotLocation created with labels and annotations
     set:
       label1: label1
       label2: global_label2
