@@ -16,4 +16,6 @@
 
   {{- include "tc.v1.common.values.volumeSnapshotList" . -}}
 
+  {{- include "tc.v1.common.values.volumeSnapshotClassList" . -}}
+
 {{- end -}}
