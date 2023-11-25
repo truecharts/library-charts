@@ -10,4 +10,10 @@
 
   {{- include "tc.v1.common.values.ingressList" . -}}
 
+  {{- include "tc.v1.common.values.backupStorageLocationList" . -}}
+
+  {{- include "tc.v1.common.values.volumeSnapshotLocationList" . -}}
+
+  {{- include "tc.v1.common.values.volumeSnapshotList" . -}}
+
 {{- end -}}

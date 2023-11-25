@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.values.volumeSnapshotList" -}}
+{{- define "tc.v1.common.values.volumeSnapshotLocationList" -}}
   {{- $rootCtx := . -}}
 
   {{- range $idx, $vslValues := $rootCtx.Values.volumeSnapshotLocationList -}}
