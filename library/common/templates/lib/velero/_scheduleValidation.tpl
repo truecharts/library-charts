@@ -10,5 +10,13 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
+  {{- if not $objectData.schedule -}}
+    {{- fail "Velero Schedule - Expected non-empty [schedule]" -}}
+  {{- end -}}
 
+  {{- if (hasKey $objectData "useOwnerReferencesInBackup") -}}
+    {{- if not (kindIs "bool" $objectData.useOwnerReferencesInBackup) -}}
+      {{ fail "Velero Schedule - Expected [useOwnerReferencesInBackup] to be a boolean" -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}

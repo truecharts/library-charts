@@ -788,6 +788,7 @@ volumeSnapshotLocation: []
 # #    project:
 
 # Backup schedules to create.
+schedules: {}
 # Eg:
 # schedules:
 #   mybackup:
