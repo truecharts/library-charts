@@ -5,7 +5,7 @@ release:
   name: test-release-name
   namespace: test-release-namespace
 tests:
-  - it: should generate correct spec with provided provider and credential
+  - it: should generate correct spec with aws provider and credential
     set:
       volumeSnapshotLocation:
         - enabled: true
@@ -13,6 +13,32 @@ tests:
           provider: aws
           credential:
             aws:
+              id: my-id
+              key: my-key
+    asserts:
+      - documentIndex: &volSnapLocDoc 1
+        isKind:
+          of: VolumeSnapshotLocation
+      - documentIndex: *volSnapLocDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *volSnapLocDoc
+        equal:
+          path: spec
+          value:
+            provider: velero.io/aws
+            credential:
+              name: vsl-test-release-name-common-test-my-snap1
+              key: cloud
+
+  - it: should generate correct spec with s3 provider and credential
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: s3
+          credential:
+            s3:
               id: my-id
               key: my-key
     asserts:

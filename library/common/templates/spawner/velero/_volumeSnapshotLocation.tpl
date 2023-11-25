@@ -58,7 +58,7 @@
       {{- $_ := set $objectData "shortName" $volSnapLoc.name -}}
 
       {{/* Create secret with creds for provider, if the provider is not matched, it will skip creation */}}
-      {{- include "tc.v1.common.lib.velero.provider.secret" (dict "rootCtx" $ "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.velero.provider.secret" (dict "rootCtx" $ "objectData" $objectData "prefix" "vsl") -}}
 
       {{- include "tc.v1.common.lib.velero.volumesnapshotlocation.validation" (dict "objectData" $objectData) -}}
 
