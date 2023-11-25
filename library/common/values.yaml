@@ -130,6 +130,8 @@ podOptions:
   enableServiceLinks: false
   hostNetwork: false
   hostPID: false
+  hostIPC: false
+  hostUsers: false
   shareProcessNamespace: false
   restartPolicy: Always
   dnsPolicy: ClusterFirst
@@ -320,6 +322,7 @@ persistenceList: []
 
 deviceList: []
 
+volumeSnapshotClass: []
 volumeSnapshots: []
 # volumeSnapshots:
 #   - name: "mycustomsnapshot"
@@ -372,7 +375,7 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Thank you for installing [{{ .Chart.Name }}] by TrueCharts.
+    # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
     {{- if .Values.iXPortals }}
@@ -384,7 +387,7 @@ notes:
     {{- end -}}
     {{- end }}
 
-    ## [{{ .Chart.Name }}] Sources
+    ## Sources for {{ .Chart.Name }}
 
     {{- range .Chart.Sources }}
     - {{ . }}
@@ -394,7 +397,8 @@ notes:
     {{- if not $link -}}
       {{- $link = .Chart.Home -}}
     {{- end }}
-    [See more for [{{ $.Chart.Name }}] at [{{ $link }}]
+
+    See more for **{{ $.Chart.Name }}** at ({{ $link }})
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
@@ -456,7 +460,7 @@ alpineImage:
 
 scratchImage:
   repository: tccr.io/truecharts/scratch
-  tag: latest@sha256:7f821eeb99d04ac248c47f79cfbcc2482651fea48aff9ec5d2ba0ba34f1f5531
+  tag: latest@sha256:e7d1aaa6e29e7bcf3e3f13a8fc41803ca81b2614f72d11287ca4dcab4850bd99
   pullPolicy: IfNotPresent
 
 kubectlImage:
@@ -704,7 +708,6 @@ webhook:
 #     volumeBindingMode: Immediate
 #     mountOptions: []
 
-
 # # Parameters for the BackupStorageLocation(s). Configure multiple by adding other element(s) to the backupStorageLocation slice.
 # # See https://velero.io/docs/v1.6/api-types/backupstoragelocation/
 # backupStorageLocation:
@@ -800,6 +803,14 @@ volumeSnapshotLocation: []
 #       storageLocation: default
 #       includedNamespaces:
 #       - foo
+# # -- create volumeSnapshotClass on demand
+# volumeSnapshotClass:
+#   example:
+#     enabled: true
+#     driver: some.driver.io
+#     deletionPolicy: Retain
+#     isDefault: false
+#     parameters: {}
 
 metrics:
   main:
