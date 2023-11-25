@@ -2,7 +2,8 @@
   {{- $rootCtx := .rootCtx }}
   {{- $objectData := .objectData -}}
 
-  {{- $creds := "" -}} {{/* TODO: Provider should probably be velero.io/aws or we should map it  */}}
+  {{- $creds := "" -}} {{/* We can add additinal providers here, and only create the template for the data */}}
+  {{/* TODO: Provider should probably be velero.io/aws or we should map it  */}}
   {{- if and (eq ($objectData.provider | toString) "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}
   {{- end -}}
