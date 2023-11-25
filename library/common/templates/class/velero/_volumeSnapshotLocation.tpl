@@ -19,7 +19,7 @@ apiVersion: velero.io/v1
 kind: VolumeSnapshotLocation
 metadata:
   name: {{ $objectData.name }}
-  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "volumesnapshotlocation") }}
+  namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Volume Snapshot Location") }}
   {{- $labels := (mustMerge ($objectData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
   labels:
@@ -31,20 +31,16 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if not (empty $objectData.credential) }}
-  credential:
-    {{- with $objectData.credential.name }}
-    name: {{ . }}
-    {{- end }}
-    {{- with $objectData.credential.key }}
-    key: {{ . }}
-    {{- end }}
-  {{- end }}
   provider: {{ $objectData.provider }}
-{{- with $objectData.config }}
+  {{- with $objectData.credential }}
+  credential:
+    name: {{ .name }}
+    key: {{ .key }}
+  {{- end -}}
+  {{- with $objectData.config }}
   config:
-{{- range $key, $value := . }}
-{{- $key | nindent 4 }}: {{ $value | quote }}
-{{- end }}
-{{- end -}}
+    {{- range $k, $v := . }}
+    {{ $k }}: {{ tpl (toString $v) $rootCtx | quote }}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}

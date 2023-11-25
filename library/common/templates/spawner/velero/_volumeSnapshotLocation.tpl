@@ -6,17 +6,16 @@
 {{- define "tc.v1.common.spawner.velero.volumesnapshotlocation" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $volumesnapshotlocation := .Values.volumeSnapshotLocation -}}
+  {{- range $volSnapLoc := .Values.volumeSnapshotLocation -}}
 
     {{- $enabled := false -}}
-    {{- if hasKey $volumesnapshotlocation "enabled" -}}
-      {{- if not (kindIs "invalid" $volumesnapshotlocation.enabled) -}}
-        {{- $enabled = $volumesnapshotlocation.enabled -}}
+    {{- if hasKey $volSnapLoc "enabled" -}}
+      {{- if not (kindIs "invalid" $volSnapLoc.enabled) -}}
+        {{- $enabled = $volSnapLoc.enabled -}}
       {{- else -}}
-        {{- fail (printf "volumesnapshotlocation - Expected the defined key [enabled] in [volumesnapshotlocation.%s] to not be empty" $volumesnapshotlocation.name) -}}
+        {{- fail (printf "Volume Snapshot Location - Expected the defined key [enabled] in [volumeSnapshotLocation.%s] to not be empty" $volSnapLoc.name) -}}
       {{- end -}}
     {{- end -}}
-
 
     {{- if kindIs "string" $enabled -}}
       {{- $enabled = tpl $enabled $ -}}
@@ -32,48 +31,36 @@
     {{- if $enabled -}}
 
       {{/* Create a copy of the volumesnapshotlocation */}}
-      {{- $objectData := (mustDeepCopy $volumesnapshotlocation) -}}
+      {{- $objectData := (mustDeepCopy $volSnapLoc) -}}
 
-      {{- $objectName := (printf "%s-%s" $fullname $volumesnapshotlocation.name) -}}
+      {{- if not $volSnapLoc.name -}}
+        {{- fail "Volume Snapshot Location - Expected non-empty [name]" -}}
+      {{- end -}}
+
+      {{- $objectName := (printf "%s-%s" $fullname $volSnapLoc.name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $volumesnapshotlocation.name -}}
+          {{- $objectName = $volSnapLoc.name -}}
         {{- end -}}
       {{- end -}}
 
-      {{/* Set database to velero location or itself, just in case its used from within velero */}}
+      {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
       {{- $operator := index $.Values.operator "velero" -}}
-      {{- $namespace := $operator.namespace | default ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "backupstoragelocation") ) -}}
+      {{- $namespace := $operator.namespace | default (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "Volume Snapshot Location")) -}}
+      {{- $_ := set $objectData "namespace" $namespace -}}
 
       {{/* Perform validations */}} {{/* volumesnapshotlocations have a max name length of 253 */}}
       {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
-      {{- include "tc.v1.common.lib.velero.volumesnapshotlocation.validation" (dict "objectData" $objectData) -}}
-      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "volumesnapshotlocation") -}}
+      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Volume Snapshot Location") -}}
 
       {{/* Set the name of the volumesnapshotlocation */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $volumesnapshotlocation.name -}}
+      {{- $_ := set $objectData "shortName" $volSnapLoc.name -}}
 
-      {{/* Set namespace to velero location or itself, just in case its used from within velero */}}
-      {{- $operator := index $.Values.operator "velero" -}}
-      {{- $namespace := $operator.namespace | default ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $ "objectData" $objectData "caller" "backupstoragelocation") ) -}}
-      {{- $_ := set $objectData "namespace" $namespace -}}
+      {{/* Create secret with creds for provider, if the provider is not matched, it will skip creation */}}
+      {{- include "tc.v1.common.lib.velero.provider.secret" (dict "rootCtx" $ "objectData" $objectData) -}}
 
-      {{/* Create secret with creds */}}
-      {{- $creds := "" -}}
-      {{- if and (eq $objectData.provider "aws") $objectData.credential.aws -}}
-        {{- $creds = printf "%v%v%v%v" "[default]\naws_access_key_id = " $objectData.credential.aws.id "\naws_secret_access_key = " $objectData.credential.aws.key -}}
-      {{- end -}}
-      {{- $secretData := (dict
-                            "name" ( printf "vsl-%s" $objectData.name )
-                            "labels" ($objectData.labels | default dict)
-                            "annotations" ($objectData.annotations | default dict)
-                            "data" (dict "cloud" $creds )
-                          ) -}}
-      {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $secretData) -}}
-
-      {{- $_ := set $objectData.credential "name" ($objectData.credential.name | default ( printf "vsl-%s" $objectData.name ))  -}}
-      {{- $_ := set $objectData.credential "key" ($objectData.credential.key | default "cloud") -}}
+      {{- include "tc.v1.common.lib.velero.volumesnapshotlocation.validation" (dict "objectData" $objectData) -}}
 
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.velero.volumesnapshotlocation" (dict "rootCtx" $ "objectData" $objectData) -}}

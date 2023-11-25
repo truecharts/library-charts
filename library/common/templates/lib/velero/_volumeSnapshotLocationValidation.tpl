@@ -10,5 +10,20 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
+  {{- if not $objectData.provider -}}
+    {{- fail "Volume Snapshot Location - Expected non-empty [provider]" -}}
+  {{- end -}}
+
+  {{- if not $objectData.credential -}}
+    {{- fail "Volume Snapshot Location - Expected non-empty [credential]" -}}
+  {{- end -}}
+
+  {{- if not $objectData.credential.name -}}
+    {{- fail "Volume Snapshot Location - Expected non-empty [credential.name]" -}}
+  {{- end -}}
+
+  {{- if not $objectData.credential.key -}}
+    {{- fail "Volume Snapshot Location - Expected non-empty [credential.key]" -}}
+  {{- end -}}
 
 {{- end -}}

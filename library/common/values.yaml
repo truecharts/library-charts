@@ -756,9 +756,11 @@ webhook:
 #
 # # Parameters for the VolumeSnapshotLocation(s). Configure multiple by adding other element(s) to the volumeSnapshotLocation slice.
 # # See https://velero.io/docs/v1.6/api-types/volumesnapshotlocation/
+volumeSnapshotLocation: []
 # volumeSnapshotLocation:
 #   # name is the name of the volume snapshot location where snapshots are being taken. Required.
 # - name:
+#   enabled: false
 #   # provider is the name for the volume snapshot provider.
 #   provider:
 #   credential:

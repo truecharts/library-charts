@@ -1,0 +1,141 @@
+suite: velero volumeSnapshotLocation spec test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should generate correct spec with provided provider and credential
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: aws
+          credential:
+            aws:
+              id: my-id
+              key: my-key
+    asserts:
+      - documentIndex: &volSnapLocDoc 1
+        isKind:
+          of: VolumeSnapshotLocation
+      - documentIndex: *volSnapLocDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *volSnapLocDoc
+        equal:
+          path: spec
+          value:
+            provider: aws
+            credential:
+              name: vsl-test-release-name-common-test-my-snap1
+              key: cloud
+
+  - it: should generate correct spec with provided provider and credential
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: my-provider
+          credential:
+            name: my-credential
+            key: my-key
+    asserts:
+      - documentIndex: &volSnapLocDoc 0
+        isKind:
+          of: VolumeSnapshotLocation
+      - documentIndex: *volSnapLocDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *volSnapLocDoc
+        equal:
+          path: spec
+          value:
+            provider: my-provider
+            credential:
+              name: my-credential
+              key: my-key
+
+  - it: should generate correct spec with provided provider, credential and custom config
+    set:
+      region: us-east-1
+      useS3PathStyle: true
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: aws
+          credential:
+            aws:
+              id: my-id
+              key: my-key
+          config:
+            region: "{{ .Values.region }}"
+            s3ForcePathStyle: "{{ .Values.useS3PathStyle }}"
+            bool: false
+    asserts:
+      - documentIndex: &volSnapLocDoc 1
+        isKind:
+          of: VolumeSnapshotLocation
+      - documentIndex: *volSnapLocDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *volSnapLocDoc
+        equal:
+          path: spec
+          value:
+            provider: aws
+            credential:
+              name: vsl-test-release-name-common-test-my-snap1
+              key: cloud
+            config:
+              region: us-east-1
+              s3ForcePathStyle: "true"
+              bool: "false"
+
+  # Failures
+  - it: should fail without provider
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          credential:
+            aws:
+              id: my-id
+              key: my-key
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [provider]
+
+  - it: should fail without credential
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: my-provider
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [credential]
+
+  - it: should fail without credential.name
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: my-provider
+          credential:
+            key: my-key
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [credential.name]
+
+  - it: should fail without credential.key
+    set:
+      volumeSnapshotLocation:
+        - enabled: true
+          name: my-snap1
+          provider: my-provider
+          credential:
+            name: my-name
+    asserts:
+      - failedTemplate:
+          errorMessage: Volume Snapshot Location - Expected non-empty [credential.key]
