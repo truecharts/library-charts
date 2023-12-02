@@ -4,27 +4,6 @@
   {{/* Generate named cnpges as required */}}
   {{- range $name, $cnpg := $.Values.cnpg -}}
 
-    {{/* Handle forceRecovery string */}}
-    {{/* Initialize variables */}}
-    {{- $recoveryBaseKey := "recoverystring" -}} {{/* This key is used in both CM name and the key field */}}
-    {{- $cmName := printf "%s-%s" $objectName $recoveryBaseKey -}}
-    {{- $recoveryValue := "" -}}
-
-    {{/* If there are previous configmap, fetch value */}}
-    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $cmName) -}}
-      {{- $recoveryValue = (index .data $recoveryBaseKey) -}}
-    {{- end -}}
-
-    {{- if $objectData.forceRecovery -}}
-      {{- $recoveryValue = randAlphaNum 5 -}}
-    {{- end -}}
-
-    {{- if $recoveryValue -}}
-      {{- $_ := set $objectData "recoveryValue" $recoveryValue -}}
-      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict $recoveryBaseKey $recoveryValue) | fromYaml -}}
-      {{- $_ := set $.Values.configmap (printf "%s-%s" $objectData.shortName $recoveryBaseKey) $recConfig -}}
-    {{- end -}}
-
     {{- if $enabled -}}
       {{/* Sets some default values if none given */}}
       {{- include "tc.v1.common.lib.cnpg.setDefaultKeys" (dict "objectData" $objectData) -}}

@@ -36,6 +36,28 @@
     {{/* Set the cluster name */}}
     {{- $_ := set $objectData "clusterName" (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
+    {{/* Handle recovery string */}}
+    {{- $recoveryValue := "" -}}
+    {{- $recoveryKey := "recovery-string" -}}
+    {{- $recoveryConfigMapName := printf "%s-%s" $objectData.name $recoveryKey -}}
+
+    {{/* If there are previous configmap, fetch value */}}
+    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $recoveryConfigMapName) -}}
+      {{- $recoveryValue = (index .data $recoveryKey) -}}
+    {{- end -}}
+
+    {{/* If forced recovery is requested... */}}
+    {{- if $objectData.forceRecovery -}}
+      {{- $recoveryValue = randAlphaNum 5 -}}
+    {{- end -}}
+
+    {{/* Recreate the configmap if there is a recovery value */}}
+    {{- if $recoveryValue -}}
+      {{- $_ := set $objectData "recoveryValue" $recoveryValue -}}
+      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoveryString" $recoveryValue "recoveryKey" $recoveryKey) | fromYaml -}}
+      {{- $_ := set $.Values.configmap $recoveryConfigMapName $recConfig -}}
+    {{- end -}}
+
     {{- if $enabled -}}
 
       {{/* Handle Backups/ScheduledBackups */}}
