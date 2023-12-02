@@ -13,6 +13,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           pooler:
             poolMode: invalid
     asserts:

@@ -28,6 +28,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -98,6 +100,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           namespace: some-namespace
           backups:
             enabled: true
@@ -120,6 +124,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           namespace: "{{ .Values.key }}"
           backups:
             enabled: true
@@ -144,6 +150,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -168,6 +176,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -192,6 +202,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:

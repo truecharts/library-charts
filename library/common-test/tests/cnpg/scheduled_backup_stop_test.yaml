@@ -13,6 +13,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           hibernate: true
           backups:
             enabled: true
@@ -43,6 +45,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           hibernate: false
           backups:
             enabled: true
@@ -76,6 +80,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           hibernate: false
           backups:
             enabled: true
@@ -109,6 +115,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           hibernate: false
           backups:
             enabled: true

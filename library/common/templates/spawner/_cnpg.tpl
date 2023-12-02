@@ -38,21 +38,43 @@
 
     {{- if $enabled -}}
 
-      {{/* Handle backups */}}
+      {{/* Handle Backups/ScheduledBackups */}}
       {{- if and (hasKey $objectData "backups") $objectData.backups.enabled -}}
         {{/* Create secret for backup store */}}
           {{/* TODO: */}}
 
-        {{/* Create manual backups */}}
+        {{/* Create Backups */}}
         {{- include "tc.v1.common.lib.cnpg.spawner.backups" (dict "rootCtx" $ "objectData" $objectData) -}}
 
-        {{/* Create scheduled backups */}}
+        {{/* Create ScheduledBackups */}}
         {{- include "tc.v1.common.lib.cnpg.spawner.scheduledBackups" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
 
-      {{/* Handle pooler */}}
+      {{/* Handle Pooler(s) */}}
       {{- include "tc.v1.common.lib.cnpg.spawner.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
+      {{/* Handle Cluster */}}
+      {{- include "tc.v1.common.lib.cnpg.cluster.validation" (dict "objectData" $objectData) -}}
+    {{- end -}}
+
+    {{/* Fetch db pass from Secret */}}
+    {{- $dbPass := "" -}}
+    {{- with (lookup "v1" "Secret" $.Release.Namespace (printf "%s-user" $objectData.name)) -}}
+      {{- $dbPass = (index .data "password") | b64dec -}}
+    {{- end -}}
+
+    {{/* Either enebled or if there was a dbpass fetched. Required to keep the generated password around */}}
+    {{- if or $enabled $dbPass -}}
+      {{/* If enabled or dbPass fetched from secret, recreate the secret */}}
+      {{- if not $dbPass -}}
+        {{/* Use provided password or fallback to generating new password */}}
+        {{- $dbPass = $objectData.password | default (randAlphaNum 62) -}}
+      {{- end -}}
+      {{/* Set password back to password field */}}
+      {{- $_ := set $objectData "password" $dbPass -}}
+
+      {{/* Handle DB Credentials Secret, will also inject creds to cnpg.creds */}}
+      {{- include "tc.v1.common.lib.cnpg.secrets" (dict "rootCtx" $ "cnpg" $cnpg "objectData" $objectData) -}}
     {{- end -}}
 
   {{- end -}}

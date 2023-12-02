@@ -13,6 +13,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -21,6 +23,8 @@ tests:
                 backupOwnerReference: self
         my-pg2:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:

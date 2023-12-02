@@ -13,8 +13,12 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
         my-pg2:
           enabled: true
+          user: test-user
+          database: test-db
           pooler:
             createRO: true
     asserts:

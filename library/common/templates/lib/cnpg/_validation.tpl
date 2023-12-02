@@ -10,13 +10,6 @@
   {{- if not (mustHas $objectData.mode $validModes) -}}
     {{- fail (printf "CNPG - Expected [mode] to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
   {{- end -}}
-
-  {{- $requiredKeys := (list "database" "user") -}}
-  {{- range $key := $requiredKeys -}}
-    {{- if not (get $objectData $key) -}}
-      {{- fail (printf "CNPG - Expected a non-empty [%s] key" $key) -}}
-    {{- end -}}
-  {{- end -}}
 {{- end -}}
 
 {{- define "tc.v1.common.lib.cnpg.cluster.recovery.validation" -}}
@@ -82,7 +75,7 @@
 
 {{- end -}}
 
-{{- define "tc.v1.common.lib.cnpg.cluster.validation" -}}
+{{- define "tc.v1.common.lib.cnpg.cluster.validation.old" -}}
   {{- $objectData := .objectData -}}
 
   {{- if $objectData.cluster.primaryUpdateStrategy -}}

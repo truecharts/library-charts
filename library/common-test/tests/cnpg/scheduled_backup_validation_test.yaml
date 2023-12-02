@@ -13,6 +13,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -29,6 +31,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -45,6 +49,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -63,6 +69,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -81,6 +89,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
@@ -100,6 +110,8 @@ tests:
       cnpg:
         my-pg:
           enabled: true
+          user: test-user
+          database: test-db
           backups:
             enabled: true
             scheduledBackups:
