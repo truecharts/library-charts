@@ -99,3 +99,22 @@
   {{- end -}}
 
 {{- end -}}
+
+{{- define "tc.v1.common.lib.cnpg.cluster.validation" -}}
+  {{- $objectData := .objectData -}}
+
+  {{- if $objectData.cluster.primaryUpdateStrategy -}}
+    {{- $validStrategies := (list "unsupervised" "supervised") -}}
+    {{- if not (mustHas $objectData.cluster.primaryUpdateStrategy $validStrategies) -}}
+      {{- fail (printf "CNPG Cluster - Expected [cluster.primaryUpdateStrategy] to be one of [%s], but got [%s]" (join ", " $validStrategies) $objectData.cluster.primaryUpdateStrategy) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $objectData.cluster.primaryUpdateMethod -}}
+    {{- $validMethods := (list "switchover" "restart") -}}
+    {{- if not (mustHas $objectData.cluster.primaryUpdateMethod $validMethods) -}}
+      {{- fail (printf "CNPG Cluster - Expected [cluster.primaryUpdateMethod] to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.cluster.primaryUpdateStrategy) -}}
+    {{- end -}}
+  {{- end -}}
+
+{{- end -}}

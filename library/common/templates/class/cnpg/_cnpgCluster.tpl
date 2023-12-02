@@ -22,26 +22,57 @@
     {{- $instances = 0 -}}
   {{- end -}}
 
-  {{- $monitoring := false -}}
+  {{/* Monitoring */}}
+  {{- $enableMonitoring := false -}}
   {{- with $objectData.monitoring -}}
-    {{- if not (kindIs "invalid" .enablePodMonitor) -}}
-      {{- $monitoring = .enablePodMonitor -}}
+    {{- if (kindIs "bool" .enablePodMonitor) -}}
+      {{- $enableMonitoring = .enablePodMonitor -}}
     {{- end -}}
+  {{- end -}}
+
+  {{/* Superuser */}}
+  {{- $enableSuperUser := true -}}
+  {{- if (kindIs "bool" $objectData.cluster.enableSuperuserAccess) -}}
+    {{- $enableSuperUser = $objectData.cluster.enableSuperuserAccess -}}
+  {{- end -}}
+
+  {{/* Node Maintenance Window */}}
+  {{- $inProgress := false -}}
+  {{- $reusePVC := true -}}
+  {{- if or $rootCtx.Values.global.ixChartContext $objectData.cluster.singleNode -}}
+    {{- $inProgress = true -}}
+    {{- $reusePVC = true -}}
+  {{- end -}}
+  {{- with $objectData.cluster.nodeMaintenanceWindow -}}
+    {{- if (kindIs "bool" .inProgress) }}
+      {{ $inProgress = .inProgress }}
+    {{- end -}}
+    {{- if (kindIs "string" .reusePVC) }}
+      {{ $reusePVC = .reusePVC }}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $preloadLibraries := list -}}
+  {{- if (kindIs "slice" $objectData.cluster.preloadLibraries) -}}
+    {{- $preloadLibraries = $objectData.cluster.preloadLibraries -}}
+  {{- end -}}
+  {{- if eq $objectData.type "timescaledb" -}}
+    {{- $preloadLibraries = mustAppend $preloadLibraries "timescaledb" -}}
   {{- end -}}
 
   {{- $size := $rootCtx.Values.fallbackDefaults.vctSize -}}
   {{- with $objectData.cluster.storage.size -}}
-    {{- $size := . -}}
+    {{- $size = . -}}
   {{- end -}}
 
   {{- $walSize := $rootCtx.Values.fallbackDefaults.vctSize -}}
   {{- with $objectData.cluster.walStorage.size -}}
-    {{- $walSize := . -}}
+    {{- $walSize = . -}}
   {{- end -}}
 
-  {{- $customQueries := dict -}}
+  {{- $customQueries := list -}}
   {{- with $objectData.cluster.monitoring.customQueries -}}
-    {{- $customQueries := . -}}
+    {{- $customQueries = . -}}
   {{- end }}
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -71,52 +102,50 @@ spec:
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
-{{- if $objectData.backups.enabled }}
-  {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
-{{- end }}
-{{/* TODO: Cleanup-Checkpoint */}}
-  enableSuperuserAccess: {{ $objectData.cluster.enableSuperuserAccess | default "true" }}
+  {{- if $objectData.backups.enabled }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
+  {{- end }}
+  enableSuperuserAccess: {{ $enableSuperUser }}
   primaryUpdateStrategy: {{ $objectData.cluster.primaryUpdateStrategy | default "unsupervised" }}
   primaryUpdateMethod: {{ $objectData.cluster.primaryUpdateMethod | default "switchover" }}
-  logLevel: {{ $objectData.cluster.logLevel }}
-  {{- with $objectData.cluster.certificates }}
+  logLevel: {{ $objectData.cluster.logLevel | default "info" }}
+  {{- range $k, $v := $objectData.cluster.certificates }}
   certificates:
-    {{- toYaml . | nindent 4 }}
+    {{ $k }}: {{ $v | quote }}
   {{- end }}
   storage:
     pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $values.storage) | trim | nindent 6 }}
-
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $objectData.storage) | trim | nindent 6 }}
   walStorage:
     pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $values.walStorage) | trim | nindent 6 }}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $objectData.walStorage) | trim | nindent 6 }}
   monitoring:
-    enablePodMonitor: {{ $monitoring }}
+    enablePodMonitor: {{ $enableMonitoring }}
     {{- if $customQueries }}
     customQueriesConfigMap:
-      - name: {{ printf "%s-monitoring" (include "cluster.fullname" .) }}
-        key: custom-queries
+      {{- range $q := $customQueries }}
+      - name: {{ $q.name }}
+        key: {{ $q.key }}
+      {{- end -}}
     {{- end }}
   nodeMaintenanceWindow:
-  {{- if $objectData.cluster.nodeMaintenanceWindow -}}
-    {{- toYaml $objectData.cluster.nodeMaintenanceWindow | nindent 6 -}}
-  {{- else -}}
-    {{- if or $rootCtx.Values.global.ixChartContext $objectData.cluster.singleNode }}
-    inProgress: true
-    reusePVC: true
-    {{- end -}}
-  {{- end -}}
+    inProgress: {{ $inProgress }}
+    reusePVC: {{ $reusePVC }}
   {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster) | trim) }}
   resources:
     {{- . | nindent 4 }}
   {{- end }}
   postgresql:
+    {{- with $preloadLibraries }}
     shared_preload_libraries:
-      {{- if eq $objectData.type "timescaledb" }}
-      - timescaledb
+      {{- range $lib := (. | uniq) }}
+      - {{ $lib | quote }}
       {{- end -}}
+    {{- end -}}
     {{- with $objectData.cluster.postgresql }}
     parameters:
-      {{- toYaml . | nindent 6 }}
+    {{- range $k, $v := . }}
+      {{ $k }}: {{ $v | quote }}
     {{- end -}}
+  {{- end -}}
 {{- end -}}
