@@ -52,7 +52,7 @@
   {{- $validPgModes := (list "session" "transaction") -}}
   {{- if $objectData.pooler.poolMode -}}
     {{- if not (mustHas $objectData.pooler.poolMode $validPgModes) -}}
-      {{- fail (printf "CNPG Pooler - Expected [poolMode] to be one one of [%s], but got [%s]" (join ", " $validPgModes) $objectData.pooler.poolMode) -}}
+      {{- fail (printf "CNPG Pooler - Expected [poolMode] to be one of [%s], but got [%s]" (join ", " $validPgModes) $objectData.pooler.poolMode) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
