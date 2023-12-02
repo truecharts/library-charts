@@ -73,6 +73,10 @@
       {{/* Create the RW Pooler object  */}}
       {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
+      {{- if eq $objectData.mode "recovery" -}}
+        {{- include "tc.v1.common.lib.cnpg.cluster.recovery.validation" (dict "objectData" $objectData) -}}
+      {{- end -}}
+
       {{- if $objectData.pooler.acceptRO -}}
         {{- $_ := set $objectData.pooler "type" "ro" -}}
         {{/* Create the RO Pooler object  */}}

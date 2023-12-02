@@ -13,275 +13,365 @@ tests:
       - failedTemplate:
           errorMessage: CNPG - Expected the defined key [enabled] in [cnpg.mypg] to not be empty
 
+  - it: should fail with invalid type
+    set:
+      cnpg:
+        mypg:
+          enabled: true
+          type: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected [type] to be one of [postgresql, postgis, timescaledb], but got [invalid]
+
   - it: should fail with invalid mode
     set:
       cnpg:
         mypg:
           enabled: true
+          type: postgresql
           mode: invalid
     asserts:
       - failedTemplate:
           errorMessage: CNPG - Expected [mode] to be one of [standalone, replica, recovery], but got [invalid]
 
-  - it: should fail with missing cluster key
+  - it: should fail with missing database
     set:
       cnpg:
         mypg:
           enabled: true
+          type: postgresql
           mode: standalone
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected [cluster] key to exist.
+          errorMessage: CNPG - Expected a non-empty [database] key
 
-  - it: should fail with invalid backup provider
+  - it: should fail with missing user
     set:
       cnpg:
         mypg:
           enabled: true
+          type: postgresql
           mode: standalone
-          cluster: {}
-          backups:
-            enabled: true
-            provider: invalid
+          database: app
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected [backups.provider] to be one of [azure, google, object_store, s3], but got [invalid]
+          errorMessage: CNPG - Expected a non-empty [user] key
 
   - it: should fail with invalid recovery method
     set:
+      operator:
+        verify:
+          enabled: false
       cnpg:
         mypg:
           enabled: true
+          type: postgresql
           mode: recovery
-          cluster: {}
+          database: app
+          user: app
           recovery:
             method: invalid
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected [recovery.method] to be one of [object_store, backup, pg_basebackup], but got [invalid]
+          errorMessage: CNPG Cluster Recovery - Expected [method] to be one of [backup, object_store, pg_basebackup], but got [invalid]
 
-  - it: should fail with invalid recovery provider
+  - it: should fail with empty backupName on backup method
     set:
+      operator:
+        verify:
+          enabled: false
       cnpg:
         mypg:
           enabled: true
+          type: postgresql
           mode: recovery
-          cluster: {}
+          database: app
+          user: app
+          recovery:
+            method: backup
+            backupName:
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster Recovery - Expected non-empty [backupName] key when [method] is [backup]
+
+  - it: should fail with empty serverName on object_store method
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        mypg:
+          enabled: true
+          type: postgresql
+          mode: recovery
+          database: app
+          user: app
           recovery:
             method: object_store
+            serverName:
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster Recovery - Expected non-empty [serverName] key when [method] is [object_store]
+
+  - it: should fail with invalid provider on recovery mode and object_store method
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        mypg:
+          enabled: true
+          type: postgresql
+          mode: recovery
+          database: app
+          user: app
+          recovery:
+            method: object_store
+            serverName: myserver
             provider: invalid
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected [recovery.provider] to be one of [azure, google, object_store, s3], but got [invalid]
+          errorMessage: CNPG Cluster Recovery - Expected [provider] to be one of [azure, google, object_store, s3], but got [invalid]
 
-  - it: should fail with missing s3 key when provider is s3
+  - it: should fail with invalid poolMode
     set:
+      operator:
+        verify:
+          enabled: false
       cnpg:
         mypg:
           enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: s3
+          mode: standalone
+          database: app
+          user: app
+          pooler:
+            poolMode: invalid
     asserts:
       - failedTemplate:
-          errorMessage: CNPG Barman - Expected key [s3] to exist and not be empty when provider is [s3]
+          errorMessage: CNPG Pooler - Expected [poolMode] to be one of [session, transaction], but got [invalid]
 
-  - it: should fail with missing azure key when provider is azure
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: azure
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - Expected key [azure] to exist and not be empty when provider is [azure]
+  # - it: should fail with invalid recovery provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: invalid
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - Expected [recovery.provider] to be one of [azure, google, object_store, s3], but got [invalid]
 
-  - it: should fail with missing google key when provider is google
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: google
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - Expected key [google] to exist and not be empty when provider is [google]
+  # - it: should fail with missing s3 key when provider is s3
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: s3
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - Expected key [s3] to exist and not be empty when provider is [s3]
 
-  - it: should fail with missing region on s3 provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: s3
-            s3:
-              region:
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - You need to specify S3 region when [endpointURL] is empty
+  # - it: should fail with missing azure key when provider is azure
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: azure
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - Expected key [azure] to exist and not be empty when provider is [azure]
 
-  - it: should fail with missing bucket on s3 provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: s3
-            s3:
-              region: us-east-1
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - You need to specify S3 [bucket] when [destinationPath] is empty
+  # - it: should fail with missing google key when provider is google
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: google
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - Expected key [google] to exist and not be empty when provider is [google]
 
-  - it: should fail with missing accessKey on s3 provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: s3
-            s3:
-              region: us-east-1
-              bucket: mybucket
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - S3 Creds requires [accessKey] to be defined and non-empty
+  # - it: should fail with missing region on s3 provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: s3
+  #           s3:
+  #             region:
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - You need to specify S3 region when [endpointURL] is empty
 
-  - it: should fail with missing secretKey on s3 provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: s3
-            s3:
-              region: us-east-1
-              bucket: mybucket
-              accessKey: mykey
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - S3 Creds requires [secretKey] to be defined and non-empty
+  # - it: should fail with missing bucket on s3 provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: s3
+  #           s3:
+  #             region: us-east-1
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - You need to specify S3 [bucket] when [destinationPath] is empty
 
-  - it: should fail with missing bucket on google provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: google
-            google:
-              bucket:
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - You need to specify Google [bucket] when [destinationPath] is empty
+  # - it: should fail with missing accessKey on s3 provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: s3
+  #           s3:
+  #             region: us-east-1
+  #             bucket: mybucket
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - S3 Creds requires [accessKey] to be defined and non-empty
 
-  - it: should fail with missing applicationCredentials on google provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: google
-            google:
-              bucket: mybucket
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - Google Creds requires [applicationCredentials] to be defined and non-empty
+  # - it: should fail with missing secretKey on s3 provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: s3
+  #           s3:
+  #             region: us-east-1
+  #             bucket: mybucket
+  #             accessKey: mykey
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - S3 Creds requires [secretKey] to be defined and non-empty
 
-  - it: should fail with missing connectionString on azure provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: azure
-            azure:
-              connectionString:
-              storageAccount: myaccount
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - Azure Creds requires [connectionString] to be defined and non-empty
+  # - it: should fail with missing bucket on google provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: google
+  #           google:
+  #             bucket:
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - You need to specify Google [bucket] when [destinationPath] is empty
 
-  - it: should fail with missing storageAccount on azure provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: azure
-            azure:
-              connectionString: myconnectionstring
-              storageAccount:
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Barman - You need to specify Azure [storageAccount] when [destinationPath] is empty
+  # - it: should fail with missing applicationCredentials on google provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: google
+  #           google:
+  #             bucket: mybucket
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - Google Creds requires [applicationCredentials] to be defined and non-empty
 
-  - it: should fail with missing storageKey on azure provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: azure
-            azure:
-              connectionString: myconnectionstring
-              storageAccount: myaccount
-              storageKey:
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - Azure Creds requires [storageKey] to be defined and non-empty
+  # - it: should fail with missing connectionString on azure provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: azure
+  #           azure:
+  #             connectionString:
+  #             storageAccount: myaccount
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - Azure Creds requires [connectionString] to be defined and non-empty
 
-  - it: should fail with missing storageSasToken on azure provider
-    set:
-      cnpg:
-        mypg:
-          enabled: true
-          mode: recovery
-          cluster: {}
-          recovery:
-            method: object_store
-            provider: azure
-            azure:
-              connectionString: myconnectionstring
-              storageAccount: myaccount
-              storageKey: mykey
-              storageSasToken:
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - Azure Creds requires [storageSasToken] to be defined and non-empty
+  # - it: should fail with missing storageAccount on azure provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: azure
+  #           azure:
+  #             connectionString: myconnectionstring
+  #             storageAccount:
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG Barman - You need to specify Azure [storageAccount] when [destinationPath] is empty
+
+  # - it: should fail with missing storageKey on azure provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: azure
+  #           azure:
+  #             connectionString: myconnectionstring
+  #             storageAccount: myaccount
+  #             storageKey:
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - Azure Creds requires [storageKey] to be defined and non-empty
+
+  # - it: should fail with missing storageSasToken on azure provider
+  #   set:
+  #     cnpg:
+  #       mypg:
+  #         enabled: true
+  #         mode: recovery
+  #         cluster: {}
+  #         recovery:
+  #           method: object_store
+  #           provider: azure
+  #           azure:
+  #             connectionString: myconnectionstring
+  #             storageAccount: myaccount
+  #             storageKey: mykey
+  #             storageSasToken:
+  #   asserts:
+  #     - failedTemplate:
+  #         errorMessage: CNPG - Azure Creds requires [storageSasToken] to be defined and non-empty

@@ -46,8 +46,7 @@ initdb:
 {{/* Recovery Template, called when mode is recovery */}}
 {{- define "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" }}
   {{- $objectData := .objectData -}}
-  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
-  {{- include "tc.v1.common.lib.cnpg.cluster.recovery.validation" (dict "objectData" $objectData) }}
+  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) }}
 recovery:
   secret:
     name: {{ printf "%s-user" $cnpgClusterName }}

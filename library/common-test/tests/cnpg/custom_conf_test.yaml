@@ -11,9 +11,8 @@ tests:
         verify:
           enabled: false
       cnpg:
-        main:
+        mypg:
           enabled: true
-          primary: true
           user: app
           database: app
           cluster:

@@ -11,9 +11,8 @@ tests:
         verify:
           enabled: false
       cnpg:
-        main:
+        mypg:
           enabled: true
-          primary: true
           user: app
           database: app
           instances: 2
@@ -50,9 +49,8 @@ tests:
       global:
         stopAll: true
       cnpg:
-        main:
+        mypg:
           enabled: true
-          primary: true
           user: app
           database: app
           hibernate: false
@@ -92,9 +90,8 @@ tests:
           storageClassName: some-storage-class
           isStopped: true
       cnpg:
-        main:
+        mypg:
           enabled: true
-          primary: true
           user: app
           database: app
           hibernate: false
@@ -134,9 +131,8 @@ tests:
           storageClassName: some-storage-class
           isStopped: false
       cnpg:
-        main:
+        mypg:
           enabled: true
-          primary: true
           user: app
           database: app
           hibernate: false
