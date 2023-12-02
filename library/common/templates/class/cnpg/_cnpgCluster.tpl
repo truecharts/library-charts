@@ -2,6 +2,8 @@
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
+  {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $rootCtx -}}
+
   {{/* Naming */}}
   {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
 
@@ -124,7 +126,12 @@ spec:
     {{- if $customQueries }}
     customQueriesConfigMap:
       {{- range $q := $customQueries }}
-      - name: {{ $q.name }}
+        {{- $name := (printf "%s-%s" $fullname $q.name) -}}
+        {{- $expand := true -}}
+        {{- if eq ($q.expandObjectName | default "" | toString) "false" -}}
+          {{- $name = $q.name -}}
+        {{- end }}
+      - name: {{ $name }}
         key: {{ $q.key }}
       {{- end -}}
     {{- end }}
