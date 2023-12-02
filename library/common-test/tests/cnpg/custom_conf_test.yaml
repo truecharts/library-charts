@@ -32,5 +32,6 @@ tests:
           path: spec
           content:
             postgresql:
-              key1: value1
-              key2: test-tpl
+              parameters:
+                key1: value1
+                key2: test-tpl
