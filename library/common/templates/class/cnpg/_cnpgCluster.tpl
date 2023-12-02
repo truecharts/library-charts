@@ -126,10 +126,26 @@ spec:
     {{- if $customQueries }}
     customQueriesConfigMap:
       {{- range $q := $customQueries }}
-        {{- $name := (printf "%s-%s" $fullname $q.name) -}}
-        {{- $expand := true -}}
-        {{- if eq ($q.expandObjectName | default "" | toString) "false" -}}
-          {{- $name = $q.name -}}
+        {{- $name := $q.name -}}
+        {{- $expandName := true -}}
+        {{- if (hasKey $q "expandObjectName") -}}
+          {{- if not (kindIs "invalid" $q.expandObjectName) -}}
+            {{- $expandName = $q.expandObjectName -}}
+          {{- else -}}
+            {{- fail "CNPG - Expected the defined key [expandObjectName] in [customQueries] to not be empty" -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if kindIs "string" $expandName -}}
+          {{- $expandName = tpl $expandName $rootCtx -}}
+          {{/* After tpl it becomes a string, not a bool */}}
+          {{-  if eq $expandName "true" -}}
+            {{- $expandName = true -}}
+          {{- else if eq $expandName "false" -}}
+            {{- $expandName = false -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if $expandName -}}
+          {{- $name = (printf "%s-%s" $fullname $q.name) -}}
         {{- end }}
       - name: {{ $name }}
         key: {{ $q.key }}
