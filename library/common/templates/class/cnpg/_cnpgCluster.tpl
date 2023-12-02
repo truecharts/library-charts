@@ -168,7 +168,7 @@ spec:
     {{- with $objectData.cluster.postgresql }}
     parameters:
     {{- range $k, $v := . }}
-      {{ $k }}: {{ $v | quote }}
+      {{ $k }}: {{ tpl $v $rootCtx | quote }}
     {{- end -}}
   {{- end -}}
 {{- end -}}

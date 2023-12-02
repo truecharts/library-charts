@@ -16,9 +16,10 @@ tests:
           primary: true
           user: app
           database: app
-          postgresql:
-            key1: value1
-            key2: '{{ printf "test-tpl" }}'
+          cluster:
+            postgresql:
+              key1: value1
+              key2: '{{ printf "test-tpl" }}'
     asserts:
       - documentIndex: &clusterDoc 0
         isKind:
