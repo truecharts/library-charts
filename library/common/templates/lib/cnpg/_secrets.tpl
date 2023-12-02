@@ -55,7 +55,7 @@
 {{- end -}}
 
 {{- define "tc.v1.common.lib.cnpg.secret.urls" -}}
-  {{- $creds := .creds }}
+  {{- $creds := .creds -}}
   {{- $credsRO := .credsRO }}
 enabled: true
 data:
