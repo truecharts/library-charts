@@ -39,7 +39,7 @@
     {{/* Handle recovery string */}}
     {{- $recoveryValue := "" -}}
     {{- $recoveryKey := "recovery-string" -}}
-    {{- $recoveryConfigMapName := printf "%s-%s" $objectData.shortName $recoveryKey -}}
+    {{- $recoveryConfigMapName := printf "cnpg-%s-%s" $objectData.shortName $recoveryKey -}}
 
     {{/* If there are previous configmap, fetch value */}}
     {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $recoveryConfigMapName) -}}
