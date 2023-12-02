@@ -14,6 +14,7 @@
   {{- $objAnnotations := $objectData.annotations | default dict -}}
   {{- $poolerAnnotations := $objectData.pooler.annotations | default dict -}}
   {{- $poolerAnnotations = mustMerge $poolerAnnotations $objAnnotations -}}
+
   {{/* Stop All */}}
   {{- $instances := $objectData.pooler.instances | default 2 -}}
   {{- $hibernation := "off" -}}
@@ -51,7 +52,7 @@ spec:
     {{- with $objectData.pooler.parameters }}
     parameters:
       {{- range $key, $value := . }}
-      {{ $key }}: {{ include "tc.v1.common.helper.makeIntOrNoop" $value | quote }}
+      {{ $key }}: {{ $value | quote }}
       {{- end -}}
     {{- end -}}
 {{- end -}}

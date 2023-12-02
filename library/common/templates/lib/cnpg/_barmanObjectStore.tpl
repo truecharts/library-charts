@@ -10,14 +10,14 @@
   {{- end -}}
   {{- if not $endpointUrl -}}
     {{- if not .scope.s3.region -}}
-      {{- fail "CNPG Barman - You need to specify S3 region when <endpointURL> is empty" -}}
+      {{- fail "CNPG Barman - You need to specify S3 region when [endpointURL] is empty" -}}
     {{- end -}}
     {{- $endpointUrl = (printf "https://s3.%s.amazonaws.com" .scope.s3.region) -}}
   {{- end -}}
 
   {{- if not $destPath -}}
     {{- if not .scope.s3.bucket -}}
-      {{- fail "CNPG Barman - You need to specify S3 <bucket> when <destinationPath> is empty" -}}
+      {{- fail "CNPG Barman - You need to specify S3 [bucket] when [destinationPath] is empty" -}}
     {{- end -}}
     {{- $destPath = (printf "s3://%s/%s" .scope.s3.bucket ((.scope.s3.path | default "/") | trimSuffix "/")) -}}
   {{- end }}
@@ -34,7 +34,7 @@
   {{- end -}}
   {{- if not $destPath -}}
     {{- if not .scope.azure.storageAccount -}}
-      {{- fail "CNPG Barman - You need to specify Azure <storageAccount> when <destinationPath> is empty" -}}
+      {{- fail "CNPG Barman - You need to specify Azure [storageAccount] when [destinationPath] is empty" -}}
     {{- end -}}
     {{- $destPath = (printf "https://%s.%s.core.windows.net/%s/%s" .scope.azure.storageAccount .scope.azure.serviceName .scope.azure.containerName ((.scope.azure.path | default "/") | trimSuffix "/")) -}}
   {{- end }}
@@ -57,7 +57,7 @@
   {{- end -}}
   {{- if not $destPath -}}
     {{- if not .scope.google.bucket -}}
-      {{- fail "CNPG Barman - You need to specify Google <bucket> when <destinationPath> is empty" -}}
+      {{- fail "CNPG Barman - You need to specify Google [bucket] when [destinationPath] is empty" -}}
     {{- end -}}
     {{- $destPath = (printf "gs://%s/%s" .scope.google.bucket ((.scope.google.path | default "/") | trimSuffix "/")) -}}
   {{- end }}
