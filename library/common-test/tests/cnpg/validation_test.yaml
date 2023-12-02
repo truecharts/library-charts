@@ -21,7 +21,7 @@ tests:
           mode: invalid
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected mode to be one of [standalone, replica, recovery], but got [invalid]
+          errorMessage: CNPG - Expected [mode] to be one of [standalone, replica, recovery], but got [invalid]
 
   - it: should fail with missing cluster key
     set:
