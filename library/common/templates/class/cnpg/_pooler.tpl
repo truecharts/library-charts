@@ -4,7 +4,7 @@
 
   {{/* Naming */}}
   {{- $poolerName := printf "%s-pooler-%s" $objectData.name $objectData.pooler.type -}}
-  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
+  {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $poolerName "length" 253) -}}
 
   {{/* Metadata */}}
   {{- $objLabels := $objectData.labels | default dict -}}
@@ -43,7 +43,7 @@ metadata:
   {{- end }}
 spec:
   cluster:
-    name: {{ $cnpgClusterName }}
+    name: {{ $objectData.clusterName }}
   instances: {{ $instances }}
   type: {{ $objectData.pooler.type }}
   pgbouncer:
@@ -52,7 +52,7 @@ spec:
     {{- with $objectData.pooler.parameters }}
     parameters:
       {{- range $key, $value := . }}
-      {{ $key }}: {{ $value | quote }}
+      {{ $key }}: {{ tpl $value $rootCtx | quote }}
       {{- end -}}
     {{- end -}}
 {{- end -}}

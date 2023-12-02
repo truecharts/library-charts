@@ -1,0 +1,50 @@
+suite: cnpg pooler name test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should generate correct name
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+        my-pg2:
+          enabled: true
+          pooler:
+            createRO: true
+    asserts:
+      - documentIndex: &poolerDoc 0
+        isKind:
+          of: Pooler
+      - documentIndex: *poolerDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *poolerDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg-pooler-rw
+      - documentIndex: &otherpoolerDoc 1
+        isKind:
+          of: Pooler
+      - documentIndex: *otherpoolerDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *otherpoolerDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg2-pooler-rw
+      - documentIndex: &otherpoolerDoc 2
+        isKind:
+          of: Pooler
+      - documentIndex: *otherpoolerDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *otherpoolerDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg2-pooler-ro

@@ -37,20 +37,8 @@
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
-      {{- $_ := set $objectData.pooler "type" "rw" -}}
-      {{- include "tc.v1.common.lib.cnpg.pooler.validation" (dict "objectData" $objectData) -}}
-      {{/* Create the RW Pooler object  */}}
-      {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
-
       {{- if eq $objectData.mode "recovery" -}}
         {{- include "tc.v1.common.lib.cnpg.cluster.recovery.validation" (dict "objectData" $objectData) -}}
-      {{- end -}}
-
-      {{- if $objectData.pooler.acceptRO -}}
-        {{- $_ := set $objectData.pooler "type" "ro" -}}
-        {{/* Create the RO Pooler object  */}}
-        {{- include "tc.v1.common.lib.cnpg.pooler.validation" ("objectData" $objectData) -}}
-        {{- include "tc.v1.common.class.cnpg.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
     {{- end -}}
 

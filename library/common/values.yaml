@@ -1219,10 +1219,12 @@ cnpg:
         gkeEnvironment: false
         applicationCredentials: ""
 
-      scheduledBackups:
-        - name: daily-backup # Daily at midnight
-          schedule: "0 0 0 * * *" # Daily at midnight
-          backupOwnerReference: self
+      scheduledBackups: []
+        # - name: daily-backup # Daily at midnight
+        #   schedule: "0 0 0 * * *" # Daily at midnight
+        #   backupOwnerReference: self
+        #   immediate: false
+        #   suspend: false
 
       retentionPolicy: "30d"
 
@@ -1238,7 +1240,7 @@ cnpg:
     # Database cluster PgBouncer configuration
     pooler:
       # -- enable to create extra pgbouncer for readonly access
-      acceptRO: false
+      createRO: false
       poolMode: session
       # -- Gets scaled to 0 if hibernation is true
       instances: 2

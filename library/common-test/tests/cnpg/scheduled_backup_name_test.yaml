@@ -28,23 +28,23 @@ tests:
                 schedule: "0 0 * * 0"
                 backupOwnerReference: self
     asserts:
-      - documentIndex: &cnpgDoc 0
+      - documentIndex: &backupDoc 0
         isKind:
           of: ScheduledBackup
-      - documentIndex: *cnpgDoc
+      - documentIndex: *backupDoc
         isAPIVersion:
           of: postgresql.cnpg.io/v1
-      - documentIndex: *cnpgDoc
+      - documentIndex: *backupDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test-cnpg-my-pg-sched-backup-daily
-      - documentIndex: &otherCnpgDoc 1
+      - documentIndex: &otherbackupDoc 2
         isKind:
           of: ScheduledBackup
-      - documentIndex: *otherCnpgDoc
+      - documentIndex: *otherbackupDoc
         isAPIVersion:
           of: postgresql.cnpg.io/v1
-      - documentIndex: *otherCnpgDoc
+      - documentIndex: *otherbackupDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test-cnpg-my-pg2-sched-backup-weekly

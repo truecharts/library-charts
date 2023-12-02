@@ -51,6 +51,7 @@
       {{- end -}}
 
       {{/* Handle pooler */}}
+      {{- include "tc.v1.common.lib.cnpg.spawner.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
     {{- end -}}
 
