@@ -37,22 +37,23 @@
 
     {{/* Handle forceRecovery string */}}
     {{/* Initialize variables */}}
-    {{- $fetchname := printf "%s-recoverystring" $objectName -}}
-    {{- $recValue := "" -}}
+    {{- $recoveryBaseKey := "recoverystring" -}} {{/* This key is used in both CM name and the key field */}}
+    {{- $cmName := printf "%s-%s" $objectName $recoveryBaseKey -}}
+    {{- $recoveryValue := "" -}}
 
     {{/* If there are previous configmap, fetch value */}}
-    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $fetchname) -}}
-      {{- $recValue = (index .data "recoverystring") -}}
+    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $cmName) -}}
+      {{- $recoveryValue = (index .data $recoveryBaseKey) -}}
     {{- end -}}
 
     {{- if $objectData.forceRecovery -}}
-      {{- $recValue = randAlphaNum 5 -}}
+      {{- $recoveryValue = randAlphaNum 5 -}}
     {{- end -}}
 
-    {{- if $recValue -}}
-      {{- $_ := set $objectData "recValue" $recValue -}}
-      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoverystring" $recValue) | fromYaml -}}
-      {{- $_ := set $.Values.configmap (printf "%s-recoverystring" $objectData.shortName) $recConfig -}}
+    {{- if $recoveryValue -}}
+      {{- $_ := set $objectData "recoveryValue" $recoveryValue -}}
+      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict $recoveryBaseKey $recoveryValue) | fromYaml -}}
+      {{- $_ := set $.Values.configmap (printf "%s-%s" $objectData.shortName $recoveryBaseKey) $recConfig -}}
     {{- end -}}
 
     {{- if $enabled -}}
@@ -66,10 +67,6 @@
 
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
-
-      {{- if not (hasKey $objectData "pooler") -}} {{/* No required values from user */}}
-        {{- $_ := set $objectData "pooler" dict -}}
-      {{- end -}}
 
       {{- $_ := set $objectData.pooler "type" "rw" -}}
       {{- include "tc.v1.common.lib.cnpg.pooler.validation" (dict "objectData" $objectData) -}}
@@ -104,7 +101,6 @@
     {{- end -}}
 
     {{- if or $enabled $dbPass -}}
-
       {{- if not $dbPass -}}
         {{- $dbPass = $objectData.password | default (randAlphaNum 62) -}}
       {{- end -}}
@@ -130,7 +126,7 @@
       {{- end -}}
 
       {{/* We need to mutate the actual (cnpg) values here not the copy */}}
-      {{- $_ := set $cnpg.creds "password" ($dbPass | quote) -}}
+      {{- $_ := set $cnpg.creds "password" $dbPass -}}
       {{- $_ := set $cnpg.creds "std" $creds.std -}}
       {{- $_ := set $cnpg.creds "nossl" $creds.nossl -}}
       {{- $_ := set $cnpg.creds "porthost" $creds.porthost -}}
