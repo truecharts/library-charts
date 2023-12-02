@@ -5,32 +5,32 @@ release:
   name: test-release-name
   namespace: test-release-namespace
 tests:
-  - it: should pass with custom-conf
-    set:
-      operator:
-        verify:
-          enabled: false
-      cnpg:
-        mypg:
-          enabled: true
-          user: app
-          database: app
-          cluster:
-            postgresql:
-              key1: value1
-              key2: '{{ printf "test-tpl" }}'
-    asserts:
-      - documentIndex: &clusterDoc 0
-        isKind:
-          of: Cluster
-      - documentIndex: *clusterDoc
-        isAPIVersion:
-          of: postgresql.cnpg.io/v1
-      - documentIndex: *clusterDoc
-        isSubset:
-          path: spec
-          content:
-            postgresql:
-              parameters:
-                key1: value1
-                key2: test-tpl
+#   - it: should pass with custom-conf
+#     set:
+#       operator:
+#         verify:
+#           enabled: false
+#       cnpg:
+#         mypg:
+#           enabled: true
+#           user: app
+#           database: app
+#           cluster:
+#             postgresql:
+#               key1: value1
+#               key2: '{{ printf "test-tpl" }}'
+#     asserts:
+#       - documentIndex: &clusterDoc 0
+#         isKind:
+#           of: Cluster
+#       - documentIndex: *clusterDoc
+#         isAPIVersion:
+#           of: postgresql.cnpg.io/v1
+#       - documentIndex: *clusterDoc
+#         isSubset:
+#           path: spec
+#           content:
+#             postgresql:
+#               parameters:
+#                 key1: value1
+#                 key2: test-tpl

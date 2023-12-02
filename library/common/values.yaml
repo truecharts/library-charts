@@ -1227,9 +1227,13 @@ cnpg:
       retentionPolicy: "30d"
 
       # - Manual list of backups
-      manual: []
-      # - today
-      # - beforeUpdate
+      manualBackups: []
+        # - name: today
+        #   labels: {}
+        #   annotations: {}
+        # - name: beforeUpgrade
+        #   labels: {}
+        #   annotations: {}
 
     # Database cluster PgBouncer configuration
     pooler:

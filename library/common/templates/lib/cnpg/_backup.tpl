@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.lib.cnpg.spawner.backup" -}}
+{{- define "tc.v1.common.lib.cnpg.backup.secret" -}}
   {{- $objectData := .objectData -}}
   {{- $rootCtx := .rootCtx -}}
 

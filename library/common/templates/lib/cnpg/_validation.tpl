@@ -79,7 +79,7 @@
   {{- end -}}
 {{- end -}}
 
-{{- define "tc.v1.common.lib.cnpg.backup.validation" -}}
+{{- define "tc.v1.common.lib.cnpg.backup.validation.old" -}}
   {{- $objectData := .objectData -}}
 
   {{- if not $objectData.schedData.name -}}
