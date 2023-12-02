@@ -6,18 +6,37 @@
 {{- define "tc.v1.common.spawner.volumesnapshot" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{- range $volumesnapshot := .Values.volumeSnapshots -}}
+  {{- range $name, $volumesnapshot := .Values.volumeSnapshots -}}
+
+    {{- $enabled := false -}}
+    {{- if hasKey $volumesnapshot "enabled" -}}
+      {{- if not (kindIs "invalid" $volumesnapshot.enabled) -}}
+        {{- $enabled = $volumesnapshot.enabled -}}
+      {{- else -}}
+        {{- fail (printf "Volume Snapshot - Expected the defined key [enabled] in [volumeSnapshots.%v] to not be empty" $name) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if kindIs "string" $enabled -}}
+      {{- $enabled = tpl $enabled $ -}}
+
+      {{/* After tpl it becomes a string, not a bool */}}
+      {{-  if eq $enabled "true" -}}
+        {{- $enabled = true -}}
+      {{- else if eq $enabled "false" -}}
+        {{- $enabled = false -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if $enabled -}}
+
       {{/* Create a copy of the volumesnapshot */}}
       {{- $objectData := (mustDeepCopy $volumesnapshot) -}}
 
-      {{- if not $objectData.name -}}
-        {{- fail "VolumeSnapshot - Expected non empty [name]" -}}
-      {{- end -}}
-
-      {{- $objectName := (printf "%s-%s" $fullname $volumesnapshot.name) -}}
+      {{- $objectName := (printf "%s-%s" $fullname $name) -}}
       {{- if hasKey $objectData "expandObjectName" -}}
         {{- if not $objectData.expandObjectName -}}
-          {{- $objectName = $volumesnapshot.name -}}
+          {{- $objectName = $name -}}
         {{- end -}}
       {{- end -}}
 
@@ -28,10 +47,12 @@
 
       {{/* Set the name of the volumesnapshot */}}
       {{- $_ := set $objectData "name" $objectName -}}
-      {{- $_ := set $objectData "shortName" $volumesnapshot.name -}}
+      {{- $_ := set $objectData "shortName" $name -}}
 
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.volumesnapshot" (dict "rootCtx" $ "objectData" $objectData) -}}
+
+    {{- end -}}
 
   {{- end -}}
 
