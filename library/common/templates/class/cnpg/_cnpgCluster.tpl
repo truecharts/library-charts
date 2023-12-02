@@ -117,10 +117,10 @@ spec:
   {{- end }}
   storage:
     pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $objectData.storage) | trim | nindent 6 }}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.storage) | trim | nindent 6 }}
   walStorage:
     pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $ "objectData" $objectData.walStorage) | trim | nindent 6 }}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.walStorage) | trim | nindent 6 }}
   monitoring:
     enablePodMonitor: {{ $enableMonitoring }}
     {{- if $customQueries }}
