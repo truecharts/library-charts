@@ -11,14 +11,15 @@
     "host" (printf "%s-rw" $objectData.name)
     "jdbc" (printf "jdbc:postgresql://%v-rw:5432/%v" $objectData.name $objectData.database)
   ) -}}
+
   {{- $credsRO := dict -}}
   {{- if $objectData.pooler.createRO -}}
     {{- $credsRO = (dict
-      "stdRO" (printf "postgresql://%v:%v@%v-ro:5432/%v" $objectData.user $dbPass $objectData.name $objectData.database)
-      "nosslRO" (printf "postgresql://%v:%v@%v-ro:5432/%v?sslmode=disable" $objectData.user $dbPass $objectData.name $objectData.database)
-      "porthostRO" (printf "%s-ro:5432" $objectData.name)
-      "hostRO" (printf "%s-ro" $objectData.name)
-      "jdbcRO" (printf "jdbc:postgresql://%v-ro:5432/%v" $objectData.name $objectData.database)
+      "std" (printf "postgresql://%v:%v@%v-ro:5432/%v" $objectData.user $dbPass $objectData.name $objectData.database)
+      "nossl" (printf "postgresql://%v:%v@%v-ro:5432/%v?sslmode=disable" $objectData.user $dbPass $objectData.name $objectData.database)
+      "porthost" (printf "%s-ro:5432" $objectData.name)
+      "host" (printf "%s-ro" $objectData.name)
+      "jdbc" (printf "jdbc:postgresql://%v-ro:5432/%v" $objectData.name $objectData.database)
     ) -}}
   {{- end -}}
 
@@ -44,11 +45,11 @@
   {{- $_ := set $cnpg.creds "jdbc" $creds.jdbc -}}
 
   {{- if $objectData.pooler.createRO -}}
-    {{- $_ := set $cnpg.creds "stdRO" $credsRO.stdRO -}}
-    {{- $_ := set $cnpg.creds "nosslRO" $credsRO.nosslRO -}}
-    {{- $_ := set $cnpg.creds "porthostRO" $credsRO.porthostRO -}}
-    {{- $_ := set $cnpg.creds "hostRO" $credsRO.hostRO -}}
-    {{- $_ := set $cnpg.creds "jdbcRO" $credsRO.jdbcRO -}}
+    {{- $_ := set $cnpg.creds "stdRO" $credsRO.std -}}
+    {{- $_ := set $cnpg.creds "nosslRO" $credsRO.nossl -}}
+    {{- $_ := set $cnpg.creds "porthostRO" $credsRO.porthost -}}
+    {{- $_ := set $cnpg.creds "hostRO" $credsRO.host -}}
+    {{- $_ := set $cnpg.creds "jdbcRO" $credsRO.jdbc -}}
   {{- end -}}
 
 {{- end -}}
@@ -64,11 +65,11 @@ data:
   host: {{ $creds.host }}
   jdbc: {{ $creds.jdbc }}
   {{- if $credsRO }}
-  stdRO: {{ $creds.stdRO }}
-  nosslRO: {{ $creds.nosslRO }}
-  porthostRO: {{ $creds.porthostRO }}
-  hostRO: {{ $creds.hostRO }}
-  jdbcRO: {{ $creds.jdbcRO }}
+  stdRO: {{ $credsRO.std }}
+  nosslRO: {{ $credsRO.nossl }}
+  porthostRO: {{ $credsRO.porthost }}
+  hostRO: {{ $credsRO.host }}
+  jdbcRO: {{ $credsRO.jdbc }}
   {{- end -}}
 {{- end -}}
 
