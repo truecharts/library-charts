@@ -48,7 +48,7 @@ metadata:
   {{- end }}
 spec:
   schedule: {{ $objectData.schedData.schedule }}
-  backupOwnerReference: {{ $objectData.schedData.backupOwnerReference }}
+  backupOwnerReference: {{ $objectData.schedData.backupOwnerReference | default "none" }}
   suspend: {{ $suspend }}
   immediate: {{ $immediate }}
   cluster:

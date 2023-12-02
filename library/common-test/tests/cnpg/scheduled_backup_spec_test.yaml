@@ -19,7 +19,6 @@ tests:
               - name: daily
                 schedule: "0 0 * * *"
                 suspend: true
-                backupOwnerReference: self
               - name: weekly
                 schedule: "0 0 * * 0"
                 immediate: true
@@ -40,7 +39,7 @@ tests:
           path: spec
           value:
             schedule: "0 0 * * *"
-            backupOwnerReference: self
+            backupOwnerReference: none
             suspend: true
             immediate: false
             cluster:

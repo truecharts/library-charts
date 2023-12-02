@@ -41,6 +41,7 @@
       {{/* Handle backups */}}
       {{- if and (hasKey $objectData "backups") $objectData.backups.enabled -}}
         {{/* Create secret for backup store */}}
+          {{/* TODO: */}}
 
         {{/* Create manual backups */}}
         {{- include "tc.v1.common.lib.cnpg.spawner.backups" (dict "rootCtx" $ "objectData" $objectData) -}}
