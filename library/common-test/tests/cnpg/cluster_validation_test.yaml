@@ -238,3 +238,41 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: CNPG Recovery - Expected a non-empty [recovery.serverName] key
+
+  - it: should fail with invalid provider on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            serverName: some-server-name
+            provider: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected [recovery.provider] to be one of [azure, s3, google], but got [invalid]
+
+  - it: should fail with missing "provider" key on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            serverName: some-server-name
+            provider: google
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected [recovery.google] to be defined when [recovery.provider] is set to [google]

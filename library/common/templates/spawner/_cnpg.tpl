@@ -65,6 +65,11 @@
       {{/* Validate Cluster */}}
       {{- include "tc.v1.common.lib.cnpg.cluster.validation" (dict "objectData" $objectData) -}}
 
+      {{- if and (eq $objectData.mode "recovery") (eq $objectData.recovery.method "object_store") -}}
+        {{/* Create secret for recovery store */}} {{/* TODO: unit test */}}
+        {{- include "tc.v1.common.lib.cnpg.provider.secret.spawner" (dict "rootCtx" $ "objectData" $objectData "type" "recovery") -}}
+      {{- end -}}
+
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 

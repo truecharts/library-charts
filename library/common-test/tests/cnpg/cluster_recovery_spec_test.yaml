@@ -85,6 +85,9 @@ tests:
           mode: recovery
           recovery:
             method: object_store
+            provider: google
+            google:
+              applicationCredentials: some-credentials
             serverName: some-server-name
             pitrTarget:
               time: "2021-01-01T00:00:00Z"
