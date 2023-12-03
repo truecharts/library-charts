@@ -31,6 +31,21 @@ tests:
       - failedTemplate:
           errorMessage: CNPG - Expected a non-empty [database] key
 
+  - it: should fail with invalid version
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          version: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected [version] to be one of [legacy], but got [invalid]
+
   - it: should fail with hibernate not a bool
     set:
       operator:

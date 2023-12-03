@@ -8,6 +8,13 @@
     {{- end -}}
   {{- end -}}
 
+  {{- if (hasKey $objectData "version") -}}
+    {{- $validVersions := (list "legacy") -}}
+    {{- if not (mustHas $objectData.version $validVersions) -}}
+      {{- fail (printf "CNPG - Expected [version] to be one of [%s], but got [%s]" (join ", " $validVersions) $objectData.version) -}}
+    {{- end -}}
+  {{- end -}}
+
   {{- if (hasKey $objectData "hibernate") -}}
     {{- if not (kindIs "bool" $objectData.hibernate) -}}
       {{- fail (printf "CNPG - Expected [hibernate] to be a boolean, but got [%s]" (kindOf $objectData.hibernate)) -}}
