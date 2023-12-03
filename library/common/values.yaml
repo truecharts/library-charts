@@ -1082,22 +1082,6 @@ cnpg:
       # walStorage:
       #   size: "256Gi"
       # -- Gets scaled to 0 if hibernation is true
-      # -- set to enable prometheus metrics
-      monitoring:
-        enablePodMonitor: false
-        disableDefaultQueries: false
-        customQueries: []
-          # - name: "pg_cache_hit_ratio"
-          #   expandObjectName: true
-          #   key: "custom-key" (defaults to "custom-queries")
-          #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
-          #   metrics:
-          #     - datname:
-          #         usage: "LABEL"
-          #         description: "Name of the database database"
-          #     - ratio:
-          #         usage: GAUGE
-          #         description: "Cache hit ratio"
       ## See .Values.resources for more info
       # resources:
 
@@ -1139,7 +1123,22 @@ cnpg:
       initdb: {}
         # postInitSQL:
         #   - CREATE EXTENSION IF NOT EXISTS vector;
-
+    # -- set to enable prometheus metrics
+    monitoring:
+      enablePodMonitor: false
+      disableDefaultQueries: false
+      customQueries: []
+        # - name: "pg_cache_hit_ratio"
+        #   expandObjectName: true
+        #   key: "custom-key" (defaults to "custom-queries")
+        #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
+        #   metrics:
+        #     - datname:
+        #         usage: "LABEL"
+        #         description: "Name of the database database"
+        #     - ratio:
+        #         usage: GAUGE
+        #         description: "Cache hit ratio"
     # Recovery settings if the chosen mode is `recovery`.
     recovery:
       ##

@@ -244,9 +244,8 @@ tests:
           user: app
           database: app
           type: timescaledb
-          cluster:
-            monitoring:
-              enablePodMonitor: true
+          monitoring:
+            enablePodMonitor: true
     asserts:
       - documentIndex: *clusterDoc
         isKind:
@@ -269,34 +268,32 @@ tests:
           user: app
           database: app
           type: timescaledb
-          cluster:
-            monitoring:
-              enablePodMonitor: true
-              disableDefaultQueries: true
-              customQueries:
-                - name: test-query
-                  query: test-query
-                  metrics:
-                    - a-gauge:
-                        usage: GAUGE
-                        description: test-metric
-                    - a-counter:
-                        usage: COUNTER
-                        description: test-metric
-                - name: test-query2
-                  query: test-query2
-                  metrics:
-                    - a-gauge:
-                        usage: GAUGE
-                        description: test-metric
-                    - a-counter:
-                        usage: COUNTER
-                        description: test-metric
-                - name: test-query3
-                  query: test-query3
-                  expandObjectName: false
-                  key: test-key
-
+          monitoring:
+            enablePodMonitor: true
+            disableDefaultQueries: true
+            customQueries:
+              - name: test-query
+                query: test-query
+                metrics:
+                  - a-gauge:
+                      usage: GAUGE
+                      description: test-metric
+                  - a-counter:
+                      usage: COUNTER
+                      description: test-metric
+              - name: test-query2
+                query: test-query2
+                metrics:
+                  - a-gauge:
+                      usage: GAUGE
+                      description: test-metric
+                  - a-counter:
+                      usage: COUNTER
+                      description: test-metric
+              - name: test-query3
+                query: test-query3
+                expandObjectName: false
+                key: test-key
     asserts:
       - documentIndex: *clusterDoc
         isKind:

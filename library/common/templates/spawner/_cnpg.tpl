@@ -68,6 +68,7 @@
       {{/* Create the Cluster object */}}
       {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
+      {{/* TODO: Create configmaps for cluster.monitoring.customQueries */}}
     {{- end -}}
 
     {{/* Fetch db pass from Secret */}}

@@ -27,8 +27,8 @@
   {{- if not (hasKey $objectData "cluster") -}}
     {{- $_ := set $objectData "cluster" dict -}}
   {{- end -}}
-  {{- if not (hasKey $objectData.cluster "monitoring") -}}
-    {{- $_ := set $objectData.cluster "monitoring" dict -}}
+  {{- if not (hasKey $objectData "monitoring") -}}
+    {{- $_ := set $objectData "monitoring" dict -}}
   {{- end -}}
   {{- if not (hasKey $objectData.cluster "storage") -}}
     {{- $_ := set $objectData.cluster "storage" dict -}}
@@ -72,7 +72,7 @@
   {{- end -}}
 
   {{/* Monitoring */}}
-  {{- with $objectData.cluster.monitoring -}}
+  {{- with $objectData.monitoring -}}
     {{- if (kindIs "bool" .enablePodMonitor) -}}
       {{- $enableMonitoring = .enablePodMonitor -}}
     {{- end -}}
@@ -187,7 +187,7 @@ spec:
         {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
                         "rootCtx" $rootCtx "objectData" $q
                         "name" $q.name "caller" "CNPG Cluster"
-                        "key" "cluster.customQueries")) -}}
+                        "key" "monitoring.customQueries")) -}}
 
         {{- if eq $expandName "true" -}}
           {{- $name = (printf "%s-cnpg-%s-%s" $fullname $objectData.shortName $q.name) -}}
