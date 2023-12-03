@@ -10,7 +10,7 @@
 
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
                     "rootCtx" $ "objectData" $mutatingWebhookConfiguration
-                    "name" $name "caller" "Webhook Configuration"
+                    "name" $name "caller" "Webhook"
                     "key" "webhook")) -}}
 
     {{- if eq $enabled "true" -}}
