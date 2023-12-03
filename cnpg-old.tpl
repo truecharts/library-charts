@@ -5,16 +5,10 @@
   {{- range $name, $cnpg := $.Values.cnpg -}}
 
     {{- if $enabled -}}
-      {{/* Sets some default values if none given */}}
-      {{- include "tc.v1.common.lib.cnpg.setDefaultKeys" (dict "objectData" $objectData) -}}
 
       {{/* Validate the object */}}
-      {{- include "tc.v1.common.lib.cnpg.validation" (dict "objectData" $objectData) -}}
       {{/* Validate backup here as it used in Cluster too */}}
       {{- include "tc.v1.common.lib.cnpg.cluster.backup.validation" (dict "objectData" $objectData) -}}
-
-      {{/* Create the Cluster object */}}
-      {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{- if eq $objectData.mode "recovery" -}}
         {{- include "tc.v1.common.lib.cnpg.cluster.recovery.validation" (dict "objectData" $objectData) -}}
