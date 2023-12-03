@@ -97,6 +97,9 @@ tests:
               postInitSQL:
                 - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext1 }}1;
                 - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext2 }}2;
+              postInitTemplateSQL:
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext1 }}1;
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext2 }}2;
             nodeMaintenanceWindow:
               reusePVC: false
               inProgress: true
@@ -167,6 +170,9 @@ tests:
                   - CREATE EXTENSION IF NOT EXISTS some-extension;
                   - CREATE EXTENSION IF NOT EXISTS some-other-extension;
                 postInitSQL:
+                  - CREATE EXTENSION IF NOT EXISTS some-extension1;
+                  - CREATE EXTENSION IF NOT EXISTS some-other-extension2;
+                postInitTemplateSQL:
                   - CREATE EXTENSION IF NOT EXISTS some-extension1;
                   - CREATE EXTENSION IF NOT EXISTS some-other-extension2;
 

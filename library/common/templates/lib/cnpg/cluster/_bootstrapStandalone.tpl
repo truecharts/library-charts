@@ -4,6 +4,7 @@
 
   {{- $initdb := dict -}}
   {{- $postInitSQL := list -}}
+  {{- $postInitTemplateSQL := list -}}
   {{- $postInitApplicationSQL := list -}}
   {{- $dataChecksums := false -}}
   {{- if not (hasKey $objectData.cluster "initdb") -}}
@@ -13,6 +14,7 @@
   {{- if $objectData.cluster.initdb -}}
     {{- $postInitApplicationSQL = $objectData.cluster.initdb.postInitApplicationSQL | default list -}}
     {{- $postInitSQL = $objectData.cluster.initdb.postInitSQL | default list -}}
+    {{- $postInitTemplateSQL = $objectData.cluster.initdb.postInitTemplateSQL | default list -}}
   {{- end -}}
 
   {{- if (kindIs "bool" $objectData.cluster.initdb.dataChecksums) -}}
@@ -58,6 +60,12 @@ initdb:
   {{- if $postInitSQL }}
   postInitSQL:
     {{- range $v := $postInitSQL }}
+    - {{ tpl $v $rootCtx | quote }}
+    {{- end -}}
+  {{- end -}}
+  {{- if $postInitTemplateSQL }}
+  postInitTemplateSQL:
+    {{- range $v := $postInitTemplateSQL }}
     - {{ tpl $v $rootCtx | quote }}
     {{- end -}}
   {{- end -}}
