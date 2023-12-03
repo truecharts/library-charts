@@ -25,5 +25,6 @@
     {{- end -}}
   {{- end -}}
 
+  {{/* NOTE: Always treat the returned result as string */}}
   {{- $expandName -}}
 {{- end -}}
