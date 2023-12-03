@@ -75,3 +75,51 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: CNPG Cluster - Expected [type] to be one of [postgresql, postgis, timescaledb], but got [invalid]
+
+  - it: should fail with invalid log level
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          cluster:
+            logLevel: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [cluster.logLevel] to be one of [error, warning, info, debug, trace], but got [invalid]
+
+  - it: should fail with invalid primaryUpdateStrategy
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          cluster:
+            primaryUpdateStrategy: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [cluster.primaryUpdateStrategy] to be one of [supervised, unsupervised], but got [invalid]
+
+  - it: should fail with invalid primaryUpdateMethod
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          cluster:
+            primaryUpdateMethod: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [cluster.primaryUpdateMethod] to be one of [switchover, restart], but got [invalid]

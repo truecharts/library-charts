@@ -28,4 +28,27 @@
     {{- end -}}
   {{- end -}}
 
+  {{- if (hasKey $objectData "cluster") -}}
+    {{- if (hasKey $objectData.cluster "logLevel") -}}
+      {{- $validLevels := (list "error" "warning" "info" "debug" "trace") -}}
+      {{- if not (mustHas $objectData.cluster.logLevel $validLevels) -}}
+        {{- fail (printf "CNPG Cluster - Expected [cluster.logLevel] to be one of [%s], but got [%s]" (join ", " $validLevels) $objectData.cluster.logLevel) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if (hasKey $objectData.cluster "primaryUpdateStrategy") -}}
+      {{- $validStrategies := (list "supervised" "unsupervised") -}}
+      {{- if not (mustHas $objectData.cluster.primaryUpdateStrategy $validStrategies) -}}
+        {{- fail (printf "CNPG Cluster - Expected [cluster.primaryUpdateStrategy] to be one of [%s], but got [%s]" (join ", " $validStrategies) $objectData.cluster.primaryUpdateStrategy) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if (hasKey $objectData.cluster "primaryUpdateMethod") -}}
+      {{- $validMethods := (list "switchover" "restart") -}}
+      {{- if not (mustHas $objectData.cluster.primaryUpdateMethod $validMethods) -}}
+        {{- fail (printf "CNPG Cluster - Expected [cluster.primaryUpdateMethod] to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.cluster.primaryUpdateMethod) -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- end -}}
 {{- end -}}

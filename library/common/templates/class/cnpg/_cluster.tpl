@@ -142,6 +142,10 @@ spec:
   primaryUpdateMethod: {{ $primaryUpdateMethod }}
   logLevel: {{ $logLevel }}
   instances: {{ $instances }}
+  {{- range $k, $v := $objectData.cluster.certificates }}
+  certificates:
+    {{ $k }}: {{ $v | quote }}
+  {{- end }}
   {{/*
   bootstrap:
   {{- if eq $objectData.mode "standalone" -}}
@@ -152,10 +156,6 @@ spec:
   {{- end -}}
   {{- if $objectData.backups.enabled }}
     {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
-  {{- end }}
-  {{- range $k, $v := $objectData.cluster.certificates }}
-  certificates:
-    {{ $k }}: {{ $v | quote }}
   {{- end }}
   storage:
     pvcTemplate:
