@@ -45,7 +45,6 @@
 
     {{- if eq $enabled "true" -}}
 
-
       {{/* Handle Backups/ScheduledBackups */}}
       {{- if and (hasKey $objectData "backups") $objectData.backups.enabled -}}
 

@@ -1043,6 +1043,7 @@ cnpg:
     # Type of the CNPG database. Available types:
     # * `postgresql`
     # * `postgis`
+    # * `timescaledb`
     type: postgresql
 
     # Version of Postgresql to use, changes cluster naming scheme

@@ -3,9 +3,8 @@
   {{- $objectData := .objectData -}}
 
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $rootCtx -}}
-
-  {{/* Naming */}}
-  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
+  {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectData.clusterName "length" 253) -}}
+  {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "CNPG Cluster") -}}
 
   {{/* Metadata */}}
   {{- $objLabels := $objectData.labels | default dict -}}
@@ -24,12 +23,23 @@
     {{- $instances = 0 -}}
   {{- end -}}
 
+  {{/* General */}}
+  {{- $mode := "standalone" -}}
+  {{- with $objectData.mode -}}
+    {{- $mode = . -}}
+  {{- end -}}
+
   {{/* Monitoring */}}
   {{- $enableMonitoring := false -}}
   {{- with $objectData.monitoring -}}
     {{- if (kindIs "bool" .enablePodMonitor) -}}
       {{- $enableMonitoring = .enablePodMonitor -}}
     {{- end -}}
+  {{- end -}}
+
+  {{- $customQueries := list -}}
+  {{- with $objectData.cluster.monitoring.customQueries -}}
+    {{- $customQueries = . -}}
   {{- end -}}
 
   {{/* Superuser */}}
@@ -45,15 +55,17 @@
     {{- $inProgress = true -}}
     {{- $reusePVC = true -}}
   {{- end -}}
+
   {{- with $objectData.cluster.nodeMaintenanceWindow -}}
     {{- if (kindIs "bool" .inProgress) }}
       {{ $inProgress = .inProgress }}
     {{- end -}}
-    {{- if (kindIs "string" .reusePVC) }}
+    {{- if (kindIs "bool" .reusePVC) }}
       {{ $reusePVC = .reusePVC }}
     {{- end -}}
   {{- end -}}
 
+  {{/* Preload Libraries */}}
   {{- $preloadLibraries := list -}}
   {{- if (kindIs "slice" $objectData.cluster.preloadLibraries) -}}
     {{- $preloadLibraries = $objectData.cluster.preloadLibraries -}}
@@ -62,6 +74,7 @@
     {{- $preloadLibraries = mustAppend $preloadLibraries "timescaledb" -}}
   {{- end -}}
 
+  {{/* Storage */}}
   {{- $size := $rootCtx.Values.fallbackDefaults.vctSize -}}
   {{- with $objectData.cluster.storage.size -}}
     {{- $size = . -}}
@@ -70,17 +83,12 @@
   {{- $walSize := $rootCtx.Values.fallbackDefaults.vctSize -}}
   {{- with $objectData.cluster.walStorage.size -}}
     {{- $walSize = . -}}
-  {{- end -}}
-
-  {{- $customQueries := list -}}
-  {{- with $objectData.cluster.monitoring.customQueries -}}
-    {{- $customQueries = . -}}
   {{- end }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: {{ $cnpgClusterName }}
+  name: {{ $objectData.clusterName }}
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "CNPG Cluster") }}
   labels:
     cnpg.io/reload: "on"

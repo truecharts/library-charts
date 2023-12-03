@@ -1,0 +1,77 @@
+suite: cnpg cluster validation test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should fail without user
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          database: test-db
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected a non-empty [user] key
+
+  - it: should fail without database
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected a non-empty [database] key
+
+  - it: should fail with hibernate not a bool
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          hibernate: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG - Expected [hibernate] to be a boolean, but got [string]
+
+  - it: should fail with invalid mode
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [mode] to be one of [standalone, replica, recovery], but got [invalid]
+
+  - it: should fail with invalid type
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          type: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [type] to be one of [postgresql, postgis, timescaledb], but got [invalid]

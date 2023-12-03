@@ -1,16 +1,3 @@
-{{- define "tc.v1.common.lib.cnpg.validation" -}}
-  {{- $objectData := .objectData -}}
-
-  {{- $validTypes := (list "postgresql" "postgis" "timescaledb") -}}
-  {{- if not (mustHas $objectData.type $validTypes) -}}
-    {{- fail (printf "CNPG - Expected [type] to be one of [%s], but got [%s]" (join ", " $validTypes) $objectData.type) -}}
-  {{- end -}}
-
-  {{- $validModes := (list "standalone" "replica" "recovery") -}}
-  {{- if not (mustHas $objectData.mode $validModes) -}}
-    {{- fail (printf "CNPG - Expected [mode] to be one of [%s], but got [%s]" (join ", " $validModes) $objectData.mode) -}}
-  {{- end -}}
-{{- end -}}
 
 {{- define "tc.v1.common.lib.cnpg.cluster.recovery.validation" -}}
   {{- $objectData := .objectData -}}
@@ -31,10 +18,7 @@
       {{- fail "CNPG Cluster Recovery - Expected non-empty [serverName] key when [method] is [object_store]" -}}
     {{- end -}}
   {{- end -}}
-
 {{- end -}}
-
-
 
 {{- define "tc.v1.common.lib.cnpg.cluster.backup.validation" -}}
   {{- $objectData := .objectData -}}
@@ -56,23 +40,6 @@
     {{- end -}}
 
   {{- end -}}
-{{- end -}}
-
-{{- define "tc.v1.common.lib.cnpg.backup.validation.old" -}}
-  {{- $objectData := .objectData -}}
-
-  {{- if not $objectData.schedData.name -}}
-    {{- fail "CNPG Scheduled Backups - Expected non-empty [name]" -}}
-  {{- end -}}
-
-  {{- if not $objectData.schedData.schedule -}}
-    {{- fail "CNPG Scheduled Backups - Expected non-empty [schedule]" -}}
-  {{- end -}}
-
-  {{- if not $objectData.schedData.backupOwnerReference -}}
-    {{- fail "CNPG Scheduled Backups - Expected non-empty [backupOwnerReference]" -}}
-  {{- end -}}
-
 {{- end -}}
 
 {{- define "tc.v1.common.lib.cnpg.cluster.validation.old" -}}
