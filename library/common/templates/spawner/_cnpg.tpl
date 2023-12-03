@@ -5,25 +5,10 @@
 
   {{- range $name, $cnpg := $.Values.cnpg -}}
 
-    {{- $enabled := false -}}
-    {{- if hasKey $cnpg "enabled" -}}
-      {{- if not (kindIs "invalid" $cnpg.enabled) -}}
-        {{- $enabled = $cnpg.enabled -}}
-      {{- else -}}
-        {{- fail (printf "CNPG - Expected the defined key [enabled] in [cnpg.%s] to not be empty" $name) -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if kindIs "string" $enabled -}}
-      {{- $enabled = tpl $enabled $ -}}
-
-      {{/* After tpl it becomes a string, not a bool */}}
-      {{-  if eq $enabled "true" -}}
-        {{- $enabled = true -}}
-      {{- else if eq $enabled "false" -}}
-        {{- $enabled = false -}}
-      {{- end -}}
-    {{- end -}}
+    {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
+                    "rootCtx" $ "objectData" $cnpg
+                    "name" $name "caller" "CNPG"
+                    "key" "cnpg")) -}}
 
     {{/* Create a copy */}}
     {{- $objectData := mustDeepCopy $cnpg -}}
@@ -58,7 +43,8 @@
       {{- $_ := set $.Values.configmap $recoveryConfigMapName $recConfig -}}
     {{- end -}}
 
-    {{- if $enabled -}}
+    {{- if eq $enabled "true" -}}
+
 
       {{/* Handle Backups/ScheduledBackups */}}
       {{- if and (hasKey $objectData "backups") $objectData.backups.enabled -}}
@@ -87,7 +73,7 @@
     {{- end -}}
 
     {{/* Either enebled or if there was a dbpass fetched. Required to keep the generated password around */}}
-    {{- if or $enabled $dbPass -}}
+    {{- if or (eq $enabled "true") $dbPass -}}
       {{/* If enabled or dbPass fetched from secret, recreate the secret */}}
       {{- if not $dbPass -}}
         {{/* Use provided password or fallback to generating new password */}}

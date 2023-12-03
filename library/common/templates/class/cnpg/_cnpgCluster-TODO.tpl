@@ -127,24 +127,13 @@ spec:
     customQueriesConfigMap:
       {{- range $q := $customQueries }}
         {{- $name := $q.name -}}
-        {{- $expandName := true -}}
-        {{- if (hasKey $q "expandObjectName") -}}
-          {{- if not (kindIs "invalid" $q.expandObjectName) -}}
-            {{- $expandName = $q.expandObjectName -}}
-          {{- else -}}
-            {{- fail "CNPG - Expected the defined key [expandObjectName] in [customQueries] to not be empty" -}}
-          {{- end -}}
-        {{- end -}}
-        {{- if kindIs "string" $expandName -}}
-          {{- $expandName = tpl $expandName $rootCtx -}}
-          {{/* After tpl it becomes a string, not a bool */}}
-          {{-  if eq $expandName "true" -}}
-            {{- $expandName = true -}}
-          {{- else if eq $expandName "false" -}}
-            {{- $expandName = false -}}
-          {{- end -}}
-        {{- end -}}
-        {{- if $expandName -}}
+
+        {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
+                        "rootCtx" $rootCtx "objectData" $q
+                        "name" $q.name "caller" "CNPG Cluster"
+                        "key" "customQueries")) -}}
+
+        {{- if eq $expandName "true" -}}
           {{- $name = (printf "%s-%s" $fullname $q.name) -}}
         {{- end }}
       - name: {{ $name }}
