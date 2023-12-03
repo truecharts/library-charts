@@ -1144,6 +1144,7 @@ cnpg:
     # Recovery settings if the chosen mode is `recovery`.
     recovery:
       ##
+      # Backup Recovery Method
       # Available recovery methods:
       # * `backup` - Recovers a CNPG cluster from a CNPG backup (PITR supported) Needs to be on the same cluster in the same namespace.
       # * `object_store` - Recovers a CNPG cluster from a barman object store (PITR supported).
@@ -1155,8 +1156,8 @@ cnpg:
       pitrTarget:
         time: "" # Time in RFC3339 format
 
-      # Backup Recovery Method
-      backupName: "" # Name of the backup to recover from. Required if method is `backup`.
+      # Name of the backup to recover from. Required if method is `backup`.
+      backupName: ""
 
       # Object Store Recovery Method
       clusterName: ""

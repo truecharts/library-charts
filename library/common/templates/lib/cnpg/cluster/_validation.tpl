@@ -67,6 +67,27 @@
         {{- end -}}
       {{- end -}}
     {{- end -}}
+  {{- end -}}
+
+  {{- if eq $objectData.mode "recovery" -}}
+    {{- if not $objectData.recovery -}}
+      {{- fail "CNPG Recovery - Expected a non-empty [recovery] key" -}}
+    {{- end -}}
+
+    {{- $validMethods := (list "backup" "object_store" "pg_basebackup") -}}
+    {{- if not (mustHas $objectData.recovery.method $validMethods) -}}
+      {{- fail (printf "CNPG Recovery - Expected [recovery.method] to be one of [%s], but got [%s]" (join ", " $validMethods) $objectData.recovery.method) -}}
+    {{- end -}}
+    {{- if eq $objectData.recovery.method "backup" -}}
+      {{- if not $objectData.recovery.backupName -}}
+        {{- fail "CNPG Recovery - Expected a non-empty [recovery.backupName] key" -}}
+      {{- end -}}
+    {{- else if eq $objectData.recovery.method "object_store" -}}
+      {{- if not $objectData.recovery.serverName -}}
+        {{- fail "CNPG Recovery - Expected a non-empty [recovery.serverName] key" -}}
+      {{- end -}}
+    {{- end -}}
 
   {{- end -}}
+
 {{- end -}}

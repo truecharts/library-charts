@@ -172,3 +172,69 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: CNPG Cluster - Expected [cluster.initdb.walSegmentSize] to be between 1 and 1024, but got [1025]
+
+  - it: should fail without recovery object when mode is recovery
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected a non-empty [recovery] key
+
+  - it: should fail with invalid recovery method
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected [recovery.method] to be one of [backup, object_store, pg_basebackup], but got [invalid]
+
+  - it: should fail without backupName on recovery method backup
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: backup
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected a non-empty [recovery.backupName] key
+
+  - it: should fail without serverName on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - Expected a non-empty [recovery.serverName] key
