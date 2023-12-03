@@ -30,6 +30,9 @@
   {{- if not (hasKey $objectData "monitoring") -}}
     {{- $_ := set $objectData "monitoring" dict -}}
   {{- end -}}
+  {{- if not (hasKey $objectData "backups") -}}
+    {{- $_ := set $objectData "backups" dict -}}
+  {{- end -}}
   {{- if not (hasKey $objectData.cluster "storage") -}}
     {{- $_ := set $objectData.cluster "storage" dict -}}
   {{- end -}}
@@ -203,10 +206,10 @@ spec:
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
-  {{/*
   {{- if $objectData.backups.enabled }}
-    {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
-  {{- end }}
+    {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 2 -}}
+  {{- end -}}
+  {{/*
   TODO: Template it
   {{- with $objectData.cluster.certificates }}
   certificates:

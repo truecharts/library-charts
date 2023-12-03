@@ -18,7 +18,10 @@ tests:
           hibernate: true
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -53,7 +56,10 @@ tests:
           hibernate: false
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -91,7 +97,10 @@ tests:
           hibernate: false
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -129,7 +138,10 @@ tests:
           hibernate: false
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:

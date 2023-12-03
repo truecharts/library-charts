@@ -1,6 +1,6 @@
 {{- define "tc.v1.common.lib.cnpg.cluster.backup" -}}
+  {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
-  {{- $cnpgClusterName := (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) }}
 backup:
   target: {{ $objectData.backups.target }}
   retentionPolicy: {{ $objectData.backups.retentionPolicy }}
@@ -12,6 +12,9 @@ backup:
       compression: gzip
       encryption: AES256
       jobs: {{ $objectData.backups.jobs | default 2 }}
-    {{- $data := dict "chartFullname" $cnpgClusterName "scope" $objectData.backups -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig" $data | nindent 4 -}}
+
+  {{- $provider := $objectData.backups.provider -}}
+  {{/* Fetch provider data */}}
+  {{- $data := (get $objectData.backups $provider) -}}
+  {{- include (printf "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig.%s" $provider) (dict "rootCtx" $rootCtx "objectData" $objectData "data" $data "type" "backup") | nindent 6 -}}
 {{- end -}}

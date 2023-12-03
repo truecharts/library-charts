@@ -11,6 +11,6 @@ externalClusters:
     {{- $provider := $objectData.recovery.provider -}}
     {{/* Fetch provider data */}}
     {{- $data := (get $objectData.recovery $provider) -}}
-    {{- include (printf "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig.%s" $provider) (dict "rootCtx" $rootCtx "objectData" $objectData "data" $data) | nindent 6 -}}
+    {{- include (printf "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig.%s" $provider) (dict "rootCtx" $rootCtx "objectData" $objectData "data" $data "type" "recovery") | nindent 6 -}}
   {{- end -}}
 {{- end -}}

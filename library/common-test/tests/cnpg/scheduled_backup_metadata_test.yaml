@@ -38,7 +38,10 @@ tests:
             annotation2: annotation2
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             labels:
@@ -108,7 +111,10 @@ tests:
           namespace: some-namespace
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -135,7 +141,10 @@ tests:
           namespace: "{{ .Values.key }}"
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -163,7 +172,10 @@ tests:
           database: test-db
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -192,7 +204,10 @@ tests:
           database: test-db
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:
@@ -222,7 +237,10 @@ tests:
           database: test-db
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:

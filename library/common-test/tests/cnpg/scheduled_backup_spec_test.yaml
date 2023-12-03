@@ -17,7 +17,10 @@ tests:
           database: test-db
           backups:
             enabled: true
+            target: primary
+            retentionPolicy: 10d
             provider: azure
+            destinationPath: some-path
             azure:
               connectionString: some-connection-string
             scheduledBackups:

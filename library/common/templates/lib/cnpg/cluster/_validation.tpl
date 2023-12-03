@@ -82,10 +82,21 @@
       {{- if not $objectData.recovery.backupName -}}
         {{- fail "CNPG Recovery - Expected a non-empty [recovery.backupName] key" -}}
       {{- end -}}
-    {{- else if eq $objectData.recovery.method "object_store" -}}
-
     {{- end -}}
+  {{- end -}}
 
+  {{- if (hasKey $objectData "backups") -}}
+    {{- if $objectData.backups.enabled -}} {{/* TODO: CNPG Unit test */}}
+      {{- $validTargets := (list "primary" "prefer-standby") -}}
+      {{- if not (mustHas $objectData.backups.target $validTargets) -}}
+        {{- fail (printf "CNPG Backup - Expected [backups.target] to be one of [%s], but got [%s]" (join ", " $validTargets) $objectData.backups.target) -}}
+      {{- end -}}
+
+      {{- $regexPolicy := "^[1-9][0-9]*[dwm]$" -}} {{/* Copied from upstream */}}
+      {{- if not (mustRegexMatch $regexPolicy $objectData.backups.retentionPolicy) -}}
+        {{- fail (printf "CNPG Backup - Expected [backups.retentionPolicy] to match regex [%s], got [%s]" $regexPolicy $objectData.backups.retentionPolicy) -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 
 {{- end -}}
