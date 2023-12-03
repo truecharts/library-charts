@@ -2,7 +2,7 @@
   {{- $objectData := .objectData -}}
   {{- $rootCtx := .rootCtx -}}
   {{- $key := .key -}}
-  {{- $name := .name -}}
+  {{- $name := (.name | toString) -}}
   {{- $caller := .caller -}}
 
   {{- $expandName := true -}}
