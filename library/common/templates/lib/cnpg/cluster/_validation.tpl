@@ -83,9 +83,7 @@
         {{- fail "CNPG Recovery - Expected a non-empty [recovery.backupName] key" -}}
       {{- end -}}
     {{- else if eq $objectData.recovery.method "object_store" -}}
-      {{- if not $objectData.recovery.serverName -}}
-        {{- fail "CNPG Recovery - Expected a non-empty [recovery.serverName] key" -}}
-      {{- end -}}
+
     {{- end -}}
 
   {{- end -}}

@@ -222,23 +222,6 @@ tests:
       - failedTemplate:
           errorMessage: CNPG Recovery - Expected a non-empty [recovery.backupName] key
 
-  - it: should fail without serverName on recovery method object_store
-    set:
-      operator:
-        verify:
-          enabled: false
-      cnpg:
-        my-pg:
-          enabled: true
-          user: test-user
-          database: test-db
-          mode: recovery
-          recovery:
-            method: object_store
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG Recovery - Expected a non-empty [recovery.serverName] key
-
   - it: should fail with invalid provider on recovery method object_store
     set:
       operator:
@@ -252,7 +235,6 @@ tests:
           mode: recovery
           recovery:
             method: object_store
-            serverName: some-server-name
             provider: invalid
     asserts:
       - failedTemplate:
@@ -271,8 +253,133 @@ tests:
           mode: recovery
           recovery:
             method: object_store
-            serverName: some-server-name
             provider: google
     asserts:
       - failedTemplate:
           errorMessage: CNPG Recovery - Expected [recovery.google] to be defined when [recovery.provider] is set to [google]
+
+  - it: should fail with missing destinationPath and google bucket on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: google
+            google:
+              applicationCredentials: some-credentials
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [recovery.google.bucket] or [recovery.destinationPath]
+
+  - it: should fail with missing destinationPath and s3 bucket on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: s3
+            s3:
+              accessKey: some-access-key
+              secretKey: some-secret-key
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [recovery.s3.bucket] or [recovery.destinationPath]
+
+  - it: should fail with missing endpointURL and s3 region on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: s3
+            s3:
+              accessKey: some-access-key
+              secretKey: some-secret-key
+              bucket: some-bucket
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [recovery.s3.region] or [recovery.endpointURL]
+
+  - it: should fail with missing destinationPath and azure storageAccount on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: azure
+            azure:
+              connectionString: some-connection-string
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [azure.storageAccount] or [recovery.destinationPath]
+
+  - it: should fail with missing destinationPath and azure serviceName on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: azure
+            azure:
+              connectionString: some-connection-string
+              storageAccount: some-storage-account
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [azure.serviceName] or [recovery.destinationPath]
+
+  - it: should fail with missing destinationPath and azure containerName on recovery method object_store
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          mode: recovery
+          recovery:
+            method: object_store
+            provider: azure
+            azure:
+              connectionString: some-connection-string
+              storageAccount: some-storage-account
+              serviceName: some-service-name
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Recovery - You need to specify [azure.containerName] or [recovery.destinationPath]

@@ -201,7 +201,7 @@ spec:
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 4 -}}
   {{- else if eq $mode "recovery" -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | nindent 2 -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
   {{/*
   {{- if $objectData.backups.enabled }}
