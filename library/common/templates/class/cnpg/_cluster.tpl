@@ -156,7 +156,14 @@ spec:
       - {{ $lib | quote }}
       {{- end -}}
     {{- end -}}
-  {{- end -}}
+  {{- end }}
+  nodeMaintenanceWindow:
+    inProgress: {{ $inProgress }}
+    reusePVC: {{ $reusePVC }}
+  {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster) | trim) }}
+  resources:
+    {{- . | nindent 4 }}
+  {{- end }}
   {{/*
   bootstrap:
   {{- if eq $objectData.mode "standalone" -}}
@@ -193,16 +200,8 @@ spec:
         key: {{ $q.key }}
       {{- end -}}
     {{- end }}
-  nodeMaintenanceWindow:
-    inProgress: {{ $inProgress }}
-    reusePVC: {{ $reusePVC }}
-  {{- with (include "tc.v1.common.lib.container.resources" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster) | trim) }}
-  resources:
-    {{- . | nindent 4 }}
-  {{- end }}
-  */}}
 
-  {{/* TODO: Template it
+  TODO: Template it
   {{- with $objectData.cluster.certificates }}
   certificates:
     {{- toYaml . | nindent 4 }}
