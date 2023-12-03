@@ -38,6 +38,9 @@ tests:
             annotation2: annotation2
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             labels:
               label5: label5
             annotations:
@@ -103,6 +106,9 @@ tests:
           namespace: some-namespace
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
     asserts:
@@ -125,6 +131,9 @@ tests:
           namespace: "{{ .Values.key }}"
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
     asserts:
@@ -148,6 +157,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
     asserts:
@@ -172,6 +184,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
     asserts:
@@ -196,6 +211,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
     asserts:

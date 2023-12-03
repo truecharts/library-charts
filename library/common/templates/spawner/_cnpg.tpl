@@ -62,14 +62,15 @@
 
       {{/* Handle Backups/ScheduledBackups */}}
       {{- if and (hasKey $objectData "backups") $objectData.backups.enabled -}}
-        {{/* Create secret for backup store */}}
-          {{/* TODO: */}}
 
         {{/* Create Backups */}}
         {{- include "tc.v1.common.lib.cnpg.spawner.backups" (dict "rootCtx" $ "objectData" $objectData) -}}
 
         {{/* Create ScheduledBackups */}}
         {{- include "tc.v1.common.lib.cnpg.spawner.scheduledBackups" (dict "rootCtx" $ "objectData" $objectData) -}}
+
+        {{/* Create secret for backup store */}}
+        {{- include "tc.v1.common.lib.cnpg.provider.secret.spawner" (dict "rootCtx" $ "objectData" $objectData) -}}
       {{- end -}}
 
       {{/* Handle Pooler(s) */}}
@@ -96,7 +97,7 @@
       {{- $_ := set $objectData "password" $dbPass -}}
 
       {{/* Handle DB Credentials Secret, will also inject creds to cnpg.creds */}}
-      {{- include "tc.v1.common.lib.cnpg.secrets" (dict "rootCtx" $ "cnpg" $cnpg "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.cnpg.db.credentials.secrets" (dict "rootCtx" $ "cnpg" $cnpg "objectData" $objectData) -}}
     {{- end -}}
 
   {{- end -}}

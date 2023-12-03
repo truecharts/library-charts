@@ -17,6 +17,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name:
     asserts:
@@ -35,6 +38,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: daily
     asserts:
@@ -53,6 +59,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: daily
                 schedule: "0 0 * * *"
@@ -73,6 +82,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: _invalid
                 schedule: "0 0 * * *"
@@ -93,6 +105,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: _invalid
                 schedule: "0 0 * * *"
@@ -114,6 +129,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: _invalid
                 schedule: "0 0 * * *"

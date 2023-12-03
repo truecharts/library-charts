@@ -17,6 +17,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             scheduledBackups:
               - name: daily
                 schedule: "0 0 * * *"

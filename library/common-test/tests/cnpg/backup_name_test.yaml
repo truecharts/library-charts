@@ -17,6 +17,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: today
         my-pg2:
@@ -25,6 +28,9 @@ tests:
           database: test-db
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: other
     asserts:

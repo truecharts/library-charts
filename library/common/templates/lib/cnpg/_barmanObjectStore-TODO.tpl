@@ -23,10 +23,10 @@
   {{- end }}
   s3Credentials:
     accessKeyId:
-      name: {{ printf "%s-backup-s3%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_KEY_ID
     secretAccessKey:
-      name: {{ printf "%s-backup-s3%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_SECRET_KEY
 {{- else if eq .scope.provider "azure" -}}
   {{- if or (not (hasKey .scope "azure")) (not .scope.azure) -}}
@@ -40,17 +40,17 @@
   {{- end }}
   azureCredentials:
     connectionString:
-      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
-      key: AZURE_CONNECTION_STRING
+      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      key: CONNECTION_STRING
     storageAccount:
-      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
-      key: AZURE_STORAGE_ACCOUNT
+      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      key: STORAGE_ACCOUNT
     storageKey:
-      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
-      key: AZURE_STORAGE_KEY
+      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      key: STORAGE_KEY
     storageSasToken:
-      name: {{ printf "%s-backup-azure%s-creds" $chartFullname .secretSuffix }}
-      key: AZURE_STORAGE_SAS_TOKEN
+      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      key: STORAGE_SAS_TOKEN
 {{- else if eq .scope.provider "google" -}}
   {{- if or (not (hasKey .scope "google")) (not .scope.google) -}}
     {{- fail "CNPG Barman - Expected key [google] to exist and not be empty when provider is [google]" -}}
@@ -64,7 +64,7 @@
   googleCredentials:
     gkeEnvironment: {{ .scope.google.gkeEnvironment }}
     applicationCredentials:
-      name: {{ printf "%s-backup-google%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-google%s-creds" $chartFullname .secretSuffix }}
       key: APPLICATION_CREDENTIALS
 {{- end }}
   endpointURL: {{ $endpointUrl }}

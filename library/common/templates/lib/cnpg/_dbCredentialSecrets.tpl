@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.lib.cnpg.secrets" -}}
+{{- define "tc.v1.common.lib.cnpg.db.credentials.secrets" -}}
   {{- $objectData := .objectData -}}
   {{- $cnpg := .cnpg -}}
   {{- $rootCtx := .rootCtx -}}

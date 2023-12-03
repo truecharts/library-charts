@@ -15,6 +15,9 @@ tests:
           enabled: true
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name:
     asserts:
@@ -31,6 +34,9 @@ tests:
           enabled: true
           backups:
             enabled: true
+            provider: azure
+            azure:
+              connectionString: some-connection-string
             manualBackups:
               - name: _invalid
     asserts:
