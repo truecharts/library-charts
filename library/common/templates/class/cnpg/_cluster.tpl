@@ -11,6 +11,7 @@
   {{- $instances := 2 -}}
   {{- $mode := "standalone" -}}
   {{- $enableMonitoring := false -}}
+  {{- $disableDefaultQueries := false -}}
   {{- $customQueries := list -}}
   {{- $enableSuperUser := true -}}
   {{- $inProgress := false -}}
@@ -75,10 +76,12 @@
     {{- if (kindIs "bool" .enablePodMonitor) -}}
       {{- $enableMonitoring = .enablePodMonitor -}}
     {{- end -}}
-  {{- end -}}
-
-  {{- with $objectData.cluster.monitoring.customQueries -}}
-    {{- $customQueries = . -}}
+    {{- if (kindIs "bool" .disableDefaultQueries) -}}
+      {{- $disableDefaultQueries = .disableDefaultQueries -}}
+    {{- end -}}
+    {{- with .customQueries -}}
+      {{- $customQueries = . -}}
+    {{- end -}}
   {{- end -}}
 
   {{/* Superuser */}}
@@ -172,6 +175,28 @@ spec:
     pvcTemplate:
       {{- $_ := set $objectData.cluster.walStorage "size" $walSize -}}
       {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.walStorage) | trim | nindent 6 }}
+  {{- if $enableMonitoring }}
+  monitoring:
+    enablePodMonitor: {{ $enableMonitoring }}
+    disableDefaultQueries: {{ $disableDefaultQueries }}
+    {{- if $customQueries }}
+    customQueriesConfigMap:
+      {{- range $q := $customQueries }}
+        {{- $name := $q.name -}}
+
+        {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
+                        "rootCtx" $rootCtx "objectData" $q
+                        "name" $q.name "caller" "CNPG Cluster"
+                        "key" "cluster.customQueries")) -}}
+
+        {{- if eq $expandName "true" -}}
+          {{- $name = (printf "%s-cnpg-%s-%s" $fullname $objectData.shortName $q.name) -}}
+        {{- end }}
+      - name: {{ $name }}
+        key: {{ $q.key | default "custom-queries" }}
+      {{- end -}}
+    {{- end -}}
+  {{- end }}
   {{/*
   bootstrap:
   {{- if eq $objectData.mode "standalone" -}}
@@ -183,26 +208,6 @@ spec:
   {{- if $objectData.backups.enabled }}
     {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
   {{- end }}
-  monitoring:
-    enablePodMonitor: {{ $enableMonitoring }}
-    {{- if $customQueries }}
-    customQueriesConfigMap:
-      {{- range $q := $customQueries }}
-        {{- $name := $q.name -}}
-
-        {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
-                        "rootCtx" $rootCtx "objectData" $q
-                        "name" $q.name "caller" "CNPG Cluster"
-                        "key" "customQueries")) -}}
-
-        {{- if eq $expandName "true" -}}
-          {{- $name = (printf "%s-%s" $fullname $q.name) -}}
-        {{- end }}
-      - name: {{ $name }}
-        key: {{ $q.key }}
-      {{- end -}}
-    {{- end }}
-
   TODO: Template it
   {{- with $objectData.cluster.certificates }}
   certificates:

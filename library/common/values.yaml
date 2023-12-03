@@ -1085,8 +1085,11 @@ cnpg:
       # -- set to enable prometheus metrics
       monitoring:
         enablePodMonitor: false
+        disableDefaultQueries: false
         customQueries: []
           # - name: "pg_cache_hit_ratio"
+          #   expandObjectName: true
+          #   key: "custom-key" (defaults to "custom-queries")
           #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
           #   metrics:
           #     - datname:

@@ -232,3 +232,85 @@ tests:
                 - pg_stat_statements
                 - pg_cron
                 - timescaledb
+
+  - it: should pass with enabled monitoring
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: app
+          database: app
+          type: timescaledb
+          cluster:
+            monitoring:
+              enablePodMonitor: true
+    asserts:
+      - documentIndex: *clusterDoc
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        equal:
+          path: spec.monitoring
+          value:
+            enablePodMonitor: true
+            disableDefaultQueries: false
+
+  - it: should pass with override monitoring
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: app
+          database: app
+          type: timescaledb
+          cluster:
+            monitoring:
+              enablePodMonitor: true
+              disableDefaultQueries: true
+              customQueries:
+                - name: test-query
+                  query: test-query
+                  metrics:
+                    - a-gauge:
+                        usage: GAUGE
+                        description: test-metric
+                    - a-counter:
+                        usage: COUNTER
+                        description: test-metric
+                - name: test-query2
+                  query: test-query2
+                  metrics:
+                    - a-gauge:
+                        usage: GAUGE
+                        description: test-metric
+                    - a-counter:
+                        usage: COUNTER
+                        description: test-metric
+                - name: test-query3
+                  query: test-query3
+                  expandObjectName: false
+                  key: test-key
+
+    asserts:
+      - documentIndex: *clusterDoc
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        equal:
+          path: spec.monitoring
+          value:
+            enablePodMonitor: true
+            disableDefaultQueries: true
+            customQueriesConfigMap:
+              - name: test-release-name-common-test-cnpg-my-pg-test-query
+                key: custom-queries
+              - name: test-release-name-common-test-cnpg-my-pg-test-query2
+                key: custom-queries
+              - name: test-query3
+                key: test-key
