@@ -4,7 +4,7 @@
 
   {{- include "tc.v1.common.lib.cnpg.provider.validation" (dict
         "objectData" $objectData
-        "key" "backups" "caller" "CNPG Backups"
+        "key" "backups" "caller" "CNPG Backup"
         "provider" $provider) -}}
 
   {{- if not (get $objectData.backups $provider) -}}
