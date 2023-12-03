@@ -12,7 +12,6 @@ backup:
       compression: gzip
       encryption: AES256
       jobs: {{ $objectData.backups.jobs | default 2 }}
-
   {{- $provider := $objectData.backups.provider -}}
   {{/* Fetch provider data */}}
   {{- $data := (get $objectData.backups $provider) -}}
