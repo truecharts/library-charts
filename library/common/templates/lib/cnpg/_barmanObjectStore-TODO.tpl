@@ -23,10 +23,10 @@
   {{- end }}
   s3Credentials:
     accessKeyId:
-      name: {{ printf "cnpg-%s-provider-s3%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_KEY_ID
     secretAccessKey:
-      name: {{ printf "cnpg-%s-provider-s3%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-s3%s-creds" $chartFullname .secretSuffix }}
       key: ACCESS_SECRET_KEY
 {{- else if eq .scope.provider "azure" -}}
   {{- if or (not (hasKey .scope "azure")) (not .scope.azure) -}}
@@ -40,16 +40,16 @@
   {{- end }}
   azureCredentials:
     connectionString:
-      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: CONNECTION_STRING
     storageAccount:
-      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: STORAGE_ACCOUNT
     storageKey:
-      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: STORAGE_KEY
     storageSasToken:
-      name: {{ printf "cnpg-%s-provider-azure%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-azure%s-creds" $chartFullname .secretSuffix }}
       key: STORAGE_SAS_TOKEN
 {{- else if eq .scope.provider "google" -}}
   {{- if or (not (hasKey .scope "google")) (not .scope.google) -}}
@@ -64,7 +64,7 @@
   googleCredentials:
     gkeEnvironment: {{ .scope.google.gkeEnvironment }}
     applicationCredentials:
-      name: {{ printf "cnpg-%s-provider-google%s-creds" $chartFullname .secretSuffix }}
+      name: {{ printf "cnpg-%s-provider-backup-google%s-creds" $chartFullname .secretSuffix }}
       key: APPLICATION_CREDENTIALS
 {{- end }}
   endpointURL: {{ $endpointUrl }}

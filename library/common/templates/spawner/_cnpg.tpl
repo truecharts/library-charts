@@ -70,7 +70,7 @@
         {{- include "tc.v1.common.lib.cnpg.spawner.scheduledBackups" (dict "rootCtx" $ "objectData" $objectData) -}}
 
         {{/* Create secret for backup store */}}
-        {{- include "tc.v1.common.lib.cnpg.provider.secret.spawner" (dict "rootCtx" $ "objectData" $objectData) -}}
+        {{- include "tc.v1.common.lib.cnpg.provider.secret.spawner" (dict "rootCtx" $ "objectData" $objectData "type" "backup") -}}
       {{- end -}}
 
       {{/* Handle Pooler(s) */}}
