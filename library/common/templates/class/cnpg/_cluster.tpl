@@ -142,10 +142,21 @@ spec:
   primaryUpdateMethod: {{ $primaryUpdateMethod }}
   logLevel: {{ $logLevel }}
   instances: {{ $instances }}
-  {{- range $k, $v := $objectData.cluster.certificates }}
-  certificates:
-    {{ $k }}: {{ $v | quote }}
-  {{- end }}
+  {{- if or $objectData.cluster.postgresql $preloadLibraries }}
+  postgresql:
+    {{- with $objectData.cluster.postgresql }}
+    parameters:
+      {{- range $k, $v := . }}
+      {{ $k }}: {{ tpl $v $rootCtx | quote }}
+      {{- end -}}
+    {{- end -}}
+    {{- with $preloadLibraries }}
+    shared_preload_libraries:
+      {{- range $lib := (. | uniq) }}
+      - {{ $lib | quote }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
   {{/*
   bootstrap:
   {{- if eq $objectData.mode "standalone" -}}
@@ -189,18 +200,12 @@ spec:
   resources:
     {{- . | nindent 4 }}
   {{- end }}
-  postgresql:
-    {{- with $preloadLibraries }}
-    shared_preload_libraries:
-      {{- range $lib := (. | uniq) }}
-      - {{ $lib | quote }}
-      {{- end -}}
-    {{- end -}}
-    {{- with $objectData.cluster.postgresql }}
-    parameters:
-    {{- range $k, $v := . }}
-      {{ $k }}: {{ tpl $v $rootCtx | quote }}
-    {{- end -}}
-  {{- end -}}
+  */}}
+
+  {{/* TODO: Template it
+  {{- with $objectData.cluster.certificates }}
+  certificates:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   */}}
 {{- end -}}

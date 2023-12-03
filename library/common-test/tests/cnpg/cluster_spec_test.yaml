@@ -16,17 +16,17 @@ tests:
           user: test-user
           database: test-db
     asserts:
-      - documentIndex: &cnpgDoc 1
+      - documentIndex: &clusterDoc 1
         isKind:
           of: Cluster
-      - documentIndex: *cnpgDoc
+      - documentIndex: *clusterDoc
         isAPIVersion:
           of: postgresql.cnpg.io/v1
-      - documentIndex: *cnpgDoc
+      - documentIndex: *clusterDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test-cnpg-my-pg
-      - documentIndex: *cnpgDoc
+      - documentIndex: *clusterDoc
         equal:
           path: spec
           value:
@@ -53,10 +53,10 @@ tests:
             logLevel: debug
             instances: 3
     asserts:
-      - documentIndex: &cnpgDoc 1
+      - documentIndex: *clusterDoc
         isKind:
           of: Cluster
-      - documentIndex: *cnpgDoc
+      - documentIndex: *clusterDoc
         equal:
           path: spec
           value:
@@ -65,3 +65,71 @@ tests:
             primaryUpdateMethod: restart
             logLevel: debug
             instances: 3
+
+  - it: should pass with custom-conf
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: app
+          database: app
+          cluster:
+            postgresql:
+              key1: value1
+              key2: '{{ printf "test-tpl" }}'
+            preloadLibraries:
+              - pg_stat_statements
+              - pg_cron
+    asserts:
+      - documentIndex: *clusterDoc
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        isSubset:
+          path: spec
+          content:
+            postgresql:
+              parameters:
+                key1: value1
+                key2: test-tpl
+              shared_preload_libraries:
+                - pg_stat_statements
+                - pg_cron
+
+  - it: should pass with timescaledb
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: app
+          database: app
+          type: timescaledb
+          cluster:
+            postgresql:
+              key1: value1
+              key2: '{{ printf "test-tpl" }}'
+            preloadLibraries:
+              - pg_stat_statements
+              - pg_cron
+    asserts:
+      - documentIndex: *clusterDoc
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        isSubset:
+          path: spec
+          content:
+            postgresql:
+              parameters:
+                key1: value1
+                key2: test-tpl
+              shared_preload_libraries:
+                - pg_stat_statements
+                - pg_cron
+                - timescaledb
