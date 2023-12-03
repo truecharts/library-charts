@@ -72,8 +72,8 @@ tests:
       operator:
         verify:
           enabled: false
-      ext1: some-extention
-      ext2: some-other-extention
+      ext1: some-extension
+      ext2: some-other-extension
       cnpg:
         my-pg:
           enabled: true
