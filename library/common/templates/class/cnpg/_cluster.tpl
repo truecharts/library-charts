@@ -164,6 +164,14 @@ spec:
   resources:
     {{- . | nindent 4 }}
   {{- end }}
+  storage:
+    pvcTemplate:
+      {{- $_ := set $objectData.cluster.storage "size" $size -}}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.storage) | trim | nindent 6 }}
+  walStorage:
+    pvcTemplate:
+      {{- $_ := set $objectData.cluster.walStorage "size" $walSize -}}
+      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.walStorage) | trim | nindent 6 }}
   {{/*
   bootstrap:
   {{- if eq $objectData.mode "standalone" -}}
@@ -175,12 +183,6 @@ spec:
   {{- if $objectData.backups.enabled }}
     {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict $objectData) | nindent 2 -}}
   {{- end }}
-  storage:
-    pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.storage) | trim | nindent 6 }}
-  walStorage:
-    pvcTemplate:
-      {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.walStorage) | trim | nindent 6 }}
   monitoring:
     enablePodMonitor: {{ $enableMonitoring }}
     {{- if $customQueries }}

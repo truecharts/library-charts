@@ -45,6 +45,20 @@ tests:
               requests:
                 cpu: 10m
                 memory: 50Mi
+            storage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Gi
+            walStorage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Gi
 
   - it: should override options
     set:
@@ -72,6 +86,14 @@ tests:
               requests:
                 cpu: 20m
                 memory: 100Mi
+            storage:
+              size: 200Gi
+              accessModes:
+                - ReadWriteMany
+            walStorage:
+              size: 200Gi
+              accessModes:
+                - ReadWriteMany
     asserts:
       - documentIndex: *clusterDoc
         isKind:
@@ -95,6 +117,21 @@ tests:
               requests:
                 cpu: 20m
                 memory: 100Mi
+            storage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteMany
+                resources:
+                  requests:
+                    storage: 200Gi
+            walStorage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteMany
+                resources:
+                  requests:
+                    storage: 200Gi
+
   - it: should override resources from top level
     set:
       operator:
@@ -117,17 +154,9 @@ tests:
         isKind:
           of: Cluster
       - documentIndex: *clusterDoc
-        equal:
+        isSubset:
           path: spec
-          value:
-            enableSuperuserAccess: true
-            primaryUpdateStrategy: unsupervised
-            primaryUpdateMethod: switchover
-            logLevel: info
-            instances: 2
-            nodeMaintenanceWindow:
-              reusePVC: true
-              inProgress: false
+          content:
             resources:
               limits:
                 cpu: 2000m
