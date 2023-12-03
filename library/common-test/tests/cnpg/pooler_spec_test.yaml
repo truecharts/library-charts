@@ -48,7 +48,7 @@ tests:
             type: rw
             pgbouncer:
               poolMode: session
-      - documentIndex: &otherpoolerDoc 1
+      - documentIndex: &otherpoolerDoc 2
         isKind:
           of: Pooler
       - documentIndex: *otherpoolerDoc
@@ -71,7 +71,7 @@ tests:
               parameters:
                 some: value
                 someOther: someValue
-      - documentIndex: &otherpoolerDoc 2
+      - documentIndex: &otherpoolerDoc 3
         isKind:
           of: Pooler
       - documentIndex: *otherpoolerDoc

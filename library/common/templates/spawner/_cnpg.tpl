@@ -62,7 +62,12 @@
       {{- include "tc.v1.common.lib.cnpg.spawner.pooler" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{/* Handle Cluster */}}
+      {{/* Validate Cluster */}}
       {{- include "tc.v1.common.lib.cnpg.cluster.validation" (dict "objectData" $objectData) -}}
+
+      {{/* Create the Cluster object */}}
+      {{- include "tc.v1.common.class.cnpg.cluster" (dict "rootCtx" $ "objectData" $objectData) -}}
+
     {{- end -}}
 
     {{/* Fetch db pass from Secret */}}

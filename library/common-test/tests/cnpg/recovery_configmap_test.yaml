@@ -17,7 +17,7 @@ tests:
           user: test-user
           database: test-db
     asserts:
-      - documentIndex: &configMapDoc 1
+      - documentIndex: &configMapDoc 2
         isKind:
           of: ConfigMap
       - documentIndex: *configMapDoc

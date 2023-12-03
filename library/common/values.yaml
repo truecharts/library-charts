@@ -1082,7 +1082,19 @@ cnpg:
       # walStorage:
       #   size: "256Gi"
       # -- Gets scaled to 0 if hibernation is true
-
+      # -- set to enable prometheus metrics
+      monitoring:
+        enablePodMonitor: false
+        customQueries: []
+          # - name: "pg_cache_hit_ratio"
+          #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
+          #   metrics:
+          #     - datname:
+          #         usage: "LABEL"
+          #         description: "Name of the database database"
+          #     - ratio:
+          #         usage: GAUGE
+          #         description: "Cache hit ratio"
       ## See .Values.resources for more info
       # resources:
 
@@ -1113,18 +1125,6 @@ cnpg:
       # and then blank the password of the postgres user by setting it to NULL.
 
       # enableSuperuserAccess: true
-
-      monitoring:
-        customQueries: []
-          # - name: "pg_cache_hit_ratio"
-          #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
-          #   metrics:
-          #     - datname:
-          #         usage: "LABEL"
-          #         description: "Name of the database database"
-          #     - ratio:
-          #         usage: GAUGE
-          #         description: "Cache hit ratio"
 
       # Configuration of the PostgreSQL server
       # See: https://cloudnative-pg.io/documentation/current/api_reference/#PostgresConfiguration
@@ -1253,9 +1253,6 @@ cnpg:
       labels: {}
       annotations: {}
 
-    # -- set to enable prometheus metrics
-    monitoring:
-      enablePodMonitor: false
 
     # -- contains credentials and urls output by generator
     creds: {}

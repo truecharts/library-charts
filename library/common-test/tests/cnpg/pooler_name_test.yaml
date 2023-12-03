@@ -32,7 +32,7 @@ tests:
         equal:
           path: metadata.name
           value: test-release-name-common-test-cnpg-my-pg-pooler-rw
-      - documentIndex: &otherpoolerDoc 1
+      - documentIndex: &otherpoolerDoc 2
         isKind:
           of: Pooler
       - documentIndex: *otherpoolerDoc
@@ -42,7 +42,7 @@ tests:
         equal:
           path: metadata.name
           value: test-release-name-common-test-cnpg-my-pg2-pooler-rw
-      - documentIndex: &otherpoolerDoc 2
+      - documentIndex: &otherpoolerDoc 3
         isKind:
           of: Pooler
       - documentIndex: *otherpoolerDoc
