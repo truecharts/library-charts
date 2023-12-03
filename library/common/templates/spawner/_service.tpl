@@ -11,7 +11,7 @@
 
   {{- range $name, $service := .Values.service -}}
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
-                    "rootCtx" $ "objectData" $configmap
+                    "rootCtx" $ "objectData" $service
                     "name" $name "caller" "Service"
                     "key" "service")) -}}
 

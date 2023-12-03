@@ -10,7 +10,7 @@
 
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
                     "rootCtx" $ "objectData" $imgPullSecret
-                    "name" $name "caller" "ImagePullSecret"
+                    "name" $name "caller" "Image Pull Secret"
                     "key" "imagePullSecret")) -}}
 
     {{- if eq $enabled "true" -}}
