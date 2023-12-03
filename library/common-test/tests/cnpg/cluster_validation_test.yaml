@@ -425,11 +425,6 @@ tests:
       - failedTemplate:
           errorMessage: CNPG Backup - Expected [backups.retentionPolicy] to match regex [^[1-9][0-9]*[dwm]$], got [invalid]
 
-
-
-
-
-
   - it: should fail with missing destinationPath and google bucket on backups
     set:
       operator:
@@ -443,6 +438,8 @@ tests:
           backups:
             enabled: true
             provider: google
+            target: primary
+            retentionPolicy: 1d
             google:
               applicationCredentials: some-credentials
     asserts:
@@ -462,6 +459,8 @@ tests:
           backups:
             enabled: true
             provider: s3
+            target: primary
+            retentionPolicy: 1d
             s3:
               accessKey: some-access-key
               secretKey: some-secret-key
@@ -482,6 +481,8 @@ tests:
           backups:
             enabled: true
             provider: s3
+            target: primary
+            retentionPolicy: 1d
             s3:
               accessKey: some-access-key
               secretKey: some-secret-key
@@ -503,6 +504,8 @@ tests:
           backups:
             enabled: true
             provider: azure
+            target: primary
+            retentionPolicy: 1d
             azure:
               connectionString: some-connection-string
     asserts:
@@ -522,6 +525,8 @@ tests:
           backups:
             enabled: true
             provider: azure
+            target: primary
+            retentionPolicy: 1d
             azure:
               connectionString: some-connection-string
               storageAccount: some-storage-account
@@ -542,6 +547,8 @@ tests:
           backups:
             enabled: true
             provider: azure
+            target: primary
+            retentionPolicy: 1d
             azure:
               connectionString: some-connection-string
               storageAccount: some-storage-account
