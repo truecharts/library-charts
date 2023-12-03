@@ -1123,6 +1123,8 @@ cnpg:
       initdb: {}
         # postInitSQL:
         #   - CREATE EXTENSION IF NOT EXISTS vector;
+        # postInitApplicationSQL:
+        #   - CREATE EXTENSION IF NOT EXISTS someextension;
     # -- set to enable prometheus metrics
     monitoring:
       enablePodMonitor: false

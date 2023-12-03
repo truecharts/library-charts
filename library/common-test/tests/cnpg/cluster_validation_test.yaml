@@ -138,3 +138,37 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: CNPG Cluster - Expected [cluster.primaryUpdateMethod] to be one of [switchover, restart], but got [invalid]
+
+  - it: should fail with invalid walSegmentSize
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          cluster:
+            initdb:
+              walSegmentSize: invalid
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [cluster.initdb.walSegmentSize] to be an integer, but got [string]
+
+  - it: should fail with too large walSegmentSize
+    set:
+      operator:
+        verify:
+          enabled: false
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          cluster:
+            initdb:
+              walSegmentSize: 1025
+    asserts:
+      - failedTemplate:
+          errorMessage: CNPG Cluster - Expected [cluster.initdb.walSegmentSize] to be between 1 and 1024, but got [1025]

@@ -59,12 +59,21 @@ tests:
                 resources:
                   requests:
                     storage: 100Gi
+            bootstrap:
+              initdb:
+                secret:
+                  name: test-release-name-common-test-cnpg-my-pg-user
+                database: test-db
+                owner: test-user
+                dataChecksums: false
 
   - it: should override options
     set:
       operator:
         verify:
           enabled: false
+      ext1: some-extention
+      ext2: some-other-extention
       cnpg:
         my-pg:
           enabled: true
@@ -76,6 +85,18 @@ tests:
             primaryUpdateMethod: restart
             logLevel: debug
             instances: 3
+            initdb:
+              dataChecksums: true
+              encoding: some-encoding
+              localeCollate: some-locale
+              localeCtype: some-locale
+              walSegmentSize: 16
+              postInitApplicationSQL:
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext1 }};
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext2 }};
+              postInitSQL:
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext1 }}1;
+                - CREATE EXTENSION IF NOT EXISTS {{ .Values.ext2 }}2;
             nodeMaintenanceWindow:
               reusePVC: false
               inProgress: true
@@ -131,6 +152,23 @@ tests:
                 resources:
                   requests:
                     storage: 200Gi
+            bootstrap:
+              initdb:
+                secret:
+                  name: test-release-name-common-test-cnpg-my-pg-user
+                database: test-db
+                owner: test-user
+                dataChecksums: true
+                encoding: some-encoding
+                localeCollate: some-locale
+                localeCtype: some-locale
+                walSegmentSize: 16
+                postInitApplicationSQL:
+                  - CREATE EXTENSION IF NOT EXISTS some-extension;
+                  - CREATE EXTENSION IF NOT EXISTS some-other-extension;
+                postInitSQL:
+                  - CREATE EXTENSION IF NOT EXISTS some-extension1;
+                  - CREATE EXTENSION IF NOT EXISTS some-other-extension2;
 
   - it: should override resources from top level
     set:
@@ -210,6 +248,9 @@ tests:
           database: app
           type: timescaledb
           cluster:
+            initdb:
+              postInitApplicationSQL:
+                - CREATE EXTENSION IF NOT EXISTS some-extension;
             postgresql:
               key1: value1
               key2: '{{ printf "test-tpl" }}'
@@ -232,6 +273,16 @@ tests:
                 - pg_stat_statements
                 - pg_cron
                 - timescaledb
+            bootstrap:
+              initdb:
+                secret:
+                  name: test-release-name-common-test-cnpg-my-pg-user
+                database: app
+                owner: app
+                dataChecksums: false
+                postInitApplicationSQL:
+                  - CREATE EXTENSION IF NOT EXISTS some-extension;
+                  - CREATE EXTENSION IF NOT EXISTS timescaledb;
 
   - it: should pass with enabled monitoring
     set:

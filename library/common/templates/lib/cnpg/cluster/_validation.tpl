@@ -57,5 +57,16 @@
       {{- end -}}
     {{- end -}}
 
+    {{- if (hasKey $objectData.cluster "initdb") -}}
+      {{- with $objectData.cluster.initdb.walSegmentSize -}}
+        {{- if not (mustHas (kindOf .) (list "int" "int64" "float64")) -}}
+          {{- fail (printf "CNPG Cluster - Expected [cluster.initdb.walSegmentSize] to be an integer, but got [%s]" (kindOf .)) -}}
+        {{- end -}}
+        {{- if or (lt (. | int) 1) (gt (. | int) 1024) -}}
+          {{- fail (printf "CNPG Cluster - Expected [cluster.initdb.walSegmentSize] to be between 1 and 1024, but got [%d]" (. | int)) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
   {{- end -}}
 {{- end -}}

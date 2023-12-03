@@ -183,7 +183,6 @@ spec:
     customQueriesConfigMap:
       {{- range $q := $customQueries }}
         {{- $name := $q.name -}}
-
         {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
                         "rootCtx" $rootCtx "objectData" $q
                         "name" $q.name "caller" "CNPG Cluster"
@@ -197,11 +196,12 @@ spec:
       {{- end -}}
     {{- end -}}
   {{- end }}
-  {{/*
   bootstrap:
-  {{- if eq $objectData.mode "standalone" -}}
-    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "objectData" $objectData) | nindent 4 -}}
-  {{- else if eq $objectData.mode "recovery" -}}
+  {{- if eq $mode "standalone" -}}
+    {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.standalone" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 4 -}}
+  {{- end -}}
+  {{/*
+  {{- else if eq $mode "recovery" -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery" (dict "objectData" $objectData) | nindent 4 -}}
     {{- include "tc.v1.common.lib.cnpg.cluster.bootstrap.recovery.externalCluster" (dict "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
