@@ -209,11 +209,4 @@ spec:
   {{- if $objectData.backups.enabled }}
     {{- include "tc.v1.common.lib.cnpg.cluster.backup" (dict "rootCtx" $rootCtx "objectData" $objectData) | nindent 2 -}}
   {{- end -}}
-  {{/*
-  TODO: Template it
-  {{- with $objectData.cluster.certificates }}
-  certificates:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  */}}
 {{- end -}}
