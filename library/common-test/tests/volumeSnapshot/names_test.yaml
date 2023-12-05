@@ -8,11 +8,11 @@ tests:
   - it: should generate correct name
     set:
       volumeSnapshots:
-        - name: example1
+        example1:
           enabled: true
           source:
             volumeSnapshotContentName: some-name
-        - name: example2
+        example2:
           enabled: true
           source:
             volumeSnapshotContentName: some-name

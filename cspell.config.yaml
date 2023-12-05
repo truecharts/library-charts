@@ -1,2 +1,5 @@
 words:
-- tailscale
+  - cnpg
+  - netshoot
+  - tailscale
+  - velero

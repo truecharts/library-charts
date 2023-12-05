@@ -7,7 +7,12 @@
 
   {{- range $name, $persistence := .Values.persistence -}}
 
-    {{- if $persistence.enabled -}}
+    {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
+                    "rootCtx" $ "objectData" $persistence
+                    "name" $name "caller" "Persistence"
+                    "key" "persistence")) -}}
+
+    {{- if eq $enabled "true" -}}
 
       {{/* Create a copy of the persistence */}}
       {{- $objectData := (mustDeepCopy $persistence) -}}
@@ -85,7 +90,7 @@
 
           {{/* Perform validations */}} {{/* volumesnapshots have a max name length of 253 */}}
           {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $snapshotName "length" 253) -}}
-          {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $volSnapData "caller" "PVC - VolumeSnapshot") -}}
+          {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $volSnapData "caller" "PVC - Volume Snapshot") -}}
 
           {{/* Set the name of the volumesnapshot */}}
           {{- $_ := set $volSnapData "name" $snapshotName -}}

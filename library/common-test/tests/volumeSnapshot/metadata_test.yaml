@@ -21,7 +21,7 @@ tests:
           g_annotation1: global_annotation1
           g_annotation2: "{{ .Values.annotation2 }}"
       volumeSnapshots:
-        - name: example1
+        example1:
           enabled: true
           source:
             volumeSnapshotContentName: some-name
@@ -35,7 +35,7 @@ tests:
       - documentIndex: &volumeSnapshotDoc 0
         isKind:
           of: VolumeSnapshot
-      - documentIndex: &volumeSnapshotDoc 0
+      - documentIndex: *volumeSnapshotDoc
         isAPIVersion:
           of: snapshot.storage.k8s.io/v1
       - documentIndex: *volumeSnapshotDoc

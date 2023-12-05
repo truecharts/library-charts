@@ -130,6 +130,8 @@ podOptions:
   enableServiceLinks: false
   hostNetwork: false
   hostPID: false
+  hostIPC: false
+  hostUsers: false
   shareProcessNamespace: false
   restartPolicy: Always
   dnsPolicy: ClusterFirst
@@ -320,9 +322,12 @@ persistenceList: []
 
 deviceList: []
 
-volumeSnapshots: []
+volumeSnapshotClass: {}
+volumeSnapshotClassList: {}
+volumeSnapshots: {}
+volumeSnapshotsList: {}
 # volumeSnapshots:
-#   - name: "mycustomsnapshot"
+#   mysnapshot:
 #     volumeSnapshotClassName: "mycustomsnapshot" (optional)
 #     source:
 #       # pick one
@@ -372,7 +377,7 @@ scaleGPU: []
 # NOTES.txt
 notes:
   header: |
-    # Thank you for installing [{{ .Chart.Name }}] by TrueCharts.
+    # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
     {{- if .Values.iXPortals }}
@@ -384,7 +389,7 @@ notes:
     {{- end -}}
     {{- end }}
 
-    ## [{{ .Chart.Name }}] Sources
+    ## Sources for {{ .Chart.Name }}
 
     {{- range .Chart.Sources }}
     - {{ . }}
@@ -394,7 +399,8 @@ notes:
     {{- if not $link -}}
       {{- $link = .Chart.Home -}}
     {{- end }}
-    [See more for [{{ $.Chart.Name }}] at [{{ $link }}]
+
+    See more for **{{ $.Chart.Name }}** at ({{ $link }})
   footer: |
     ## Documentation
     Please check out the TrueCharts documentation on:
@@ -451,7 +457,7 @@ codeserverImage:
 
 alpineImage:
   repository: tccr.io/truecharts/alpine
-  tag: v3.18.4@sha256:17cd77e25d3fa829d168caec4db7bb5b52ceeb935d8ca0d1180de6f615553dc4
+  tag: v3.18.4@sha256:51c4ca9a8213d3f4026bd560e8aa2de365d275d6cd0298eff2ae20671fef34e9
   pullPolicy: IfNotPresent
 
 scratchImage:
@@ -684,6 +690,7 @@ webhook:
     webhooks: []
 
 
+priorityClass: {}
 # priorityClass:
 #   example:
 #     provisioner: some.provisioner.io
@@ -694,6 +701,7 @@ webhook:
 #     description: "some description"
 
 # # -- create storageClasses on demand
+storageClass: {}
 # storageClass:
 #   example:
 #     provisioner: some.provisioner.io
@@ -703,6 +711,116 @@ webhook:
 #     allowVolumeExpansion: true
 #     volumeBindingMode: Immediate
 #     mountOptions: []
+
+# # Parameters for the BackupStorageLocation(s). Configure multiple by adding other element(s) to the backupStorageLocation slice.
+# # See https://velero.io/docs/v1.6/api-types/backupstoragelocation/
+backupStorageLocationList: []
+# - name: name
+#     # name is the name of the backup storage location where backups should be stored. If a name is not provided,
+#     # a backup storage location will be created with the name "default". Optional.
+backupStorageLocation: {}
+# backupStorageLocation:
+#   name:
+#     # provider is the name for the backup storage location provider.
+#     provider:
+#     objectStorage:
+#       # bucket is the name of the bucket to store backups in. Required.
+#       bucket:
+#       # caCert defines a base64 encoded CA bundle to use when verifying TLS connections to the provider. Optional.
+#       caCert:
+#       # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
+#       prefix:
+#     # validationFrequency defines how frequently Velero should validate the object storage. Optional.
+#     validationFrequency:
+#     # accessMode determines if velero can write to this backup storage location. Optional.
+#     # default to ReadWrite, ReadOnly is used during migrations and restores.
+#     accessMode: ReadWrite
+#     credential:
+#       # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
+#       aws:
+#         id: fdgsdfghsdfgh
+#         key: dfgdfhsdfgh
+#       # name of the secret used by this backupStorageLocation.
+#       name:
+#       # name of key that contains the secret data to be used.
+#       key:
+#     # Additional provider-specific configuration. See link above
+#     # for details of required/optional fields for your provider.
+#     config: {}
+#     #  region:
+#     #  s3ForcePathStyle:
+#     #  s3Url:
+#     #  kmsKeyId:
+#     #  resourceGroup:
+#     #  The ID of the subscription containing the storage account, if different from the cluster’s subscription. (Azure only)
+#     #  subscriptionId:
+#     #  storageAccount:
+#     #  publicUrl:
+#     #  Name of the GCP service account to use for this backup storage location. Specify the
+#     #  service account here if you want to use workload identity instead of providing the key file.(GCP only)
+#     #  serviceAccount:
+#     #  Option to skip certificate validation or not if insecureSkipTLSVerify is set to be true, the client side should set the
+#     #  flag. For Velero client Command like velero backup describe, velero backup logs needs to add the flag --insecure-skip-tls-verify
+#     #  insecureSkipTLSVerify:
+#
+# # Parameters for the VolumeSnapshotLocation(s). Configure multiple by adding other element(s) to the volumeSnapshotLocation slice.
+# # See https://velero.io/docs/v1.6/api-types/volumesnapshotlocation/
+volumeSnapshotLocationList: []
+#   # name is the |name of the volume snapshot location where snapshots are being taken. Required.
+#   - name: name
+#   ...
+volumeSnapshotLocation: {}
+# volumeSnapshotLocation:
+#   name:
+#     enabled: false
+#     # provider is the name for the volume snapshot provider.
+#     provider:
+#     credential:
+#       # AWS/s3 credentials to be put into secret (mandatory if provider == aws/s3)
+#       aws:
+#         id: fdgsdfghsdfgh
+#         key: dfgdfhsdfgh
+#       # name of the secret used by this volumeSnapshotLocation.  (Optional/Advanced)
+#       name:
+#       # name of key that contains the secret data to be used.  (Optional/Advanced)
+#       key:
+#     # Additional provider-specific configuration. See link above
+#     # for details of required/optional fields for your provider.
+#     config: {}
+#   #    region:
+#   #    apiTimeout:
+#   #    resourceGroup:
+#   #    The ID of the subscription where volume snapshots should be stored, if different from the cluster’s subscription. If specified, also requires `configuration.volumeSnapshotLocation.config.resourceGroup`to be set. (Azure only)
+#   #    subscriptionId:
+#   #    incremental:
+#   #    snapshotLocation:
+#   #    project:
+
+# Backup schedules to create.
+schedules: {}
+# Eg:
+# schedules:
+#   mybackup:
+#     disabled: false
+#     labels:
+#       myenv: foo
+#     annotations:
+#       myenv: foo
+#     schedule: "0 0 * * *"
+#     useOwnerReferencesInBackup: false
+#     template:
+#       ttl: "240h"
+#       storageLocation: default
+#       includedNamespaces:
+#       - foo
+# # -- create volumeSnapshotClass on demand
+# volumeSnapshotClass:
+#   example:
+#     enabled: true
+#     driver: some.driver.io
+#     deletionPolicy: Retain
+#     isDefault: false
+#     parameters: {}
 
 metrics:
   main:
@@ -904,9 +1022,9 @@ addons:
     env: {}
 
 
-##
-# This section contains some-preconfig for frequently used dependencies
-##
+##########################################################################
+# This section contains some pre-config for frequently used dependencies #
+##########################################################################
 
 cnpg:
   main:
@@ -914,46 +1032,242 @@ cnpg:
     primary: true
     # -- Puts the cnpg cluster in hibernation mode
     hibernate: false
-    # -- number of instances for both postgres and pgbouncer
-    instances: 2
+    # Additional Labels and annotations for all cnpg objects
+    labels: {}
+    annotations: {}
+
+    # -- Destroys the current cluster to forge a new cluster or recovery operation
+    # ABSOLUTELY DESTRUCTIVE
+    forceRecovery: false
+
+    # Type of the CNPG database. Available types:
+    # * `postgresql`
+    # * `postgis`
+    # * `timescaledb`
+    type: postgresql
+
+    # Version of Postgresql to use, changes cluster naming scheme
+    # * `legacy`
+    # TODO: allow for selecting other versions
+    version: legacy
+
+    # Cluster mode of operation. Available modes:
+    # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
+    # * `replica` - Creates a replica cluster from an existing CNPG cluster. # TODO
+    # * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup.
+    mode: standalone
+
+    # Database details
     database: "app"
     user: "app"
-    # password:
-    # superUserPassword:
-    # -- change to supervised to disable unsupervised updates
-    # Example of rolling update strategy:
-    # - unsupervised: automated update of the primary once all
-    #                 replicas have been upgraded (default)
-    # - supervised: requires manual supervision to perform
-    #               the switchover of the primary
-    primaryUpdateStrategy: unsupervised
-    # -- enable to create extra pgbouncer for readonly access
-    acceptRO: false
-    # # -- storage size for the data pvc's
-    # # Follows the same spec as .Values.Persistence type=PVC
-    # storage:
-    #   size: "256Gi"
-    # # -- storage size for the wal pvc's
-    # # Follows the same spec as .Values.Persistence type=PVC
-    # walStorage:
-    #   size: "256Gi"
-    # -- Gets scaled to 0 if hibernation is true
-    pooler:
+    password: ""
+
+    # Database cluster configuration
+    cluster:
+      # Additional Labels and annotations for cnpg cluster
+      labels: {}
+      annotations: {}
+
+      # Number of instances
       instances: 2
+
+      # set to true on single-node clusters to allow PVCs to be kept on instance restart
+      singleNode: false
+      # # -- storage size for the data pvc's
+      # # Follows the same spec as .Values.Persistence type=PVC
+      # storage:
+      #   size: "256Gi"
+      # # -- storage size for the wal pvc's
+      # # Follows the same spec as .Values.Persistence type=PVC
+      # walStorage:
+      #   size: "256Gi"
+      # -- Gets scaled to 0 if hibernation is true
+      ## See .Values.resources for more info
+      # resources:
+
+      # Method to follow to upgrade the primary server during a rolling update procedure, after all replicas have been
+      # successfully updated. It can be switchover (default) or in-place (restart).
+      primaryUpdateMethod: switchover
+
+      # Strategy to follow to upgrade the primary server during a rolling update procedure, after all replicas have been
+      # successfully updated: it can be automated (unsupervised - default) or manual (supervised)
+      # Example of rolling update strategy:
+      # - unsupervised: automated update of the primary once all
+      #                 replicas have been upgraded (default)
+      # - supervised: requires manual supervision to perform
+      #               the switchover of the primary
+      # -- change to supervised to disable unsupervised updates
+      primaryUpdateStrategy: unsupervised
+
+      # The instances' log level, one of the following values: error, warning, info (default), debug, trace
+      logLevel: info
+
+      # The configuration for the CA and related certificates
+      # See: https://cloudnative-pg.io/documentation/current/api_reference/#CertificatesConfiguration
+      certificates:
+
+      # When this option is enabled, the operator will use the SuperuserSecret to update the postgres user password.
+      # If the secret is not present, the operator will automatically create one.
+      # When this option is disabled, the operator will ignore the SuperuserSecret content, delete it when automatically created,
+      # and then blank the password of the postgres user by setting it to NULL.
+
+      # enableSuperuserAccess: true
+
+      # Configuration of the PostgreSQL server
+      # See: https://cloudnative-pg.io/documentation/current/api_reference/#PostgresConfiguration
+      postgresql:
+
+      # BootstrapInitDB is the configuration of the bootstrap process when initdb is used
+      # See: https://cloudnative-pg.io/documentation/current/bootstrap/
+      # See: https://cloudnative-pg.io/documentation/current/api_reference/#bootstrapinitdb
+      initdb: {}
+        # postInitSQL:
+        #   - CREATE EXTENSION IF NOT EXISTS vector;
+        # postInitApplicationSQL:
+        #   - CREATE EXTENSION IF NOT EXISTS someextension;
     # -- set to enable prometheus metrics
     monitoring:
-      enablePodMonitor: true
+      enablePodMonitor: false
+      disableDefaultQueries: false
+      customQueries: []
+        # - name: "pg_cache_hit_ratio"
+        #   expandObjectName: true
+        #   key: "custom-key" (defaults to "custom-queries")
+        #   query: "SELECT current_database() as datname, sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) as ratio FROM pg_statio_user_tables;"
+        #   metrics:
+        #     - datname:
+        #         usage: "LABEL"
+        #         description: "Name of the database database"
+        #     - ratio:
+        #         usage: GAUGE
+        #         description: "Cache hit ratio"
+    # Recovery settings if the chosen mode is `recovery`.
+    recovery:
+      ##
+      # Backup Recovery Method
+      # Available recovery methods:
+      # * `backup` - Recovers a CNPG cluster from a CNPG backup (PITR supported) Needs to be on the same cluster in the same namespace.
+      # * `object_store` - Recovers a CNPG cluster from a barman object store (PITR supported).
+      # * `pg_basebackup` - Recovers a CNPG cluster viaa streaming replication protocol. Useful if you want to
+      #        migrate databases to CloudNativePG, even from outside Kubernetes. # TODO
+      method: backup
+
+      ## Point in time recovery target. Specify one of the following:
+      pitrTarget:
+        time: "" # Time in RFC3339 format
+
+      # Name of the backup to recover from. Required if method is `backup`.
+      backupName: ""
+
+      # Object Store Recovery Method
+      clusterName: ""
+      # Overrides the provider specific default endpoint. Defaults to:
+      # S3: https://s3.<region>.amazonaws.com"
+      endpointURL: "" # Leave empty if using the default S3 endpoint
+      # Overrides the provider specific default path. Defaults to:
+      # S3: s3://<bucket><path>
+      # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<clusterName><path>
+      # Google: gs://<bucket><path>
+      destinationPath: ""
+      provider: s3 # One of s3, azure, google
+      s3:
+        region: ""
+        bucket: ""
+        path: "/"
+        accessKey: ""
+        secretKey: ""
+      azure:
+        path: "/"
+        connectionString: ""
+        storageAccount: ""
+        storageKey: ""
+        storageSasToken: ""
+        containerName: ""
+        serviceName: blob
+        inheritFromAzureAD: false
+      google:
+        path: "/"
+        bucket: ""
+        gkeEnvironment: false
+        applicationCredentials: ""
+
+    # Database cluster backup configuration
+    backups:
+      enabled: false # You need to configure backups manually, so backups are disabled by default.
+
+      # Overrides the provider specific default endpoint. Defaults to:
+      # S3: https://s3.<region>.amazonaws.com"
+      endpointURL: "" # Leave empty if using the default S3 endpoint
+
+      # Overrides the provider specific default path. Defaults to:
+      # S3: s3://<bucket><path>
+      # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<clusterName><path>
+      # Google: gs://<bucket><path>
+      destinationPath: ""
+
+      provider: s3
+      s3:
+        region: ""
+        bucket: ""
+        path: "/"
+        accessKey: ""
+        secretKey: ""
+      azure:
+        path: "/"
+        connectionString: ""
+        storageAccount: ""
+        storageKey: ""
+        storageSasToken: ""
+        containerName: ""
+        serviceName: blob
+        inheritFromAzureAD: false
+      google:
+        path: "/"
+        bucket: ""
+        gkeEnvironment: false
+        applicationCredentials: ""
+
+      scheduledBackups: []
+        # - name: daily-backup # Daily at midnight
+        #   schedule: "0 0 0 * * *" # Daily at midnight
+        #   backupOwnerReference: self
+        #   immediate: false
+        #   suspend: false
+
+      retentionPolicy: "30d"
+
+      # - Manual list of backups
+      manualBackups: []
+        # - name: today
+        #   labels: {}
+        #   annotations: {}
+        # - name: beforeUpgrade
+        #   labels: {}
+        #   annotations: {}
+
+    # Database cluster PgBouncer configuration
+    pooler:
+      # -- enable to create extra pgbouncer for readonly access
+      createRO: false
+      poolMode: session
+      # -- Gets scaled to 0 if hibernation is true
+      instances: 2
+      # parameters:
+      #   max_client_conn: "1000"
+      #   default_pool_size: "25"
+      labels: {}
+      annotations: {}
+
+
     # -- contains credentials and urls output by generator
     creds: {}
-    # -- contains postgresql settings
-    # ref: https://cloudnative-pg.io/documentation/1.19/postgresql_conf/#the-postgresql-section
-    postgresql: {}
+
 
 # -- Redis dependency configuration
 # @default -- See below
 redis:
   enabled: false
-  # -- can be used to make an easy accessable note which URLS to use to access the DB.
+  # -- can be used to make an easy accessible note which URLS to use to access the DB.
   creds: {}
   manifestManager:
     enabled: false
