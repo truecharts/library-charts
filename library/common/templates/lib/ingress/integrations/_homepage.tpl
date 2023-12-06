@@ -4,7 +4,7 @@
 
   {{- $homepage := $objectData.integrations.homepage -}}
   {{- if and $homepage $homepage.enabled -}}
-    {{- if not $homepage.widget -}}
+    {{- if not (hasKey $homepage.widget) -}}
       {{- $_ := set $objectData.integrations.homepage "widget" dict -}}
     {{- end -}}
 
