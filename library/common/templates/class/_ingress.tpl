@@ -9,7 +9,21 @@ objectData: The object data to be used to render the Ingress.
 {{- define "tc.v1.common.class.ingress" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData }}
+  {{- $objectData := .objectData -}}
+
+  {{/* TODO: fetch the selected service or fallback to primary */}}
+
+  {{- if not (hasKey $objectData "integrations") -}}
+    {{- $_ := set $objectData "integrations" dict -}}
+  {{- end -}}
+  {{- if not (hasKey $objectData "annotations") -}}
+    {{- $_ := set $objectData "annotations" dict -}}
+  {{- end -}}
+
+  {{- include "tc.v1.common.lib.ingress.integration.certManager" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
+  {{- include "tc.v1.common.lib.ingress.integration.traefik" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
+  {{- include "tc.v1.common.lib.ingress.integration.homepage" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
+  {{/* TODO: fix last - */}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -28,4 +42,9 @@ metadata:
   {{- end }}
 spec:
 {{/* TODO: Stuff */}}
+  {{- if $objectData.ingressClassName }}
+  ingressClassName: {{ $objectData.ingressClassName }}
+  {{- end }}
+
+
 {{- end -}}
