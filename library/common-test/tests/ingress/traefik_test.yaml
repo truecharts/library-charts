@@ -7,7 +7,7 @@ release:
   name: test-release-name
   namespace: test-release-namespace
 tests:
-  - it: should pass with ingress created with annotations from traefik by default
+  - it: should pass with ingress created with annotations from traefik
     set:
       operator: &operator
         verify:
@@ -16,6 +16,9 @@ tests:
         my-ingress:
           enabled: true
           primary: true
+          integrations:
+            traefik:
+              enabled: true
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:
@@ -339,81 +342,6 @@ tests:
           value:
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: chain-basic-tc-system@kubernetescrd,some-middleware-tc-system@kubernetescrd,some-other-middleware-tc-system@kubernetescrd
-
-  - it: should disable traefik annotations in ingress
-    set:
-      operator: *operator
-      global:
-        traefik:
-          addIngressAnnotations: false
-      ingress:
-        my-ingress:
-          enabled: true
-          primary: true
-    asserts:
-      - documentIndex: *ingressDoc
-        isKind:
-          of: Ingress
-      - documentIndex: *ingressDoc
-        equal:
-          path: metadata.name
-          value: test-release-name-common-test
-      - documentIndex: *ingressDoc
-        isNull:
-          path: metadata.annotations
-
-  - it: should override global disable for traefik annotations in ingress
-    set:
-      operator: *operator
-      global:
-        traefik:
-          addIngressAnnotations: false
-      ingress:
-        my-ingress:
-          enabled: true
-          primary: true
-          integrations:
-            traefik:
-              enabled: true
-    asserts:
-      - documentIndex: *ingressDoc
-        isKind:
-          of: Ingress
-      - documentIndex: *ingressDoc
-        equal:
-          path: metadata.name
-          value: test-release-name-common-test
-      - documentIndex: *ingressDoc
-        equal:
-          path: metadata.annotations
-          value:
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            traefik.ingress.kubernetes.io/router.middlewares: chain-basic-tc-system@kubernetescrd
-
-  - it: should override global disable for traefik annotations in ingress
-    set:
-      operator: *operator
-      global:
-        traefik:
-          addIngressAnnotations: true
-      ingress:
-        my-ingress:
-          enabled: true
-          primary: true
-          integrations:
-            traefik:
-              enabled: false
-    asserts:
-      - documentIndex: *ingressDoc
-        isKind:
-          of: Ingress
-      - documentIndex: *ingressDoc
-        equal:
-          path: metadata.name
-          value: test-release-name-common-test
-      - documentIndex: *ingressDoc
-        isNull:
-          path: metadata.annotations
 
   # Failures
   - it: should fail with entrypoint not a slice

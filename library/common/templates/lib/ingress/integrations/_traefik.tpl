@@ -4,16 +4,7 @@
 
   {{- $traefik := $objectData.integrations.traefik -}}
 
-  {{- $enabled := false -}}
-  {{- if (hasKey $rootCtx.Values.global "traefik") -}}
-    {{- $enabled = $rootCtx.Values.global.traefik.addIngressAnnotations -}}
-  {{- end -}}
-
-  {{- if and $traefik (kindIs "bool" $traefik.enabled) -}}
-    {{- $enabled = $traefik.enabled -}}
-  {{- end -}}
-
-  {{- if $enabled -}}
+  {{- if $traefik.enabled -}}
     {{- include "tc.v1.common.lib.ingress.integration.traefik.validate" (dict "objectData" $objectData) -}}
 
     {{- $fixedMiddlewares := list -}}
@@ -98,24 +89,22 @@
 
   {{- $traefik := $objectData.integrations.traefik -}}
 
-  {{- if $traefik -}}
-    {{- if $traefik.entrypoints -}}
-      {{- if not (kindIs "slice" $traefik.entrypoints) -}}
-        {{- fail (printf "Ingress - Expected [integrations.traefik.entrypoints] to be a [slice], but got [%s]" (kindOf $traefik.entrypoints)) -}}
-      {{- end -}}
+  {{- if $traefik.entrypoints -}}
+    {{- if not (kindIs "slice" $traefik.entrypoints) -}}
+      {{- fail (printf "Ingress - Expected [integrations.traefik.entrypoints] to be a [slice], but got [%s]" (kindOf $traefik.entrypoints)) -}}
     {{- end -}}
-
-    {{- if $traefik.middlewares -}}
-      {{- if not (kindIs "slice" $traefik.middlewares) -}}
-        {{- fail (printf "Ingress - Expected [integrations.traefik.middlewares] to be a [slice], but got [%s]" (kindOf $traefik.middlewares)) -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if $traefik.fixedMiddlewares -}}
-      {{- if not (kindIs "slice" $traefik.fixedMiddlewares) -}}
-        {{- fail (printf "Ingress - Expected [integrations.traefik.fixedMiddlewares] to be a [slice], but got [%s]" (kindOf $traefik.fixedMiddlewares)) -}}
-      {{- end -}}
-    {{- end -}}
-
   {{- end -}}
+
+  {{- if $traefik.middlewares -}}
+    {{- if not (kindIs "slice" $traefik.middlewares) -}}
+      {{- fail (printf "Ingress - Expected [integrations.traefik.middlewares] to be a [slice], but got [%s]" (kindOf $traefik.middlewares)) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $traefik.fixedMiddlewares -}}
+    {{- if not (kindIs "slice" $traefik.fixedMiddlewares) -}}
+      {{- fail (printf "Ingress - Expected [integrations.traefik.fixedMiddlewares] to be a [slice], but got [%s]" (kindOf $traefik.fixedMiddlewares)) -}}
+    {{- end -}}
+  {{- end -}}
+
 {{- end -}}

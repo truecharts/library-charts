@@ -18,11 +18,6 @@ tests:
       operator: &operator
         verify:
           enabled: false
-      global:
-        traefik:
-          addIngressAnnotations: false
-        certManager:
-          addIngressAnnotations: false
       ingress:
         my-ingress1:
           enabled: true

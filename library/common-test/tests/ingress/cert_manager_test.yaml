@@ -1,0 +1,93 @@
+suite: ingress - cert manager metadata test
+templates:
+  - common.yaml
+chart:
+  appVersion: &appVer v9.9.9
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should pass with ingress created with annotations from cert manager
+    set:
+      operator: &operator
+        verify:
+          enabled: false
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: true
+              clusterIssuer: some-issuer
+    asserts:
+      - documentIndex: &ingressDoc 0
+        isKind:
+          of: Ingress
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.annotations
+          value:
+            cert-manager.io/cluster-issuer: some-issuer
+            cert-manager.io/private-key-rotation-policy: Always
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.namespace
+          value: test-release-namespace
+
+  - it: should pass with ingress created without cert manager annotations when cert manager false
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: false
+    asserts:
+      - documentIndex: *ingressDoc
+        isKind:
+          of: Ingress
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *ingressDoc
+        isNull:
+          path: metadata.annotations
+
+  # Failures
+  - it: should fail with missing clusterIssuer
+    set:
+      operator: *operator
+      ingress:
+        my-ingress1:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected a non-empty [integrations.certManager.clusterIssuer]
+
+  - it: should fail with clusterIssuer not a string
+    set:
+      operator: *operator
+      ingress:
+        my-ingress1:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: true
+              clusterIssuer:
+                - some-issuer
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [integrations.certManager.clusterIssuer] to be a [string], but got [slice]
