@@ -10,6 +10,9 @@ global:
   metallb:
     # -- Adds metalLB annotations to services
     addServiceAnnotations: true
+  certManager:
+    # -- Adds cert-manager annotations to ingresses
+    addIngressAnnotations: true
   traefik:
     # -- Adds traefik annotations to services (when needed)
     addServiceAnnotations: true

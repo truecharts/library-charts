@@ -21,6 +21,8 @@ tests:
       global:
         traefik:
           addIngressAnnotations: false
+        certManager:
+          addIngressAnnotations: false
       ingress:
         my-ingress1:
           enabled: true

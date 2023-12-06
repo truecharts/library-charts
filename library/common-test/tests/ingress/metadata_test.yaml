@@ -16,6 +16,8 @@ tests:
       global:
         traefik:
           addIngressAnnotations: false
+        certManager:
+          addIngressAnnotations: false
         labels:
           g_label1: global_label1
           g_label2: "{{ .Values.label2 }}"
