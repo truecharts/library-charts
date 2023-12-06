@@ -22,6 +22,9 @@ tests:
     set:
       operator: *operator
       ingress:
+        my-ing:
+          enabled: true
+          primary: true
         my-ingress-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-long-long-long-long-long-long-long-name:
           enabled: true
     asserts:
@@ -32,6 +35,9 @@ tests:
     set:
       operator: *operator
       ingress:
+        my-ing:
+          enabled: true
+          primary: true
         _my-ingress:
           enabled: true
     asserts:
@@ -44,6 +50,7 @@ tests:
       ingress:
         my-ingress:
           enabled: true
+          primary: true
           namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
     asserts:
       - failedTemplate:
@@ -58,6 +65,7 @@ tests:
       ingress:
         my-ingress:
           enabled: true
+          primary: true
           namespace: my-namespace
     asserts:
       - failedTemplate:
@@ -69,6 +77,7 @@ tests:
       ingress:
         my-ingress:
           enabled: true
+          primary: true
           labels: "not a dict"
     asserts:
       - failedTemplate:
@@ -80,6 +89,7 @@ tests:
       ingress:
         my-ingress:
           enabled: true
+          primary: true
           annotations: "not a dict"
     asserts:
       - failedTemplate:
@@ -94,3 +104,56 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected the defined key [enabled] in [ingress.my-ingress] to not be empty
+
+  - it: should fail with targetSelector not a map
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector: "not a map"
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [targetSelector] to be a [map], but got [string]
+
+  - it: should fail with targetSelector having more than one key
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            main: main
+            other: other
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [targetSelector] to have exactly one key, but got [2]
+
+  - it: should fail with targetSelector key missing value
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            main:
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [targetSelector.main] to have a value
+
+  - it: should fail with targetSelector key having non-string value
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            main:
+              - not a string
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [targetSelector.main] to be a [string], but got [slice]

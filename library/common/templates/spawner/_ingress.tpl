@@ -6,7 +6,9 @@
 {{- define "tc.v1.common.spawner.ingress" -}}
   {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $ -}}
 
-  {{/* Generate named ingresses as required */}}
+  {{/* Validate that only 1 primary exists */}}
+  {{- include "tc.v1.common.lib.ingress.primaryValidation" $ -}}
+
   {{- range $name, $ingress := .Values.ingress -}}
 
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
@@ -44,7 +46,7 @@
       {{/* Perform validations */}}
       {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
       {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Ingress") -}}
-      {{- /* include "tc.v1.common.lib.service.validation" (dict "rootCtx" $ "objectData" $objectData) */ -}}
+      {{- include "tc.v1.common.lib.ingress.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{/* Set the name of the ingress */}}
       {{- $_ := set $objectData "name" $objectName -}}
