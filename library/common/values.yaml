@@ -7,10 +7,15 @@ global:
   # -- Set a global namespace
   # TODO: Currently some objects do not support this
   namespace: ""
-  # -- Adds metalLB annotations to services
-  addMetalLBAnnotations: true
-  # -- Adds traefik annotations to services
-  addTraefikAnnotations: true
+  metallb:
+    # -- Adds metalLB annotations to services
+    addServiceAnnotations: true
+  traefik:
+    # -- Adds traefik annotations to services (when needed)
+    addServiceAnnotations: true
+    # Applies middleware to all ingresses
+    fixedMiddlewares:
+      - chain-basic
   # -- Minimum nodePort value
   minNodePort: 9000
   # -- Enable to stop most pods and containers including cnpg
@@ -566,8 +571,7 @@ ingress:
     # -- List of middlewares in the traefikmiddlewares k8s namespace to add automatically
     # Creates an annotation with the middlewares and appends k8s and traefik namespaces to the middleware names
     # Primarily used for TrueNAS SCALE to add additional (seperate) middlewares without exposing them to the end-user
-    fixedMiddlewares:
-      - chain-basic
+
 
     # -- Additional List of middlewares in the traefikmiddlewares k8s namespace to add automatically
     # Creates an annotation with the middlewares and appends k8s and traefik namespaces to the middleware names
