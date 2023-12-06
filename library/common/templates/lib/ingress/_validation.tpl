@@ -51,6 +51,9 @@ objectData:
     {{- if (hasPrefix "https://" $host) -}}
       {{- fail (printf "Ingress - Expected [hosts.host] to not start with [https://], but got [%s]" $host) -}}
     {{- end -}}
+    {{- if (contains ":" $host) -}}
+      {{- fail (printf "Ingress - Expected [hosts.host] to not contain [:], but got [%s]" $host) -}}
+    {{- end -}}
 
     {{- if not $h.paths -}}
       {{- fail "Ingress - Expected non-empty [hosts.paths]" -}}

@@ -233,6 +233,21 @@ tests:
       - failedTemplate:
           errorMessage: Ingress - Expected [hosts.host] to not start with [http://], but got [http://test-host]
 
+  - it: should fail with host contain ":"
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts:
+            - host: test-host:123
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [hosts.host] to not contain [:], but got [test-host:123]
+
   - it: should fail without paths
     set:
       operator: *operator
