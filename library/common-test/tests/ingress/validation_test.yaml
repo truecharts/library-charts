@@ -1,0 +1,96 @@
+suite: ingress validation test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should fail if required is true but enabled is false
+    set:
+      operator: &operator
+        verify:
+          enabled: false
+      ingress:
+        my-ingress:
+          enabled: false
+          required: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected ingress [my-ingress] to be enabled. This chart is designed to work only with ingress enabled.
+
+  - it: should fail with name longer than 253 characters
+    set:
+      operator: *operator
+      ingress:
+        my-ingress-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-long-long-long-long-long-long-long-name:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-my-ingress-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-name-that-is-longer-than-253-characters-my-configmap-super-long-long-long-long-long-long-long-long-name] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 253 characters.
+
+  - it: should fail with name starting with underscore
+    set:
+      operator: *operator
+      ingress:
+        _my-ingress:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Name [test-release-name-common-test-_my-ingress] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 253 characters.
+
+  - it: should fail with namespace longer than 63 characters
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          namespace: my-extra-super-duper-long-name-that-is-longer-than-63-characters
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Namespace [my-extra-super-duper-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail with namespace not starting with [ix-] in TrueNAS SCALE
+    set:
+      global:
+        ixChartContext:
+          iAmNotEmpty: true
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          namespace: my-namespace
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Namespace [my-namespace] expected to have [ix-] prefix when installed in TrueNAS SCALE
+
+  - it: should fail with labels not a dict
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          labels: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [labels] to be a dictionary, but got [string]
+
+  - it: should fail with annotations not a dict
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          annotations: "not a dict"
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [annotations] to be a dictionary, but got [string]
+
+  - it: should fail with empty enabled
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled:
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected the defined key [enabled] in [ingress.my-ingress] to not be empty

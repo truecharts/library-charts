@@ -15,7 +15,7 @@
               "key" "ingress")) -}}
 
     {{- if and (eq $enabled "false") ($ingress.required) -}}
-      {{- fail "Ingress - Chart is designed to work only with ingress enabled. Please enable and configure ingress." -}}
+      {{- fail (printf "Ingress - Expected ingress [%s] to be enabled. This chart is designed to work only with ingress enabled." $name) -}}
     {{- end -}}
 
     {{- if eq $enabled "true" -}}
@@ -42,8 +42,8 @@
       {{- end -}}
 
       {{/* Perform validations */}}
-      {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName) -}}
-      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Service") -}}
+      {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
+      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Ingress") -}}
       {{- /* include "tc.v1.common.lib.service.validation" (dict "rootCtx" $ "objectData" $objectData) */ -}}
 
       {{/* Set the name of the ingress */}}
