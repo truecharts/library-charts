@@ -543,7 +543,7 @@ ingress:
     annotations: {}
     # -- Set the ingressClass that is used for this ingress.
     # Requires Kubernetes >=1.19
-    ingressClassName:  # "nginx"
+    ingressClassName:  ""
     # Defaults to primary service and primary port
     # targetSelector:
     #   # service: port
