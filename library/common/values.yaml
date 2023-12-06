@@ -13,7 +13,11 @@ global:
   traefik:
     # -- Adds traefik annotations to services (when needed)
     addServiceAnnotations: true
+    # Enables or disables the fixed middlewares on all ingresses
+    # Can be overrided per ingress
+    enableFixedMiddlewares: true
     # Applies middleware to all ingresses
+    # Can be overrided per ingress
     fixedMiddlewares:
       - chain-basic
   # -- Minimum nodePort value
