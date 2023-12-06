@@ -524,7 +524,6 @@ wireguardImage:
   # -- Specify the WireGuard image pull policy
   pullPolicy: IfNotPresent
 
-
 # -- Configure the ingresses for the chart here.
 # Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress.
 # @default -- See below
@@ -550,21 +549,21 @@ ingress:
     #   # service: port
     #   main: main
     ## Configure the hosts for the ingress
-    hosts:
-      -  # -- Host address. Helm template can be passed.
-        host: chart-example.local
-        ## Configure the paths for the host
-        paths:
-          -  # -- Path.  Helm template can be passed.
-            path: /
-            # -- Ignored if not kubeVersion >= 1.14-0
-            pathType: Prefix
-            # -- Overrides the service reference for this path, by default the selector is honored
-            overrideService:
-              # -- Overrides the service name reference for this path
-              name:
-              # -- Overrides the service port reference for this path
-              port:
+    hosts: []
+      # -  # -- Host address. Helm template can be passed.
+      #   host: chart-example.local
+      #   ## Configure the paths for the host
+      #   paths:
+      #     -  # -- Path.  Helm template can be passed.
+      #       path: /
+      #       # -- Ignored if not kubeVersion >= 1.14-0
+      #       pathType: Prefix
+      #       # -- Overrides the service reference for this path, by default the selector is honored
+      #       # overrideService:
+            #   # -- Overrides the service name reference for this path
+            #   name:
+            #   # -- Overrides the service port reference for this path
+            #   port:
     # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
     # Gets ignored when clusterIssuer is filled
     tls: []
@@ -576,6 +575,9 @@ ingress:
     #    hosts:
     #      - chart-example.local
     integrations:
+      certManager:
+        enabled: false
+        clusterIssuer: ""
       traefik:
         enabled: true
         # Default to websecure
@@ -584,52 +586,26 @@ ingress:
         enableFixedMiddlewares: true
         # Drops both global and local fixedMiddlewares when enabled
         allowCors: false
-        fixedMiddlewares:
-          - chain-basic
+        # fixedMiddlewares:
+        #   - chain-basic
         middlewares: []
-      certManager:
-        enabled: true
-        clusterIssuer: ""
-    # -- Adds integrations to ingress
-    integration:
       homepage:
-        # enabled: true
-        # # Default: chart name
-        # name: somename
-        # # Default: chart description
-        # description: some description
-        # # Default: no group
-        # group: somegroup
-        # # Default: chart icon
-        # icon: icon.png
-        # widget:
-        #   # Default: chartname
-        #   type: "sometype"
-        #   # Default to ingress host 0
-        #   url: "https://example.com"
-        #   custom:
-        #     - somesetting: some value
-      traefik:
-        # -- Enables or disables the traefik integration (enabled if not defined)
-        enabled: true
-        # -- List of entrypoints to add, Defaults to websecure
-        entrypoints:
-          - websecure
-        # -- disable to ignore any default middelwares
-        enableFixedMiddlewares: true
-        # -- Additional List of middlewares in the traefik middlewares k8s namespace to add automatically
-        # Creates an annotation with the middlewares and appends k8s and traefik namespaces to the middleware names
-        middlewares: []
-        # Replaces global fixed middlewares
-        fixedMiddlewares: []
-        # Enable or disable CORS Requests to the ingress
-        # Drops both global and local fixedMiddlewares when enabled
-        allowCors: false
-      certManager:
-        # -- Enables or disables the cert-manager integration (enabled if not defined)
-        enabled: true
-        # -- set the Cert-Manager clusterissuer for this ingress
-        clusterIssuer: ""
+        enabled: false
+        # Default: chart name
+        name: somename
+        # Default: chart description
+        description: some description
+        # Default: no group
+        group: somegroup
+        # Default: chart icon
+        icon: icon.png
+        widget:
+          # Default: chartname
+          type: "sometype"
+          # Default to ingress host 0
+          url: "https://example.com"
+          custom:
+            - somesetting: some value
 
 # -- BETA: Configure the gateway routes for the chart here.
 # Additional routes can be added by adding a dictionary key similar to the 'main' route.
