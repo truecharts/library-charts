@@ -4,13 +4,17 @@
 
   {{- $homepage := $objectData.integrations.homepage -}}
   {{- if and $homepage $homepage.enabled -}}
+    {{- if not $homepage.widget -}}
+      {{- $_ := set $objectData.integrations.homepage "widget" dict -}}
+    {{- end -}}
+
     {{- include "tc.v1.common.lib.ingress.integration.homepage.validation" (dict "objectData" $objectData) -}}
 
     {{- $name := $homepage.name | default ($rootCtx.Chart.Name | camelcase) -}}
     {{- $desc := $homepage.description | default $rootCtx.Chart.Description -}}
     {{- $icon := $homepage.icon | default $rootCtx.Chart.Icon -}}
-    {{- $type := $homepage.type | default $rootCtx.Chart.Name -}}
-    {{- $url := $homepage.url | default "TODO:" -}}
+    {{- $type := $homepage.widget.type | default $rootCtx.Chart.Name -}}
+    {{- $url := $homepage.widget.url | default "TODO:" -}}
 
     {{- $_ := set $objectData.annotations "gethomepage.dev/enabled" "true" -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/name" (tpl $name $rootCtx) -}}
@@ -29,7 +33,7 @@
       {{- $_ := set $objectData.annotations "gethomepage.dev/widget.url" (tpl $url $rootCtx) -}}
     {{- end -}}
 
-    {{- if and $homepage.widget $homepage.widget.custom -}}
+    {{- if $homepage.widget.custom -}}
       {{- range $k, $v := $homepage.widget.custom -}}
         {{- $_ := set $objectData.annotations (printf "gethomepage.dev/widget.%s" $k) (tpl $v $rootCtx | toString) -}}
       {{- end -}}
@@ -54,7 +58,7 @@
     {{- end -}}
   {{- end -}}
 
-  {{- if and $homepage.widget $homepage.widget.custom -}}
+  {{- if $homepage.widget.custom -}}
     {{- if not (kindIs "map" $homepage.widget.custom) -}}
       {{- fail (printf "Ingress - Expected [integrations.homepage.widget.custom] to be a [map], but got [%s]" (kindOf $homepage.widget.custom)) -}}
     {{- end -}}
