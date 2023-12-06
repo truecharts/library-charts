@@ -559,11 +559,11 @@ ingress:
       #       # -- Ignored if not kubeVersion >= 1.14-0
       #       pathType: Prefix
       #       # -- Overrides the service reference for this path, by default the selector is honored
-      #       # overrideService:
-            #   # -- Overrides the service name reference for this path
-            #   name:
-            #   # -- Overrides the service port reference for this path
-            #   port:
+      #       overrideService:
+      #         # -- Overrides the service name reference for this path
+      #         name:
+      #         # -- Overrides the service port reference for this path
+      #         port:
     # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
     # Gets ignored when clusterIssuer is filled
     tls: []
