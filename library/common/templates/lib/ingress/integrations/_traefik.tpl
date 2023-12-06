@@ -4,7 +4,12 @@
 
   {{- $traefik := $objectData.integrations.traefik -}}
 
-  {{- if $traefik.enabled -}}
+  {{- $enabled := true -}}
+  {{- if and $traefik (hasKey $traefik "enabled") (kindIs "bool" $traefik.enabled) -}}
+    {{- $enabled = $traefik.enabled -}}
+  {{- end -}}
+
+  {{- if $enabled -}}
     {{- include "tc.v1.common.lib.ingress.integration.traefik.validate" (dict "objectData" $objectData) -}}
 
     {{- $fixedMiddlewares := list -}}

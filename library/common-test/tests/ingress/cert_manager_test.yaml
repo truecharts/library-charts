@@ -17,9 +17,15 @@ tests:
           enabled: true
           primary: true
           integrations:
+            traefik: &traefik
+              enabled: false
             certManager:
               enabled: true
               clusterIssuer: some-issuer
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:
@@ -47,8 +53,10 @@ tests:
           enabled: true
           primary: true
           integrations:
+            traefik: *traefik
             certManager:
               enabled: false
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -72,6 +80,7 @@ tests:
           integrations:
             certManager:
               enabled: true
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected a non-empty [integrations.certManager.clusterIssuer]
@@ -88,6 +97,7 @@ tests:
               enabled: true
               clusterIssuer:
                 - some-issuer
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.certManager.clusterIssuer] to be a [string], but got [slice]

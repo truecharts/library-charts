@@ -14,7 +14,16 @@
     {{- $desc := $homepage.description | default $rootCtx.Chart.Description -}}
     {{- $icon := $homepage.icon | default $rootCtx.Chart.Icon -}}
     {{- $type := $homepage.widget.type | default $rootCtx.Chart.Name -}}
-    {{- $url := $homepage.widget.url | default "TODO:" -}}
+    {{- $url := $homepage.widget.url -}}
+
+    {{- if not $url -}}
+      {{- $fHost := $objectData.hosts | mustFirst -}}
+      {{- $fPath := $fHost.paths | mustFirst -}}
+      {{- $host := $fHost.host -}}
+      {{- $path := $fPath.path -}}
+
+      {{- $url = printf "https://%s/%s" $host ($path | trimPrefix "/") -}}
+    {{- end -}}
 
     {{- $_ := set $objectData.annotations "gethomepage.dev/enabled" "true" -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/name" (tpl $name $rootCtx) -}}

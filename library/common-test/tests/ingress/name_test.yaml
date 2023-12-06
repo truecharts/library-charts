@@ -14,11 +14,17 @@ tests:
         my-ingress1:
           enabled: true
           primary: true
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
         my-ingress2:
           enabled: true
+          hosts: *hosts
         my-ingress3:
           enabled: true
           expandObjectName: false
+          hosts: *hosts
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:

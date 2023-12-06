@@ -23,11 +23,18 @@ tests:
           enabled: true
           primary: true
           integrations:
+            traefik: &traefik
+              enabled: false
             homepage:
               enabled: true
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
         my-ingress2:
           enabled: true
           integrations:
+            traefik: *traefik
             homepage:
               enabled: true
               name: "{{ .Values.k1 }}"
@@ -44,6 +51,7 @@ tests:
                 custom:
                   some-key: some-value
                   some-other-key: some-other-value
+          hosts: *hosts
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:
@@ -57,7 +65,7 @@ tests:
             gethomepage.dev/description: Helper chart to test different use cases of the common library
             gethomepage.dev/icon: https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png
             gethomepage.dev/widget.type: common-test
-            gethomepage.dev/widget.url: "TODO:"
+            gethomepage.dev/widget.url: "https://test-host/test-path"
       - documentIndex: *ingressDoc
         equal:
           path: metadata.name
@@ -105,6 +113,7 @@ tests:
             homepage:
               enabled: true
               podSelector: main
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.homepage.podSelector] to be a [slice], but got [string]
@@ -121,6 +130,7 @@ tests:
               enabled: true
               widget:
                 custom: "not a map"
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.homepage.widget.custom] to be a [map], but got [string]

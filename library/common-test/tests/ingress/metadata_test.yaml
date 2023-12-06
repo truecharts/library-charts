@@ -33,9 +33,18 @@ tests:
           annotations:
             annotation1: "{{ .Values.annotation1 }}"
             annotation2: annotation2
+          integrations: &integrations
+            traefik:
+              enabled: false
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
         my-ingress2:
           enabled: true
           primary: false
+          integrations: *integrations
+          hosts: *hosts
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:
@@ -107,6 +116,8 @@ tests:
           enabled: true
           primary: true
           namespace: "{{ .Values.key }}"
+          integrations: *integrations
+          hosts: *hosts
     asserts:
       - documentIndex: &IngressDoc 0
         equal:
@@ -123,6 +134,8 @@ tests:
         my-ingress1:
           enabled: true
           primary: true
+          integrations: *integrations
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         equal:
@@ -140,6 +153,8 @@ tests:
         my-ingress1:
           enabled: true
           primary: true
+          integrations: *integrations
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         equal:
@@ -157,6 +172,8 @@ tests:
         my-ingress1:
           enabled: true
           primary: true
+          integrations: *integrations
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         equal:

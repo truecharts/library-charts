@@ -16,9 +16,10 @@ tests:
         my-ingress:
           enabled: true
           primary: true
-          integrations:
-            traefik:
-              enabled: true
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
     asserts:
       - documentIndex: &ingressDoc 0
         isKind:
@@ -48,6 +49,7 @@ tests:
           integrations:
             traefik:
               enabled: false
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -73,6 +75,7 @@ tests:
               allowCors: true
               fixedMiddlewares:
                 - some-fixed-middleware
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -99,6 +102,7 @@ tests:
             traefik:
               enabled: true
               allowCors: true
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -126,6 +130,7 @@ tests:
               enabled: true
               fixedMiddlewares:
                 - some-fixed-middleware
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -154,6 +159,7 @@ tests:
               entrypoints:
                 - web
                 - websecure
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -182,6 +188,7 @@ tests:
           integrations:
             traefik:
               enabled: true
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -206,6 +213,7 @@ tests:
             traefik:
               enabled: true
               enableFixedMiddlewares: false
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -233,6 +241,7 @@ tests:
               entrypoints:
                 - web
                 - websecure
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -263,6 +272,7 @@ tests:
             traefik:
               enabled: true
               ingressClassName: some-class
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -297,6 +307,7 @@ tests:
             traefik:
               enabled: true
               ingressClassName: some-class
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -325,6 +336,7 @@ tests:
               middlewares:
                 - some-middleware
                 - some-other-middleware
+          hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
         isKind:
@@ -355,6 +367,7 @@ tests:
             traefik:
               enabled: true
               entrypoints: "not a string"
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.traefik.entrypoints] to be a [slice], but got [string]
@@ -370,6 +383,7 @@ tests:
             traefik:
               enabled: true
               middlewares: "not a slice"
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.traefik.middlewares] to be a [slice], but got [string]
@@ -385,6 +399,7 @@ tests:
             traefik:
               enabled: true
               fixedMiddlewares: "not a slice"
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.traefik.fixedMiddlewares] to be a [slice], but got [string]
@@ -401,6 +416,7 @@ tests:
               enabled: true
               middlewares:
                 - chain-basic
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Combined traefik middlewares contain duplicates [chain-basic, chain-basic]
@@ -418,6 +434,7 @@ tests:
               entrypoints:
                 - websecure
                 - websecure
+          hosts: *hosts
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Combined traefik entrypoints contain duplicates [websecure, websecure]

@@ -22,8 +22,7 @@ objectData: The object data to be used to render the Ingress.
 
   {{- include "tc.v1.common.lib.ingress.integration.certManager" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
   {{- include "tc.v1.common.lib.ingress.integration.traefik" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
-  {{- include "tc.v1.common.lib.ingress.integration.homepage" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
-  {{/* TODO: fix last - */}}
+  {{- include "tc.v1.common.lib.ingress.integration.homepage" (dict "rootCtx" $rootCtx "objectData" $objectData) }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -41,10 +40,31 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-{{/* TODO: Stuff */}}
+  {{- /* TODO: UT */}}
   {{- if $objectData.ingressClassName }}
   ingressClassName: {{ $objectData.ingressClassName }}
   {{- end }}
+  rules:
+    {{- range $h := $objectData.hosts }}
+    - host: {{ $h.host }}
+      http:
+        paths:
+          {{- range $p := $h.paths -}}
+            {{- $serviceName := "TODO:!" -}}
+            {{- $servicePort := "TODO:!" -}}
+            {{- with $p.overrideService -}}
+              {{- $serviceName = .name -}}
+              {{- $servicePort = .port -}}
+            {{- end }}
+          - path: {{ $p.path }}
+            pathType: {{ $p.pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+          {{- end -}}
+    {{- end }}
 
 
 {{- end -}}
