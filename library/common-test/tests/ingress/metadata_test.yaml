@@ -37,7 +37,7 @@ tests:
           enabled: true
           primary: false
     asserts:
-      - documentIndex: &ingressDoc 1
+      - documentIndex: &ingressDoc 0
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -72,7 +72,7 @@ tests:
         equal:
           path: metadata.namespace
           value: test-release-namespace
-      - documentIndex: &otherIngressDoc 2
+      - documentIndex: &otherIngressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *otherIngressDoc
@@ -92,13 +92,13 @@ tests:
       - documentIndex: *otherIngressDoc
         equal:
           path: metadata.name
-          value: test-release-name-common-test-my-service2
+          value: test-release-name-common-test-my-ingress2
       - documentIndex: *otherIngressDoc
         equal:
           path: metadata.namespace
           value: test-release-namespace
 
-  - it: should pass with service created with object namespace from tpl
+  - it: should pass with ingress created with object namespace from tpl
     set:
       key: some-namespace
       operator: *operator
@@ -113,7 +113,7 @@ tests:
           path: metadata.namespace
           value: some-namespace
 
-  - it: should pass with service created with global namespace from tpl
+  - it: should pass with ingress created with global namespace from tpl
     set:
       key: global-namespace
       global:
@@ -129,7 +129,7 @@ tests:
           path: metadata.namespace
           value: global-namespace
 
-  - it: should pass with service created with root namespace from tpl
+  - it: should pass with ingress created with root namespace from tpl
     set:
       key: local-namespace
       namespace: "{{ .Values.key }}"
@@ -146,7 +146,7 @@ tests:
           path: metadata.namespace
           value: local-namespace
 
-  - it: should pass with service created with namespace in TrueNAS SCALE
+  - it: should pass with ingress created with namespace in TrueNAS SCALE
     set:
       global:
         ixChartContext:
