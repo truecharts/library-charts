@@ -37,7 +37,7 @@ tests:
               enabled: false
             certManager:
               enabled: true
-              clusterIssuer: some-issuer
+              certificateIssuer: some-issuer
     asserts:
       - documentIndex: &ingressDoc 1
         isKind:
@@ -148,7 +148,7 @@ tests:
                 - some-other-test-host
               secretName: test-release-name-common-test-scale-tls-1
 
-  - it: should pass with ingress created with tls with clusterIssuer
+  - it: should pass with ingress created with tls with certificateIssuer
     set:
       operator: *operator
       service: *service
@@ -167,10 +167,10 @@ tests:
             - hosts:
                 - test-host
                 - other-test-host
-              clusterIssuer: some-issuer
+              certificateIssuer: some-issuer
             - hosts:
                 - some-other-test-host
-              clusterIssuer: some-other-issuer
+              certificateIssuer: some-other-issuer
           integrations: &integrations
             traefik:
               enabled: false

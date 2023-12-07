@@ -30,7 +30,7 @@ tests:
               enabled: false
             certManager:
               enabled: true
-              clusterIssuer: some-issuer
+              certificateIssuer: some-issuer
           hosts: &hosts
             - host: test-host
               paths:
@@ -80,7 +80,7 @@ tests:
           path: metadata.annotations
 
   # Failures
-  - it: should fail with missing clusterIssuer
+  - it: should fail with missing certificateIssuer
     set:
       operator: *operator
       service: *service
@@ -94,9 +94,9 @@ tests:
           hosts: *hosts
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected a non-empty [integrations.certManager.clusterIssuer]
+          errorMessage: Ingress - Expected a non-empty [integrations.certManager.certificateIssuer]
 
-  - it: should fail with clusterIssuer not a string
+  - it: should fail with certificateIssuer not a string
     set:
       operator: *operator
       service: *service
@@ -107,9 +107,9 @@ tests:
           integrations:
             certManager:
               enabled: true
-              clusterIssuer:
+              certificateIssuer:
                 - some-issuer
           hosts: *hosts
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected [integrations.certManager.clusterIssuer] to be a [string], but got [slice]
+          errorMessage: Ingress - Expected [integrations.certManager.certificateIssuer] to be a [string], but got [slice]

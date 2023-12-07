@@ -61,7 +61,7 @@ spec:
                   number: {{ $svcData.port }}
           {{- end -}}
     {{- end -}}
-  {{/* If a clusterIssuer is defined in the whole ingress, use that */}}
+  {{/* If a certificateIssuer is defined in the whole ingress, use that */}}
   {{- if and $objectData.integrations.certManager $objectData.integrations.certManager.enabled }}
   tls:
     {{- range $idx, $h := $objectData.hosts }}
@@ -78,7 +78,7 @@ spec:
         {{- $secretName = tpl $t.secretName $rootCtx -}}
       {{- else if $t.scaleCert -}}
         {{- $secretName = printf "%s-scale-tls-%d" $objectData.name ($idx | int) -}}
-      {{- else if $t.clusterIssuer -}}
+      {{- else if $t.certificateIssuer -}}
         {{- $secretName = printf "%s-tls-%d" $objectData.name ($idx | int) -}}
       {{- else if $t.clusterCertificate -}}
         {{/* TODO: Needs the refactor of Certificate object */}}
