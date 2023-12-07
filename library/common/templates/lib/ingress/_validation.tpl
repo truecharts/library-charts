@@ -105,19 +105,19 @@ objectData:
     {{- end -}}
 
     {{- range $h := $t.hosts -}}
-      {{- if not $h.host -}}
-        {{- fail "Ingress - Expected non-empty [tls.hosts.host]" -}}
+      {{- if not $h -}}
+        {{- fail "Ingress - Expected non-empty entry in [tls.hosts]" -}}
       {{- end -}}
 
-      {{- $host := tpl $h.host $rootCtx -}}
+      {{- $host := tpl $h $rootCtx -}}
       {{- if (hasPrefix "http://" $host) -}}
-        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not start with [http://], but got [%s]" $host) -}}
+        {{- fail (printf "Ingress - Expected entry in [tls.hosts] to not start with [http://], but got [%s]" $host) -}}
       {{- end -}}
       {{- if (hasPrefix "https://" $host) -}}
-        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not start with [https://], but got [%s]" $host) -}}
+        {{- fail (printf "Ingress - Expected entry in [tls.hosts] to not start with [https://], but got [%s]" $host) -}}
       {{- end -}}
       {{- if (contains ":" $host) -}}
-        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not contain [:], but got [%s]" $host) -}}
+        {{- fail (printf "Ingress - Expected entry in [tls.hosts] to not contain [:], but got [%s]" $host) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

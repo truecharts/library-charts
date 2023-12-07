@@ -518,10 +518,10 @@ tests:
           hosts: *hosts
           tls:
             - hosts:
-              - host: ""
+              - ""
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected non-empty [tls.hosts.host]
+          errorMessage: Ingress - Expected non-empty entry in [tls.hosts]
 
   - it: should fail if tls.hosts.host starts with https://
     set:
@@ -534,10 +534,10 @@ tests:
           hosts: *hosts
           tls:
             - hosts:
-              - host: https://test-host
+              - https://test-host
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected [tls.hosts.host] to not start with [https://], but got [https://test-host]
+          errorMessage: Ingress - Expected entry in [tls.hosts] to not start with [https://], but got [https://test-host]
 
   - it: should fail if tls.hosts.host starts with http://
     set:
@@ -550,10 +550,10 @@ tests:
           hosts: *hosts
           tls:
             - hosts:
-              - host: http://test-host
+              - http://test-host
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected [tls.hosts.host] to not start with [http://], but got [http://test-host]
+          errorMessage: Ingress - Expected entry in [tls.hosts] to not start with [http://], but got [http://test-host]
 
   - it: should fail if tls.hosts.host contains ":"
     set:
@@ -566,7 +566,7 @@ tests:
           hosts: *hosts
           tls:
             - hosts:
-              - host: test-host:123
+              - test-host:123
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected [tls.hosts.host] to not contain [:], but got [test-host:123]
+          errorMessage: Ingress - Expected entry in [tls.hosts] to not contain [:], but got [test-host:123]
