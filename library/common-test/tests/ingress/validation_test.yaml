@@ -10,6 +10,15 @@ tests:
       operator: &operator
         verify:
           enabled: false
+      service: &service
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress:
           enabled: false
@@ -21,6 +30,7 @@ tests:
   - it: should fail with name longer than 253 characters
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ing:
           enabled: true
@@ -38,6 +48,7 @@ tests:
   - it: should fail with name starting with underscore
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ing:
           enabled: true
@@ -52,6 +63,7 @@ tests:
   - it: should fail with namespace longer than 63 characters
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -68,6 +80,16 @@ tests:
         ixChartContext:
           iAmNotEmpty: true
       operator: *operator
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          namespace: ix-namespace
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress:
           enabled: true
@@ -340,3 +362,117 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected non-empty [hosts.paths.overrideService.port]
+
+  - it: should fail if targeted service does not exist
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            my-service: my-port
+          hosts:
+            - host: test-host
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected targeted service [my-service] to exist
+
+  - it: should fail if targeted service is not enabled
+    set:
+      operator: *operator
+      service:
+        my-service:
+          enabled: false
+          primary: true
+          ports:
+            my-port:
+              enabled: true
+              primary: true
+              port: 80
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            my-service: my-port
+          hosts:
+            - host: test-host
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected targeted service [my-service] to be enabled
+
+  - it: should fail without primary service or a targetSelector
+    set:
+      operator: *operator
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts:
+            - host: test-host
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [targetSelector] or a primary service to exist
+
+  - it: should fail if the targeted service does not have the targeted port
+    set:
+      operator: *operator
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            my-other-port:
+              enabled: true
+              primary: true
+              port: 80
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            my-service: my-port
+          hosts:
+            - host: test-host
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected targeted service [my-service] to have port [my-port]
+
+  - it: should fail if the targeted service port is not enabled
+    set:
+      operator: *operator
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            my-port:
+              enabled: false
+              primary: true
+              port: 80
+            my-other-port:
+              enabled: true
+              primary: true
+              port: 80
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          targetSelector:
+            my-service: my-port
+          hosts:
+            - host: test-host
+              paths:
+                - path: /test-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected targeted service port [my-port] to be enabled

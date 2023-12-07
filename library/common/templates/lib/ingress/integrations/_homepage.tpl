@@ -19,8 +19,8 @@
     {{- if not $url -}}
       {{- $fHost := $objectData.hosts | mustFirst -}}
       {{- $fPath := $fHost.paths | mustFirst -}}
-      {{- $host := $fHost.host -}}
-      {{- $path := $fPath.path -}}
+      {{- $host := tpl $fHost.host $rootCtx -}}
+      {{- $path := tpl $fPath.path $rootCtx -}}
 
       {{- $url = printf "https://%s/%s" $host ($path | trimPrefix "/") -}}
     {{- end -}}

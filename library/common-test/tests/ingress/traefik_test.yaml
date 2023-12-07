@@ -12,6 +12,15 @@ tests:
       operator: &operator
         verify:
           enabled: false
+      service: &service
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress:
           enabled: true
@@ -21,7 +30,7 @@ tests:
               paths:
                 - path: /test-path
     asserts:
-      - documentIndex: &ingressDoc 0
+      - documentIndex: &ingressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -42,6 +51,7 @@ tests:
   - it: should pass with ingress created without traefik annotations when traefik false
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -65,6 +75,7 @@ tests:
   - it: should replace local fixedMiddlewares when allowCors true
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -94,6 +105,7 @@ tests:
   - it: should replace global fixedMiddlewares when allowCors true
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -121,6 +133,7 @@ tests:
   - it: should replace global fixedMiddlewares when local fixedMiddlewares is defined
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -149,6 +162,7 @@ tests:
   - it: should override default entrypoint(s)
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -178,6 +192,7 @@ tests:
   - it: should not contain fixed middlewares when global is disabled
     set:
       operator: *operator
+      service: *service
       global:
         traefik:
           enableFixedMiddlewares: false
@@ -202,6 +217,7 @@ tests:
   - it: should not contain fixed middlewares when local is disabled
     set:
       operator: *operator
+      service: *service
       global:
         traefik:
           enableFixedMiddlewares: true
@@ -231,6 +247,7 @@ tests:
           enabled: false
         traefik:
           namespace: some-ns
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -264,6 +281,8 @@ tests:
           enabled: false
         traefik:
           namespace: some-ns
+      someclass: some-class
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -271,7 +290,7 @@ tests:
           integrations:
             traefik:
               enabled: true
-              ingressClassName: some-class
+              ingressClassName: "{{ .Values.someclass }}"
           hosts: *hosts
     asserts:
       - documentIndex: *ingressDoc
@@ -295,6 +314,7 @@ tests:
           enabled: false
         traefik:
           namespace: some-ns
+      service: *service
       global:
         ixChartContext:
           imNotEmpty: true
@@ -326,6 +346,7 @@ tests:
   - it: should add the defined middlewares to the ingress
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -359,6 +380,7 @@ tests:
   - it: should fail with entrypoint not a slice
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -375,6 +397,7 @@ tests:
   - it: should fail with middlewares not a slice
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -391,6 +414,7 @@ tests:
   - it: should fail with fixedMiddlewares not a slice
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -407,6 +431,7 @@ tests:
   - it: should fail with duplicate middlewares
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -424,6 +449,7 @@ tests:
   - it: should fail with duplicate entrypoints
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true

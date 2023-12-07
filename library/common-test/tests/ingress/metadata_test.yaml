@@ -23,6 +23,15 @@ tests:
       operator: &operator
         verify:
           enabled: false
+      service: &service
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress1:
           enabled: true
@@ -46,7 +55,7 @@ tests:
           integrations: *integrations
           hosts: *hosts
     asserts:
-      - documentIndex: &ingressDoc 0
+      - documentIndex: &ingressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -81,7 +90,7 @@ tests:
         equal:
           path: metadata.namespace
           value: test-release-namespace
-      - documentIndex: &otherIngressDoc 1
+      - documentIndex: &otherIngressDoc 2
         isKind:
           of: Ingress
       - documentIndex: *otherIngressDoc
@@ -111,6 +120,7 @@ tests:
     set:
       key: some-namespace
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -119,7 +129,7 @@ tests:
           integrations: *integrations
           hosts: *hosts
     asserts:
-      - documentIndex: &IngressDoc 0
+      - documentIndex: *ingressDoc
         equal:
           path: metadata.namespace
           value: some-namespace
@@ -130,6 +140,7 @@ tests:
       global:
         namespace: "{{ .Values.key }}"
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -149,6 +160,7 @@ tests:
       global:
         namespace: global-namespace
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -168,6 +180,7 @@ tests:
           iAmNotEmpty: true
       namespace: ix-namespace
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true

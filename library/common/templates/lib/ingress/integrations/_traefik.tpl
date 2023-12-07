@@ -67,7 +67,7 @@
     {{- end -}}
 
     {{- if $traefik.ingressClassName -}}
-      {{- $midNamespace = $traefik.ingressClassName -}}
+      {{- $midNamespace = tpl $traefik.ingressClassName $rootCtx -}}
 
       {{/* On SCALE prepend with ix- */}}
       {{- if $rootCtx.Values.global.ixChartContext -}}

@@ -18,6 +18,17 @@ tests:
       operator: &operator
         verify:
           enabled: false
+      service: &service
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
+      someHost: test-host
+      somePath: /test-path
       ingress:
         my-ingress1:
           enabled: true
@@ -27,10 +38,10 @@ tests:
               enabled: false
             homepage:
               enabled: true
-          hosts: &hosts
-            - host: test-host
+          hosts:
+            - host: "{{ .Values.someHost }}"
               paths:
-                - path: /test-path
+                - path: "{{ .Values.somePath }}"
         my-ingress2:
           enabled: true
           integrations:
@@ -51,9 +62,12 @@ tests:
                 custom:
                   some-key: some-value
                   some-other-key: some-other-value
-          hosts: *hosts
+          hosts: &hosts
+            - host: test-host
+              paths:
+                - path: /test-path
     asserts:
-      - documentIndex: &ingressDoc 0
+      - documentIndex: &ingressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -74,7 +88,7 @@ tests:
         equal:
           path: metadata.namespace
           value: test-release-namespace
-      - documentIndex: &otherIngressDoc 1
+      - documentIndex: &otherIngressDoc 2
         isKind:
           of: Ingress
       - documentIndex: *otherIngressDoc
@@ -105,6 +119,7 @@ tests:
   - it: should fail with podSelector not a slice
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -121,6 +136,7 @@ tests:
   - it: should fail with custom widget not a map
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true

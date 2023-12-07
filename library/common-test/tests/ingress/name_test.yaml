@@ -10,6 +10,15 @@ tests:
       operator:
         verify:
           enabled: false
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress1:
           enabled: true
@@ -26,7 +35,7 @@ tests:
           expandObjectName: false
           hosts: *hosts
     asserts:
-      - documentIndex: &ingressDoc 0
+      - documentIndex: &ingressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -36,7 +45,7 @@ tests:
         equal:
           path: metadata.name
           value: test-release-name-common-test
-      - documentIndex: &otherIngressDoc 1
+      - documentIndex: &otherIngressDoc 2
         isKind:
           of: Ingress
       - documentIndex: *otherIngressDoc
@@ -46,7 +55,7 @@ tests:
         equal:
           path: metadata.name
           value: test-release-name-common-test-my-ingress2
-      - documentIndex: &thirdIngressDoc 2
+      - documentIndex: &thirdIngressDoc 3
         isKind:
           of: Ingress
       - documentIndex: *thirdIngressDoc

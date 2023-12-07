@@ -12,6 +12,15 @@ tests:
       operator: &operator
         verify:
           enabled: false
+      service: &service
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            main:
+              enabled: true
+              primary: true
+              port: 80
       ingress:
         my-ingress:
           enabled: true
@@ -27,7 +36,7 @@ tests:
               paths:
                 - path: /test-path
     asserts:
-      - documentIndex: &ingressDoc 0
+      - documentIndex: &ingressDoc 1
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
@@ -48,6 +57,7 @@ tests:
   - it: should pass with ingress created without cert manager annotations when cert manager false
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress:
           enabled: true
@@ -73,6 +83,7 @@ tests:
   - it: should fail with missing clusterIssuer
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true
@@ -88,6 +99,7 @@ tests:
   - it: should fail with clusterIssuer not a string
     set:
       operator: *operator
+      service: *service
       ingress:
         my-ingress1:
           enabled: true

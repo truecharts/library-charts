@@ -11,7 +11,8 @@ objectData: The object data to be used to render the Ingress.
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{/* TODO: fetch the selected service or fallback to primary */}}
+  {{- /* TODO: UT */}}
+  {{- $svcData := (include "tc.v1.common.lib.ingress.targetSelector" (dict "rootCtx" $rootCtx "objectData" $objectData) | fromYaml) -}}
 
   {{- if not (hasKey $objectData "integrations") -}}
     {{- $_ := set $objectData "integrations" dict -}}
@@ -40,29 +41,25 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- /* TODO: UT */}}
   {{- if $objectData.ingressClassName }}
-  ingressClassName: {{ $objectData.ingressClassName }}
+  ingressClassName: {{ tpl $objectData.ingressClassName $rootCtx }}
   {{- end }}
   rules:
     {{- range $h := $objectData.hosts }}
-    - host: {{ $h.host }}
+    - host: {{ tpl $h.host $rootCtx }}
       http:
         paths:
           {{- range $p := $h.paths -}}
-            {{- $serviceName := "TODO:!" -}}
-            {{- $servicePort := "TODO:!" -}}
             {{- with $p.overrideService -}}
-              {{- $serviceName = .name -}}
-              {{- $servicePort = .port -}}
+              {{- $svcData = (dict "name" .name "port" .port) -}}
             {{- end }}
-          - path: {{ $p.path }}
-            pathType: {{ $p.pathType | default "Prefix" }}
+          - path: {{ tpl $p.path $rootCtx }}
+            pathType: {{ tpl ($p.pathType | default "Prefix") $rootCtx }}
             backend:
               service:
-                name: {{ $serviceName }}
+                name: {{ $svcData.name }}
                 port:
-                  number: {{ $servicePort }}
+                  number: {{ $svcData.port }}
           {{- end -}}
     {{- end }}
 
