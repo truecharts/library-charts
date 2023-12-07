@@ -1,4 +1,4 @@
-suite: certificate name test
+suite: scale certificate name test
 templates:
   - common.yaml
 release:

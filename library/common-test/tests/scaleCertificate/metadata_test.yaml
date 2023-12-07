@@ -1,4 +1,4 @@
-suite: certificate metadata test
+suite: scale certificate metadata test
 templates:
   - common.yaml
 chart:
