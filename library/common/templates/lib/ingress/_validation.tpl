@@ -120,6 +120,20 @@ objectData:
         {{- fail (printf "Ingress - Expected entry in [tls.hosts] to not contain [:], but got [%s]" $host) -}}
       {{- end -}}
     {{- end -}}
+
+    {{/* TODO: Add the rest of the options?! */}}
+    {{- $certOptions := (list "scaleCert" "secretName") -}}
+    {{- $optsSet := list -}}
+    {{- range $opt := $certOptions -}}
+      {{- if (get $t $opt) -}}
+        {{- $optsSet = mustAppend $optsSet $opt -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if gt ($optsSet | len) 1 -}}
+      {{- fail (printf "Ingress - Expected only one of [%s] to be set, but got [%s]" (join ", " $certOptions) (join ", " $optsSet)) -}}
+    {{- end -}}
+
   {{- end -}}
 
 {{- end -}}

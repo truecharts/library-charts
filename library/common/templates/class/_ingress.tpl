@@ -63,18 +63,28 @@ spec:
           {{- end -}}
     {{- end -}}
   {{/* If a clusterIssuer is defined in the whole ingress, use that */}}
-  {{- if and $objectData.integrations.certManager $objectData.integrations.certManager.enabled -}}
-    {{- $clusterIssuer := $objectData.integrations.certManager.clusterIssuer }}
+  {{- if and $objectData.integrations.certManager $objectData.integrations.certManager.enabled }}
   tls:
-    {{- range $h := $objectData.hosts }}
-    - secretName: TODO:!!!
+    {{- range $idx, $h := $objectData.hosts }}
+    - secretName: {{ printf "%s-tls-%d" $objectData.name ($idx | int) }}
       hosts:
         - {{ tpl $h.host $rootCtx }}
     {{- end -}}
-  {{- else if $objectData.tls }} {{/* If a tls is defined in the tls section, use that */}}
+  {{/* else if a tls section is defined use the configuration from there */}}
+  {{- else if $objectData.tls }}
   tls:
-    {{- range $t := $objectData.tls -}}
-    - secretName: TODO:!!!
+    {{- range $idx, $t := $objectData.tls -}}
+      {{- $secretName := "" -}}
+      {{- if $t.secretName -}}
+        {{- $secretName = tpl $t.secretName $rootCtx -}}
+      {{- else if $t.scaleCert -}}
+        {{- if not $rootCtx.global.ixChartContext -}}
+          {{- fail "Ingress - [tls.scalecert] can only be used in TrueNAS SCALE" -}}
+        {{- end -}}{{/* TODO: Check the naming */}}
+        {{- $secretName = printf "%s-tls-%d" $objectData.name ($idx | int) -}}
+      {{/* TODO: old ing had both certificateIssuer and clusterCertificate here ?! */}}
+      {{- end }}
+    - secretName: {{ $secretName }}
       hosts:
         {{- range $h := $t.hosts }}
         - {{ tpl $h $rootCtx }}

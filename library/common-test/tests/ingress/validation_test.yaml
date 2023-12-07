@@ -570,3 +570,21 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected entry in [tls.hosts] to not contain [:], but got [test-host:123]
+
+  - it: should fail if more than 1 cert option is set under tls
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - test-host
+              secretName: test-secret
+              scaleCert: "1"
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected only one of [secretName, scaleCert] to be set, but got [secretName, scaleCert]
