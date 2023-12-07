@@ -587,4 +587,21 @@ tests:
               scaleCert: "1"
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Expected only one of [secretName, scaleCert] to be set, but got [secretName, scaleCert]
+          errorMessage: Ingress - Expected only one of [scaleCert, secretName] to be set, but got [scaleCert, secretName]
+
+  - it: should fail with scaleCert outside of SCALE
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - test-host
+              scaleCert: "1"
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - [tls.scalecert] can only be used in TrueNAS SCALE
