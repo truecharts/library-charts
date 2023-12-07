@@ -85,7 +85,8 @@
 
             {{/* Create the secret with the certData */}}
             {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $certObjData) -}}
-
+          {{- else if $tlsData.clusterCertificate -}}
+            {{/* TODO: Needs the refactor of Certificate object */}}
           {{- end -}}
         {{- end -}}
       {{- end -}}

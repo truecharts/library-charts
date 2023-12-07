@@ -11,7 +11,6 @@ objectData: The object data to be used to render the Ingress.
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
 
-  {{- /* TODO: UT */}}
   {{- $svcData := (include "tc.v1.common.lib.ingress.targetSelector" (dict "rootCtx" $rootCtx "objectData" $objectData) | fromYaml) -}}
 
   {{- if not (hasKey $objectData "integrations") -}}
@@ -82,7 +81,7 @@ spec:
       {{- else if $t.clusterIssuer -}}
         {{- $secretName = printf "%s-tls-%d" $objectData.name ($idx | int) -}}
       {{- else if $t.clusterCertificate -}}
-        {{/* TODO: */}}
+        {{/* TODO: Needs the refactor of Certificate object */}}
       {{- end }}
     - secretName: {{ $secretName }}
       hosts:
