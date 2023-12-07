@@ -95,6 +95,33 @@ objectData:
     {{- end -}}
   {{- end -}}
 
+  {{- range $t := $objectData.tls -}}
+    {{- if not $t.hosts -}}
+      {{- fail "Ingress - Expected non-empty [tls.hosts]" -}}
+    {{- end -}}
+
+    {{- if not (kindIs "slice" $t.hosts) -}}
+      {{- fail (printf "Ingress - Expected [tls.hosts] to be a [slice], but got [%s]" (kindOf $t.hosts)) -}}
+    {{- end -}}
+
+    {{- range $h := $t.hosts -}}
+      {{- if not $h.host -}}
+        {{- fail "Ingress - Expected non-empty [tls.hosts.host]" -}}
+      {{- end -}}
+
+      {{- $host := tpl $h.host $rootCtx -}}
+      {{- if (hasPrefix "http://" $host) -}}
+        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not start with [http://], but got [%s]" $host) -}}
+      {{- end -}}
+      {{- if (hasPrefix "https://" $host) -}}
+        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not start with [https://], but got [%s]" $host) -}}
+      {{- end -}}
+      {{- if (contains ":" $host) -}}
+        {{- fail (printf "Ingress - Expected [tls.hosts.host] to not contain [:], but got [%s]" $host) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
 {{- end -}}
 
 {{/* Ingress Primary Validation */}}

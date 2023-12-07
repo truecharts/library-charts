@@ -476,3 +476,97 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected targeted service port [my-port] to be enabled
+
+  - it: should fail if tls.hosts are empty
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts: []
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected non-empty [tls.hosts]
+
+  - it: should fail if tls.hosts is not a slice
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts: not-a-slice
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [tls.hosts] to be a [slice], but got [string]
+
+  - it: should fail if tls.hosts.host is empty
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - host: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected non-empty [tls.hosts.host]
+
+  - it: should fail if tls.hosts.host starts with https://
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - host: https://test-host
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [tls.hosts.host] to not start with [https://], but got [https://test-host]
+
+  - it: should fail if tls.hosts.host starts with http://
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - host: http://test-host
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [tls.hosts.host] to not start with [http://], but got [http://test-host]
+
+  - it: should fail if tls.hosts.host contains ":"
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          hosts: *hosts
+          tls:
+            - hosts:
+              - host: test-host:123
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected [tls.hosts.host] to not contain [:], but got [test-host:123]
