@@ -61,7 +61,24 @@ spec:
                 port:
                   number: {{ $svcData.port }}
           {{- end -}}
-    {{- end }}
-
-
+    {{- end -}}
+  {{/* If a clusterIssuer is defined in the whole ingress, use that */}}
+  {{- if and $objectData.integrations.certManager $objectData.integrations.certManager.enabled -}}
+    {{- $clusterIssuer := $objectData.integrations.certManager.clusterIssuer }}
+  tls:
+    {{- range $h := $objectData.hosts }}
+    - secretName: TODO:!!!
+      hosts:
+        - {{ tpl $h.host $rootCtx }}
+    {{- end -}}
+  {{- else if $objectData.tls }} {{/* If a tls is defined in the tls section, use that */}}
+  tls:
+    {{- range $t := $objectData.tls -}}
+    - secretName: TODO:!!!
+      hosts:
+        {{- range $h := $t.hosts }}
+        - {{ tpl $h $rootCtx }}
+        {{- end -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
