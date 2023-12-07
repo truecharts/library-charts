@@ -78,11 +78,11 @@ spec:
       {{- if $t.secretName -}}
         {{- $secretName = tpl $t.secretName $rootCtx -}}
       {{- else if $t.scaleCert -}}
-        {{- if not $rootCtx.global.ixChartContext -}}
-          {{- fail "Ingress - [tls.scalecert] can only be used in TrueNAS SCALE" -}}
-        {{- end -}}{{/* TODO: Check the naming */}}
+        {{- $secretName = printf "%s-scale-tls-%d" $objectData.name ($idx | int) -}}
+      {{- else if $t.clusterIssuer -}}
         {{- $secretName = printf "%s-tls-%d" $objectData.name ($idx | int) -}}
-      {{/* TODO: old ing had both certificateIssuer and clusterCertificate here ?! */}}
+      {{- else if $t.clusterCertificate -}}
+        {{/* TODO: */}}
       {{- end }}
     - secretName: {{ $secretName }}
       hosts:

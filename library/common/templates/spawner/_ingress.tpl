@@ -56,6 +56,39 @@
       {{- include "tc.v1.common.class.ingress" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{/* TODO: range over TLS and do stuff */}}
+      {{- $hasCertIssuer := false -}}
+      {{- if $objectData.integrations -}}
+        {{- if and $objectData.integrations.certManager $objectData.integrations.certManager.enabled -}}
+          {{- $hasCertIssuer = true -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if not $hasCertIssuer -}}
+        {{- range $idx, $tlsData := $objectData.tls -}}
+          {{- if $tlsData.scaleCert -}}
+            {{- if not $.Values.global.ixChartContext -}}
+              {{- fail "Ingress - [tls.scalecert] can only be used in TrueNAS SCALE" -}}
+            {{- end -}}
+
+            {{- $certData := (include "tc.v1.common.lib.scaleCertificate.getData" (dict "rootCtx" $ "objectData" (dict "id" $tlsData.scaleCert)) | fromJson) -}}
+            {{- $certName := printf "%s-scale-tls-%d" $objectData.name ($idx | int) -}}
+
+            {{- $certObjData := (dict
+              "id" $tlsData.scaleCert "type" "certificate"
+              "name" $certName "shortName" $name
+              "data" $certData
+            ) -}}
+
+            {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $certName) -}}
+            {{- include "tc.v1.common.lib.scaleCertificate.validation" (dict "objectData" $certObjData) -}}
+            {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $certObjData "caller" "Ingress") -}}
+
+            {{/* Create the secret with the certData */}}
+            {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $certObjData) -}}
+
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
