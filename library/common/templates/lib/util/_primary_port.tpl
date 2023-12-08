@@ -9,7 +9,7 @@
     {{- $enabled := "false" -}}
 
     {{- if not (kindIs "invalid" $port.enabled) -}}
-      {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
+      {{- $enabled = (include "tc.v1.common.lib.util.enabled" (dict
                 "rootCtx" $rootCtx "objectData" $port
                 "name" $name "caller" "Primary Port Util"
                 "key" ".ports.$portname.enabled")) -}}
