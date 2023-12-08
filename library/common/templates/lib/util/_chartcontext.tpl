@@ -132,7 +132,7 @@
       {{- end -}}
 
       {{- if not $selectedPort -}}
-        {{- $portName := ($selectedService.ports | keys | mustFirst) -}}
+        {{- $portName := ($selectedService.ports | keys | sortAlpha | mustFirst) -}}
         {{- $selectedPort = (get $selectedService.ports $portName) -}}
       {{- end -}}
 

@@ -725,7 +725,7 @@ tests:
         my-other-service:
           enabled: true
           ports:
-            my-port:
+            my-port1:
               enabled: true
               port: 123457
             my-port2:
