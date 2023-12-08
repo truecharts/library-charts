@@ -29,8 +29,8 @@
 
       {{/* Perform validations */}}
       {{- include "tc.v1.common.lib.chart.names.validation" (dict "name" $objectName "length" 253) -}}
-      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Secret") -}}
-      {{- include "tc.v1.common.lib.certificate.validation" (dict "objectData" $objectData) -}}
+      {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $objectData "caller" "Cert Manager Certificate") -}}
+      {{- include "tc.v1.common.lib.certificate.validation" (dict "rootCtx" $ "objectData" $objectData) -}}
 
       {{/* Set the name of the secret */}}
       {{- $_ := set $objectData "name" $objectName -}}
