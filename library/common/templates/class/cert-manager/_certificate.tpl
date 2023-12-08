@@ -32,25 +32,25 @@ metadata:
 spec:
   secretName: {{ $objectData.name }}
   dnsNames:
-    {{- range $h := $objectData.hosts }}
-      - {{ tpl $h $rootCtx }}
-    {{- end }}
+  {{- range $h := $objectData.hosts }}
+    - {{ tpl $h $rootCtx }}
+  {{- end }}
   privateKey:
     algorithm: ECDSA
     size: 256
     rotationPolicy: Always
   issuerRef:
-    name: {{ tpl $objectData.certificatesIssuerName $rootCtx }}
+    name: {{ tpl $objectData.certificateIssuer $rootCtx }}
     kind: ClusterIssuer
     group: cert-manager.io
   {{- if $objectData.certificateSecretTemplate }}
   secretTemplate:
-    {{- $labels := (mustMerge ($objectData.certificateSercretTemplate.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
+    {{- $labels := (mustMerge ($objectData.certificateSecretTemplate.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
     {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     labels:
       {{- . | nindent 6 }}
     {{- end -}}
-    {{- $annotations := (mustMerge ($objectData.certificateSercretTemplate.annotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+    {{- $annotations := (mustMerge ($objectData.certificateSecretTemplate.annotations | default dict) (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
     {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     annotations:
       {{- . | nindent 6 }}
