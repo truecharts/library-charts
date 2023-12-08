@@ -129,10 +129,15 @@
         {{- end -}}
       {{- end -}}
 
+      {{- if not $selectedPort -}}
+        {{- $portName := ($selectedService.ports | keys | mustFirst) -}}
+        {{- $selectedPort = (get $selectedService.ports $portName) -}}
+      {{- end -}}
+
       {{- $port = tpl ($selectedPort.port | toString) $rootCtx -}}
 
-      {{- if mustHas $selectedPort.type (list "http" "https") -}}
-        {{- $protocol = $selectedPort.type -}}
+      {{- if mustHas $selectedPort.protocol (list "http" "https") -}}
+        {{- $protocol = $selectedPort.protocol -}}
       {{- else -}}
         {{- $protocol = "http" -}}
       {{- end -}}
