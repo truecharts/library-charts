@@ -2,17 +2,14 @@
 {{/* Return the primary port for a given Service object. */}}
 {{- define "tc.v1.common.lib.util.service.ports.primary" -}}
   {{- $rootCtx := .rootCtx -}}
-  {{- $svcName := .svcName -}}
+  {{- $svcValues := .svcValues -}}
 
   {{- $result := "" -}}
-  {{- $serviceName := include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $rootCtx) -}}
-  {{- $service := (get $rootCtx.Values.service $serviceName) -}}
-
-  {{- range $name, $port := $service.ports -}}
+  {{- range $name, $port := $svcValues.ports -}}
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
               "rootCtx" $rootCtx "objectData" $port
               "name" $name "caller" "Primary Port Util"
-              "key" (printf "service.%s.ports" $serviceName))) -}}
+              "key" ".ports.$portname.enabled")) -}}
 
     {{- if eq $enabled "true" -}}
       {{- if $port.primary -}}

@@ -65,7 +65,7 @@
     {{- $primaryService := (get $.Values.service $primaryServiceName) -}}
     {{- $primaryPort := dict -}}
     {{- if $primaryService -}}
-      {{- $primaryPortName := include "tc.v1.common.lib.util.service.ports.primary" (dict "rootCtx" $ "svcName" $primaryServiceName) -}}
+      {{- $primaryPortName := include "tc.v1.common.lib.util.service.ports.primary" (dict "rootCtx" $ "svcValues" $primaryService) -}}
       {{- $primaryPort = (get $primaryService.ports $primaryPortName) -}}
 
       {{- $port = tpl ($primaryPort.port | toString) $ -}}
