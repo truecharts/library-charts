@@ -407,7 +407,7 @@ tests:
           hosts: *hosts
     asserts:
       - failedTemplate:
-          errorMessage: Ingress - Combined traefik middlewares contain duplicates [chain-basic, chain-basic]
+          errorMessage: Ingress - Combined traefik middlewares contain duplicates [chain-basic-test-release-namespace, chain-basic-test-release-namespace]
 
   - it: should fail with duplicate entrypoints
     set:
@@ -442,7 +442,7 @@ tests:
               enabled: true
               entrypoints:
                 - websecure
-              middleware:
+              middlewares:
                 - name: some-middleware
           hosts: *hosts
     asserts:
