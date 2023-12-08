@@ -728,7 +728,7 @@ tests:
             my-port:
               enabled: true
               port: 123457
-            my-other-port:
+            my-port2:
               enabled: true
               port: 123458
     asserts:
