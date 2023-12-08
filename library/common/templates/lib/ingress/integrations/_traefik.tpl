@@ -122,18 +122,22 @@
         {{- fail (printf "Ingress - Could not determine namespace for middleware [%s]. Make sure middleware is created or explicitly specify [namespace]" $mid.name) -}}
       {{- end -}}
 
+      {{/* TODO: FIXME: Fix this hack
+          If ingressClassName is set, use that as namespace
+      */}}
+      {{- if $traefik.ingressClassName -}}
+        {{- $midNamespace = tpl $traefik.ingressClassName $rootCtx -}}
+
+        {{/* On SCALE prepend with ix- */}}
+        {{- if $rootCtx.Values.global.ixChartContext -}}
+          {{- $midNamespace = (printf "ix-%s" $midNamespace) -}}
+        {{- end -}}
+      {{- end -}}
+
       {{/* Format middleware */}}
       {{- $formattedMiddlewares = mustAppend $formattedMiddlewares (printf "%s-%s@kubernetescrd" $mid.name $midNamespace) -}}
     {{- end -}}
 
-    # {{- if $traefik.ingressClassName -}}
-    #   {{- $midNamespace = tpl $traefik.ingressClassName $rootCtx -}}
-
-    #   {{/* On SCALE prepend with ix- */}}
-    #   {{- if $rootCtx.Values.global.ixChartContext -}}
-    #     {{- $midNamespace = (printf "ix-%s" $midNamespace) -}}
-    #   {{- end -}}
-    # {{- end -}}
 
     {{- $_ := set $objectData.annotations "traefik.ingress.kubernetes.io/router.entrypoints" (join "," $entrypoints) -}}
     {{- if $formattedMiddlewares -}}

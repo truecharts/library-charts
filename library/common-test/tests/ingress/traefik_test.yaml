@@ -265,41 +265,67 @@ tests:
           value:
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
-  # - it: should set correct namespace when ingressClassName is defined in SCALE regardless of operator
-  #   set:
-  #     operator:
-  #       verify:
-  #         enabled: false
-  #       traefik:
-  #         namespace: some-ns
-  #     service: *service
-  #     global:
-  #       ixChartContext:
-  #         imNotEmpty: true
-  #     namespace: ix-namespace
-  #     ingress:
-  #       my-ingress:
-  #         enabled: true
-  #         primary: true
-  #         integrations:
-  #           traefik:
-  #             enabled: true
-  #             ingressClassName: some-class
-  #         hosts: *hosts
-  #   asserts:
-  #     - documentIndex: *ingressDoc
-  #       isKind:
-  #         of: Ingress
-  #     - documentIndex: *ingressDoc
-  #       equal:
-  #         path: metadata.name
-  #         value: test-release-name-common-test
-  #     - documentIndex: *ingressDoc
-  #       equal:
-  #         path: metadata.annotations
-  #         value:
-  #           traefik.ingress.kubernetes.io/router.entrypoints: websecure
-  #           traefik.ingress.kubernetes.io/router.middlewares: chain-basic-ix-some-class@kubernetescrd
+  - it: should set correct namespace when ingressClassName is defined
+    set:
+      service: *service
+      global: *global
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            traefik:
+              enabled: true
+              ingressClassName: some-class
+          hosts: *hosts
+    asserts:
+      - documentIndex: *ingressDoc
+        isKind:
+          of: Ingress
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.annotations
+          value:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: chain-basic-some-class@kubernetescrd
+
+  - it: should set correct namespace when ingressClassName is defined in SCALE
+    set:
+      service: *service
+      global:
+        ixChartContext:
+          imNotEmpty: true
+        fixedMiddlewares:
+          - name: chain-basic
+            namespace: some-namespace
+      namespace: ix-namespace
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            traefik:
+              enabled: true
+              ingressClassName: some-class
+          hosts: *hosts
+    asserts:
+      - documentIndex: *ingressDoc
+        isKind:
+          of: Ingress
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test
+      - documentIndex: *ingressDoc
+        equal:
+          path: metadata.annotations
+          value:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: chain-basic-ix-some-class@kubernetescrd
 
   - it: should add the defined middlewares to the ingress
     set:
