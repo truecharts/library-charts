@@ -1,41 +1,31 @@
 {{/* A dict containing .values and .serviceName is passed when this function is called */}}
 {{/* Return the primary port for a given Service object. */}}
 {{- define "tc.v1.common.lib.util.service.ports.primary" -}}
+  {{- $rootCtx := .rootCtx -}}
   {{- $svcName := .svcName -}}
-  {{- $svcValues := .svcValues -}}
-
-  {{- $enabledPorts := dict -}}
-
-  {{- range $name, $port := $svcValues.ports -}}
-    {{- if $port.enabled -}}
-      {{- $_ := set $enabledPorts $name $port -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{- if not $enabledPorts -}}
-    {{- fail (printf "No ports are enabled for the service: (%s)" $svcName) -}}
-  {{- end -}}
 
   {{- $result := "" -}}
-  {{- range $name, $port := $enabledPorts -}}
-    {{- if (hasKey $port "primary") -}}
+  {{- $serviceName := include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $rootCtx) -}}
+  {{- $service := (get $rootCtx.Values.service $serviceName) -}}
+
+  {{- range $name, $port := $service.ports -}}
+    {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
+              "rootCtx" $rootCtx "objectData" $port
+              "name" $name "caller" "Primary Port Util"
+              "key" (printf "service.%s.ports" $serviceName))) -}}
+
+    {{- if eq $enabled "true" -}}
       {{- if $port.primary -}}
-        {{- if $result -}}
-          {{- fail (printf "More than one ports are set as primary in the (%s) service. This is not supported." $svcName ) -}}
-        {{- end -}}
+        {{/*
+          While this will overwrite if there are
+          more than 1 primary port, its not an issue
+          as there is validation down the line that will
+          fail if there are more than 1 primary port
+        */}}
         {{- $result = $name -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
 
-  {{- if not $result -}}
-    {{- if eq (len $enabledPorts) 1 -}}
-      {{- $result = keys $enabledPorts | mustFirst -}}
-    {{- else -}}
-      {{- if $enabledPorts -}}
-        {{- fail (printf "At least one port must be set as primary in service (%s)" $svcName) -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
   {{- $result -}}
 {{- end -}}

@@ -1,126 +1,12 @@
 {{/* Returns the primary Workload object */}}
 {{- define "tc.v1.common.lib.util.chartcontext" -}}
   {{/* Create defaults */}}
-  {{- $protocol := "https" -}}
+  {{- $protocol := "http" -}}
   {{- $host := "127.0.0.1" -}}
   {{- $port := "443" -}}
-  {{- $url := "" -}}
+  {{- $path := "/" -}}
   {{- $podCIDR := "172.16.0.0/16" -}}
   {{- $svcCIDR := "172.17.0.0/16" -}}
-
-  {{/* set temporary storage for ingress name and port */}}
-  {{- $targetIngress := "" -}}
-  {{- $selectedIngress := "" -}}
-
-  {{/* Get service, default to primary */}}
-  {{- $selectedService := fromYaml (include "tc.v1.common.lib.helpers.getSelectedServiceValues" (dict "rootCtx" $ )) -}}
-
-  {{/* read loadbalancer IPs for metallb */}}
-  {{- if eq $selectedService.type "LoadBalancer" -}}
-    {{- with $selectedService.loadBalancerIP -}}
-      {{- $host = toString . -}}
-    {{- end -}}
-
-    {{/* set temporary storage for port name and port */}}
-    {{- $targetPort := "" -}}
-    {{- $selectedPort := "" -}}
-    {{/* Fetch port values */}}
-    {{- $targetPort = include "tc.v1.common.lib.util.service.ports.primary" (dict "svcName" $selectedService.shortName "svcValues" $selectedService) -}}
-    {{- $selectedPort = get $selectedService.ports $targetPort -}}
-    {{/* store port number */}}
-    {{- $port = $selectedPort.port -}}
-  {{- end -}}
-
-  {{/* Fetch ingress values */}}
-  {{- $targetIngress = include "tc.v1.common.lib.util.ingress.primary" $ -}}
-  {{- $selectedIngress = get $.Values.ingress $targetIngress -}}
-
-  {{/* store host from ingress number */}}
-  {{- if $selectedIngress -}}
-    {{- if $selectedIngress.enabled -}}
-      {{- with (index $selectedIngress.hosts 0) -}}
-         {{- $host = .host -}}
-      {{- end -}}
-
-      {{/* Get the port for the ingress entrypoint */}}
-
-      {{- $namespace := "tc-system" -}}
-      {{- if $.Values.operator.traefik -}}
-        {{- if $.Values.operator.traefik.namespace -}}
-          {{- $namespace = $.Values.operator.traefik.namespace -}}
-        {{- end -}}
-      {{- end -}}
-
-      {{- if $selectedIngress.ingressClassName -}}
-        {{- if $.Values.global.ixChartContext -}}
-          {{- $namespace = (printf "ix-%s" $selectedIngress.ingressClassName) -}}
-        {{- else -}}
-          {{- $namespace = $selectedIngress.ingressClassName -}}
-        {{- end -}}
-
-      {{- end -}}
-
-      {{- $traefikportalhook := lookup "v1" "ConfigMap" $namespace "portalhook" | default dict -}}
-      {{/* If there is no portalhook */}}
-      {{- if not $traefikportalhook -}}
-        {{/* Get all configmaps */}}
-        {{- $hooks := lookup "v1" "ConfigMap" $namespace "" -}}
-
-        {{- $portalHooks := list -}}
-        {{- range $hook := ($hooks.items | default list) -}}
-          {{- $hookData := (get $hook "data") -}}
-          {{- $hookMetaData := (get $hook "metadata") -}}
-          {{- if and $hookData $hookMetaData -}}
-            {{/* Filter portalhook-* */}}
-            {{- if $hookMetaData.name -}}
-              {{- if hasPrefix "portalhook-" $hookMetaData.name -}}
-                {{- $portalHooks = mustAppend $portalHooks $hook -}}
-              {{- end -}}
-            {{- end -}}
-          {{- end -}}
-        {{- end -}}
-
-        {{/* use the first available portalhook */}}
-        {{- if $portalHooks -}}
-          {{- $traefikportalhook = index $portalHooks 0 -}}
-        {{- end -}}
-      {{- end -}}
-
-      {{- $entrypoint := "websecure" -}}
-      {{- if $selectedIngress.entrypoint -}}
-        {{- $entrypoint = $selectedIngress.entrypoint -}}
-      {{- end -}}
-      {{- if $traefikportalhook -}}
-        {{- if (get $traefikportalhook.data $entrypoint) -}}
-          {{- $port = (get $traefikportalhook.data $entrypoint) -}}
-        {{- else if $traefikportalhook.data.websecure -}}
-          {{- $port =  $traefikportalhook.data.websecure -}}
-        {{- end -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{- $port = toString $port -}}
-
-  {{/* sanitise */}}
-  {{- if eq $port "443" -}}
-    {{- $protocol = "https" -}}
-  {{- end -}}
-
-  {{- if eq $port "80" -}}
-    {{- $protocol = "http" -}}
-  {{- end -}}
-
-  {{- if or (and (eq $protocol "https") (eq $port "443")) (and (eq $protocol "http") (eq $port "80")) -}}
-    {{- $port = "" -}}
-  {{- end -}}
-
-  {{/* Construct URL*/}}
-  {{- if $port -}}
-    {{- $url = printf "%s://%s:%s" $protocol $host $port -}}
-  {{- else -}}
-    {{- $url = printf "%s://%s" $protocol $host -}}
-  {{- end -}}
 
   {{/* TrueNAS SCALE specific code */}}
   {{- if $.Values.global.ixChartContext -}}
@@ -132,21 +18,101 @@
     {{/* TODO: Find ways to implement CIDR detection */}}
   {{- end -}}
 
-  {{- if $.Values.chartContext -}}
-    {{- if $.Values.chartContext.APPURL -}}
-      {{- $url = $.Values.chartContext.APPURL -}}
+  {{/* If there is ingress, get data from the primary */}}
+  {{- $primaryIngressName := include "tc.v1.common.lib.util.ingress.primary" (dict "rootCtx" $) -}}
+  {{- $primaryIngress := (get $.Values.ingress $primaryIngressName) -}}
+  {{- with $primaryIngress -}}
+    {{- $firstHost := ((.hosts | default list) | mustFirst) -}}
+    {{- if $firstHost -}}
+      {{- $host = tpl $firstHost.host $ -}}
+      {{- $firstPath := (($firstHost.paths | default list) | mustFirst) -}}
+      {{- if $firstPath -}}
+        {{- $path = $firstPath.path -}}
+      {{- end -}}
     {{- end -}}
 
-    {{- if $.Values.chartContext.podCIDR -}}
-      {{- $podCIDR = $.Values.chartContext.podCIDR -}}
+    {{- if and .integrations .integrations.traefik -}}
+      {{- $enabled := true -}}
+      {{- if and (hasKey .integrations.traefik "enabled") (kindIs "bool" .integrations.traefik.enabled) -}}
+        {{- $enabled = .integrations.traefik.enabled -}}
+      {{- end -}}
+
+      {{- if $enabled -}}
+        {{- $entrypoints := (.integrations.traefik.entrypoints | default (list "websecure")) -}}
+        {{- if mustHas "websecure" $entrypoints -}}
+          {{- $port = "443" -}}
+        {{- else if mustHas "web" $entrypoints -}}
+          {{- $port = "80" -}}
+        {{- end -}}
+      {{- end -}}
     {{- end -}}
 
-    {{- if $.Values.chartContext.svcCIDR -}}
-      {{- $svcCIDR = $.Values.chartContext.svcCIDR -}}
+    {{- if and .integrations .integrations.certManager .integrations.certManager.enabled -}}
+      {{- $protocol = "https" -}}
+      {{- $port = "443" -}}
+    {{- end -}}
+
+    {{- $tls := ((.tls | default list) | mustFirst) -}}
+    {{- if (or $tls.secretName $tls.scaleCert $tls.certificateIssuer $tls.clusterCertificate) -}}
+      {{- $protocol = "https" -}}
+      {{- $port = "443" -}}
     {{- end -}}
   {{- end -}}
 
-  {{- $_ := set $.Values.chartContext "APPURL" $url -}}
-  {{- $_ := set $.Values.chartContext "podCIDR" $podCIDR -}}
-  {{- $_ := set $.Values.chartContext "svcCIDR" $svcCIDR -}}
+  {{/* If there is no ingress, we have to use service */}}
+  {{- if not $primaryIngress -}}
+    {{- $primaryServiceName := include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $) -}}
+    {{- $primaryService := (get $.Values.service $primaryServiceName) -}}
+    {{- $primaryPort := dict -}}
+    {{- if $primaryService -}}
+      {{- $primaryPortName := include "tc.v1.common.lib.util.service.ports.primary" (dict "rootCtx" $ "svcName" $primaryServiceName) -}}
+      {{- $primaryPort = (get $primaryService.ports $primaryPortName) -}}
+
+      {{- $port = tpl ($primaryPort.port | toString) $ -}}
+
+      {{- if mustHas $primaryPort.type (list "http" "https") -}}
+        {{- $protocol = $primaryPort.type -}}
+      {{- else -}}
+        {{- $protocol = "http" -}}
+      {{- end -}}
+
+      {{- if eq $primaryService.type "LoadBalancer" -}}
+        {{- with $primaryService.loadBalancerIP -}}
+          {{- $host = tpl . $ | toString -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* URL Will not include the path. */}}
+  {{- $url := printf "%s://%s:%s" $protocol $host $port -}}
+
+  {{- $port = $port | toString -}}
+  {{- if eq $port "443" -}}
+    {{- $url = $url | trimSuffix ":443" -}}
+    {{- $url = $url | replace $protocol "https" -}}
+    {{- $protocol = "https" -}}
+  {{- end -}}
+
+  {{- if eq $port "80" -}}
+    {{- $url = $url | trimSuffix ":80" -}}
+    {{- $url = $url | replace $protocol "http" -}}
+    {{- $protocol = "http" -}}
+  {{- end -}}
+
+  {{- $context := (dict
+    "podCIDR" $podCIDR
+    "svcCIDR" $svcCIDR
+    "appUrl" $url
+    "appHost" $host
+    "appPort" $port
+    "appPath" $path
+    "appProtocol" $protocol
+  ) -}}
+
+  {{- $_ := set $.Values "chartContext" $context -}}
+  {{- $_ := set $.Values.configmap "chart-context" (dict
+    "enabled" true
+    "data" $context
+  ) -}}
 {{- end -}}

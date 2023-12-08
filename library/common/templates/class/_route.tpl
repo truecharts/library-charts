@@ -20,7 +20,7 @@ within the common library.
 {{- $routeKind := $values.kind | default "HTTPRoute" -}}
 
 {{/* Get the name of the primary service, if any */}}
-{{- $primaryServiceName := (include "tc.v1.common.lib.util.service.primary" (dict "services" .Values.service "root" .)) -}}
+{{- $primaryServiceName := (include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $)) -}}
 {{/* Get service values of the primary service, if any */}}
 {{- $primaryService := get .Values.service $primaryServiceName -}}
 {{- $defaultServiceName := $fullName -}}
@@ -28,7 +28,7 @@ within the common library.
 {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
   {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
 {{- end -}}
-{{- $defaultServicePort := get $primaryService.ports (include "tc.v1.common.lib.util.service.ports.primary" (dict "svcValues" $primaryService "svcName" $primaryServiceName )) }}
+{{- $defaultServicePort := get $primaryService.ports (include "tc.v1.common.lib.util.service.ports.primary" (dict "svcName" $primaryServiceName "rootCtx" $)) }}
 
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
