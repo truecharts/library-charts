@@ -81,10 +81,12 @@
 
       {{- if $enabled -}}
         {{- $entrypoints := (.integrations.traefik.entrypoints | default (list "websecure")) -}}
-        {{- if mustHas "websecure" $entrypoints -}}
-          {{- $port = "443" -}}
-        {{- else if mustHas "web" $entrypoints -}}
-          {{- $port = "80" -}}
+        {{- if kindIs "slice" $entrypoints -}}
+          {{- if mustHas "websecure" $entrypoints -}}
+            {{- $port = "443" -}}
+          {{- else if mustHas "web" $entrypoints -}}
+            {{- $port = "80" -}}
+          {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
