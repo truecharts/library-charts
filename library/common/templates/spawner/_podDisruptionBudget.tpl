@@ -9,7 +9,7 @@
   {{- range $name, $pdb := .Values.podDisruptionBudget -}}
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
                     "rootCtx" $ "objectData" $pdb
-                    "name" $name "caller" "Pod Distruption Budget"
+                    "name" $name "caller" "Pod Disruption Budget"
                     "key" "podDistruptionBudget")) -}}
 
     {{- if eq $enabled "true" -}}
@@ -21,7 +21,7 @@
 
       {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
                 "rootCtx" $ "objectData" $objectData
-                "name" $name "caller" "Pod Distruption Budget"
+                "name" $name "caller" "Pod Disruption Budget"
                 "key" "podDistruptionBudget")) -}}
 
       {{- if eq $expandName "true" -}}
