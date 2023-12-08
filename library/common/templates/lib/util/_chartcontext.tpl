@@ -64,10 +64,19 @@
   {{- end -}}
 
   {{- with $selectedIngress -}}
-    {{- $firstHost := ((.hosts | default list) | mustFirst) -}}
+    {{- $firstHost := list -}}
+    {{- if (kindIs "slice" .hosts) -}}
+      {{- $firstHost = ((.hosts | default list) | mustFirst) -}}
+    {{- end -}}
     {{- if $firstHost -}}
-      {{- $host = tpl $firstHost.host $rootCtx -}}
-      {{- $firstPath := (($firstHost.paths | default list) | mustFirst) -}}
+      {{- if $firstHost.host -}}
+        {{- $host = tpl $firstHost.host $rootCtx -}}
+      {{- end -}}
+
+      {{- $firstPath := list -}}
+      {{- if (kindIs "slice" $firstHost.paths) -}}
+        {{- $firstPath = (($firstHost.paths | default list) | mustFirst) -}}
+      {{- end -}}
       {{- if $firstPath -}}
         {{- $path = $firstPath.path -}}
       {{- end -}}
@@ -120,7 +129,10 @@
     {{- $primaryPort := dict -}}
     {{- if $selectedService -}}
       {{- $primaryPortName := include "tc.v1.common.lib.util.service.ports.primary" (dict "rootCtx" $rootCtx "svcValues" $selectedService) -}}
-      {{- $selectedPort := (get $selectedService.ports $primaryPortName) -}}
+      {{- $selectedPort := dict -}}
+      {{- if $selectedService.ports -}} {{/* eg, ExternalName does not require ports */}}
+        {{- $selectedPort = (get $selectedService.ports $primaryPortName) -}}
+      {{- end -}}
 
       {{- with $objectData.targetSelector -}}
         {{- if .port -}}
@@ -133,7 +145,9 @@
 
       {{- if not $selectedPort -}}
         {{- $portName := ($selectedService.ports | keys | sortAlpha | mustFirst) -}}
-        {{- $selectedPort = (get $selectedService.ports $portName) -}}
+        {{- if $selectedService.ports -}} {{/* eg, ExternalName does not require ports */}}
+          {{- $selectedPort = (get $selectedService.ports $portName) -}}
+        {{- end -}}
       {{- end -}}
 
       {{- $port = tpl ($selectedPort.port | toString) $rootCtx -}}

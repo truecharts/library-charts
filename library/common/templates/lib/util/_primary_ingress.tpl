@@ -4,10 +4,14 @@
 
   {{- $result := "" -}}
   {{- range $name, $ingress := $rootCtx.Values.ingress -}}
-    {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
-              "rootCtx" $rootCtx "objectData" $ingress
-              "name" $name "caller" "Primary Ingress Util"
-              "key" "ingress")) -}}
+    {{- $enabled := "false" -}}
+
+    {{- if not (kindIs "invalid" $ingress.enabled) -}}
+      {{- $enabled = (include "tc.v1.common.lib.util.enabled" (dict
+                "rootCtx" $rootCtx "objectData" $ingress
+                "name" $name "caller" "Primary Ingress Util"
+                "key" "ingress")) -}}
+    {{- end -}}
 
     {{- if eq $enabled "true" -}}
       {{- if $ingress.primary -}}
