@@ -159,6 +159,9 @@
     {{- end -}}
   {{- end -}}
 
+  {{- with $objectData.path -}}
+    {{- $path = . -}}
+  {{- end -}}
 
   {{/* URL Will not include the path. */}}
   {{- $url := printf "%s://%s:%s" $protocol $host $port -}}

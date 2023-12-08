@@ -339,3 +339,142 @@ tests:
             port: "443"
             protocol: https
             url: https://example.com:443/some-path
+
+  - it: should pass with overrides
+    set:
+      global: *global
+      portal:
+        main:
+          enabled: true
+          override:
+            protocol: "http"
+            host: "test.example.com"
+            port: "123"
+      operator:
+        verify:
+          enabled: false
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: true
+              certificateIssuer: some-issuer
+            traefik:
+              enabled: true
+              entrypoints:
+                - web
+              enableFixedMiddlewares: false
+          hosts:
+            - host: example.com
+              paths:
+                - path: /some-path
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            my-port:
+              enabled: true
+              primary: true
+              port: 12345
+    asserts:
+      - documentIndex: &configMapDoc 2
+        isKind:
+          of: ConfigMap
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.name
+          value: tcportal-main
+      - documentIndex: *configMapDoc
+        equal:
+          path: data
+          value:
+            host: test.example.com
+            path: /some-path
+            port: "123"
+            protocol: http
+            url: http://test.example.com:123/some-path
+
+  - it: should pass with overrides and multiple portals
+    set:
+      global: *global
+      portal:
+        main:
+          enabled: true
+          override:
+            protocol: "http"
+            host: "test.example.com"
+            port: "123"
+        other:
+          enabled: true
+          path: /some-other-path
+          override:
+            protocol: "http"
+            host: "test123.example.com"
+            port: "456"
+      operator:
+        verify:
+          enabled: false
+      ingress:
+        my-ingress:
+          enabled: true
+          primary: true
+          integrations:
+            certManager:
+              enabled: true
+              certificateIssuer: some-issuer
+            traefik:
+              enabled: true
+              entrypoints:
+                - web
+              enableFixedMiddlewares: false
+          hosts:
+            - host: example.com
+              paths:
+                - path: /some-path
+      service:
+        my-service:
+          enabled: true
+          primary: true
+          ports:
+            my-port:
+              enabled: true
+              primary: true
+              port: 12345
+    asserts:
+      - documentIndex: &configMapDoc 2
+        isKind:
+          of: ConfigMap
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.name
+          value: tcportal-main
+      - documentIndex: *configMapDoc
+        equal:
+          path: data
+          value:
+            host: test.example.com
+            path: /some-path
+            port: "123"
+            protocol: http
+            url: http://test.example.com:123/some-path
+      - documentIndex: &configMapDoc 3
+        isKind:
+          of: ConfigMap
+      - documentIndex: *configMapDoc
+        equal:
+          path: metadata.name
+          value: tcportal-other
+      - documentIndex: *configMapDoc
+        equal:
+          path: data
+          value:
+            host: test123.example.com
+            path: /some-other-path
+            port: "456"
+            protocol: http
+            url: http://test123.example.com:456/some-other-path
+
+  # TODO: test targetSelector
