@@ -22,13 +22,13 @@ within the common library.
 {{/* Get the name of the primary service, if any */}}
 {{- $primaryServiceName := (include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $)) -}}
 {{/* Get service values of the primary service, if any */}}
-{{- $primaryService := get .Values.service $primaryServiceName -}}
+{{- $primaryService := get $.Values.service $primaryServiceName -}}
 {{- $defaultServiceName := $fullName -}}
 
 {{- if and (hasKey $primaryService "nameOverride") $primaryService.nameOverride -}}
   {{- $defaultServiceName = printf "%v-%v" $defaultServiceName $primaryService.nameOverride -}}
 {{- end -}}
-{{- $defaultServicePort := get $primaryService.ports (include "tc.v1.common.lib.util.service.ports.primary" (dict "svcName" $primaryServiceName "rootCtx" $)) }}
+{{- $defaultServicePort := get $primaryService.ports (include "tc.v1.common.lib.util.service.ports.primary" (dict "svcValues" $primaryService "rootCtx" $)) }}
 
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
