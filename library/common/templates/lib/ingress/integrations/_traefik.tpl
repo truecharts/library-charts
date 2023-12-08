@@ -107,10 +107,10 @@
             {{- $found = true -}}
             {{- $midNamespace = $p.namespace -}}
           {{- end -}}
+        {{- end -}}
 
-          {{- if not $found -}}
-            {{- fail (printf "Ingress - Middleware [%s] is not defined in any namespace. Create the middleware first." $mid.name) -}}
-          {{- end -}}
+        {{- if not $found -}}
+          {{- fail (printf "Ingress - Middleware [%s] is not defined in any namespace. Create the middleware first." $mid.name) -}}
         {{- end -}}
       {{- end -}}
 
