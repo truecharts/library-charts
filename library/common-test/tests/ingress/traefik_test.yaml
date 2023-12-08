@@ -301,9 +301,10 @@ tests:
       global:
         ixChartContext:
           imNotEmpty: true
-        fixedMiddlewares:
-          - name: chain-basic
-            namespace: some-namespace
+        traefik:
+          fixedMiddlewares:
+            - name: chain-basic
+              namespace: some-namespace
       namespace: ix-namespace
       ingress:
         my-ingress:
