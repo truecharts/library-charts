@@ -103,6 +103,9 @@
 
   {{/* If there is no ingress, we have to use service */}}
   {{- if not $selectedIngress -}}
+    {{- $primaryServiceName := include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $rootCtx) -}}
+    {{- $selectedService := (get $rootCtx.Values.service $primaryServiceName) -}}
+
     {{- with $objectData.targetSelector -}}
       {{- if .service -}}
         {{- $svc := (get $rootCtx.Values.service .service) -}}
@@ -112,8 +115,6 @@
       {{- end -}}
     {{- end -}}
 
-    {{- $primaryServiceName := include "tc.v1.common.lib.util.service.primary" (dict "rootCtx" $rootCtx) -}}
-    {{- $selectedService := (get $rootCtx.Values.service $primaryServiceName) -}}
     {{- $primaryPort := dict -}}
     {{- if $selectedService -}}
       {{- $primaryPortName := include "tc.v1.common.lib.util.service.ports.primary" (dict "rootCtx" $rootCtx "svcValues" $selectedService) -}}
