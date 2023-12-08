@@ -109,7 +109,7 @@
           {{- end -}}
 
           {{- if not $found -}}
-            {{- fail (printf "Parsed:\n%s\n\nMiddlewares:\n%s" (toYaml $parsedMiddlewares) (toYaml $middlewares)) -}}
+            {{- fail (printf "Parsed:\n%s\n\nMiddlewares:\n%s\n\nmidName:%s\n\npName:%s\n\nfound:%s" (toYaml $parsedMiddlewares) (toYaml $middlewares) $mid.name $p.name $found) -}}
 
             {{- fail (printf "Ingress - Middleware [%s] is not defined in any namespace. Create the middleware first." $mid.name) -}}
           {{- end -}}
