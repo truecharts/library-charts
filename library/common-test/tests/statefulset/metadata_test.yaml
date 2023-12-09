@@ -73,7 +73,6 @@ tests:
             g_label2: global_label2
             label1: label1
             label2: label2
-            some-annotation: some-value
             some-label: some-value
       - documentIndex: *statefulSetDoc
         equal:

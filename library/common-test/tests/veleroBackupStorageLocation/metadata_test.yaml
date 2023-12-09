@@ -75,7 +75,6 @@ tests:
             label1: label1
             label2: label2
             some-label: some-value
-
       - documentIndex: &backStoreLocDoc 1
         isKind:
           of: BackupStorageLocation
@@ -90,6 +89,7 @@ tests:
             annotation2: annotation2
             g_annotation1: global_annotation1
             g_annotation2: global_annotation2
+            some-annotation: some-value
       - documentIndex: *backStoreLocDoc
         equal:
           path: metadata.labels
@@ -106,3 +106,4 @@ tests:
             g_label2: global_label2
             label1: label1
             label2: label2
+            some-label: some-value
