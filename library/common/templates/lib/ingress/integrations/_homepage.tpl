@@ -80,5 +80,10 @@
     {{- if not (kindIs "slice" $homepage.widget.customkv) -}}
       {{- fail (printf "Ingress - Expected [integrations.homepage.widget.customkv] to be a [slice], but got [%s]" (kindOf $homepage.widget.customkv)) -}}
     {{- end -}}
+    {{- range $item := $homepage.widget.customkv -}}
+      {{- if not $item.key -}}
+        {{- fail "Ingress - Expected non-empty [key] in [integrations.homepage.widget.customkv]" -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}

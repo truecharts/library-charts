@@ -181,3 +181,25 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Ingress - Expected [integrations.homepage.widget.customkv] to be a [slice], but got [string]
+
+  - it: should fail with customkv having empty key
+    set:
+      operator: *operator
+      service: *service
+      ingress:
+        my-ingress1:
+          enabled: true
+          primary: true
+          integrations:
+            traefik:
+              enabled: false
+            homepage:
+              enabled: true
+              widget:
+                customkv:
+                  - key: ""
+                    value: some-value
+          hosts: *hosts
+    asserts:
+      - failedTemplate:
+          errorMessage: Ingress - Expected non-empty [key] in [integrations.homepage.widget.customkv]
