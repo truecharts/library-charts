@@ -43,8 +43,8 @@
     {{- end -}}
 
     {{- if $homepage.widget.custom -}}
-      {{- range $k, $v := $homepage.widget.custom -}}
-        {{- $_ := set $objectData.annotations (printf "gethomepage.dev/widget.%s" $k) (tpl $v $rootCtx | toString) -}}
+      {{- range $homepage.widget.custom -}}
+        {{- $_ := set $objectData.annotations (printf "gethomepage.dev/widget.%s" .key ) (tpl .value $rootCtx | toString) -}}
       {{- end -}}
     {{- end -}}
 
