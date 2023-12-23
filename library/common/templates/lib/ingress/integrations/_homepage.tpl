@@ -31,7 +31,7 @@
     {{- if not $url -}}
       {{- $svc := $svcData.name -}}
       {{- $port := $svcData.port -}}
-      {{- $ns := printf "%s" (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Ingress") -}}
+      {{- $ns := printf "%s" (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Ingress")) -}}
 
       {{- $url = printf "http://%s.$ns.svc:%s" $svc $ns $port -}}
     {{- end -}}
