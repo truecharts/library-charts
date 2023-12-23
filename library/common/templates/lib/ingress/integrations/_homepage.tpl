@@ -28,7 +28,7 @@
 
     {{- $_ := set $objectData.annotations "gethomepage.dev/enabled" "true" -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/name" (tpl $name $rootCtx) -}}
-    {{- $_ := set $objectData.annotations "gethomepage.dev/href" (tpl $name $rootCtx) -}}
+    {{- $_ := set $objectData.annotations "gethomepage.dev/href" (tpl $href $rootCtx) -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/description" (tpl $desc $rootCtx) -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/icon" (tpl $icon $rootCtx) -}}
     {{- $_ := set $objectData.annotations "gethomepage.dev/widget.type" (tpl $type $rootCtx) -}}
