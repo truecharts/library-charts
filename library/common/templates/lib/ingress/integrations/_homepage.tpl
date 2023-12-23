@@ -14,7 +14,8 @@
     {{- $name := $homepage.name | default ($rootCtx.Chart.Name | camelcase) -}}
     {{- $desc := $homepage.description | default $rootCtx.Chart.Description -}}
     {{- $icon := $homepage.icon | default $rootCtx.Chart.Icon -}}
-    {{- $type := $homepage.widget.type | default $rootCtx.Chart.Name -}}
+    {{- $type := $homepage.widget.type | default ($rootCtx.Chart.Name | lower) -}}
+    {{- $type = regexReplaceAll "\\W+" $type "" -}}
     {{- $url := $homepage.widget.url -}}
     {{- $href := $homepage.href -}}
 
