@@ -35,7 +35,7 @@
       {{- $prot := $objectData.selectedService.protocol -}}
       {{- $ns := include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Ingress") -}}
 
-      {{- $url = printf "%s://%s.%s.svc:%s" $prot $ns $svc $port -}}
+      {{- $url = printf "%s://%s.%s.svc:%s" $prot $svc $ns $port -}}
     {{- end -}}
 
     {{- $_ := set $objectData.annotations "gethomepage.dev/enabled" "true" -}}
