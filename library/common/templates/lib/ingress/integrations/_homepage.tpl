@@ -23,7 +23,7 @@
       {{- $host := tpl $fHost.host $rootCtx -}}
       {{- $path := tpl $fPath.path $rootCtx -}}
 
-      {{- $href = printf "https://%s/%s" $host ($path | trimPrefix "/") -}}
+      {{- $href = printf "https://%s/%s/" $host ($path | trimPrefix "/") -}}
     {{- end -}}
 
     {{- $_ := set $objectData.annotations "gethomepage.dev/enabled" "true" -}}
