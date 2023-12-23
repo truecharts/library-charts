@@ -13,10 +13,10 @@
     {{- $name := $homepage.name | default ($rootCtx.Chart.Name | camelcase) -}}
     {{- $desc := $homepage.description | default $rootCtx.Chart.Description -}}
     {{- $icon := $homepage.icon | default $rootCtx.Chart.Icon -}}
-    {{- $defaultType := $rootCtx.Chart.Name -}}
+    {{- $defaultType := $rootCtx.Chart.Name | lower -}}
     {{/* Remove any non-characters from the default type */}}
     {{- $defaultType = regexReplaceAll "\\W+" $defaultType "" -}}
-    {{- $type := $homepage.widget.type | (default $defaultType | lower) -}}
+    {{- $type := $homepage.widget.type | default $defaultType -}}
     {{- $url := $homepage.widget.url -}}
     {{- $href := $homepage.href -}}
 
