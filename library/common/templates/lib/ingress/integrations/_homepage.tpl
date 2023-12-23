@@ -15,7 +15,7 @@
     {{- $icon := $homepage.icon | default $rootCtx.Chart.Icon -}}
     {{- $defaultType := $rootCtx.Chart.Name -}}
     {{/* Remove any non-characters from the default type */}}
-    {{- $defaultType = regexReplaceAll "\\W+" $type "" -}}
+    {{- $defaultType = regexReplaceAll "\\W+" $defaultType "" -}}
     {{- $type := $homepage.widget.type | (default $defaultType | lower) -}}
     {{- $url := $homepage.widget.url -}}
     {{- $href := $homepage.href -}}
