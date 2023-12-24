@@ -539,6 +539,7 @@ tests:
         my-service1:
           enabled: true
           primary: true
+          type: LoadBalancer
           loadBalancerIP: 1.2.3.4
           loadBalancerIPs:
             - 1.2.3.4
@@ -557,6 +558,7 @@ tests:
         my-service1:
           enabled: true
           primary: true
+          type: LoadBalancer
           loadBalancerIP: []
           ports:
             port-name:
@@ -573,6 +575,7 @@ tests:
         my-service1:
           enabled: true
           primary: true
+          type: LoadBalancer
           loadBalancerIPs: not-a-slice
           ports:
             port-name:
