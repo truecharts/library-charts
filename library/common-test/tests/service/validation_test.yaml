@@ -559,7 +559,8 @@ tests:
           enabled: true
           primary: true
           type: LoadBalancer
-          loadBalancerIP: []
+          loadBalancerIP:
+            - 1.2.3.4
           ports:
             port-name:
               enabled: true
