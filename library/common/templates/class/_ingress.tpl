@@ -25,8 +25,13 @@ objectData: The object data to be used to render the Ingress.
   {{- include "tc.v1.common.lib.ingress.integration.traefik" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
   {{- include "tc.v1.common.lib.ingress.integration.homepage" (dict "rootCtx" $rootCtx "objectData" $objectData) -}}
 
-  {{/* When Stop All is set, force ingressClass "stopped" to yeet ingress from the ingresscontroller */}}
-  {{- $ingressClassName := (tpl $objectData.ingressClassName $rootCtx) -}}
+  {{- $ingressClassName := "" -}}
+  {{- if $objectData.ingressClassName -}}
+    {{- $ingressClassName = (tpl $objectData.ingressClassName $rootCtx) -}}
+  {{- end -}}
+
+  {{/* When Stop All is set, force ingressClass "stopped"
+  to yeet ingress from the ingresscontroller */}}
   {{- if (include "tc.v1.common.lib.util.stopAll" $rootCtx) -}}
     {{- $ingressClassName = "stopped" -}}
   {{- end }}
