@@ -45,7 +45,7 @@ tests:
       - documentIndex: *ingressDoc
         equal:
           path: spec.ingressClassName
-          value: stopped
+          value: tc-stopped
 
   - it: should pass with ixChartContext - isStopped (true)
     set:
@@ -68,7 +68,7 @@ tests:
       - documentIndex: *ingressDoc
         equal:
           path: spec.ingressClassName
-          value: stopped
+          value: tc-stopped
 
   - it: should pass with ixChartContext - isStopped (false)
     set:
