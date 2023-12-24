@@ -51,14 +51,12 @@ objectData: The service data, that will be used to render the Service object.
       {{- $svcType = "ClusterIP" -}}
     {{- end -}}
   {{- end -}}
-  
+
   {{/* When Stop All is set, force ClusterIP as well */}}
   {{- if (include "tc.v1.common.lib.util.stopAll" $rootCtx) -}}
     {{- $svcType = "ClusterIP" -}}
   {{- end -}}
   {{- $_ := set $objectData "type" $svcType  }}
-  
-
 ---
 apiVersion: v1
 kind: Service
