@@ -77,7 +77,7 @@ tests:
                 - path: /test-other-path
                 - path: /test-other-path2
                   overrideService:
-                    name: other-service
+                    name: some-other-service
                     expandObjectName: false
                     port: 8080
           integrations: *integrations
@@ -117,7 +117,7 @@ tests:
                     pathType: Prefix
                     backend:
                       service:
-                        name: other-service
+                        name: some-other-service
                         port:
                           number: 8080
 
