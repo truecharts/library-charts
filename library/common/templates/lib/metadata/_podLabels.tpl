@@ -17,7 +17,10 @@
   {{- $permanent := (list "Deployment" "StatefulSet" "DaemonSet") -}}
   {{- if (mustHas $type $permanent) -}}
     {{- $label = "permanent" -}}
-  {{- end }}
+  {{- end -}}
 
-pod.lifecycle: {{ $label | default "unknown" }}
+  {{- if not $label -}}
+    {{- fail "PodLabels - Template used in a place that is not designed to be used" -}}
+  {{- end }}
+pod.lifecycle: {{ $label }}
 {{- end -}}
