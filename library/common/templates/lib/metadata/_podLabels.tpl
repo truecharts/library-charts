@@ -3,4 +3,21 @@
 {{ include "tc.v1.common.lib.metadata.podLabels" $ }}
 */}}
 {{- define "tc.v1.common.lib.metadata.podLabels" -}}
+  {{- $rootCtx := .rootCtx -}}
+  {{- $objectData := .objectData -}}
+
+  {{- $type := $objectData.type -}}
+
+  {{- $label := "" -}}
+  {{- $fleeting := (list "CronJob" "Job") -}}
+  {{- if (mustHas $type $fleeting) -}}
+    {{- $label = "fleeting" -}}
+  {{- end -}}
+
+  {{- $permanent := (list "Deployment" "StatefulSet" "DaemonSet") -}}
+  {{- if (mustHas $type $permanent) -}}
+    {{- $label = "permanent" -}}
+  {{- end }}
+
+pod.lifecycle: {{ $label | default "unknown" }}
 {{- end -}}
