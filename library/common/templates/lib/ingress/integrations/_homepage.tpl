@@ -56,7 +56,7 @@
       {{- $_ := set $objectData.annotations "gethomepage.dev/weight" (. | toString) -}}
     {{- end -}}
 
-    {{- $selector := printf "app.kubernetes.io/name=%s" (include "tc.v1.common.lib.chart.names.name" $rootCtx) -}}
+    {{- $selector := printf "app.kubernetes.io/instance=%s" $rootCtx.Release.Name -}}
     {{- with $homepage.podSelector -}}
       {{- $selector = (printf "pod.name in (%s)" (join "," .)) -}}
     {{- end -}}
