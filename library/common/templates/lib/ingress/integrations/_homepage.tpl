@@ -9,7 +9,7 @@
     {{- end -}}
 
     {{- $widEnabled := true -}}
-    {{- if and (hasKey $homepage.widget "enabled") (kindIs "bool" $homepage.widget) -}}
+    {{- if and (hasKey $homepage.widget "enabled") (kindIs "bool" $homepage.widget.enabled) -}}
       {{- $widEnabled = $homepage.widget.enabled -}}
     {{- end -}}
 
