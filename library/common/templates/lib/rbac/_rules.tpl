@@ -38,7 +38,7 @@ objectData: The object data to be used to render the RBAC.
   - {{ tpl . $rootCtx | quote }}
     {{- end -}}
   {{- /* resourceNames */}}
-  {{- if .resourceNames -}}
+  {{- if .resourceNames }}
   resourceNames:
     {{- range .resourceNames -}}
       {{- if not . -}}
