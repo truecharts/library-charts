@@ -982,6 +982,29 @@ tests:
           of: apps/v1
       - documentIndex: *deploymentDoc
         equal:
+          path: spec.template.spec.volumes
+          value:
+            - name: devshm
+              emptyDir:
+                medium: Memory
+                sizeLimit: 8Gi
+            - name: shared
+              emptyDir: {}
+            - name: tmp
+              emptyDir:
+                medium: Memory
+                sizeLimit: 8Gi
+            - name: varlogs
+              emptyDir:
+                medium: Memory
+                sizeLimit: 8Gi
+            - name: varrun
+              emptyDir:
+                medium: Memory
+                sizeLimit: 8Gi
+
+      - documentIndex: *deploymentDoc
+        equal:
           # some-vol should not be present
           path: spec.template.spec.containers[0].volumeMounts
           value:
