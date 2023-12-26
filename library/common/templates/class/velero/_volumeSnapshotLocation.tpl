@@ -40,9 +40,9 @@ spec:
   {{- with $objectData.config }}
   config:
     {{- range $k, $v := . }}
-    {{- if $v -}}
+      {{- if (ne (toString $v) "") }}
     {{ $k }}: {{ tpl (toString $v) $rootCtx | quote }}
-    {{- end -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
