@@ -40,7 +40,7 @@ spec:
   {{- with $objectData.config }}
   config:
     {{- range $k, $v := . }}
-      {{- if (ne (toString $v) "") }}
+      {{- if and (not (kindIs "invalid" $v)) (ne (toString $v) "") }}
     {{ $k }}: {{ tpl (toString $v) $rootCtx | quote }}
       {{- end -}}
     {{- end -}}
