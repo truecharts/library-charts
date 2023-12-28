@@ -599,7 +599,7 @@ tests:
                   echo ""
                   echo "Automatically correcting ownership for /mounts/test1..."
                   before=$(stat -c "%u:%g" /mounts/test1)
-                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -R -c "/mounts/test1" -p "/mounts/test1" || echo "Failed setting ownership using winacl..."
+                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -r -c "/mounts/test1" -p "/mounts/test1" || echo "Failed setting ownership using winacl..."
 
                   echo "Ownership before: [$before]"
                   echo "Ownership after: [$(stat -c "%u:%g" /mounts/test1)]"
@@ -651,7 +651,7 @@ tests:
                   echo ""
                   echo "Automatically correcting ownership for /mounts/test7..."
                   before=$(stat -c "%u:%g" /mounts/test7)
-                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -R -c "/mounts/test7" -p "/mounts/test7" || echo "Failed setting ownership using winacl..."
+                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -r -c "/mounts/test7" -p "/mounts/test7" || echo "Failed setting ownership using winacl..."
 
                   echo "Ownership before: [$before]"
                   echo "Ownership after: [$(stat -c "%u:%g" /mounts/test7)]"
@@ -664,7 +664,7 @@ tests:
                   echo ""
                   echo "Automatically correcting ownership for /mounts/test8..."
                   before=$(stat -c "%u:%g" /mounts/test8)
-                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -R -c "/mounts/test8" -p "/mounts/test8" || echo "Failed setting ownership using winacl..."
+                      /usr/sbin/nfs4xdr_winacl -a chown -G 568 -r -c "/mounts/test8" -p "/mounts/test8" || echo "Failed setting ownership using winacl..."
 
                   echo "Ownership before: [$before]"
                   echo "Ownership after: [$(stat -c "%u:%g" /mounts/test8)]"
