@@ -54,9 +54,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if $ingressClassName }}
-  ingressClassName: {{ $ingressClassName }}
-  {{- end }}
+  ingressClassName: {{ $ingressClassName | default null }}
   rules:
     {{- range $h := $objectData.hosts }}
     - host: {{ (tpl $h.host $rootCtx) | quote }}
