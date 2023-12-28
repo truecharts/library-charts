@@ -103,7 +103,7 @@ podSpec:
 
             {{- $r := "" -}}
             {{- if $vol.recursive -}}
-              {{- $r = "-$" -}}
+              {{- $r = "-R" -}}
             {{- end -}}
 
             {{/* Permissions */}}
