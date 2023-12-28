@@ -638,7 +638,7 @@ tests:
                   echo ""
                   echo "Automatically correcting ownership for /mounts/test6..."
                   before=$(stat -c "%u:%g" /mounts/test6)
-                      /usr/sbin/nfs4xdr_winacl -a chown -G 1000 -R -c "/mounts/test6" -p "/mounts/test6" || echo "Failed setting ownership using winacl..."
+                      /usr/sbin/nfs4xdr_winacl -a chown -G 1000 -r -c "/mounts/test6" -p "/mounts/test6" || echo "Failed setting ownership using winacl..."
 
                   echo "Ownership before: [$before]"
                   echo "Ownership after: [$(stat -c "%u:%g" /mounts/test6)]"
