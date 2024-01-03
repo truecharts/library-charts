@@ -30,7 +30,7 @@ jobs:
     - name: Install Helm
       uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # tag=v3
       with:
-        version: v3.9.4
+        version: v3.13.3
 
     # Optional step if GPG signing is used
     - name: Prepare GPG key
@@ -55,3 +55,26 @@ jobs:
       env:
         CR_TOKEN: "${{ secrets.BOT_TOKEN }}"
         CR_SKIP_EXISTING: "true"
+
+    - name: Helm | Login
+      shell: bash
+      run: echo ${{ secrets.QUAY_SECRET }} | helm registry login -u ${{ secrets.QUAY_USER }} --password-stdin quay.io
+
+
+    - name: Push Charts to Quay
+      shell: bash
+      run: |
+        for pkg in .cr-release-packages/*.tgz; do
+          if [ -z "${pkg:-}" ]; then
+            break
+          fi
+          filename=$(basename "$pkg")
+          name="${filename%%-[0-9]*.[0-9]*.[0-9]*.tgz}"
+          echo "uploading $name"
+          helm push "${pkg}" oci://quay.io/truecharts || echo "failed to upload $pkg to OCI"
+          curl -X POST -H "Content-Type: application/json" -d '{"visibility": "public"}' -H "Authorization: Bearer ${{ secrets.QUAY_TOKEN }}" "https://quay.io/api/v1/repository/truecharts/$name/changevisibility"  || echo "failed to set $pkg to public on OCI"
+        done
+
+    - name: Helm | Logout
+      shell: bash
+      run: helm registry logout quay.io
