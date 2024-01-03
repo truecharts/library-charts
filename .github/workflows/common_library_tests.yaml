@@ -215,7 +215,7 @@ jobs:
           fi
           if [[ "${{ matrix.values }}" =~ ingress.*-values.yaml ]]; then
             helm install cert-manager oci://tccr.io/truecharts/cert-manager --namespace cert-manager --create-namespace --wait --debug
-            helm install traefik oci://tccr.io/truecharts/traefik --namespace traefik --create-namespace --wait --debug
+            helm install traefik oci://tccr.io/truecharts/traefik --namespace traefik --create-namespace --wait --debug --set image.tag=v2.10.5
           fi
 
       - name: Run chart-testing (install)
