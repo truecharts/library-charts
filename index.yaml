@@ -3,6 +3,27 @@ entries:
   common:
   - apiVersion: v2
     appVersion: latest
+    created: "2024-01-05T19:56:37.443482236Z"
+    description: Function library for TrueCharts
+    digest: db483a9755b1785e1f9ade4d125593e486e8a3800f7cbc0aec89d134f339e18d
+    home: https://github.com/truecharts/apps/tree/master/charts/common
+    icon: https://avatars.githubusercontent.com/u/76400755
+    keywords:
+    - truecharts
+    - library-chart
+    - common
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: info@truecharts.org
+      name: TrueCharts
+      url: https://truecharts.org
+    name: common
+    type: library
+    urls:
+    - https://github.com/truecharts/library-charts/releases/download/common-17.2.22/common-17.2.22.tgz
+    version: 17.2.22
+  - apiVersion: v2
+    appVersion: latest
     created: "2024-01-01T21:44:30.625198549Z"
     description: Function library for TrueCharts
     digest: 231d19f0bc8001fa49220de755f7ced68201116c5f9f7950874575a629963862
@@ -7401,4 +7422,4 @@ entries:
     urls:
     - https://github.com/truecharts/library-charts/releases/download/dep-common-9.3.7/dep-common-9.3.7.tgz
     version: 9.3.7
-generated: "2024-01-01T21:44:30.626483722Z"
+generated: "2024-01-05T19:56:37.55353887Z"
