@@ -24,7 +24,4 @@ sources:
 type: application
 version: 1.0.0
 annotations:
-  # This crazy version is used for checking
-  # if the helm version check works correctly
-  # in the unit tests.
-  truecharts.org/min_helm_version: "99.99"
+  truecharts.org/min_helm_version: "3.12"
