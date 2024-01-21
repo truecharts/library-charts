@@ -45,7 +45,7 @@ cnpg:
     #               the switchover of the primary
     primaryUpdateStrategy: unsupervised
     # -- enable to create extra pgbouncer for readonly access
-    acceptRO: false
+    createRO: false
     # -- storage size for the two pvc's per instance
     storage:
       size: "256Gi"
@@ -73,7 +73,7 @@ cnpg:
     #               the switchover of the primary
     primaryUpdateStrategy: unsupervised
     # -- enable to create extra pgbouncer for readonly access
-    acceptRO: true
+    createRO: true
     # -- storage size for the two pvc's per instance
     storage:
       size: "256Gi"
@@ -101,7 +101,7 @@ cnpg:
     #               the switchover of the primary
     primaryUpdateStrategy: unsupervised
     # -- enable to create extra pgbouncer for readonly access
-    acceptRO: true
+    createRO: true
     # -- storage size for the two pvc's per instance
     storage:
       size: "256Gi"
@@ -113,3 +113,7 @@ cnpg:
       enablePodMonitor: true
     # -- contains credentials and urls output by generator
     creds: {}
+
+operator:
+  verify:
+    enabled: false

@@ -45,7 +45,7 @@ cnpg:
     #               the switchover of the primary
     primaryUpdateStrategy: unsupervised
     # -- enable to create extra pgbouncer for readonly access
-    acceptRO: false
+    createRO: false
     # -- storage size for the two pvc's per instance
     storage:
       size: "256Gi"
