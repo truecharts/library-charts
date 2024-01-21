@@ -38,5 +38,4 @@
       {{- $_ := set $.Values.metrics (printf "cnpg-%s-ro" $objectData.shortName) $poolerMetrics -}}
     {{- end -}}
   {{- end -}}
-
 {{- end -}}
