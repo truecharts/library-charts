@@ -114,6 +114,3 @@ cnpg:
     # -- contains credentials and urls output by generator
     creds: {}
 
-operator:
-  verify:
-    enabled: false
