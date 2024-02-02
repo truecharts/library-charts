@@ -13,3 +13,5 @@ repositoryID: 6dc73019-7bcb-43e6-b9cd-48398de01e33
 owners: # (optional, used to claim repository ownership)
   - name: Kjeld Schouten-Lebbing
     email: kjeld@schouten-lebbing.nl
+ignore: # (optional, packages that should not be indexed by Artifact Hub)
+  - name: 'common-test'
