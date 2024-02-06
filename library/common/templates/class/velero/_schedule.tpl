@@ -14,7 +14,7 @@ objectData:
 
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
-  {{- $namespace := ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule" ) -}}
+  {{- $namespace := ( include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule" )) -}}
   {{- $lookupBSL := (lookup "velero.io/v1" "BackupStorageLocation" "" "") -}}
   {{- if and $lookupBSL $lookupBSL.items -}}
     {{- with (index $lookupBSL.items 0) }}
