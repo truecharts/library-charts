@@ -44,7 +44,7 @@ spec:
   useOwnerReferencesInBackup: {{ $objectData.useOwnerReferencesInBackup }}
   {{- end }}
   template:
-    {{- if not $objectData.template -}}
+    {{- if not $objectData.template }}
     includedNamespaces:
       - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
     {{- end -}}
