@@ -46,11 +46,15 @@ spec:
   useOwnerReferencesInBackup: {{ $objectData.useOwnerReferencesInBackup }}
   {{- end -}}
   template:
-    {{- if or ( not $objectData.template ) ( and ( not $objectData.template ) ( not $objectData.template.includedNamespaces ) ) -}}
+    {{- if not $objectData.template -}}
     includedNamespaces:
       - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
     {{- end -}}
     {{- with $objectData.template }}
     {{- toYaml . | nindent 4 }}
+    {{- if not .includedNamespaces }}
+    includedNamespaces:
+      - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
+    {{- end -}}
     {{- end -}}
 {{- end -}}
