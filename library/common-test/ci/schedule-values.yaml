@@ -40,7 +40,7 @@ manifestManager:
   enabled: false
 
 schedules:
-  - name:
+  test:
     enabled: true
     labels:
       myenv: foo
@@ -51,5 +51,3 @@ schedules:
     template:
       ttl: "240h"
       storageLocation: default
-      includedNamespaces:
-      - foo
