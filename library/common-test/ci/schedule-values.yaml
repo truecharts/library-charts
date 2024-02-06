@@ -43,3 +43,14 @@ schedules:
   test:
     enabled: true
     schedule: "0 0 * * *"
+  test2:
+    enabled: true
+    labels:
+      myenv: foo
+    annotations:
+      myenv: foo
+    schedule: "0 0 * * *"
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "240h"
+      storageLocation: default
