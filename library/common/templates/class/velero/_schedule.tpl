@@ -53,5 +53,4 @@ spec:
     {{- with $objectData.template }}
     {{- toYaml . | nindent 4 }}
     {{- end -}}
-  {{- end -}}
 {{- end -}}
