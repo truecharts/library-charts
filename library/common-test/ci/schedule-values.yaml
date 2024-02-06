@@ -42,12 +42,4 @@ manifestManager:
 schedules:
   test:
     enabled: true
-    labels:
-      myenv: foo
-    annotations:
-      myenv: foo
     schedule: "0 0 * * *"
-    useOwnerReferencesInBackup: false
-    template:
-      ttl: "240h"
-      storageLocation: default
