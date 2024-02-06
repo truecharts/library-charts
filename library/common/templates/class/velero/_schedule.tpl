@@ -19,7 +19,7 @@ objectData:
   {{- if and $lookupBSL $lookupBSL.items -}}
       {{- $lookupBSL = $lookupBSL.items  -}}
   {{- end -}}
-  {{- with (index $lookupBSL 0) }}
+  {{- with ( index $lookupBSL ( $lookupBSL | keys | first ) ) }}
     {{- $namespace = .metadata.namespace -}}
   {{- end -}}
 ---
