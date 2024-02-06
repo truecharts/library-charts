@@ -54,3 +54,11 @@ schedules:
     template:
       ttl: "240h"
       storageLocation: default
+  test3:
+    enabled: true
+    schedule: "0 0 * * *"
+    template:
+      ttl: "240h"
+      storageLocation: default
+      includedNamespaces:
+      - foo
