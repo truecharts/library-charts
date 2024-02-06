@@ -42,7 +42,7 @@ spec:
   schedule: {{ $objectData.schedule | quote }}
   {{- if (kindIs "bool" $objectData.useOwnerReferencesInBackup) }}
   useOwnerReferencesInBackup: {{ $objectData.useOwnerReferencesInBackup }}
-  {{- end -}}
+  {{- end }}
   template:
     {{- if not $objectData.template -}}
     includedNamespaces:
