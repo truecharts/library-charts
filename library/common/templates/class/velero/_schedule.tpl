@@ -19,8 +19,8 @@ objectData:
   {{- if and $lookupBSL $lookupBSL.items -}}
       {{- $lookupBSL = $lookupBSL.items  -}}
   {{- end -}}
-  {{- with ( index $lookupBSL ( $lookupBSL | keys | first ) ) }}
-    {{- $namespace = .metadata.namespace -}}
+  {{- range $BSL := $lookupBSL -}}
+    {{- $namespace = $BSL.metadata.namespace -}}
   {{- end -}}
 ---
 apiVersion: velero.io/v1
