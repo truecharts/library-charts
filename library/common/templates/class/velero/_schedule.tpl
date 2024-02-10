@@ -68,7 +68,7 @@ spec:
       to use along with the toYaml.
      */}}
     {{- toYaml . | nindent 4 }}
-    {{- if not (hasKey .  "includeClusterResources") }}
+    {{- if not (hasKey . "includeClusterResources") }}
     includeClusterResources: true
     {{- end -}}
     {{- if not .orLabelSelectors }}
