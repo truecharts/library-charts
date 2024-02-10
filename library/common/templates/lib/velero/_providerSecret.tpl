@@ -14,10 +14,14 @@
 
   {{- if and (eq $provider "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}
-    {{- $_ := set $objectData "provider" "velero.io/aws" -}}
+    {{- if ne $prefix "vsl" -}} {{/* If its not VSL, update the provider with a prefix */}}
+      {{- $_ := set $objectData "provider" "velero.io/aws" -}}
+    {{- end -}}
   {{- else if and (eq $provider "s3") $objectData.credential.s3 -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.s3) | fromYaml).data -}}
-    {{- $_ := set $objectData "provider" "velero.io/aws" -}}
+    {{- if ne $prefix "vsl" -}} {{/* If its not VSL, update the provider with a prefix */}}
+      {{- $_ := set $objectData "provider" "velero.io/aws" -}}
+    {{- end -}}
   {{- end -}}
 
   {{/* If we matched a provider, create the secret */}}
