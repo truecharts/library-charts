@@ -19,7 +19,12 @@
 
       {{- $objectName := $name -}}
 
-      {{/* Default to false for schedule objects */}}
+      {{/*
+        Default to false for schedule objects.
+        This is because those objects are usualy used
+        from the velero cli and having the object expanded
+        would make it harder to use the cli.
+      */}}
       {{- if not (hasKey $objectData "expandObjectName") -}}
         {{- $_ := set $objectData "expandObjectName" "false" -}}
       {{- end -}}
