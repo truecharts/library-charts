@@ -19,7 +19,9 @@
     {{- end -}}
   {{- else if and (eq $provider "s3") $objectData.credential.s3 -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.s3) | fromYaml).data -}}
-    {{- if ne $prefix "vsl" -}} {{/* If its not VSL, update the provider with a prefix */}}
+    {{- if eq $prefix "vsl" -}} {{/* Convert s3 to aws for vsl under config.provider */}}
+      {{- $_ := set $objectData.config "provider" "aws" -}}
+    {{- else -}} {{/* If its not VSL, update the provider with a prefix */}}
       {{- $_ := set $objectData "provider" "velero.io/aws" -}}
     {{- end -}}
   {{- end -}}
