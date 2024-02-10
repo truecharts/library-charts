@@ -14,7 +14,7 @@ objectData:
 
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
-  {{- $namespace := (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule")) -}}
+  {{- $namespace := (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Velero Schedule")) -}}
 
   {{/* Get existing BSLs */}}
   {{- $lookupBSL := (lookup "velero.io/v1" "BackupStorageLocation" "" "") -}}
@@ -49,7 +49,7 @@ spec:
   {{- if not $objectData.template }}
     includeClusterResources: true
     includedNamespaces:
-      - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
+      - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Velero Schedule") }}
     orLabelSelectors:
       - matchLabels:
           app.kubernetes.io/instance: {{ $rootCtx.Release.Name }}
@@ -82,7 +82,7 @@ spec:
     {{- end -}}
     {{- if not .includedNamespaces }}
     includedNamespaces:
-      - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
+      - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Velero Schedule") }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
