@@ -8,7 +8,7 @@
   {{- $provider := $objectData.provider | toString -}}
 
   {{/* Use config.provider when creating secret for VSL */}}
-  {{- if eq $prefix "vsl" -}}
+  {{- if and (eq $prefix "vsl") $objectData.config -}}
     {{- $provider = $objectData.config.provider | toString -}}
   {{- end -}}
 
