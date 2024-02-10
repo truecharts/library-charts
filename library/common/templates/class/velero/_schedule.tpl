@@ -18,11 +18,12 @@ objectData:
 
   {{/* Get existing BSLs */}}
   {{- $lookupBSL := (lookup "velero.io/v1" "BackupStorageLocation" "" "") -}}
-  {{/* TODO: Why we only keep one namespace of the found BSLs?
-    In this case we can just get the `| first` item
-  */}}
-  {{- range $bsl := $lookupBSL.items -}}
-    {{- $namespace = $bsl.metadata.namespace -}}
+  {{- if $lookupBSL.items -}}
+    {{/*
+      Find the velero namespace (this is where BSLs are created)
+      And use it as the namespace for the schedule too.
+    */}}
+    {{- $namespace = ($lookupBSL.items | first).metadata.namespace -}}
   {{- end }}
 ---
 apiVersion: velero.io/v1
