@@ -12,7 +12,6 @@
     {{- $provider = $objectData.credential.provider | toString -}}
   {{- end -}}
 
-
   {{- if and (eq $provider "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}
     {{- $_ := set $objectData "provider" "velero.io/aws" -}}
