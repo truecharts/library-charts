@@ -7,9 +7,9 @@
   {{/* Make sure provider is a string */}}
   {{- $provider := $objectData.provider | toString -}}
 
-  {{/* Use credential provider when creating secret for VSL */}}
+  {{/* Use config.provider when creating secret for VSL */}}
   {{- if eq $prefix "vsl" -}}
-    {{- $provider = $objectData.credential.provider | toString -}}
+    {{- $provider = $objectData.config.provider | toString -}}
   {{- end -}}
 
   {{- if and (eq $provider "aws") $objectData.credential.aws -}}
