@@ -50,7 +50,7 @@ tests:
               includedNamespaces:
                 - test-release-namespace
 
-  - it: should generate correct spec with template
+  - it: should generate correct spec with template and override on includedNamespaces
     set:
       schedules:
         my-sched:
@@ -60,6 +60,8 @@ tests:
             ttl: 720h
             includeClusterResources: true
             snapshotVolumes: true
+            includedNamespaces:
+              - some-namespace
     asserts:
       - documentIndex: &scheduleDoc 0
         isKind:
@@ -77,7 +79,7 @@ tests:
               includeClusterResources: true
               snapshotVolumes: true
               includedNamespaces:
-                - test-release-namespace
+                - some-namespace
 
   # Failures
   - it: should fail without schedule

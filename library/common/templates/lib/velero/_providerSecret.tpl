@@ -4,16 +4,14 @@
   {{- $prefix := .prefix -}}
 
   {{- $creds := "" -}}
-  {{- $provider := "" -}}
+  {{/* Make sure provider is a string */}}
+  {{- $provider := $objectData.provider | toString -}}
 
   {{/* Use credential provider when creating secret for VSL */}}
-  {{/* Make sure provider is a string */}}
   {{- if eq $prefix "vsl" -}}
     {{- $provider = $objectData.credential.provider | toString -}}
-  {{- else -}}
-    {{- $provider = $objectData.provider | toString -}}
   {{- end -}}
- 
+
 
   {{- if and (eq $provider "aws") $objectData.credential.aws -}}
     {{- $creds = (include "tc.v1.common.lib.velero.provider.aws.secret" (dict "creds" $objectData.credential.aws) | fromYaml).data -}}

@@ -1,0 +1,47 @@
+suite: volumeSnapshotList spec test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should generate correct spec
+    set:
+      schedulesList:
+        - name: example1
+          enabled: true
+          schedule: "0 2 * * *"
+        - name: example2
+          enabled: true
+          schedule: "0 2 * * *"
+          useOwnerReferencesInBackup: true
+    asserts:
+      - documentIndex: &scheduleDoc 0
+        isKind:
+          of: Schedule
+      - documentIndex: *scheduleDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *scheduleDoc
+        equal:
+          path: spec
+          value:
+            schedule: 0 2 * * *
+            template:
+              includedNamespaces:
+                - test-release-namespace
+      - documentIndex: &scheduleDoc 1
+        isKind:
+          of: Schedule
+      - documentIndex: *scheduleDoc
+        isAPIVersion:
+          of: velero.io/v1
+      - documentIndex: *scheduleDoc
+        equal:
+          path: spec
+          value:
+            schedule: "0 2 * * *"
+            useOwnerReferencesInBackup: true
+            template:
+              includedNamespaces:
+                - test-release-namespace

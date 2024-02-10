@@ -15,12 +15,14 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
   {{- $namespace := (include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule")) -}}
+
+  {{/* Get existing BSLs */}}
   {{- $lookupBSL := (lookup "velero.io/v1" "BackupStorageLocation" "" "") -}}
-  {{- if and $lookupBSL $lookupBSL.items -}}
-      {{- $lookupBSL = $lookupBSL.items  -}}
-  {{- end -}}
-  {{- range $BSL := $lookupBSL -}}
-    {{- $namespace = $BSL.metadata.namespace -}}
+  {{/* TODO: Why we only keep one namespace of the found BSLs?
+    In this case we can just get the `| first` item
+  */}}
+  {{- range $bsl := $lookupBSL.items -}}
+    {{- $namespace = $bsl.metadata.namespace -}}
   {{- end }}
 ---
 apiVersion: velero.io/v1
@@ -44,7 +46,7 @@ spec:
   useOwnerReferencesInBackup: {{ $objectData.useOwnerReferencesInBackup }}
   {{- end }}
   template:
-    {{- if not $objectData.template }}
+  {{- if not $objectData.template }}
     includeClusterResources: true
     includedNamespaces:
       - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
@@ -56,10 +58,18 @@ spec:
       - matchLabels:
           owner: helm
           name: {{ $rootCtx.Release.Name }}
-    {{- end -}}
-
-    {{- with $objectData.template }}
+  {{- end -}}
+  {{- with $objectData.template }}
+    {{/*
+      TODO: This toYaml should **not** be here if any of the checks
+      below renders when a key is present. Currently, checks below
+      only render when a key is not present, which is mostly safe
+      to use along with the toYaml.
+     */}}
     {{- toYaml . | nindent 4 }}
+    {{- if not (hasKey .  "includeClusterResources") }}
+    includeClusterResources: true
+    {{- end -}}
     {{- if not .orLabelSelectors }}
     orLabelSelectors:
       - matchLabels:
@@ -74,8 +84,5 @@ spec:
     includedNamespaces:
       - {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "Schedule") }}
     {{- end -}}
-    {{- if not (hasKey .  "includeClusterResources") }}
-    includeClusterResources: true
-    {{- end -}}
-    {{- end -}}
+  {{- end -}}
 {{- end -}}
