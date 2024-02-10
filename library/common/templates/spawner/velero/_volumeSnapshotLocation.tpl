@@ -44,10 +44,10 @@
       {{- $_ := set $objectData "name" $objectName -}}
       {{- $_ := set $objectData "shortName" $name -}}
 
+      {{- include "tc.v1.common.lib.velero.volumesnapshotlocation.validation" (dict "objectData" $objectData) -}}
+
       {{/* Create secret with creds for provider, if the provider is not matched, it will skip creation */}}
       {{- include "tc.v1.common.lib.velero.provider.secret" (dict "rootCtx" $ "objectData" $objectData "prefix" "vsl") -}}
-
-      {{- include "tc.v1.common.lib.velero.volumesnapshotlocation.validation" (dict "objectData" $objectData) -}}
 
       {{/* Call class to create the object */}}
       {{- include "tc.v1.common.class.velero.volumesnapshotlocation" (dict "rootCtx" $ "objectData" $objectData) -}}
