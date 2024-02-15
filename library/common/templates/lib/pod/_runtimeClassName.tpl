@@ -22,17 +22,30 @@ objectData: The object data to be used to render the Pod.
 
   {{- if hasKey $rootCtx.Values.global "ixChartContext" -}}
     {{- if $rootCtx.Values.global.ixChartContext.addNvidiaRuntimeClass -}}
+    {{- $gpuAssigned := false -}}
+
+     {{- if gt $rootCtx.Values.resources.limits.nvidia.com/gpu "0" -}}
+       {{- $gpuAssigned = true -}}
+     {{- end -}}
+
+      {{- range $rootCtx.Values.workload -}}
+        {{- range $k, $v := .containers -}}
+          {{- if gt .resources.limits.nvidia.com/gpu "0" -}}
+            {{- $gpuAssigned = true -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
 
       {{- range $rootCtx.Values.scaleGPU -}}
         {{- if .gpu -}} {{/* Make sure it has a value... */}}
-          {{- $gpuAssigned := false -}}
-
+          
           {{- range $k, $v := .gpu -}}
             {{- if $v -}} {{/* Make sure value is not "0" or "" */}}
               {{- $gpuAssigned = true -}}
             {{- end -}}
           {{- end -}}
-
+        {{- end -}}
+      {{- end -}}
           {{- if $gpuAssigned -}}
             {{- if (kindIs "map" .targetSelector) -}}
               {{- range $podName, $containers := .targetSelector -}}
@@ -48,8 +61,7 @@ objectData: The object data to be used to render the Pod.
 
             {{- end -}}
           {{- end -}}
-        {{- end -}}
-      {{- end -}}
+
     {{- end -}}
   {{- end -}}
 
