@@ -13,5 +13,7 @@ repositoryID: 08c223d5-c4ba-4f3b-ad8f-d27aaf7077da
 owners: # (optional, used to claim repository ownership)
   - name: Kjeld Schouten
     email: info@kjeldschouten.nl
+  - name: truecharts
+    email: info@truecharts.org
 ignore: # (optional, packages that should not be indexed by Artifact Hub)
   - name: 'common-test'
