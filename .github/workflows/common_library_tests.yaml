@@ -23,7 +23,7 @@ jobs:
       matrix:
         helm-version:
           - v3.12.3
-          - v3.14.0
+          - v3.14.1
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -62,7 +62,7 @@ jobs:
       matrix:
         helm-version:
           - v3.12.3
-          - v3.14.0
+          - v3.14.1
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -110,7 +110,7 @@ jobs:
         # We run tests on Helm version of latest SCALE, fluxcd and latest helm release
         helm-version:
           - v3.12.3
-          - v3.14.0
+          - v3.14.1
         values:
           - basic-values.yaml
           - configmap-values.yaml
