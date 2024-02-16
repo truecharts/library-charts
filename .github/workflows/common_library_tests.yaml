@@ -200,10 +200,7 @@ jobs:
           tar -xvzf kail_${KAIL_VERSION}_linux_amd64.tar.gz
           chmod +x kail
 
-      - name: Prep Helm
-        run: |
-          helm repo add truecharts-deps https://deps.truecharts.org
-          helm repo update
+
 
       - name: Add Dependencies
         run: |
@@ -335,10 +332,7 @@ jobs:
 #        with:
 #          version: ${{ matrix.helm-version }}
 #
-#      - name: Prep Helm
-#        run: |
-#          helm repo add truecharts-deps https://deps.truecharts.org
-#          helm repo update
+
 #      - name: Add Dependencies
 #        run: |
 #            helm install prometheus-operator oci://tccr.io/truecharts/prometheus-operator --namespace prometheus-operator --create-namespace --wait
