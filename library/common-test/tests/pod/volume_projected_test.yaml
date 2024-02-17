@@ -1,0 +1,193 @@
+suite: pod projected volume test
+templates:
+  - common.yaml
+release:
+  name: test-release-name
+  namespace: test-release-namespace
+tests:
+  - it: should pass with projected volume (serviceAccountToken)
+    set:
+      some_path: /some-path
+      some_audience: some-server
+      workload:
+        workload-name1:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        proj-sa-vol1:
+          enabled: true
+          type: projected
+          sources:
+            - serviceAccountToken:
+                expirationSeconds: 600
+                audience: "{{ .Values.some_audience }}"
+                path: "{{ .Values.some_path }}"
+        proj-sa-vol2:
+          enabled: true
+          type: projected
+          sources:
+            - serviceAccountToken:
+                path: /some-other-path
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-sa-vol1
+            projected:
+              sources:
+                - serviceAccountToken:
+                    expirationSeconds: 600
+                    audience: some-server
+                    path: /some-path
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-sa-vol2
+            projected:
+              sources:
+                - serviceAccountToken:
+                    path: /some-other-path
+
+  # Failures
+  - it: should fail without sources in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources: []
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [sources] on [projected] type
+
+  - it: should fail with defaultMode not a string in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          defaultMode: 123
+          sources:
+            - serviceAccountToken:
+                name: some-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [defaultMode] to be [string], but got [float64]
+
+  - it: should fail with invalid format for defaultMode in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          defaultMode: "123"
+          sources:
+            - serviceAccountToken:
+                name: some-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [defaultMode] to have be in format of ["0777"], but got ["123"]
+
+  - it: should fail with more than 1 type per item for source in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - serviceAccountToken:
+                name: some-secret
+              secret:
+                name: some-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected only one source type per item in [projected] volume
+
+  - it: should fail with invalid type for source in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - something:
+                name: some-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Invalid source type [something] for projected. Valid sources are [clusterTrustBundle, configMap, downwardAPI, secret, serviceAccountToken]
+
+  # Service Account Token
+  - it: should fail with too small expirationSeconds for serviceAccountToken in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - serviceAccountToken:
+                expirationSeconds: 599
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [expirationSeconds] to be greater than 600 seconds, but got [599]
+
+  - it: should fail without path for serviceAccountToken in projected
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - serviceAccountToken:
+                expirationSeconds: 600
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [path] on [serviceAccountToken] type
