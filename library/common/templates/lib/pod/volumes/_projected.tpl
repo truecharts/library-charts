@@ -41,10 +41,8 @@ objectData: The object data to be used to render the volume.
 
       {{- if eq $k "serviceAccountToken" }}
         {{- include "tc.v1.common.lib.pod.volume.projected.serviceAccountToken" (dict "rootCtx" $rootCtx "source" $v) | nindent 6 }}
-      {{- else if eq $k "secret" }}
-        {{- include "tc.v1.common.lib.pod.volume.projected.secret" (dict "rootCtx" $rootCtx "source" $v) | nindent 6 }}
-      {{- else if eq $k "configMap" }}
-        {{- include "tc.v1.common.lib.pod.volume.projected.configMap" (dict "rootCtx" $rootCtx "source" $v) | nindent 6 }}
+      {{- else if or (eq $k "secret") (eq $k "configMap") }}
+        {{- include "tc.v1.common.lib.pod.volume.projected.cm-secret" (dict "rootCtx" $rootCtx "source" $v "type" $k) | nindent 6 }}
       {{- else if eq $k "downwardAPI" }}
         {{- include "tc.v1.common.lib.pod.volume.projected.downwardAPI" (dict "rootCtx" $rootCtx "source" $v) | nindent 6 }}
       {{- else if eq $k "clusterTrustBundle" }}
@@ -76,18 +74,6 @@ objectData: The object data to be used to render the volume.
     expirationSeconds: {{ . }}
   {{- end }}
     path: {{ tpl $source.path $rootCtx }}
-{{- end -}}
-
-{{- define "tc.v1.common.lib.pod.volume.projected.secret" -}}
-  {{- $rootCtx := .rootCtx -}}
-  {{- $source := .source -}}
-
-{{- end -}}
-
-{{- define "tc.v1.common.lib.pod.volume.projected.configMap" -}}
-  {{- $rootCtx := .rootCtx -}}
-  {{- $source := .source -}}
-
 {{- end -}}
 
 {{- define "tc.v1.common.lib.pod.volume.projected.downwardAPI" -}}
@@ -135,11 +121,61 @@ objectData: The object data to be used to render the volume.
       {{- fail (printf "Persistence - Expected item in downwardAPI to have one of [%s] keys. But found [%s]" (join ", " $allowedItems) (join ", " ($item | keys | sortAlpha))) -}}
     {{- end -}}
   {{- end -}}
+{{- end -}}
 
+{{- define "tc.v1.common.lib.pod.volume.projected.cm-secret" -}}
+  {{- $rootCtx := .rootCtx -}}
+  {{- $source := .source -}}
+  {{- $type := .type -}}
+
+  {{- if not $source.objectName -}}
+    {{- fail (printf "Persistence - Expected non-empty [objectName] on [%s] type" $type) -}}
+  {{- end -}}
+
+  {{- if not $source.items -}}
+    {{- fail (printf "Persistence - Expected non-empty [items] on [%s] type" $type) -}}
+  {{- end -}}
+
+  {{- if not (kindIs "slice" $source.items) -}}
+    {{- fail (printf "Persistence - Expected [items] to be a slice on [%s] type, but got [%s]" $type (kindOf $source.items)) -}}
+  {{- end -}}
+
+  {{- $objectName := tpl $source.objectName $rootCtx -}}
+
+  {{- $expandName := (include "tc.v1.common.lib.util.expandName" (dict
+                  "rootCtx" $rootCtx "objectData" $source
+                  "name" $source.objectName "caller" "Persistence - Projected"
+                  "key" "persistence")) -}}
+  {{- $ltype := $type | lower -}}
+  {{- if eq $expandName "true" -}}
+    {{- $object := (get (get $rootCtx.Values $ltype) $objectName) -}}
+    {{- if and (not $object) (not $source.optional) -}}
+      {{- fail (printf "Persistence - Expected %s [%s] defined in [objectName] to exist" $ltype $objectName) -}}
+    {{- end -}}
+
+    {{- $objectName = (printf "%s-%s" (include "tc.v1.common.lib.chart.names.fullname" $rootCtx) $objectName) -}}
+  {{- end }}
+- {{ $type }}:
+    name: {{ $objectName }}
+    {{- if hasKey $source "optional" }}
+    optional: {{ $source.optional }}
+    {{- end }}
+    items:
+    {{- range $item := $source.items -}}
+      {{- if not $item.key -}}
+        {{- fail (printf "Persistence - Expected non-empty [key] on item in [%s] type" $type) -}}
+      {{- end -}}
+      {{- if not $item.path -}}
+        {{- fail (printf "Persistence - Expected non-empty [path] on item in [%s] type" $type) -}}
+      {{- end }}
+      - key: {{ tpl $item.key $rootCtx }}
+        path: {{ tpl $item.path $rootCtx }}
+    {{- end -}}
 {{- end -}}
 
 {{- define "tc.v1.common.lib.pod.volume.projected.clusterTrustBundle" -}}
   {{- $rootCtx := .rootCtx -}}
   {{- $source := .source -}}
 
+  {{- fail "Persistence - Key [clusterTrustBundle] is not yet implemented in [projected type]" -}}
 {{- end -}}

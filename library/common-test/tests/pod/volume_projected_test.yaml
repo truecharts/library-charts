@@ -156,6 +156,155 @@ tests:
             name: proj-da-vol2
             mountPath: /var/run/secrets/data2
             readOnly: false
+
+  - it: should pass with projected volume (configmap/secret)
+    set:
+      some_path: some-path/data
+      some_key: some-ext-key
+      some_container: some-container
+      some_resource: some-resource
+      workload: *workload
+      secret:
+        some-secret:
+          enabled: true
+          data:
+            some-key: some-value
+      configmap:
+        some-configmap:
+          enabled: true
+          data:
+            some-key: some-value
+      persistence:
+        proj-secret-existing-vol1:
+          enabled: true
+          type: projected
+          mountPath: /var/run/secrets/data1
+          sources:
+            - secret:
+                objectName: some-secret
+                items:
+                  - key: some-key
+                    path: "{{ .Values.some_path }}"
+        proj-secret-ext-vol1:
+          enabled: true
+          type: projected
+          mountPath: /var/run/secrets/data1
+          sources:
+            - secret:
+                objectName: some-ext-secret
+                expandObjectName: false
+                items:
+                  - key: "{{ .Values.some_key }}"
+                    path: "{{ .Values.some_path }}"
+        proj-cm-existing-vol1:
+          enabled: true
+          type: projected
+          mountPath: /var/run/cm/data1
+          sources:
+            - configMap:
+                objectName: some-configmap
+                items:
+                  - key: some-key
+                    path: "{{ .Values.some_path }}"
+        proj-cm-ext-vol1:
+          enabled: true
+          type: projected
+          mountPath: /var/run/cm/data1
+          sources:
+            - configMap:
+                objectName: some-ext-cm
+                expandObjectName: false
+                items:
+                  - key: "{{ .Values.some_key }}"
+                    path: "{{ .Values.some_path }}"
+    asserts:
+      - documentIndex: &cmDoc 0
+        isKind:
+          of: ConfigMap
+      - documentIndex: *cmDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-some-configmap
+      - documentIndex: &secretDoc 1
+        isKind:
+          of: Secret
+      - documentIndex: *secretDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-some-secret
+      - documentIndex: &deploymentDoc 2
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-secret-existing-vol1
+            projected:
+              sources:
+                - secret:
+                    name: test-release-name-common-test-some-secret
+                    items:
+                      - key: some-key
+                        path: some-path/data
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: proj-secret-existing-vol1
+            mountPath: /var/run/secrets/data1
+            readOnly: false
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-secret-ext-vol1
+            projected:
+              sources:
+                - secret:
+                    name: some-ext-secret
+                    items:
+                      - key: some-ext-key
+                        path: some-path/data
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: proj-secret-ext-vol1
+            mountPath: /var/run/secrets/data1
+            readOnly: false
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-cm-existing-vol1
+            projected:
+              sources:
+                - configMap:
+                    name: test-release-name-common-test-some-configmap
+                    items:
+                      - key: some-key
+                        path: some-path/data
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: proj-cm-existing-vol1
+            mountPath: /var/run/cm/data1
+            readOnly: false
+      - documentIndex: *deploymentDoc
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: proj-cm-ext-vol1
+            projected:
+              sources:
+                - configMap:
+                    name: some-ext-cm
+                    items:
+                      - key: some-ext-key
+                        path: some-path/data
+
   # Failures
   - it: should fail without sources in projected
     set:
@@ -396,3 +545,267 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Persistence - Expected non-empty [fieldPath] under [fieldRef] on item in [downwardAPI] type
+
+  # Secret
+  - it: should fail without objectName in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                items:
+                  - key: some-key
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [objectName] on [secret] type
+
+  - it: should fail without items in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                objectName: some-object-name
+                items: []
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [items] on [secret] type
+
+  - it: should fail with items not a list in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                objectName: some-object-name
+                items:
+                  key: some-key
+                  path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [items] to be a slice on [secret] type, but got [map]
+
+  - it: should fail with referenced object in items not exist in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                objectName: some-object-name
+                items:
+                  - key: some-key
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected secret [some-object-name] defined in [objectName] to exist
+
+  - it: should fail with empty key in items in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                objectName: some-object-name
+                expandObjectName: false
+                items:
+                  - key: ""
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [key] on item in [secret] type
+
+  - it: should fail with empty path in items in secret type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - secret:
+                objectName: some-object-name
+                expandObjectName: false
+                items:
+                  - key: some-key
+                    path: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [path] on item in [secret] type
+
+  # ConfigMap
+  - it: should fail without objectName in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                items:
+                  - key: some-key
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [objectName] on [configMap] type
+
+  - it: should fail without items in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                objectName: some-object-name
+                items: []
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [items] on [configMap] type
+
+  - it: should fail with items not a list in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                objectName: some-object-name
+                items:
+                  key: some-key
+                  path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected [items] to be a slice on [configMap] type, but got [map]
+
+  - it: should fail with referenced object in items not exist in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                objectName: some-object-name
+                items:
+                  - key: some-key
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected configmap [some-object-name] defined in [objectName] to exist
+
+  - it: should fail with empty key in items in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                objectName: some-object-name
+                expandObjectName: false
+                items:
+                  - key: ""
+                    path: some-path
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [key] on item in [configMap] type
+
+  - it: should fail with empty path in items in configMap type
+    set:
+      workload:
+        some-workload:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec: {}
+      persistence:
+        volume1:
+          enabled: true
+          type: projected
+          sources:
+            - configMap:
+                objectName: some-object-name
+                expandObjectName: false
+                items:
+                  - key: some-key
+                    path: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected non-empty [path] on item in [configMap] type
