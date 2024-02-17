@@ -94,6 +94,48 @@ objectData: The object data to be used to render the volume.
   {{- $rootCtx := .rootCtx -}}
   {{- $source := .source -}}
 
+  {{- if not (kindIs "map" $source) -}}
+    {{- fail (printf "Persistence - Expected [downwardAPI] in [sources] to be a map on [downwardAPI] type, but got [%s]" (kindOf $source)) -}}
+  {{- end -}}
+
+  {{- if not $source.items -}}
+    {{- fail "Persistence - Expected non-empty [items] on [downwardAPI] type" -}}
+  {{- end }}
+- downwardAPI:
+    items:
+  {{- $allowedItems := (list "fieldRef" "resourceFieldRef") }}
+  {{- range $item := $source.items -}}
+    {{- if not $item.path -}}
+      {{- fail "Persistence - Expected non-empty [path] on item in [downwardAPI] type" -}}
+    {{- end }}
+    - path: {{ tpl $item.path $rootCtx }}
+    {{- if hasKey $item "fieldRef" }}
+      {{- if not $item.fieldRef.fieldPath -}}
+        {{- fail "Persistence - Expected non-empty [fieldPath] under [fieldRef] on item in [downwardAPI] type" -}}
+      {{- end }}
+      fieldRef:
+        {{- with $item.fieldRef.apiVersion }}
+        apiVersion: {{ tpl . $rootCtx }}
+        {{- end }}
+        fieldPath: {{ tpl $item.fieldRef.fieldPath $rootCtx }}
+    {{- else if hasKey $item "resourceFieldRef" }}
+      {{- if not $item.resourceFieldRef.containerName -}}
+        {{- fail "Persistence - Expected non-empty [containerName] under [resourceFieldRef] on item in [downwardAPI] type" -}}
+      {{- end -}}
+      {{- if not $item.resourceFieldRef.resource -}}
+        {{- fail "Persistence - Expected non-empty [resource] under [resourceFieldRef] on item in [downwardAPI] type" -}}
+      {{- end }}
+      resourceFieldRef:
+        resource: {{ tpl $item.resourceFieldRef.resource $rootCtx }}
+        containerName: {{ tpl $item.resourceFieldRef.containerName $rootCtx }}
+        {{- if hasKey $item.resourceFieldRef "divisor" }}
+        divisor: {{ $item.resourceFieldRef.divisor }}
+        {{- end -}}
+    {{- else -}}
+      {{- fail (printf "Persistence - Expected item in downwardAPI to have one of [%s] keys. But found [%s]" (join ", " $allowedItems) (join ", " ($item | keys | sortAlpha))) -}}
+    {{- end -}}
+  {{- end -}}
+
 {{- end -}}
 
 {{- define "tc.v1.common.lib.pod.volume.projected.clusterTrustBundle" -}}
