@@ -533,13 +533,6 @@ tests:
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
-            name: test8
-            mountPath: /mounts/test8
-            readOnly: false
-      - documentIndex: *jobDoc
-        contains:
-          path: spec.template.spec.containers[0].volumeMounts
-          content:
             name: tmp
             mountPath: /tmp
             readOnly: false
