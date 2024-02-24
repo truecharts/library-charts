@@ -376,9 +376,6 @@ rbac: {}
 # -- (docs/scaleExternalInterface.md)
 scaleExternalInterface: []
 
-# -- (docs/scaleGPU.md)
-scaleGPU: []
-
 # NOTES.txt
 notes:
   header: |
@@ -569,7 +566,6 @@ ingress:
     # Gets ignored when clusterIssuer is filled
     tls: []
     #  - secretName: chart-example-tls
-    #    # Cannot be combined with scaleCert
     #    certificateIssuer: ""
     #    hosts:
     #      - chart-example.local
