@@ -354,12 +354,6 @@ ixExternalInterfacesConfiguration: []
 # -- Injected from SCALE middleware
 # Only for reference here
 ixExternalInterfacesConfigurationNames: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixCertificates: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixVolumes: []
 
 # -- (docs/imagePullSecrets.md)
 imagePullSecret: {}
@@ -381,9 +375,6 @@ rbac: {}
 
 # -- (docs/scaleExternalInterface.md)
 scaleExternalInterface: []
-
-# -- (docs/scaleCertificate.md)
-scaleCertificate: {}
 
 # -- (docs/scaleGPU.md)
 scaleGPU: []
@@ -580,8 +571,6 @@ ingress:
     #  - secretName: chart-example-tls
     #    # Cannot be combined with scaleCert
     #    certificateIssuer: ""
-    #    # Cannot be combined with certificateIssuer
-    #    scaleCert: ""
     #    hosts:
     #      - chart-example.local
     integrations:
