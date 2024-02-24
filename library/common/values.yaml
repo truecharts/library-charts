@@ -385,8 +385,6 @@ notes:
     {{- if .Values.iXPortals }}
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
-
-    List of available links:
       {{- range .Values.iXPortals }}
     - {{ toYaml . }}
       {{- end -}}
