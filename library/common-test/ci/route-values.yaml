@@ -55,4 +55,3 @@ route:
       name: test
       # Namespace of the referent resource
       namespace: test
-
