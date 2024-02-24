@@ -222,6 +222,101 @@ tests:
               - name: GID
                 value: "568"
 
+  - it: should create the correct fixed envs with GPU
+    set:
+      image: *image
+      TZ: Europe/London
+      containerOptions:
+        NVIDIA_CAPS:
+          - compute
+          - video
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            containers:
+              container-name1:
+                enabled: true
+                primary: true
+                imageSelector: image
+                probes: *probes
+                resources:
+                  limits:
+                    nvidia.com/gpu: 1
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        isAPIVersion:
+          of: apps/v1
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec.template.spec.containers[0]
+          content:
+            env:
+              - name: TZ
+                value: Europe/London
+              - name: UMASK
+                value: "0022"
+              - name: UMASK_SET
+                value: "0022"
+              - name: NVIDIA_DRIVER_CAPABILITIES
+                value: "compute,video"
+              - name: S6_READ_ONLY_ROOT
+                value: "1"
+
+  - it: should create the correct fixed envs with GPU and overridden on container level
+    set:
+      image: *image
+      TZ: Europe/London
+      containerOptions:
+        NVIDIA_CAPS:
+          - compute
+          - video
+      workload:
+        workload-name:
+          enabled: true
+          primary: true
+          type: Deployment
+          podSpec:
+            containers:
+              container-name1:
+                enabled: true
+                primary: true
+                imageSelector: image
+                probes: *probes
+                resources:
+                  limits:
+                    nvidia.com/gpu: 1
+                fixedEnv:
+                  NVIDIA_CAPS:
+                    - all
+    asserts:
+      - documentIndex: &deploymentDoc 0
+        isKind:
+          of: Deployment
+      - documentIndex: *deploymentDoc
+        isAPIVersion:
+          of: apps/v1
+      - documentIndex: *deploymentDoc
+        isSubset:
+          path: spec.template.spec.containers[0]
+          content:
+            env:
+              - name: TZ
+                value: Europe/London
+              - name: UMASK
+                value: "0022"
+              - name: UMASK_SET
+                value: "0022"
+              - name: NVIDIA_DRIVER_CAPABILITIES
+                value: "all"
+              - name: S6_READ_ONLY_ROOT
+                value: "1"
+
   - it: should create the correct fixed envs with PUID set to 0 on container level
     set:
       image: *image
