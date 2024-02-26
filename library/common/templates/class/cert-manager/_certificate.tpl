@@ -14,7 +14,7 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData }}
 
-  {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "ertificates.cert-manager.io" "missing" "Cert-Manager") }}
+  {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "certificates.cert-manager.io" "missing" "Cert-Manager") }}
 
 ---
 apiVersion: cert-manager.io/v1
