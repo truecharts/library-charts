@@ -31,7 +31,7 @@
     {{- $immediate = $objectData.schedData.immediate -}}
   {{- end }}
 
-  {{- include "tc.v1.common.lib.util.verifycrd" (dict "crd" "scheduledbackups.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
+  {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "scheduledbackups.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
 
 ---
 apiVersion: postgresql.cnpg.io/v1
