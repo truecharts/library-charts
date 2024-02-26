@@ -22,7 +22,8 @@
     {{- $instances = 0 -}}
   {{- end }}
   
-  {{- include "tc.v1.common.lib.util.verifycrd" (dict "crd" "poolers.postgresql.cnpg.io" "missing" "CloudNative-PG") -}}
+  {{- include "tc.v1.common.lib.util.verifycrd" (dict "crd" "poolers.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
+  
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
