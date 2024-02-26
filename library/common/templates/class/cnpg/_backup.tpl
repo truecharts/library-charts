@@ -17,9 +17,9 @@
   {{- $globalBackupAnnotations := $objectData.backups.annotations | default dict -}}
   {{- $backupAnnotations := $objectData.backupAnnotations | default dict -}}
   {{- $backupAnnotations = mustMerge $backupAnnotations $objAnnotations $globalBackupAnnotations }}
-  
+
   {{- include "tc.v1.common.lib.util.verifycrd" (dict "crd" "backups.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
-  
+
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
