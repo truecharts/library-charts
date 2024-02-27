@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.class.servicemonitor" -}}
+{{- define "tc.v1.common.class.metrics.servicemonitor" -}}
   {{- $fullName := include "tc.v1.common.lib.chart.names.fullname" . -}}
   {{- $servicemonitorName := $fullName -}}
   {{- $values := .Values.servicemonitor -}}

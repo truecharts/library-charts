@@ -12,15 +12,15 @@
 
       {{- $_ := set $ "ObjectValues" (dict "metrics" $metricsValues) -}}
       {{- if eq $metricsValues.type "podmonitor" -}}
-        {{- include "tc.v1.common.class.podmonitor" $ -}}
+        {{- include "tc.v1.common.class.metrics.podmonitor" $ -}}
       {{- else if eq $metricsValues.type "servicemonitor" -}}
-        {{- include "tc.v1.common.class.servicemonitor" $ -}}
+        {{- include "tc.v1.common.class.metrics.servicemonitor" $ -}}
       {{- else -}}
         {{/* TODO: Add Fail case */}}
       {{- end -}}
 
       {{- if $metricsValues.PrometheusRule -}}
-        {{- include "tc.v1.common.class.prometheusrule" $ -}}
+        {{- include "tc.v1.common.class.metrics.prometheusrule" $ -}}
       {{- end -}}
 
     {{- end -}}

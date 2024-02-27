@@ -1,4 +1,4 @@
-{{- define "tc.v1.common.class.prometheusrule" -}}
+{{- define "tc.v1.common.class.metrics.prometheusrule" -}}
   {{- $fullName := include "tc.v1.common.lib.chart.names.fullname" . -}}
   {{- $prometheusruleName := $fullName -}}
   {{- $values := .Values.prometheusrule -}}
