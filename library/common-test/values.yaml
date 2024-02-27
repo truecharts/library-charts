@@ -19,14 +19,6 @@ service:
       main:
         enabled: false
 
-operator:
-  verify:
-    enabled: false
-
-crd:
-  verify:
-    enabled: false
-
 manifestManager:
   enabled: false
   staging: false

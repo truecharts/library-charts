@@ -92,7 +92,7 @@ jobs:
           # Run tests
           cd library/common-test/
           helm dependency update
-          helm unittest -f "tests/**/*.yaml" .
+          helm unittest -f "tests/**/*.yaml" . -v ./unit-values.yaml
 
   install:
     needs:
@@ -227,7 +227,7 @@ jobs:
           mv -f library/common-test/runtests/${{ matrix.values }} library/common-test/values.yaml
 
           # Stat kail on the background to grab logs from tests
-          ./kail --ignore-ns kube-system --ignore-ns cert-manager --ignore-ns metallb-system  --ignore-ns prometheus-operator >> /tmp/output.log &
+          ./kail --ignore-ns kube-system --ignore-ns cert-manager --ignore-ns metallb-system --ignore-ns prometheus-operator >> /tmp/output.log &
 
           # Actually run the test
           ct install  --config .github/ct-install-config/ct-install.yaml \
