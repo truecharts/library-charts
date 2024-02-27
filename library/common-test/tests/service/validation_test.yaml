@@ -31,6 +31,34 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: should not fail with 2 primary, 1 disabled (tpl)
+    set:
+      enabled: true
+      disabled: false
+      service:
+        service-name1:
+          enabled: "{{ .Values.enabled }}"
+          primary: true
+          ports:
+            port-name1:
+              enabled: true
+              primary: true
+              port: 12345
+        service-name2:
+          enabled: "{{ .Values.disabled }}"
+          primary: true
+          ports:
+            port-name2:
+              enabled: true
+              primary: true
+              port: 12345
+    asserts:
+      - documentIndex: &serviceDoc 0
+        isKind:
+          of: Service
+      - hasDocuments:
+          count: 1
+
   - it: should fail without primary service
     set:
       service:
