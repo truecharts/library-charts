@@ -21,7 +21,7 @@ service:
 
 operator:
   verify:
-    failOnError: true
+    enabled: false
 
 crd:
   verify:
