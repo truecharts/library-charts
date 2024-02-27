@@ -206,7 +206,7 @@ jobs:
 
       - name: Add Dependencies
         run: |
-          if [[ "${{ matrix.values }}" =~ (metrics|cnpg).*-values.yaml ]]; then
+          if [[ "${{ matrix.values }}" =~ (ingress|metrics|cnpg).*-values.yaml ]]; then
             helm install prometheus-operator oci://tccr.io/truecharts/prometheus-operator --namespace prometheus-operator --create-namespace --wait
           fi
           if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
