@@ -16,20 +16,20 @@
     {{- $destinationPath = $objectData.recovery.destinationPath -}}
     {{- $k = "recovery" -}}
     {{- if $objectData.recovery.serverName -}}
-      {{- $serverName = $objectData.recovery.serverName -}} 
+      {{- $serverName = $objectData.recovery.serverName -}}
     {{- end -}}
     {{- if $objectData.recovery.revision -}}
-      {{- $serverName = printf "%s-%s" $serverName $objectData.recovery.revision -}} 
+      {{- $serverName = printf "%s-%s" $serverName $objectData.recovery.revision -}}
     {{- end -}}
   {{- else if eq $type "backup" -}}
     {{- $endpointURL = $objectData.backups.endpointURL -}}
     {{- $destinationPath = $objectData.backups.destinationPath -}}
     {{- $k = "backups" -}}
     {{- if $objectData.backups.serverName -}}
-      {{- $serverName = $objectData.backups.serverName -}} 
+      {{- $serverName = $objectData.backups.serverName -}}
     {{- end -}}
     {{- if $objectData.backups.revision -}}
-      {{- $serverName = printf "%s-%s" $serverName $objectData.backups.revision -}} 
+      {{- $serverName = printf "%s-%s" $serverName $objectData.backups.revision -}}
     {{- end -}}
   {{- end -}}
   {{- if not $destinationPath -}}
