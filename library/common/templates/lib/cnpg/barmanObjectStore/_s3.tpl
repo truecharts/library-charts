@@ -44,7 +44,7 @@
     {{- end -}}
     {{- $endpointURL = (printf "https://s3.%s.amazonaws.com" $data.region) -}}
   {{- end }}
-  
+
 endpointURL: {{ $endpointURL }}
 destinationPath: {{ $destinationPath }}
 serverName: {{  $serverName }}
