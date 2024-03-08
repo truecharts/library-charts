@@ -9,8 +9,8 @@
   {{- end -}}
 
   {{- if (hasKey $objectData "version") -}}
-    {{- $validVersions := (list "legacy") -}}
-    {{- if not (mustHas $objectData.version $validVersions) -}}
+    {{- $validVersions := (list "15" "16") -}}
+    {{- if not (mustHas ( toString $objectData.version ) $validVersions) -}}
       {{- fail (printf "CNPG - Expected [version] to be one of [%s], but got [%s]" (join ", " $validVersions) $objectData.version) -}}
     {{- end -}}
   {{- end -}}
@@ -35,7 +35,7 @@
   {{- end -}}
 
   {{- if (hasKey $objectData "type") -}}
-    {{- $validTypes := (list "postgresql" "postgis" "timescaledb") -}}
+    {{- $validTypes := (list "postgres" "postgis" "timescaledb") -}}
     {{- if not (mustHas $objectData.type $validTypes) -}}
       {{- fail (printf "CNPG Cluster - Expected [type] to be one of [%s], but got [%s]" (join ", " $validTypes) $objectData.type) -}}
     {{- end -}}

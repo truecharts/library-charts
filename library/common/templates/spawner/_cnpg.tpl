@@ -19,31 +19,30 @@
     {{/* Short name is the one that defined on the chart*/}}
     {{- $_ := set $objectData "shortName" $name -}}
     {{/* Set the cluster name */}}
-    {{- $_ := set $objectData "clusterName" (include "tc.v1.common.lib.cnpg.clusterName" (dict "objectData" $objectData)) -}}
-
-    {{/* Handle recovery string */}}
-    {{- $recoveryValue := "" -}}
-    {{- $recoveryKey := "recovery-string" -}}
-    {{- $recoveryConfigMapName := printf "cnpg-%s-%s" $objectData.shortName $recoveryKey -}}
-
-    {{/* If there are previous configmap, fetch value */}}
-    {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $recoveryConfigMapName) -}}
-      {{- $recoveryValue = (index .data $recoveryKey) -}}
-    {{- end -}}
-
-    {{/* If forced recovery is requested... */}}
-    {{- if $objectData.forceRecovery -}}
-      {{- $recoveryValue = randAlphaNum 5 -}}
-    {{- end -}}
-
-    {{/* Recreate the configmap if there is a recovery value */}}
-    {{- if $recoveryValue -}}
-      {{- $_ := set $objectData "recoveryValue" $recoveryValue -}}
-      {{- $recConfig := include "tc.v1.common.lib.cnpg.configmap.recoverystring" (dict "recoveryString" $recoveryValue "recoveryKey" $recoveryKey) | fromYaml -}}
-      {{- $_ := set $.Values.configmap $recoveryConfigMapName $recConfig -}}
-    {{- end -}}
+    {{- $_ := set $objectData "clusterName" $objectData.name -}}
 
     {{- if eq $enabled "true" -}}
+
+      {{/* Handle version string */}}
+      {{- $pgversion := toString ( $objectData.version | default $.Values.global.fallbackDefaults.pgversion ) -}}
+      {{- $versionConfigMapName := printf "cnpg-%s-pgversion" $objectData.shortName -}}
+
+      {{/* If there are previous configmap, fetch value */}}
+      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $versionConfigMapName) -}}
+        {{/* If a new major is set and upgrade is enabled, upgrade */}}
+        {{- if and ( ne $pgversion .data.major ) $objectData.upgradeMajor -}}
+          {{/* TODO handle postgresql major updates here */}}
+        {{- else if .data.major -}}
+          {{- $pgversion = ( toString .data.major ) -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{/* append the pg (major) version to objectData */}}
+      {{- $_ := set $objectData "pgversion" $pgversion -}}
+
+      {{/* ensure configmap with pg version is updated */}}
+      {{- $verConfig := include "tc.v1.common.lib.cnpg.configmap.pgversion" (dict "major" $pgversion ) | fromYaml -}}
+      {{- $_ := set $.Values.configmap $versionConfigMapName $verConfig -}}
 
       {{- include "tc.v1.common.lib.util.metaListToDict" (dict "objectData" $objectData) -}}
 

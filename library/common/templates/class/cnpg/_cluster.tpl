@@ -132,6 +132,17 @@
     {{- $walAccessModes = . -}}
   {{- end -}}
 
+  {{/* Ensure version and container tracking */}}
+  {{- $imageType := camelcase ( $objectData.type | default "postgres" ) }}
+  {{- if eq $imageType "Postgres" }}
+    {{- $imageType = "" }}
+  {{- end }}
+  {{- $imageKey := printf "postgres%v%vImage" $imageType $objectData.pgversion }}
+  {{- $imageValue := fromJson (include "tc.v1.common.lib.container.imageSelector" (dict "rootCtx" $rootCtx "objectData" (dict "imageSelector" $imageKey))) }}
+  {{- $formatImage := printf "%s:%s" $imageValue.repository $imageValue.tag }}
+
+  {{- $imageName := $objectData.cluster.imageName | default $formatImage }}
+
   {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "clusters.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
 
 ---
@@ -154,6 +165,7 @@ metadata:
     {{- . | nindent 4 }}
   {{- end }}
 spec:
+  imageName: {{ $imageName }}
   enableSuperuserAccess: {{ $enableSuperUser }}
   primaryUpdateStrategy: {{ $primaryUpdateStrategy }}
   primaryUpdateMethod: {{ $primaryUpdateMethod }}
