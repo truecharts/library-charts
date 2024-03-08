@@ -28,7 +28,7 @@
       {{- $versionConfigMapName := printf "cnpg-%s-pgversion" $objectData.shortName -}}
 	  
       {{/* If there are previous configmap, fetch value */}}
-      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace ( prinf "%s-%s" $fullname $versionConfigMapName )) -}}
+      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace ( printf "%s-%s" $fullname $versionConfigMapName )) -}}
         {{/* If a new major is set and upgrade is enabled, upgrade */}}
         {{- if and ( ne $pgversion .data.major ) $objectData.upgradeMajor -}}
           {{/* TODO handle postgresql major updates here */}}
