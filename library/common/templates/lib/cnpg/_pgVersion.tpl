@@ -2,5 +2,5 @@
 {{- $major := .major -}}
 enabled: true
 data:
-  major: {{ $major }}
+  major: "{{ $major }}"
 {{- end -}}
