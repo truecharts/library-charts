@@ -26,9 +26,9 @@
       {{/* Handle version string */}}
       {{- $pgversion := toString ( $objectData.version | default $.Values.global.fallbackDefaults.pgversion ) -}}
       {{- $versionConfigMapName := printf "cnpg-%s-pgversion" $objectData.shortName -}}
-
+	  
       {{/* If there are previous configmap, fetch value */}}
-      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace $versionConfigMapName) -}}
+      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace ( prinf "%s-%s" $fullname $versionConfigMapName )) -}}
         {{/* If a new major is set and upgrade is enabled, upgrade */}}
         {{- if and ( ne $pgversion .data.major ) $objectData.upgradeMajor -}}
           {{/* TODO handle postgresql major updates here */}}
@@ -36,10 +36,10 @@
           {{- $pgversion = ( toString .data.major ) -}}
         {{- end -}}
       {{- end -}}
-
+	  
       {{/* append the pg (major) version to objectData */}}
       {{- $_ := set $objectData "pgversion" $pgversion -}}
-
+	  
       {{/* ensure configmap with pg version is updated */}}
       {{- $verConfig := include "tc.v1.common.lib.cnpg.configmap.pgversion" (dict "major" $pgversion ) | fromYaml -}}
       {{- $_ := set $.Values.configmap $versionConfigMapName $verConfig -}}
