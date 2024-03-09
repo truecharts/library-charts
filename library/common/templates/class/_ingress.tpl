@@ -61,7 +61,7 @@ spec:
       http:
         paths:
           {{- if not $h.paths -}} {{/* If no paths given, default to "/" */}}
-            {{- $_ := set $h "paths" (dict "path" "/") -}}
+            {{- $_ := set $h "paths" (list (dict "path" "/")) -}}
           {{- end -}}
           {{- range $p := $h.paths -}}
             {{- $svcData = (include "tc.v1.common.lib.ingress.backend.data" (dict
