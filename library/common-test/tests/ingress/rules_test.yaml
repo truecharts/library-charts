@@ -85,7 +85,7 @@ tests:
             - host: "host-without-explicit-paths"
             - host: "host-without-explicit-path"
               paths:
-                - pathPrefix: Exact
+                - pathType: Exact
           integrations: *integrations
     asserts:
       - documentIndex: &ingressDoc 1
