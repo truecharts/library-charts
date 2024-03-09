@@ -8,10 +8,15 @@
     {{- end -}}
   {{- end -}}
 
-  {{- if (hasKey $objectData "version") -}}
+  {{- if $objectData.version -}}
+    {{- if not (kindIs "string" $objectData.pgVersion) -}}
+      {{/* We must ensure that this is a string, as it is used in image selector that require a string */}}
+      {{- fail (printf "CNPG - Expected [pgVersion] to be a string, but got [%s]" (kindOf $objectData.pgVersion)) -}}
+    {{- end -}}
+
     {{- $validVersions := (list "15" "16") -}}
-    {{- if not (mustHas ( toString $objectData.version ) $validVersions) -}}
-      {{- fail (printf "CNPG - Expected [version] to be one of [%s], but got [%s]" (join ", " $validVersions) $objectData.version) -}}
+    {{- if not (mustHas $objectData.pgVersion $validVersions) -}}
+      {{- fail (printf "CNPG - Expected [pgVersion] to be one of [%s], but got [%s]" (join ", " $validVersions) $objectData.pgVersion) -}}
     {{- end -}}
   {{- end -}}
 
