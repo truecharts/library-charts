@@ -64,16 +64,16 @@ spec:
             {{- $_ := set $h "paths" (list (dict "path" "/")) -}}
           {{- end -}}
           {{- range $p := $h.paths -}}
-            {{- $svcData = (include "tc.v1.common.lib.ingress.backend.data" (dict
+            {{- $newSvcData := (include "tc.v1.common.lib.ingress.backend.data" (dict
                 "rootCtx" $rootCtx "svcData" $svcData "override" $p.overrideService)) | fromYaml
             }}
           - path: {{ tpl ($p.path | default "/") $rootCtx }}
             pathType: {{ tpl ($p.pathType | default "Prefix") $rootCtx }}
             backend:
               service:
-                name: {{ $svcData.name }}
+                name: {{ $newSvcData.name }}
                 port:
-                  number: {{ $svcData.port }}
+                  number: {{ $newSvcData.port }}
           {{- end -}}
     {{- end -}}
   {{/* If a certificateIssuer is defined in the whole ingress, use that */}}
