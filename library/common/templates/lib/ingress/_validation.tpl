@@ -62,11 +62,7 @@ objectData:
       {{- fail (printf "Ingress - Expected [hosts.host] to not contain [:], but got [%s]" $host) -}}
     {{- end -}}
 
-    {{- if not $h.paths -}}
-      {{- fail "Ingress - Expected non-empty [hosts.paths]" -}}
-    {{- end -}}
-
-    {{- if not (kindIs "slice" $h.paths) -}}
+    {{- if and $h.paths (not (kindIs "slice" $h.paths)) -}}
       {{- fail (printf "Ingress - Expected [hosts.paths] to be a [slice], but got [%s]" (kindOf $h.paths)) -}}
     {{- end -}}
 
@@ -84,7 +80,7 @@ objectData:
       {{- $path := tpl $p.path $rootCtx -}}
       {{- $prefixSlashTypes := (list "Prefix" "Exact") -}}
       {{- if (mustHas $pathType $prefixSlashTypes) -}}
-        {{- if not (hasPrefix "/" $path) -}}
+        {{- if and $path (not (hasPrefix "/" $path)) -}}
           {{- fail (printf "Ingress - Expected [hosts.paths.path] to start with [/], but got [%s]" $path) -}}
         {{- end -}}
       {{- end -}}

@@ -60,11 +60,14 @@ spec:
     - host: {{ (tpl $h.host $rootCtx) | quote }}
       http:
         paths:
+          {{- if not $h.paths -}} {{/* If no paths given, default to "/" */}}
+            {{- $_ := set $h "paths" (dict "path" "/") -}}
+          {{- end -}}
           {{- range $p := $h.paths -}}
             {{- $svcData = (include "tc.v1.common.lib.ingress.backend.data" (dict
                 "rootCtx" $rootCtx "svcData" $svcData "override" $p.overrideService)) | fromYaml
             }}
-          - path: {{ tpl $p.path $rootCtx }}
+          - path: {{ (tpl $p.path $rootCtx) | default "/" }}
             pathType: {{ tpl ($p.pathType | default "Prefix") $rootCtx }}
             backend:
               service:
