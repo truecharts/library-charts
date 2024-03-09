@@ -189,7 +189,7 @@ spec:
   walStorage:
     pvcTemplate:
       {{- $_ := set $objectData.cluster.walStorage "size" $walSize -}}
-      {{- $_ := set $objectData.cluster.storage "accessModes" $walAccessModes -}}
+      {{- $_ := set $objectData.cluster.walStorage "accessModes" $walAccessModes -}}
 
       {{- include "tc.v1.common.lib.storage.pvc.spec" (dict "rootCtx" $rootCtx "objectData" $objectData.cluster.walStorage) | trim | nindent 6 }}
   {{- if $enableMonitoring }}
