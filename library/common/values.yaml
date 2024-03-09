@@ -8,10 +8,10 @@ global:
   # TODO: Currently some objects do not support this
   namespace: ""
   fallbackDefaults:
-     # -- Define a postgresql version for CNPG
-     # will be used for all CNPG objects
-     # Can be overruled per CNPG objects
-     pgversion: 16
+    # -- Define a postgresql version for CNPG
+    # will be used for all CNPG objects
+    # Can be overruled per CNPG objects
+    pgVersion: "16"
   metallb:
     # -- Adds metalLB annotations to services
     addServiceAnnotations: true
@@ -511,12 +511,12 @@ mongodbClientImage:
 
 postgres15Image:
   repository: ghcr.io/cloudnative-pg/postgresql
-  tag: '15.6'
+  tag: "15.6"
   pullPolicy: IfNotPresent
 
 postgres16Image:
   repository: ghcr.io/cloudnative-pg/postgresql
-  tag: '16.2'
+  tag: "16.2"
   pullPolicy: IfNotPresent
 
 postgresPostgis15Image:
@@ -578,13 +578,14 @@ ingress:
     annotations: {}
     # -- Set the ingressClass that is used for this ingress.
     # Requires Kubernetes >=1.19
-    ingressClassName:  ""
+    ingressClassName: ""
     # Defaults to primary service and primary port
     # targetSelector:
     #   # service: port
     #   main: main
     ## Configure the hosts for the ingress
-    hosts: []
+    hosts:
+      []
       # -  # -- Host address. Helm template can be passed.
       #   host: chart-example.local
       #   ## Configure the paths for the host
@@ -625,7 +626,8 @@ ingress:
         #     # Optional, by default will try to
         #     # "lookup" the namespace based on the name
         #     namespace: ""
-        middlewares: []
+        middlewares:
+          []
           # - name: my-middleware
           #   # Optional, by default will try to
           #   # "lookup" the namespace based on the name
@@ -651,7 +653,8 @@ ingress:
             # - key: some key
             #   value: some value
 
-certificate: {}
+certificate:
+  {}
   # main:
   #   enabled: false
   #   certificateIssuer: someissuer
@@ -681,28 +684,28 @@ route:
     labels: {}
     # -- Configure the resource the route attaches to.
     parentRefs:
-    -  # Group of the referent resource.
-      group: gateway.networking.k8s.io
-      # Kind of the referent resource.
-      kind: Gateway
-      # Name of the referent resource
-      name:
-      # Namespace of the referent resource
-      namespace:
-      # Name of the section within the target resource.
-      sectionName:
+      - # Group of the referent resource.
+        group: gateway.networking.k8s.io
+        # Kind of the referent resource.
+        kind: Gateway
+        # Name of the referent resource
+        name:
+        # Namespace of the referent resource
+        namespace:
+        # Name of the section within the target resource.
+        sectionName:
     # -- Host addresses
     hostnames: []
     # -- Configure rules for routing. Defaults to the primary service.
     rules:
-      -  # -- Configure backends where matching requests should be sent.
+      - # -- Configure backends where matching requests should be sent.
         backendRefs:
-        - group: ""
-          kind: Service
-          name:
-          namespace:
-          port:
-          weight: 1
+          - group: ""
+            kind: Service
+            name:
+            namespace:
+            port:
+            weight: 1
         ## Configure conditions used for matching incoming requests. Only for HTTPRoutes
         matches:
           - path:
@@ -728,7 +731,6 @@ webhook:
     enabled: false
     type: mutating
     webhooks: []
-
 
 priorityClass: {}
 # priorityClass:
@@ -872,14 +874,15 @@ metrics:
     # defaults to selectorLabels
     selector: {}
     endpoints:
-     - port: main
-       interval: 5s
-       scrapeTimeout: 5s
-       path: /
-       honorLabels: false
+      - port: main
+        interval: 5s
+        scrapeTimeout: 5s
+        path: /
+        honorLabels: false
     prometheusRule:
       enabled: false
-      groups: {}
+      groups:
+        {}
         # somegroup:
         #   # list of rules
         #   rules: []
@@ -959,15 +962,16 @@ addons:
 
     # -- All variables specified here will be added to the vpn sidecar container
     # See the documentation of the VPN image for all config values
-    env: {}
+    env:
+      {}
       # TZ: UTC
 
     # -- All variables specified here will be added to the vpn sidecar container
     # See the documentation of the VPN image for all config values
-    envList: []
+    envList:
+      []
       # - name: someenv
       #  value: somevalue
-
 
     # -- you can directly specify the config file here
     config: ""
@@ -1002,7 +1006,6 @@ addons:
     excludedNetworks_IPv4: []
     excludedNetworks_IPv6: []
 
-
   # -- The common library supports adding a code-server add-on to access files. It can be configured under this key.
   # @default -- See values.yaml
   codeserver:
@@ -1014,7 +1017,8 @@ addons:
 
     # -- All variables specified here will be added to the codeserver sidecar container
     # See the documentation of the codeserver image for all config values
-    envList: []
+    envList:
+      []
       # - name: someenv
       #  value: somevalue
     # -- Set codeserver command line arguments.
@@ -1045,7 +1049,8 @@ addons:
     ingress:
       # -- Enable an ingress for the code-server add-on.
       enabled: false
-      annotations: {}
+      annotations:
+        {}
         # kubernetes.io/ingress.class: nginx
       labels: {}
       hosts:
@@ -1062,7 +1067,6 @@ addons:
 
     # -- Set any environment variables for netshoot here
     env: {}
-
 
 ##########################################################################
 # This section contains some pre-config for frequently used dependencies #
@@ -1159,7 +1163,8 @@ cnpg:
       # BootstrapInitDB is the configuration of the bootstrap process when initdb is used
       # See: https://cloudnative-pg.io/documentation/current/bootstrap/
       # See: https://cloudnative-pg.io/documentation/current/api_reference/#bootstrapinitdb
-      initdb: {}
+      initdb:
+        {}
         # postInitSQL:
         #   - CREATE EXTENSION IF NOT EXISTS vector;
         # postInitApplicationSQL:
@@ -1168,7 +1173,8 @@ cnpg:
     monitoring:
       enablePodMonitor: true
       disableDefaultQueries: false
-      customQueries: []
+      customQueries:
+        []
         # - name: "pg_cache_hit_ratio"
         #   expandObjectName: true
         #   key: "custom-key" (defaults to "custom-queries")
@@ -1249,7 +1255,6 @@ cnpg:
       # override serverName in recovery obkect
       servername: ""
 
-
       # Overrides the provider specific default path. Defaults to:
       # S3: s3://<bucket><path>
       # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<clusterName><path>
@@ -1289,7 +1294,8 @@ cnpg:
       retentionPolicy: "30d"
 
       # - Manual list of backups
-      manualBackups: []
+      manualBackups:
+        []
         # - name: today
         #   labels: {}
         #   annotations: {}
@@ -1310,10 +1316,8 @@ cnpg:
       labels: {}
       annotations: {}
 
-
     # -- contains credentials and urls output by generator
     creds: {}
-
 
 # -- Redis dependency configuration
 # @default -- See below
