@@ -56,12 +56,12 @@ objectData: The object data to be used to render the Pod.
           {{- $typesWithAccessMode := (list "pvc") -}}
           {{- if (mustHas $type $typesWithAccessMode) -}}
             {{- $modes := include "tc.v1.common.lib.pvc.accessModes" (dict "rootCtx" $rootCtx "objectData" $persistence "caller" "Volumes") | fromYamlArray -}}
+
             {{- range $m := $modes -}}
               {{- if eq $m "ReadWriteOnce" -}}
                 {{- fail "Expected [accessMode] to not be [ReadWriteOnce] when used on a [DaemonSet]" -}}
               {{- end -}}
             {{- end -}}
-
           {{- end -}}
         {{- end -}}
 
