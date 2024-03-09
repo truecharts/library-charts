@@ -132,16 +132,25 @@
     {{- $walAccessModes = . -}}
   {{- end -}}
 
-  {{/* Ensure version and container tracking */}}
-  {{- $imageType := camelcase ( $objectData.type | default "postgres" ) }}
-  {{- if eq $imageType "Postgres" }}
-    {{- $imageType = "" }}
-  {{- end }}
-  {{- $imageKey := printf "postgres%v%vImage" $imageType $objectData.pgversion }}
-  {{- $imageValue := fromJson (include "tc.v1.common.lib.container.imageSelector" (dict "rootCtx" $rootCtx "objectData" (dict "imageSelector" $imageKey))) }}
-  {{- $formatImage := printf "%s:%s" $imageValue.repository $imageValue.tag }}
+  {{- $imageName := $objectData.cluster.imageName -}}
+  {{- if not $imageName -}}
+    {{/* Ensure version and container tracking */}}
+    {{- $imageType := camelcase ($objectData.type | default "postgres") -}}
+    {{- if eq $imageType "Postgres" -}}
+      {{- $imageType = "" -}}
+    {{- end -}}
+    {{- $pgVersion := $rootCtx.Values.global.fallbackDefaults.pgVersion -}}
+    {{- with $objectData.pgVersion -}}
+      {{- $pgVersion = . -}}
+    {{- end -}}
 
-  {{- $imageName := $objectData.cluster.imageName | default $formatImage }}
+    {{/* Format is [postgresCustomNameVersionImage] */}}
+    {{- $imageKey := printf "postgres%s%sImage" $imageType $pgVersion -}}
+    {{- $imageValue := fromJson (include "tc.v1.common.lib.container.imageSelector" (dict "rootCtx" $rootCtx "objectData" (dict "imageSelector" $imageKey))) -}}
+    {{- $formatImage := printf "%s:%s" $imageValue.repository $imageValue.tag -}}
+
+    {{- $imageName = $formatImage -}}
+  {{- end -}}
 
   {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "clusters.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
 ---

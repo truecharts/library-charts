@@ -1,6 +1,6 @@
 {{- define "tc.v1.common.lib.cnpg.configmap.pgVersion" -}}
-  {{- $major := .major }}
+{{- $version := .version }}
 enabled: true
 data:
-  major: {{ $major | quote }}
+  version: {{ $version | quote }}
 {{- end -}}

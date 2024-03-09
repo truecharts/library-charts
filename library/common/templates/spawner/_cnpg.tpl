@@ -24,24 +24,25 @@
     {{- if eq $enabled "true" -}}
 
       {{/* Handle version string */}}
-      {{- $pgversion := toString ( $objectData.version | default $.Values.global.fallbackDefaults.pgversion ) -}}
+      {{- $pgVersion := $objectData.pgVersion | default $.Values.global.fallbackDefaults.pgVersion -}}
       {{- $versionConfigMapName := printf "cnpg-%s-pgversion" $objectData.shortName -}}
-	  
+
       {{/* If there are previous configmap, fetch value */}}
-      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace ( printf "%s-%s" $fullname $versionConfigMapName )) -}}
-        {{/* If a new major is set and upgrade is enabled, upgrade */}}
-        {{- if and ( ne $pgversion .data.major ) $objectData.upgradeMajor -}}
-          {{/* TODO handle postgresql major updates here */}}
-        {{- else if .data.major -}}
-          {{- $pgversion = ( toString .data.major ) -}}
+      {{- with (lookup "v1" "ConfigMap" $.Release.Namespace (printf "%s-%s" $fullname $versionConfigMapName)) -}}
+        {{/* If a different version is set and upgrade is enabled, upgrade */}}
+        {{- if and (ne $pgVersion .data.version) $objectData.upgradeMajor -}}
+          {{/* TODO: maybe check that the version is newer and not older? */}}
+          {{/* TODO: actually handle postgres version updates here */}}
+        {{- else -}}
+          {{- $pgVersion = .data.version -}}
         {{- end -}}
       {{- end -}}
-	  
-      {{/* append the pg (major) version to objectData */}}
-      {{- $_ := set $objectData "pgversion" $pgversion -}}
-	  
-      {{/* ensure configmap with pg version is updated */}}
-      {{- $verConfig := include "tc.v1.common.lib.cnpg.configmap.pgversion" (dict "major" $pgversion ) | fromYaml -}}
+
+      {{/* Set the updated pgVersion version to objectData */}}
+      {{- $_ := set $objectData "pgVersion" $pgVersion -}}
+
+      {{/* Ensure configmap with pgVersion is updated */}}
+      {{- $verConfig := include "tc.v1.common.lib.cnpg.configmap.pgVersion" (dict "version" $pgVersion) | fromYaml -}}
       {{- $_ := set $.Values.configmap $versionConfigMapName $verConfig -}}
 
       {{- include "tc.v1.common.lib.util.metaListToDict" (dict "objectData" $objectData) -}}
