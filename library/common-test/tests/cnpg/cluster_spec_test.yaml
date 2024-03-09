@@ -62,7 +62,7 @@ tests:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
                 owner: test-user
-                dataChecksums: false
+                dataChecksums: true
 
   - it: should override options
     set:
@@ -80,7 +80,7 @@ tests:
             logLevel: debug
             instances: 3
             initdb:
-              dataChecksums: true
+              dataChecksums: false
               encoding: some-encoding
               localeCollate: some-locale
               localeCtype: some-locale
@@ -155,7 +155,7 @@ tests:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
                 owner: test-user
-                dataChecksums: true
+                dataChecksums: false
                 encoding: some-encoding
                 localeCollate: some-locale
                 localeCtype: some-locale
@@ -270,7 +270,7 @@ tests:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
                 owner: app
-                dataChecksums: false
+                dataChecksums: true
                 postInitApplicationSQL:
                   - CREATE EXTENSION IF NOT EXISTS some-extension;
                   - CREATE EXTENSION IF NOT EXISTS timescaledb;
