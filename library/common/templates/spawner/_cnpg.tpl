@@ -39,7 +39,7 @@
       {{- end -}}
 
       {{/* Set the updated pgVersion version to objectData */}}
-      {{- $_ := set $objectData "pgVersion" $pgVersion -}}
+      {{- $_ := set $objectData "pgVersion" ($pgVersion | toString) -}}
 
       {{/* Ensure configmap with pgVersion is updated */}}
       {{- $verConfig := include "tc.v1.common.lib.cnpg.configmap.pgVersion" (dict "version" $pgVersion) | fromYaml -}}
