@@ -275,6 +275,9 @@ tests:
 
   - it: should pass with timescaledb
     set:
+      postgresTimescaledb16Image:
+        repository: timescale/timescaledb
+        tag: "some-tag"
       cnpg:
         my-pg:
           enabled: true
@@ -320,6 +323,9 @@ tests:
 
   - it: should pass with enabled monitoring
     set:
+      postgresTimescaledb16Image:
+        repository: timescale/timescaledb
+        tag: "some-tag"
       cnpg:
         my-pg:
           enabled: true
@@ -341,6 +347,9 @@ tests:
 
   - it: should pass with override monitoring
     set:
+      postgresTimescaledb16Image:
+        repository: timescale/timescaledb
+        tag: "some-tag"
       cnpg:
         my-pg:
           enabled: true
