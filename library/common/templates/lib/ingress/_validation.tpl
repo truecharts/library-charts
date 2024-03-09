@@ -77,7 +77,7 @@ objectData:
         {{- fail (printf "Ingress - Expected [hosts.paths.pathType] to be one of [%s], but got [%s]" (join ", " $validPathTypes) $pathType) -}}
       {{- end -}}
 
-      {{- $path := tpl $p.path $rootCtx -}}
+      {{- $path := tpl ($p.path | default "/") $rootCtx -}}
       {{- $prefixSlashTypes := (list "Prefix" "Exact") -}}
       {{- if (mustHas $pathType $prefixSlashTypes) -}}
         {{- if and $path (not (hasPrefix "/" $path)) -}}

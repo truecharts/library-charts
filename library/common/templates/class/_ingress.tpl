@@ -67,7 +67,7 @@ spec:
             {{- $svcData = (include "tc.v1.common.lib.ingress.backend.data" (dict
                 "rootCtx" $rootCtx "svcData" $svcData "override" $p.overrideService)) | fromYaml
             }}
-          - path: {{ (tpl $p.path $rootCtx) | default "/" }}
+          - path: {{ tpl ($p.path | default "/") $rootCtx }}
             pathType: {{ tpl ($p.pathType | default "Prefix") $rootCtx }}
             backend:
               service:
