@@ -1084,7 +1084,7 @@ cnpg:
     # Version of Postgresql to use, changes cluster naming scheme
     # * `15`
     # * `16`
-    version: 16
+    pgVrsion: 16
 
     # Cluster mode of operation. Available modes:
     # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
