@@ -64,6 +64,49 @@ tests:
                 owner: test-user
                 dataChecksums: true
 
+  - it: should respect changed fallbackDefaults
+    set:
+      fallbackDefaults:
+        vctAccessModes:
+          - ReadWriteMany
+          - ReadWriteOnce
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+    asserts:
+      - documentIndex: &clusterDoc 1
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *clusterDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg
+      - documentIndex: *clusterDoc
+        isSubset:
+          path: spec
+          content:
+            storage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteMany
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Gi
+            walStorage:
+              pvcTemplate:
+                accessModes:
+                  - ReadWriteMany
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Gi
+
   - it: should override options
     set:
       ext1: some-extension
