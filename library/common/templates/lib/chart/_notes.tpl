@@ -27,3 +27,12 @@
     {{- tpl $w $ | nindent 0 }}
   {{- end }}
 {{- end -}}
+
+{{- define "add.warning" -}}
+  {{- $rootCtx := .rootCtx -}}
+  {{- $warn := .warn -}}
+
+  {{- $newWarns := $rootCtx.Values.notes.warnings -}}
+  {{- $newWarns = mustAppend $newWarns $warn -}}
+  {{- $_ := set $rootCtx.Values.notes "warnings" $newWarns -}}
+{{- end -}}

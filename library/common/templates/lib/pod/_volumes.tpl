@@ -106,9 +106,10 @@ objectData: The object data to be used to render the Pod.
     {{- else if and (eq $objectData.type "Deployment") (gt (($objectData.replicas| default 1) | int) 1) -}}
       {{- range $m := $modes -}}
         {{- if eq $m "ReadWriteOnce" -}}
-          {{- $newWarns := $rootCtx.Values.notes.warnings -}}
-          {{- $newWarns = mustAppend $newWarns (printf "WARNING: The [accessModes] on volume [%s] is set to [ReadWriteOnce] when on a [Deployment] with more than 1 replica" $name) -}}
-          {{- $_ := set $rootCtx.Values.notes "warnings" $newWarns -}}
+          {{- include "add.warning" (dict
+              "rootCtx" $rootCtx
+              "warn" (printf "WARNING: The [accessModes] on volume [%s] is set to [ReadWriteOnce] when on a [Deployment] with more than 1 replica" $name))
+          -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
