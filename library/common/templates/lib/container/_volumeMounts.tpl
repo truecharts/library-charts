@@ -75,7 +75,7 @@ objectData: The object data to be used to render the container.
 
   {{/* Initialize from the default values */}}
   {{- $volMount := dict -}}
-  {{- if eq $objectData.podType "StatefulSet" -}}
+  {{- if eq $persistenceValues.type "vct" -}}
     {{- $fullname := include "tc.v1.common.lib.chart.names.fullname" $rootCtx -}}
     {{- $persistenceName = printf "%s-%s" $fullname $persistenceName -}}
   {{- end -}}
