@@ -67,3 +67,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: Service - Expected the key [enabled] in [service.service-name] to exist
+
+  - it: should fail without enabled key in persistence
+    set:
+      persistence:
+        persistence-name:
+          primary: true
+    asserts:
+      - failedTemplate:
+          errorMessage: Persistence - Expected the key [enabled] in [persistence.persistence-name] to exist
