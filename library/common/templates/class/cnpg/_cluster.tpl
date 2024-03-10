@@ -139,13 +139,9 @@
     {{- if eq $imageType "Postgres" -}}
       {{- $imageType = "" -}}
     {{- end -}}
-    {{- $pgVersion := $rootCtx.Values.global.fallbackDefaults.pgVersion -}}
-    {{- with $objectData.pgVersion -}}
-      {{- $pgVersion = . -}}
-    {{- end -}}
 
     {{/* Format is [postgresCustomNameVersionImage] */}}
-    {{- $imageKey := printf "postgres%s%sImage" $imageType $pgVersion -}}
+    {{- $imageKey := printf "postgres%s%sImage" $imageType $objectData.pgVersion -}}
     {{- $imageValue := fromJson (include "tc.v1.common.lib.container.imageSelector" (dict "rootCtx" $rootCtx "objectData" (dict "imageSelector" $imageKey))) -}}
     {{- $formatImage := printf "%s:%s" $imageValue.repository $imageValue.tag -}}
 
