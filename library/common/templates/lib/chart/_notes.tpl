@@ -6,6 +6,8 @@
 
   {{- include "tc.v1.common.lib.chart.footer" . -}}
 
+  {{- include "tc.v1.common.lib.chart.warnings" . -}}
+
 {{- end -}}
 
 {{- define "tc.v1.common.lib.chart.header" -}}
@@ -18,4 +20,10 @@
 
 {{- define "tc.v1.common.lib.chart.footer" -}}
   {{- tpl $.Values.notes.footer $ | nindent 0 }}
+{{- end -}}
+
+{{- define "tc.v1.common.lib.chart.warnings" -}}
+  {{- range $w := $.Values.notes.warnings }}
+    {{- tpl $w $ | nindent 0 }}
+  {{- end }}
 {{- end -}}
