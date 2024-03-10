@@ -15,7 +15,7 @@
 
   {{- $rwString := "rw" -}}
   {{- $roString := "ro" -}}
-  {{- if $objectData.pooler.enabled -}}
+  {{- if and $objectData.pooler $objectData.pooler.enabled -}}
     {{- $rwString := "pooler-rw" -}}
     {{- $roString := "pooler-ro" -}}
   {{- end -}}
