@@ -28,6 +28,7 @@ tests:
           path: spec
           value:
             enableSuperuserAccess: true
+            imageName: ghcr.io/cloudnative-pg/postgresql:16.2
             primaryUpdateStrategy: unsupervised
             primaryUpdateMethod: switchover
             logLevel: info
@@ -118,6 +119,7 @@ tests:
           database: test-db
           cluster:
             enableSuperuserAccess: false
+            imageName: some-image
             primaryUpdateStrategy: supervised
             primaryUpdateMethod: restart
             logLevel: debug
@@ -164,6 +166,7 @@ tests:
           path: spec
           value:
             enableSuperuserAccess: false
+            imageName: some-image
             primaryUpdateStrategy: supervised
             primaryUpdateMethod: restart
             logLevel: debug

@@ -35,7 +35,7 @@ tests:
           pgVersion: invalid
     asserts:
       - failedTemplate:
-          errorMessage: CNPG - Expected [version] to be one of [15, 16], but got [invalid]
+          errorMessage: CNPG - Expected [pgVersion] to be one of [15, 16], but got [invalid]
 
   - it: should fail with hibernate not a bool
     set:
@@ -167,19 +167,6 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: CNPG Recovery - Expected [recovery.revision] to be a string, got [float64]
-
-  - it: should fail with pgVersion not a string
-    set:
-      cnpg:
-        my-pg:
-          enabled: true
-          user: test-user
-          database: test-db
-          mode: standalone
-          pgVersion: 5
-    asserts:
-      - failedTemplate:
-          errorMessage: CNPG - Expected [pgVersion] to be a string, but got [float64]
 
   - it: should fail with invalid recovery method
     set:
