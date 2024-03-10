@@ -15,9 +15,11 @@
 
   {{- $rwString := "rw" -}}
   {{- $roString := "ro" -}}
+  {{- $poolEnabled := false -}}
   {{- if and $objectData.pooler $objectData.pooler.enabled -}}
-    {{- $rwString := "pooler-rw" -}}
-    {{- $roString := "pooler-ro" -}}
+    {{- $poolEnabled = true -}}
+    {{- $rwString = "pooler-rw" -}}
+    {{- $roString = "pooler-ro" -}}
   {{- end -}}
 
   {{- $creds := (dict
@@ -29,7 +31,7 @@
   ) -}}
 
   {{- $credsRO := dict -}}
-  {{- if $objectData.pooler.createRO -}}
+  {{- if and $poolEnabled $objectData.pooler.createRO -}}
     {{- $credsRO = (dict
       "std" (printf $stdTmpl $roString)
       "nossl" (printf $nosslTmpl $roString)
@@ -60,7 +62,7 @@
   {{- $_ := set $cnpg.creds "host" $creds.host -}}
   {{- $_ := set $cnpg.creds "jdbc" $creds.jdbc -}}
 
-  {{- if $objectData.pooler.createRO -}}
+  {{- if and $poolEnabled $objectData.pooler.createRO -}}
     {{- $_ := set $cnpg.creds "stdRO" $credsRO.std -}}
     {{- $_ := set $cnpg.creds "nosslRO" $credsRO.nossl -}}
     {{- $_ := set $cnpg.creds "porthostRO" $credsRO.portHost -}}
