@@ -83,8 +83,6 @@ global:
   # does not include stand-alone pods
   stopAll: false
 
-
-
 # -- Explicitly set a namespace for this chart only
 namespace: ""
 
