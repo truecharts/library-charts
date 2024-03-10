@@ -18,6 +18,7 @@ tests:
           user: test-user
           database: test-db
           pooler:
+            enabled: true
             createRO: true
             poolMode: transaction
             instances: 1
