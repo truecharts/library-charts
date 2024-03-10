@@ -31,7 +31,6 @@
       {{- with (lookup "v1" "ConfigMap" $.Release.Namespace (printf "%s-%s" $fullname $versionConfigMapName)) -}}
         {{/* If a different version is set and upgrade is enabled, upgrade */}}
         {{- if and (ne $pgVersion .data.version) $objectData.upgradeMajor -}}
-          {{/* TODO: maybe check that the version is newer and not older? */}}
           {{/* TODO: actually handle postgres version updates here */}}
         {{- else -}}
           {{- $pgVersion = .data.version -}}

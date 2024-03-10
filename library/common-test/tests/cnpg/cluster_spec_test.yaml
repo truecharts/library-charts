@@ -67,6 +67,12 @@ tests:
 
   - it: should respect changed fallbackDefaults
     set:
+      postgres15Image:
+        repository: ghcr.io/cloudnative-pg/postgresql
+        tag: "15.6"
+      global:
+        fallbackDefaults:
+          pgVersion: "15"
       fallbackDefaults:
         vctAccessModes:
           - ReadWriteMany
@@ -91,6 +97,7 @@ tests:
         isSubset:
           path: spec
           content:
+            imageName: ghcr.io/cloudnative-pg/postgresql:15.6
             storage:
               pvcTemplate:
                 accessModes:
@@ -107,6 +114,61 @@ tests:
                 resources:
                   requests:
                     storage: 100Gi
+
+  - it: should generate correct imageName with changed type and pgVersion
+    set:
+      postgresVectors15Image:
+        repository: ghcr.io/tensorchord/cloudnative-pgvecto.rs
+        tag: "15.6-v0.2.1"
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          pgVersion: "15"
+          type: vectors
+    asserts:
+      - documentIndex: &clusterDoc 1
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *clusterDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg
+      - documentIndex: *clusterDoc
+        equal:
+          path: spec.imageName
+          value: ghcr.io/tensorchord/cloudnative-pgvecto.rs:15.6-v0.2.1
+
+  - it: should generate correct imageName with changed pgVersion
+    set:
+      postgres15Image:
+        repository: ghcr.io/cloudnative-pg/postgresql
+        tag: "15.6"
+      cnpg:
+        my-pg:
+          enabled: true
+          user: test-user
+          database: test-db
+          pgVersion: "15"
+    asserts:
+      - documentIndex: &clusterDoc 1
+        isKind:
+          of: Cluster
+      - documentIndex: *clusterDoc
+        isAPIVersion:
+          of: postgresql.cnpg.io/v1
+      - documentIndex: *clusterDoc
+        equal:
+          path: metadata.name
+          value: test-release-name-common-test-cnpg-my-pg
+      - documentIndex: *clusterDoc
+        equal:
+          path: spec.imageName
+          value: ghcr.io/cloudnative-pg/postgresql:15.6
 
   - it: should override options
     set:
