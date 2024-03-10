@@ -6,12 +6,14 @@
   {{- $caller := .caller -}}
 
   {{- $enabled := false -}}
-  {{- if hasKey $objectData "enabled" -}}
-    {{- if not (kindIs "invalid" $objectData.enabled) -}}
-      {{- $enabled = $objectData.enabled -}}
-    {{- else -}}
-      {{- fail (printf "%s - Expected the defined key [enabled] in [%s.%s] to not be empty" $caller $key $name) -}}
-    {{- end -}}
+  {{- if not (hasKey $objectData "enabled") -}}
+    {{- fail (printf "%s - Expected the key [enabled] in [%s.%s] to exist" $caller $key $name) -}}
+  {{- end -}}
+
+  {{- if not (kindIs "invalid" $objectData.enabled) -}}
+    {{- $enabled = $objectData.enabled -}}
+  {{- else -}}
+    {{- fail (printf "%s - Expected the defined key [enabled] in [%s.%s] to not be empty" $caller $key $name) -}}
   {{- end -}}
 
   {{- if kindIs "string" $enabled -}}
