@@ -108,7 +108,7 @@ objectData: The object data to be used to render the Pod.
       {{- if eq $objectData.type "DaemonSet" -}}
         {{- fail "Expected [accessMode] to not be [ReadWriteOnce] when used on a [DaemonSet]" -}}
 
-      {{- else if and (eq $objectData.type "Deployment") (gt (($objectData.replicas| default 1) | int) 1) -}}
+      {{- else if and (mustHas $objectData.type (list "Deployment" "StatefulSet")) (gt (($objectData.replicas| default 1) | int) 1) -}}
         {{- include "add.warning" (dict "rootCtx" $rootCtx
             "warn" (printf "WARNING: The [accessModes] on volume [%s] is set to [ReadWriteOnce] when on a [Deployment] with more than 1 replica" $name))
         -}}
