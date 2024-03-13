@@ -62,6 +62,8 @@ tests:
         namespace: ix-namespace
         ixChartContext:
           storageClassName: ""
+          ci:
+            storageClass: true
       persistence:
         volume1:
           enabled: true

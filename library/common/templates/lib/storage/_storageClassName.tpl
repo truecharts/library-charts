@@ -37,11 +37,20 @@ objectData: The object data of the pvc
       {{- $className = tpl $storageClass $rootCtx -}}
     {{- end -}}
 
-  {{- else if $rootCtx.Values.global.ixChartContext -}}
-    {{- if not $rootCtx.Values.global.ixChartContext.storageClassName -}}
-      {{- fail (printf "%s - Expected non-empty [global.ixChartContext.storageClassName]" $caller) -}}
+  {{- else if and $rootCtx.Values.global.ixChartContext $rootCtx.Values.global.ixChartContext.storageClassName -}}
+    {{- $scaleClassFound := false -}}
+    {{- with (lookup "v1" "StorageClass" "" $rootCtx.Values.global.ixChartContext.storageClassName ) -}}
+      {{/* Check if there is an actually valid storageClass found */}}
+      {{- if .provisioner -}}
+        {{- $scaleClassFound = true -}}
+      {{- end -}}
     {{- end -}}
-    {{- $className = tpl $rootCtx.Values.global.ixChartContext.storageClassName $rootCtx -}}
+
+    {{- if or $scaleClassFound $rootCtx.Values.global.ixChartContext.ci.storageClass -}}
+      {{- $className = tpl $rootCtx.Values.global.ixChartContext.storageClassName $rootCtx -}}
+    {{- else if $rootCtx.Values.global.fallbackDefaults.storageClass -}}
+      {{- $className = tpl $rootCtx.Values.global.fallbackDefaults.storageClass $rootCtx -}}
+    {{- end -}}
 
   {{- else if $rootCtx.Values.global.fallbackDefaults.storageClass -}}
 
