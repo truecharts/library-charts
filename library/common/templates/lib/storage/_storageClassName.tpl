@@ -46,7 +46,7 @@ objectData: The object data of the pvc
       {{- end -}}
     {{- end -}}
 
-    {{- if or $scaleClassFound $rootCtx.Values.global.ixChartContext.ci.storageClass -}}
+    {{- if or $scaleClassFound ( and $rootCtx.Values.global.ixChartContext.ci $rootCtx.Values.global.ixChartContext.ci.storageClass) -}}
       {{- $className = tpl $rootCtx.Values.global.ixChartContext.storageClassName $rootCtx -}}
     {{- else if $rootCtx.Values.global.fallbackDefaults.storageClass -}}
       {{- $className = tpl $rootCtx.Values.global.fallbackDefaults.storageClass $rootCtx -}}
