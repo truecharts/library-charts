@@ -37,16 +37,17 @@ objectData: The object data of the pvc
       {{- $className = tpl $storageClass $rootCtx -}}
     {{- end -}}
 
+  {{/* On Cobia -> Dragonfish update the ixChartContext should still be there, for existing apps so we can reference it */}}
   {{- else if and $rootCtx.Values.global.ixChartContext $rootCtx.Values.global.ixChartContext.storageClassName -}}
     {{- $scaleClassFound := false -}}
-    {{- with (lookup "v1" "StorageClass" "" $rootCtx.Values.global.ixChartContext.storageClassName ) -}}
+    {{- with (lookup "v1" "StorageClass" "" $rootCtx.Values.global.ixChartContext.storageClassName) -}}
       {{/* Check if there is an actually valid storageClass found */}}
       {{- if .provisioner -}}
         {{- $scaleClassFound = true -}}
       {{- end -}}
     {{- end -}}
 
-    {{- if or $scaleClassFound ( and $rootCtx.Values.global.ixChartContext.ci $rootCtx.Values.global.ixChartContext.ci.storageClass) -}}
+    {{- if or $scaleClassFound (and $rootCtx.Values.global.ixChartContext.ci $rootCtx.Values.global.ixChartContext.ci.storageClass) -}}
       {{- $className = tpl $rootCtx.Values.global.ixChartContext.storageClassName $rootCtx -}}
     {{- else if $rootCtx.Values.global.fallbackDefaults.storageClass -}}
       {{- $className = tpl $rootCtx.Values.global.fallbackDefaults.storageClass $rootCtx -}}
