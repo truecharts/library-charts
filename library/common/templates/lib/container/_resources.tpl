@@ -14,8 +14,17 @@ objectData: The object data to be used to render the container.
     {{- $resources = mustMergeOverwrite $resources $objectData.resources -}}
   {{- end -}}
 
-  {{- include "tc.v1.common.lib.container.resources.validation" (dict "resources" $resources) -}}
+  {{- $excludedContainersFromExtraResources := (list
+      "cnpg-wait" "solr-wait" "clickhouse-wait"
+      "mongodb-wait" "redis-wait" "mariadb-wait"
+  ) -}}
 
+  {{- $excludedContainersFromExtraResources = (concat
+        $excludedContainersFromExtraResources
+        $rootCtx.Values.global.excludedContainersFromExtraResources
+  ) -}}
+
+  {{- include "tc.v1.common.lib.container.resources.validation" (dict "resources" $resources) }}
 requests:
   cpu: {{ $resources.requests.cpu }}
   memory: {{ $resources.requests.memory }}
@@ -27,8 +36,10 @@ limits:
     {{- with $resources.limits.memory }} {{/* Passing 0, will not render it, meaning unlimited */}}
   memory: {{ . }}
     {{- end -}}
-    {{- range $k, $v := (omit $resources.limits "cpu" "memory") }} {{/* Omit cpu and memory, as they are handled above */}}
+    {{- if not (mustHas $objectData.shortName $excludedContainersFromExtraResources) -}}
+      {{- range $k, $v := (omit $resources.limits "cpu" "memory") }} {{/* Omit cpu and memory, as they are handled above */}}
   {{ $k }}: {{ $v }}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

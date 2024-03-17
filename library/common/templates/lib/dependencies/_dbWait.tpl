@@ -83,11 +83,6 @@
 enabled: true
 type: system
 imageSelector: redisClientImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
@@ -147,11 +142,6 @@ command:
 enabled: true
 type: system
 imageSelector: mariadbClientImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
@@ -201,11 +191,6 @@ command:
 enabled: true
 type: system
 imageSelector: mongodbClientImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
@@ -250,11 +235,6 @@ command:
 enabled: true
 type: system
 imageSelector: wgetImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
@@ -298,11 +278,6 @@ args:
 enabled: true
 type: system
 imageSelector: wgetImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
@@ -361,11 +336,6 @@ args:
 enabled: true
 type: system
 imageSelector: postgresClientImage
-resources:
-  limits:
-    "nvidia.com/gpu": "0"
-    "amd.com/gpu": "0"
-    "gpu.intel.com/i915": "0"
 securityContext:
   runAsUser: 568
   runAsGroup: 568
