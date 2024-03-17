@@ -21,7 +21,7 @@ objectData: The object data to be used to render the container.
 
   {{- $excludeContainersFromExtraResources = (concat
         $excludeContainersFromExtraResources
-        $rootCtx.Values.global.excludeContainersFromExtraResources
+        $rootCtx.Values.resources.excludeContainersFromExtraResources
   ) -}}
 
   {{- include "tc.v1.common.lib.container.resources.validation" (dict "resources" $resources) }}

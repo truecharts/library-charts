@@ -399,12 +399,11 @@ tests:
   - it: should not add extra resources on "wait" containers and on excluded containers
     set:
       image: *image
-      global:
-        excludeContainersFromExtraResources:
-          - my-container
       redis:
         enabled: true
       resources:
+        excludeContainersFromExtraResources:
+          - my-container
         limits:
           "nvidia.com/gpu": "1"
       workload:

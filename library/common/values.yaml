@@ -7,7 +7,6 @@ global:
   # -- Set a global namespace
   # TODO: Currently some objects do not support this
   namespace: ""
-  excludeContainersFromExtraResources: []
   fallbackDefaults:
     # -- Define a storageClassName that will be used for all PVCs
     # Can be overruled per PVC
@@ -138,6 +137,7 @@ securityContext:
 # -- Resources
 # Can be overruled per container
 resources:
+  excludeContainersFromExtraResources: []
   limits:
     cpu: 4000m
     memory: 8Gi
