@@ -40,7 +40,7 @@ limits:
     {{- with $resources.limits.memory }} {{/* Passing 0, will not render it, meaning unlimited */}}
   memory: {{ . }}
     {{- end -}}
-    {{- if or (not $objectData.resources.excludeExtra) (not (mustHas $objectData.shortName $excludeContainersFromExtraResources)) -}}
+    {{- if and (not $objectData.resources.excludeExtra) (not (mustHas $objectData.shortName $excludeContainersFromExtraResources)) -}}
       {{- range $k, $v := (omit $resources.limits "cpu" "memory") }} {{/* Omit cpu and memory, as they are handled above */}}
   {{ $k }}: {{ $v }}
       {{- end -}}
