@@ -137,7 +137,6 @@ securityContext:
 # -- Resources
 # Can be overruled per container
 resources:
-  excludeContainersFromExtraResources: []
   limits:
     cpu: 4000m
     memory: 8Gi

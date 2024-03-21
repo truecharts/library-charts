@@ -402,8 +402,6 @@ tests:
       redis:
         enabled: true
       resources:
-        excludeContainersFromExtraResources:
-          - my-container
         limits:
           "nvidia.com/gpu": "1"
       workload:
@@ -418,10 +416,14 @@ tests:
                 primary: true
                 imageSelector: image
                 probes: *probes
+                resources:
+                  excludeExtra: true
               my-container:
                 enabled: true
                 imageSelector: image
                 probes: *probes
+                resources:
+                  excludeExtra: true
     asserts:
       - documentIndex: &deploymentDoc 1
         isKind:
