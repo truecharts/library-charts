@@ -416,8 +416,6 @@ tests:
                 primary: true
                 imageSelector: image
                 probes: *probes
-                resources:
-                  excludeExtra: true
               my-container:
                 enabled: true
                 imageSelector: image
