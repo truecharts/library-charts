@@ -76,7 +76,7 @@ tests:
         example1:
           enabled: true
           provisioner: some.provisioner.io
-          isDefaultClass: true
+          isDefault: true
     asserts:
       - documentIndex: &storageClassDoc 0
         isKind:
