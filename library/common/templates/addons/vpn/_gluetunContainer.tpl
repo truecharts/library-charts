@@ -46,7 +46,13 @@ env:
 {{- end }}
   FIREWALL: "on"
   FIREWALL_OUTBOUND_SUBNETS: {{ $excludednetworks | quote }}
-  FIREWALL_INPUT_PORTS: {{ $.Values.service.main.ports.main.port }}
+{{- $inputPorts = (list $.Values.service.main.ports.main.port) -}}
+{{/* if trying to use qbittorrent port forwarding, detect and add ports */}}
+{{- if $.Values.qbitportforward.enabled -}}
+  {{- $inputPorts = mustAppend ($inputPorts $.Values.service.gluetun.ports.gluetun.port) -}}
+{{- end -}}
+{{- $inputPorts = concat $inputPorts $.Values.addons.vpn.inputPorts | mustUniq }}
+  FIREWALL_INPUT_PORTS: {{ join "," $inputPorts }}
 {{- else }}
   FIREWALL: "off"
 {{- end }}
