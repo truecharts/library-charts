@@ -65,6 +65,22 @@
         "type": "array",
         "items": {"type": "string"}
       },
+      "loadBalancerIPs": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "externalName": {
+        "type": "string"
+      },
+      "externalIP": {
+        "type": "string"
+      },
+      "appProtocol": {
+        "type": "string"
+      },
+      "useSlice": {
+        "type": "boolean"
+      },
       "publishNotReadyAddresses": {
         "type": "boolean"
       },
@@ -109,8 +125,7 @@
         "type": ["string", "integer"]
       },
       "protocol": {
-        "type": "string",
-        "enum": ["http", "https", "tcp", "udp"]
+        "type": "string"
       },
       "targetPort": {
         "type": ["string", "integer"]

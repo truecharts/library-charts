@@ -17,7 +17,7 @@
     "default": false
   },
   "targetSelector": {
-    "type": ["string"]
+    "type": ["string", "object"]
   },
   "expandObjectName": {
     "type": ["boolean"],
