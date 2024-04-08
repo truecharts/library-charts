@@ -71,12 +71,8 @@
         "type": "boolean",
         "default": false
       },
-      "controller": {
-        "type": "string"
-      },
-      "extraSelectorLabels": {}
     },
-    "required": ["controller"]
+    "required": []
   },
 
   "servicePort": {
@@ -94,7 +90,7 @@
       "port": {
         "type": ["string", "integer"]
       },
-      "protocol": {
+      "type": {
         "type": "string",
         "enum": ["HTTP", "HTTPS", "TCP", "UDP"]
       },
