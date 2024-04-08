@@ -1,0 +1,142 @@
+{
+  "instance": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "$ref": "definitions.json#/enabled"
+      },
+      "annotations": {
+        "$ref": "definitions.json#/annotations"
+      },
+      "labels": {
+        "$ref": "definitions.json#/labels"
+      },
+      "name": {
+        "type": "string"
+      },
+      "namespace": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "targetSelector": {
+        "$ref": "definitions.json#/enabled"
+      },
+      "expandObjectName": {
+        "$ref": "definitions.json#/expandObjectName"
+      },
+      "clusterIP": {
+        "type": "string"
+      },
+      "loadBalancerIP": {
+        "type": "string"
+      },
+      "loadBalancerSourceRanges": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "externalTrafficPolicy": {
+        "type": "string",
+        "enum": ["Cluster", "Local"]
+      },
+      "allocateLoadBalancerNodePorts": {
+        "type": "boolean"
+      },
+      "sessionAffinity": {
+        "type": "string",
+        "enum": ["None", "ClientIP"]
+      },
+      "sessionAffinityConfig": {
+        "type": "object",
+        "properties": {
+          "clientIP": {
+            "type": "object",
+            "properties": {
+              "timeoutSeconds": {
+                "type": ["string", "integer"]
+              }
+            }
+          }
+        }
+      },
+      "externalIPs": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "loadBalancerIPs": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "externalName": {
+        "type": "string"
+      },
+      "externalIP": {
+        "type": "string"
+      },
+      "appProtocol": {
+        "type": "string"
+      },
+      "useSlice": {
+        "type": "boolean"
+      },
+      "publishNotReadyAddresses": {
+        "type": "boolean"
+      },
+      "ipFamilyPolicy": {
+        "type": "string",
+        "enum": ["SingleStack", "PreferDualStack", "RequireDualStack"]
+      },
+      "ipFamilies": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["IPv4", "IPv6"]
+        }
+      },
+      "ports": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/servicePort"
+        }
+      },
+      "primary": {
+        "$ref": "definitions.json#/primary"
+      }
+    },
+    "required": []
+  },
+
+  "servicePort": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "$ref": "definitions.json#/enabled"
+      },
+      "primary": {
+        "$ref": "definitions.json#/primary"
+      },
+      "targetSelector": {
+        "$ref": "definitions.json#/enabled"
+      },
+      "port": {
+        "type": ["string", "integer"]
+      },
+      "protocol": {
+        "type": "string"
+      },
+      "targetPort": {
+        "type": ["string", "integer"]
+      },
+      "hostPort": {
+        "type": ["string", "integer"]
+      },
+      "nodePort": {
+        "type": ["string", "integer"]
+      }
+    },
+    "required": []
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "annotations": {
+    "type": ["object", "null"],
+    "additionalProperties": {
+      "type": ["string", "null"]
+    }
+  },
+
+  "labels": {
+    "type": ["object", "null"],
+    "additionalProperties": {
+      "type": ["string", "null"]
+    }
+  },
+  "enabled": {
+    "type": ["boolean", "string"],
+    "default": false
+  },
+  "targetSelector": {
+    "type": ["string", "object"]
+  },
+  "expandObjectName": {
+    "type": ["boolean"],
+    "default": true
+  },
+  "primary": {
+    "type": ["boolean"],
+    "default": false
+  }
+}
