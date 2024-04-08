@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+
+  "type": "object",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "$ref": "schemas/definitions.json#/annotations"
+        },
+        "nameOverride": {
+          "type": ["string", "null"]
+        },
+        "fullnameOverride": {
+          "type": ["string", "null"]
+        },
+        "labels": {
+          "$ref": "schemas/definitions.json#/labels"
+        }
+      }
+    },
+    "configmap": {
+      "additionalProperties": {
+        "$ref": "schemas/configmap.json#/instance"
+      }
+    },
+    "secret": {
+      "additionalProperties": {
+        "$ref": "schemas/secret.json#/instance"
+      }
+    },
+    "ingress": {
+      "additionalProperties": {
+        "$ref": "schemas/ingress.json#/instance"
+      }
+    },
+    "service": {
+      "additionalProperties": {
+        "$ref": "schemas/service.json#/instance"
+      }
+    },
+    "persistence": {
+      "additionalProperties": {
+        "$ref": "schemas/persistence.json#/item"
+      }
+    }
+  }
+}
