@@ -56,7 +56,7 @@
             "properties": {
               "timeoutSeconds": {
                 "type": ["string", "integer"]
-              },
+              }
             }
           }
         }

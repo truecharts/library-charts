@@ -13,7 +13,8 @@
     }
   },
   "enabled": {
-    "type": ["boolean", "string"]
+    "type": ["boolean", "string"],
+    "default": false
   },
   "targetSelector": {
     "type": ["string"]
