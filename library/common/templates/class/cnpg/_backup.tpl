@@ -16,9 +16,7 @@
   {{- $objAnnotations := $objectData.annotations | default dict -}}
   {{- $globalBackupAnnotations := $objectData.backups.annotations | default dict -}}
   {{- $backupAnnotations := $objectData.backupAnnotations | default dict -}}
-  {{- $backupAnnotations = mustMerge $backupAnnotations $objAnnotations $globalBackupAnnotations -}}
-
-
+  {{- $backupAnnotations = mustMerge $backupAnnotations $objAnnotations $globalBackupAnnotations }}
 
 ---
 apiVersion: postgresql.cnpg.io/v1

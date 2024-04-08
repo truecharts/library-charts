@@ -24,9 +24,7 @@ objectData:
       And use it as the namespace for the schedule too.
     */}}
     {{- $namespace = ($lookupBSL.items | first).metadata.namespace -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: velero.io/v1

@@ -13,9 +13,7 @@
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $servicemonitorName = printf "%v-%v" $servicemonitorName $values.nameOverride -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.servicemonitor.apiVersion" $ }}

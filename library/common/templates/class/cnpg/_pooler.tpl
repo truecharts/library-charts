@@ -20,9 +20,7 @@
   {{/* Stop All */}}
   {{- if or $objectData.hibernate (include "tc.v1.common.lib.util.stopAll" $rootCtx) -}}
     {{- $instances = 0 -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: postgresql.cnpg.io/v1

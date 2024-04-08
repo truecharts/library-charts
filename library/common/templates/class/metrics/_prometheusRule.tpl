@@ -13,9 +13,7 @@
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $prometheusruleName = printf "%v-%v" $prometheusruleName $values.nameOverride -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.prometheusrule.apiVersion" $ }}

@@ -13,9 +13,7 @@ objectData:
 {{- define "tc.v1.common.class.velero.volumesnapshotlocation" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData -}}
-
-
+  {{- $objectData := .objectData }}
 
 ---
 apiVersion: velero.io/v1

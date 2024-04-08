@@ -29,9 +29,7 @@
   {{- $immediate := false -}}
   {{- if (hasKey $objectData.schedData "immediate") -}}
     {{- $immediate = $objectData.schedData.immediate -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: postgresql.cnpg.io/v1

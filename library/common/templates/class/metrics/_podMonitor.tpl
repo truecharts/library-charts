@@ -13,9 +13,7 @@
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $podmonitorName = printf "%v-%v" $podmonitorName $values.nameOverride -}}
-  {{- end -}}
-
-
+  {{- end }}
 
 ---
 apiVersion: {{ include "tc.v1.common.capabilities.podmonitor.apiVersion" $ }}
