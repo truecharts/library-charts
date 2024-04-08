@@ -21,29 +21,9 @@
         }
       }
     },
-    "configmap": {
-      "additionalProperties": {
-        "$ref": "schemas/configmap.json#/instance"
-      }
-    },
-    "secret": {
-      "additionalProperties": {
-        "$ref": "schemas/secret.json#/instance"
-      }
-    },
-    "ingress": {
-      "additionalProperties": {
-        "$ref": "schemas/ingress.json#/instance"
-      }
-    },
     "service": {
       "additionalProperties": {
         "$ref": "schemas/service.json#/instance"
-      }
-    },
-    "persistence": {
-      "additionalProperties": {
-        "$ref": "schemas/persistence.json#/item"
       }
     }
   }
