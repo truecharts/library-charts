@@ -108,7 +108,7 @@
       "port": {
         "type": ["string", "integer"]
       },
-      "type": {
+      "protocol": {
         "type": "string",
         "enum": ["http", "https", "tcp", "udp"]
       },
