@@ -99,9 +99,6 @@
       },
       "nodePort": {
         "type": ["string", "integer"]
-      },
-      "appProtocol": {
-        "type": "string"
       }
     },
     "required": ["port"]
