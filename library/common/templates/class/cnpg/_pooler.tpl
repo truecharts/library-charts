@@ -22,7 +22,7 @@
     {{- $instances = 0 -}}
   {{- end -}}
 
-  {{- include "tc.v1.common.lib.util.verifycrd" (dict "rootCtx" $rootCtx "crd" "poolers.postgresql.cnpg.io" "missing" "CloudNative-PG") }}
+
 
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -36,9 +36,9 @@ metadata:
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
-  annotations:
-    rollme: {{ randAlphaNum 5 | quote }}
   {{- $annotations := (mustMerge $poolerAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
+  annotations:
+    checksum/secrets: {{ toJson $.Values.secret | sha256sum }}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}
