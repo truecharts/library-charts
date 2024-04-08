@@ -92,7 +92,7 @@
       },
       "type": {
         "type": "string",
-        "enum": ["HTTP", "HTTPS", "TCP", "UDP"]
+        "enum": ["http", "https", "tcp", "udp"]
       },
       "targetPort": {
         "type": ["string", "integer"]
