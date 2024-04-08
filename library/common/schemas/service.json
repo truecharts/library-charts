@@ -101,6 +101,6 @@
         "type": ["string", "integer"]
       }
     },
-    "required": ["port"]
+    "required": []
   }
 }
