@@ -11,5 +11,15 @@
     "additionalProperties": {
       "type": ["string", "null"]
     }
+  },
+  "enabled": {
+    "type": ["boolean", "string"]
+  },
+  "targetSelector": {
+    "type": ["string"]
+  },
+  "primary": {
+    "type": ["boolean"],
+    "default": false
   }
 }

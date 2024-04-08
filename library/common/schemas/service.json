@@ -1,11 +1,10 @@
 {
   "instance": {
     "type": "object",
-    "additionalProperties": true,
+    "additionalProperties": false,
     "properties": {
       "enabled": {
-        "type": "boolean",
-        "default": true
+        "$ref": "definitions.json#/enabled"
       },
       "annotations": {
         "$ref": "definitions.json#/annotations"
@@ -13,11 +12,20 @@
       "labels": {
         "$ref": "definitions.json#/labels"
       },
-      "nameOverride": {
+      "name": {
+        "type": "string"
+      },
+      "namespace": {
         "type": "string"
       },
       "type": {
         "type": "string"
+      },
+      "targetSelector": {
+        "$ref": "definitions.json#/enabled"
+      },
+      "expandObjectName": {
+        "type": "boolean"
       },
       "clusterIP": {
         "type": "string"
@@ -41,7 +49,17 @@
         "enum": ["None", "ClientIP"]
       },
       "sessionAffinityConfig": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "clientIP": {
+            "type": "object",
+            "properties": {
+              "timeoutSeconds": {
+                "type": ["string", "integer"]
+              },
+            }
+          }
+        }
       },
       "externalIPs": {
         "type": "array",
@@ -68,8 +86,7 @@
         }
       },
       "primary": {
-        "type": "boolean",
-        "default": false
+        "$ref": "definitions.json#/primary"
       }
     },
     "required": []
@@ -77,15 +94,16 @@
 
   "servicePort": {
     "type": "object",
-    "additionalProperties": true,
+    "additionalProperties": false,
     "properties": {
       "enabled": {
-        "type": "boolean",
-        "default": true
+        "$ref": "definitions.json#/enabled"
       },
       "primary": {
-        "type": "boolean",
-        "default": false
+        "$ref": "definitions.json#/primary"
+      },
+      "targetSelector": {
+        "$ref": "definitions.json#/enabled"
       },
       "port": {
         "type": ["string", "integer"]
@@ -95,6 +113,9 @@
         "enum": ["http", "https", "tcp", "udp"]
       },
       "targetPort": {
+        "type": ["string", "integer"]
+      },
+      "hostPort": {
         "type": ["string", "integer"]
       },
       "nodePort": {
