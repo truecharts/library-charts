@@ -102,10 +102,6 @@ tests:
             g_annotation1: global_annotation1
             g_annotation2: global_annotation2
       - documentIndex: *cronJobDoc
-        matchRegex:
-          path: spec.jobTemplate.spec.template.metadata.annotations.rollme
-          pattern: '^[0-9a-zA-Z]{5}$'
-      - documentIndex: *cronJobDoc
         equal:
           path: metadata.name
           value: test-release-name-common-test

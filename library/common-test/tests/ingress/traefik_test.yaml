@@ -40,9 +40,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        isSubset:
+        equal:
           path: metadata.annotations
-          content:
+          value:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
