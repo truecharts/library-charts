@@ -50,9 +50,9 @@ tests:
         isKind:
           of: Cluster
       - documentIndex: *clusterDoc
-        isSubset:
+        equal:
           path: metadata.annotations
-          content:
+          value:
             annotation1: annotation1
             annotation2: annotation2
             annotation3: annotation3
@@ -60,6 +60,7 @@ tests:
             g_annotation2: global_annotation2
             cnpg.io/hibernation: "off"
             some-annotation: some-value
+            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       - documentIndex: *clusterDoc
         equal:
           path: metadata.labels
