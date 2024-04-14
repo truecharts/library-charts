@@ -140,6 +140,19 @@ tests:
             pod.lifecycle: permanent
             app.kubernetes.io/instance: test-release-name
             app.kubernetes.io/name: common-test
+      - documentIndex: *deploymentDoc
+        equal:
+          path: spec.template.metadata.annotations
+          value:
+            checksum/cnpg: 5708df134932540488ce48b3859728ddcba793f7e9893bb364af05631d9c4aaf
+            checksum/configmaps: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+            checksum/mariadb: 62fa45c44f986a32618dfbb14eb5a110c1cab8d22755a3b7c4ef901183bf4395
+            checksum/mongodb: 355982e44c8527a6f08def8694c47911a0ccba92bf8c69bdde77db408022cf76
+            checksum/persistence: 3bfd952c7ba47be068eb53a9c5f79383e4c5e0ec36432a0d18464fff2c423172
+            checksum/redis: 013343a028cbb3f7e08f4ba7522702dd98e52632c688641074b0b1db3df29894
+            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+            checksum/services: 8a1e056e87a5c03f3c23ad5d92973533e2412b53f017a1e9ebad49951ae9468b
+            checksum/solr: c853a1e2b23a08b64ef1dff6915abd0fcd491e06ee37b104674f3c34ab6497ed
       - documentIndex: &otherDeploymentDoc 1
         isKind:
           of: Deployment
