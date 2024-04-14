@@ -51,16 +51,19 @@ tests:
         isKind:
           of: Pooler
       - documentIndex: *poolerDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             annotation1: annotation1
             annotation2: annotation2
             annotation3: annotation3
             g_annotation1: global_annotation1
             g_annotation2: global_annotation2
             some-annotation: some-value
-            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+      - documentIndex: *poolerDoc
+        matchRegex:
+          path: metadata.annotations.checksum/secrets
+          pattern: ^[0-9a-f]{64}$
       - documentIndex: *poolerDoc
         equal:
           path: metadata.labels

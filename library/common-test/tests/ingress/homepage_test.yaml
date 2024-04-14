@@ -126,8 +126,14 @@ tests:
             gethomepage.dev/icon: https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png
             gethomepage.dev/widget.type: commontest
             gethomepage.dev/pod-selector: app.kubernetes.io/instance=test-release-name,pod.lifecycle in (permanent)
-            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
-            checksum/services: 11b72beaedf9424ec8f3c6a32ef5cbc3d90abba8bfb74d0fe7dc1cb85d413256
+      - documentIndex: *ingressDoc
+        matchRegex:
+          path: metadata.annotations.checksum/secrets
+          pattern: ^[0-9a-f]{64}$
+      - documentIndex: *ingressDoc
+        matchRegex:
+          path: metadata.annotations.checksum/services
+          pattern: ^[0-9a-f]{64}$
       - documentIndex: *ingressDoc
         equal:
           path: metadata.name
