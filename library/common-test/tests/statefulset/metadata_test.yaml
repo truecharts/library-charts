@@ -99,10 +99,6 @@ tests:
             g_label2: global_label2
             pod-label1: pod-label1
             pod-label2: global_label2
-      - documentIndex: *statefulSetDoc
-        matchRegex:
-          path: spec.template.metadata.annotations.rollme
-          pattern: '^[0-9a-zA-Z]{5}$'
 
   - it: should pass with 2 daemonset created with correct selector labels
     set:

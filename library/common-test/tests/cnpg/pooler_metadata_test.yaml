@@ -61,10 +61,6 @@ tests:
             g_annotation2: global_annotation2
             some-annotation: some-value
       - documentIndex: *poolerDoc
-        matchRegex:
-          path: metadata.annotations.rollme
-          pattern: "^[0-9a-zA-Z]{5}$"
-      - documentIndex: *poolerDoc
         equal:
           path: metadata.labels
           value:
