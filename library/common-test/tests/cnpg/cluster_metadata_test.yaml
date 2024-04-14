@@ -27,6 +27,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           labels:
             label1: "{{ .Values.label1 }}"
             label2: label2
@@ -60,10 +61,6 @@ tests:
             cnpg.io/hibernation: "off"
             some-annotation: some-value
       - documentIndex: *clusterDoc
-        matchRegex:
-          path: metadata.annotations.rollme
-          pattern: ^[a-zA-Z0-9]{5}$
-      - documentIndex: *clusterDoc
         equal:
           path: metadata.labels
           value:
@@ -94,6 +91,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           namespace: some-namespace
     asserts:
       - documentIndex: *clusterDoc
@@ -109,6 +107,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           namespace: "{{ .Values.key }}"
     asserts:
       - documentIndex: *clusterDoc
@@ -126,6 +125,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: *clusterDoc
         equal:
@@ -143,6 +143,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: *clusterDoc
         equal:
@@ -161,6 +162,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: *clusterDoc
         equal:

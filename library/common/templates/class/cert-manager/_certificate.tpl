@@ -12,7 +12,7 @@ objectData:
 {{- define "tc.v1.common.class.certificate" -}}
 
   {{- $rootCtx := .rootCtx -}}
-  {{- $objectData := .objectData -}}
+  {{- $objectData := .objectData }}
 
 ---
 apiVersion: cert-manager.io/v1

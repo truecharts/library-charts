@@ -36,7 +36,7 @@ metadata:
   {{- end }}
   {{- $annotations := (mustMerge $poolerAnnotations (include "tc.v1.common.lib.metadata.allAnnotations" $rootCtx | fromYaml)) -}}
   annotations:
-    checksum/secrets: {{ toJson $.Values.secret | sha256sum }}
+    checksum/secrets: {{ toJson $rootCtx.Values.secret | sha256sum }}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "annotations" $annotations) | trim) }}
     {{- . | nindent 4 }}
   {{- end }}

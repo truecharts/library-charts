@@ -154,8 +154,7 @@
     {{- $formatImage := printf "%s:%s" $imageValue.repository $imageValue.tag -}}
 
     {{- $imageName = $formatImage -}}
-  {{- end -}}
-
+  {{- end }}
 
 ---
 apiVersion: postgresql.cnpg.io/v1

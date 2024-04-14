@@ -54,8 +54,6 @@
       {{- fail (printf "Ingress - Combined traefik entrypoints contain duplicates [%s]" (join ", " $entrypoints)) -}}
     {{- end -}}
 
-
-
     {{- $lookupMiddlewares := list -}}
     {{- $parsedMiddlewares := list -}}
     {{- if $middlewares -}}

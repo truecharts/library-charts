@@ -12,6 +12,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: &clusterDoc 0
         isKind:
@@ -62,6 +63,7 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
+                password: test-password
                 owner: test-user
                 dataChecksums: true
 
@@ -81,6 +83,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: *clusterDoc
         isKind:
@@ -124,6 +127,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           pgVersion: 15
           type: vectors
     asserts:
@@ -152,6 +156,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           pgVersion: 15
     asserts:
       - documentIndex: *clusterDoc
@@ -178,6 +183,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           cluster:
             enableSuperuserAccess: false
             imageName: some-image
@@ -261,6 +267,7 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
+                password: test-password
                 owner: test-user
                 dataChecksums: false
                 encoding: some-encoding
@@ -291,6 +298,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
     asserts:
       - documentIndex: *clusterDoc
         isKind:
