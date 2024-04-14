@@ -322,6 +322,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           cluster:
             postgresql:
               key1: value1
@@ -355,6 +356,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           type: timescaledb
           cluster:
             initdb:
@@ -387,6 +389,7 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
+                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:
@@ -403,6 +406,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           type: postgis
           cluster:
             initdb:
@@ -434,6 +438,7 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
+                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:
@@ -453,6 +458,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           type: vectors
           cluster:
             initdb:
@@ -485,6 +491,7 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
+                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:
@@ -501,6 +508,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           type: timescaledb
           monitoring:
             enablePodMonitor: true
@@ -525,6 +533,7 @@ tests:
           enabled: true
           user: app
           database: app
+          password: test-password
           type: timescaledb
           monitoring:
             enablePodMonitor: true
