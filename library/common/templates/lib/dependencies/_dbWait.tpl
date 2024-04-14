@@ -110,11 +110,7 @@ env:
       expandObjectName: false
       name: '{{ printf "%s-%s" .Release.Name "rediscreds" }}'
       key: plainhost
-  REDIS_PASSWORD:
-    secretKeyRef:
-      expandObjectName: false
-      name: '{{ printf "%s-%s" .Release.Name "rediscreds" }}'
-      key: redis-password
+  REDIS_PASSWORD: "{{ .Values.redis.password }}"
   REDIS_PORT: "6379"
 command:
   - "/bin/sh"
@@ -177,11 +173,7 @@ env:
       expandObjectName: false
       name: '{{ printf "%s-%s" .Release.Name "mariadbcreds" }}'
       key: plainhost
-  MARIADB_ROOT_PASSWORD:
-    secretKeyRef:
-      expandObjectName: false
-      name: '{{ printf "%s-%s" .Release.Name "mariadbcreds" }}'
-      key: mariadb-root-password
+  MARIADB_ROOT_PASSWORD: "{{ .Values.mariadb.rootPassword }}"
 command:
   - "/bin/sh"
   - "-c"

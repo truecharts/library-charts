@@ -463,7 +463,7 @@ tailscaleImage:
 
 codeserverImage:
   repository: tccr.io/tccr/code-server
-  tag: v4.22.1@sha256:d68384bb2f46f4e4c0fec3d4f116b8499de4f2fd3d058a6b1b12a6d1c804ff00
+  tag: v4.23.0@sha256:562b6e7e0e26b914d3eeb5831312f98d5eb5009dbc20301062c9c690e19b59b2
   pullPolicy: IfNotPresent
 
 alpineImage:
@@ -473,7 +473,7 @@ alpineImage:
 
 scratchImage:
   repository: tccr.io/tccr/scratch
-  tag: latest@sha256:fff0ddfc8eeafd4e9f1b98d35419dfc2ef2854e3325a10bb34aec696ac36ca19
+  tag: latest@sha256:bd3502fe58aa2c97a530d63ad90ca39182c774fa56712791fc9c0a521577d71f
   pullPolicy: IfNotPresent
 
 kubectlImage:
@@ -1312,7 +1312,6 @@ mariadb:
   includeCommon: false
   password: "PLACEHOLDERPASSWORD"
   rootPassword: "PLACEHOLDERROOTPASSWORD"
-  existingSecret: "mariadbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   creds: {}
 
@@ -1323,7 +1322,6 @@ mongodb:
   includeCommon: false
   password: "PLACEHOLDERPASSWORD"
   rootPassword: "PLACEHOLDERROOTPASSWORD"
-  existingSecret: "mongodbcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   creds: {}
 
@@ -1333,7 +1331,6 @@ clickhouse:
   enabled: false
   includeCommon: false
   password: "PLACEHOLDERPASSWORD"
-  existingSecret: "clickhousecreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   creds: {}
 
@@ -1345,7 +1342,6 @@ solr:
   password: "PLACEHOLDERPASSWORD"
   solrCores: 1
   solrEnableAuthentication: "no"
-  existingSecret: "solrcreds"
   # -- can be used to make an easy accessable note which URLS to use to access the DB.
   creds: {}
 
