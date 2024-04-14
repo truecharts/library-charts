@@ -74,9 +74,11 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        isNull:
+        isNotSubset:
           path: metadata.annotations
-
+          content:
+            cert-manager.io/cluster-issuer: some-issuer
+            cert-manager.io/private-key-rotation-policy: Always
   # Failures
   - it: should fail with missing certificateIssuer
     set:
