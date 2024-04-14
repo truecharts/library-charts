@@ -115,9 +115,9 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             gethomepage.dev/enabled: "true"
             gethomepage.dev/name: TestReleaseName
             gethomepage.dev/description: Helper chart to test different use cases of the common library

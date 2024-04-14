@@ -142,39 +142,39 @@ tests:
             app.kubernetes.io/name: common-test
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/secrets
+          path: spec.template.metadata.annotations.checksum/secrets
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/cnpg
+          path: spec.template.metadata.annotations.checksum/cnpg
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/configmaps
+          path: spec.template.metadata.annotations.checksum/configmaps
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/mariadb
+          path: spec.template.metadata.annotations.checksum/mariadb
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/mongodb
+          path: spec.template.metadata.annotations.checksum/mongodb
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/persistence
+          path: spec.template.metadata.annotations.checksum/persistence
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/redis
+          path: spec.template.metadata.annotations.checksum/redis
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/services
+          path: spec.template.metadata.annotations.checksum/services
           pattern: ^[0-9a-f]{64}$
       - documentIndex: *deploymentDoc
         matchRegex:
-          path: metadata.annotations.checksum/solr
+          path: spec.template.metadata.annotations.checksum/solr
           pattern: ^[0-9a-f]{64}$
       - documentIndex: &otherDeploymentDoc 1
         isKind:

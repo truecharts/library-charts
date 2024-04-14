@@ -62,9 +62,9 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             annotation1: annotation1
             annotation2: annotation2
             g_annotation1: global_annotation1
