@@ -70,6 +70,8 @@ tests:
             g_annotation1: global_annotation1
             g_annotation2: global_annotation2
             some-annotation: some-value
+            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+            checksum/services: 9faeacebbbe9fcb9eb8053747881ea47bf6f55ebc6248f830c1e4d2965f66707
       - documentIndex: *ingressDoc
         equal:
           path: metadata.labels

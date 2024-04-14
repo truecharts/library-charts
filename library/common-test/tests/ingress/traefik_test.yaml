@@ -40,12 +40,14 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
+            checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+            checksum/services: 9faeacebbbe9fcb9eb8053747881ea47bf6f55ebc6248f830c1e4d2965f66707
       - documentIndex: *ingressDoc
         equal:
           path: metadata.namespace
@@ -71,8 +73,12 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        notExists:
+        isNotSubset:
           path: metadata.annotations
+          content:
+            traefik.ingress.kubernetes.io/router.tls: "true"
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
 
   - it: should replace local fixedMiddlewares when allowCors true
     set:
@@ -106,9 +112,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-tc-opencors-chain@kubernetescrd
@@ -156,9 +162,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-some-fixed-middleware@kubernetescrd
@@ -206,9 +212,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-tc-opencors-chain@kubernetescrd
@@ -237,9 +243,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-some-fixed-middleware@kubernetescrd
@@ -268,9 +274,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
@@ -294,9 +300,9 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
@@ -320,9 +326,9 @@ tests:
         isKind:
           of: Ingress
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
@@ -355,9 +361,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: websecure
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd,test-release-namespace-some-middleware@kubernetescrd,test-release-namespace-some-other-middleware@kubernetescrd
@@ -389,9 +395,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.tls: "true"
             traefik.ingress.kubernetes.io/router.entrypoints: web
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
@@ -423,9 +429,9 @@ tests:
           path: metadata.name
           value: test-release-name-common-test
       - documentIndex: *ingressDoc
-        equal:
+        isSubset:
           path: metadata.annotations
-          value:
+          content:
             traefik.ingress.kubernetes.io/router.entrypoints: web
             traefik.ingress.kubernetes.io/router.middlewares: test-release-namespace-chain-basic@kubernetescrd
 

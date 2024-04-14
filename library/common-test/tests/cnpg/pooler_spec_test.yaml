@@ -20,6 +20,7 @@ tests:
           enabled: true
           user: test-user
           database: test-db
+          password: test-password
           pooler:
             enabled: true
             createRO: true

@@ -63,7 +63,6 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
-                password: test-password
                 owner: test-user
                 dataChecksums: true
 
@@ -267,7 +266,6 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: test-db
-                password: test-password
                 owner: test-user
                 dataChecksums: false
                 encoding: some-encoding
@@ -389,7 +387,6 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
-                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:
@@ -438,7 +435,6 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
-                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:
@@ -491,7 +487,6 @@ tests:
                 secret:
                   name: test-release-name-common-test-cnpg-my-pg-user
                 database: app
-                password: test-password
                 owner: app
                 dataChecksums: true
                 postInitApplicationSQL:

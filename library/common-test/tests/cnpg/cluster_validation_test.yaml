@@ -22,6 +22,7 @@ tests:
         my-pg:
           enabled: true
           user: test-user
+          password: test-password
     asserts:
       - failedTemplate:
           errorMessage: CNPG - Expected a non-empty [database] key
@@ -33,7 +34,6 @@ tests:
           enabled: true
           user: test-user
           database: test-db
-          password: test-password
     asserts:
       - failedTemplate:
           errorMessage: CNPG - Expected a non-empty [password] key
