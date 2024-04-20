@@ -43,8 +43,8 @@ global:
         initialDelaySeconds: 20
         periodSeconds: 10
         timeoutSeconds: 5
-        failureThreshold: 3
-        successThreshold: 1
+        failureThreshold: 5
+        successThreshold: 2
       startup:
         initialDelaySeconds: 10
         periodSeconds: 5
