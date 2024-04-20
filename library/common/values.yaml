@@ -38,7 +38,7 @@ global:
         periodSeconds: 15
         timeoutSeconds: 5
         failureThreshold: 5
-        successThreshold: 2
+        successThreshold: 1
       readiness:
         initialDelaySeconds: 20
         periodSeconds: 10
