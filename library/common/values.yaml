@@ -225,6 +225,17 @@ service:
 
 serviceList: []
 
+credentials: {}
+  # mys3:
+  #   type: s3
+  #   url: ""
+  #   region: ""
+  #   bucket: ""
+  #   accessKey: ""
+  #   secretKey: ""
+  #   encrKey: ""
+
+
 # -- (docs/persistence/README.md)
 persistence:
   shared:
@@ -256,6 +267,20 @@ persistence:
     mountPath: /dev/shm
     medium: Memory
     targetSelectAll: true
+#  backupexample:
+#    enabled: true
+#    type: pvc
+#    mountPath: /backedup
+#    targetSelectAll: true
+#    volsync:
+#      - name: mybackup
+#        ## TODO: other options
+#        type: restic
+#        credentials: mys3
+#        dest:
+#          enabled: true
+#        src:
+#          enabled: true
 #  iscsi:
 #    enabled: true
 #    type: iscsi

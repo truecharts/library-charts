@@ -206,7 +206,7 @@ jobs:
 
       - name: Add Dependencies
         run: |
-          if [[ "${{ matrix.values }}" =~ (ingress|metrics|cnpg).*-values.yaml ]]; then
+          if [[ "${{ matrix.values }}" =~ (ingress|metrics|cnpg|volsync).*-values.yaml ]]; then
             helm install prometheus-operator oci://tccr.io/truecharts/prometheus-operator --namespace prometheus-operator --create-namespace --wait
           fi
           if [[ "${{ matrix.values }}" =~ cnpg.*-values.yaml ]]; then
@@ -216,6 +216,10 @@ jobs:
             helm install cert-manager oci://tccr.io/truecharts/cert-manager --namespace cert-manager --create-namespace --wait
             helm install traefik oci://tccr.io/truecharts/traefik --namespace traefik --create-namespace --wait \
               --set service.main.type=ClusterIP --set service.tcp.type=ClusterIP
+          fi
+          if [[ "${{ matrix.values }}" =~ volsync.*-values.yaml ]]; then
+            helm install volumesnapshots oci://tccr.io/truecharts/volumesnapshot --namespace volumesnapshots --create-namespace --wait 
+            helm install volsync oci://tccr.io/truecharts/volsync --namespace volsync --create-namespace --wait
           fi
 
       - name: Run chart-testing (install)

@@ -1,0 +1,24 @@
+persistence:
+  srcbackup:
+    enabled: true
+    type: pvc
+    mountPath: /backedup
+    targetSelectAll: true
+    volsync:
+      - name: mybackup
+        type: restic
+        credentials: mys3
+        dest:
+          enabled: false
+        src:
+          enabled: true
+
+credentials:
+  mys3:
+    type: s3
+    url: ""
+    region: ""
+    bucket: ""
+    accessKey: ""
+    secretKey: ""
+    encrKey: ""

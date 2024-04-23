@@ -79,6 +79,44 @@
 
         {{- end -}}
 
+        {{/* Create VolSync objects */}}
+        {{- range $objectData.volsync -}}
+          {{- if or .src.enabled .dest.enabled -}}
+            {{- $volsyncData := (mustDeepCopy .) -}}
+
+             {{/* Create Secret for VolSync */}}
+            {{- $volsyncSecretName := printf "%s-volsync-%s" $objectData.name .name -}}
+            {{- $_ := set $volsyncData "repository" $volsyncSecretName -}}
+
+            {{- $credentials := get $.Values.credentials .credentials -}}
+            {{- $resticrepository := printf "s3:%s/%s/%s/%s" $credentials.url $credentials.bucket $.Release.Name $volsyncSecretName -}}
+            {{- $resticpassword := $credentials.encrKey -}}
+            {{- $s3id := $credentials.accessKey -}}
+            {{- $s3key := $credentials.secretKey -}}
+
+            {{- $volsyncSecretData := (dict
+                                  "name" $volsyncSecretName
+                                  "labels" (.labels | default dict)
+                                  "annotations" (.annotations | default dict)
+                                  "data" (dict "RESTIC_REPOSITORY" $resticrepository "RESTIC_PASSWORD" $resticpassword "AWS_ACCESS_KEY_ID" $s3id "AWS_SECRET_ACCESS_KEY" $s3key)
+                                ) -}}
+            {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $volsyncSecretData) -}}
+
+             {{/* Create VolSync resources*/}}
+            {{- if .src.enabled -}}
+              {{- include "tc.v1.common.class.replicationsource" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
+            {{- end -}}
+            {{- if .dest.enabled -}}
+              {{- include "tc.v1.common.class.replicationdestination" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
+
+               {{/* modify PVC if enabled */}}
+               {{- $destname := printf "%s-%s-dest" $objectData.name  $volsyncData.name -}}
+               {{- $datasourceref := dict "kind" "ReplicationDestination" "apiGroup" "volsync.backube" "name" $destname -}}
+               {{- $_ := set $objectData "dataSourceRef" $datasourceref -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+
         {{/* Call class to create the object */}}
         {{- include "tc.v1.common.class.pvc" (dict "rootCtx" $ "objectData" $objectData) -}}
 
