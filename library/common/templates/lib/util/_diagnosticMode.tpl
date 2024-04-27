@@ -16,6 +16,9 @@
         {{- end -}}
       {{- end -}}
 
+      {{/* Ignore if its not true as we want any item
+          that is true to apply regardless of the order
+      */}}
       {{- if $item.diagnosticMode.enabled -}}
         {{- $diagMode = true -}}
       {{- end -}}
