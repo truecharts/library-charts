@@ -764,7 +764,7 @@ tests:
                 probes: *probes
     asserts:
       - failedTemplate:
-          errorMessage: Diagnostic mode - Expected [diagnosticMode] to be a [map], but got [string]
+          errorMessage: Diagnostic Mode - Expected [diagnosticMode] to be a map, but got [string]
 
   - it: should fail with diagnosticMode.enabled not a boolean
     set:
@@ -785,4 +785,4 @@ tests:
                 probes: *probes
     asserts:
       - failedTemplate:
-          errorMessage: Diagnostic mode - Expected [diagnosticMode.enabled] to be a [bool], but got [string]
+          errorMessage: Diagnostic Mode - Expected [diagnosticMode.enabled] to be a bool, but got [string]
