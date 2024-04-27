@@ -785,4 +785,4 @@ tests:
                 probes: *probes
     asserts:
       - failedTemplate:
-          errorMessage: Diagnostic mode - Expected [diagnosticMode.enabled] to be a [boolean], but got [string]
+          errorMessage: Diagnostic mode - Expected [diagnosticMode.enabled] to be a [bool], but got [string]
