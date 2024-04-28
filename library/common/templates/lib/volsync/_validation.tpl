@@ -15,7 +15,6 @@
     {{- fail (printf "VolSync - Expected [type] to be one of [%s], but got [%s]" (join ", " $validTypes) $objectData.type) -}}
   {{- end -}}
 
-
   {{- if not $objectData.credentials -}}
     {{- fail "VolSync - Expected non-empty [credentials]" -}}
   {{- end -}}
