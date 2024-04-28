@@ -93,7 +93,10 @@
           {{- if or $srcEnabled $destEnabled -}}
             {{- $volsyncData := (mustDeepCopy $volsync) -}}
 
-             {{/* Create Secret for VolSync */}}
+            {{- include "tc.v1.common.lib.volsync.validation" (dict "objectData" $volsyncData "rootCtx" $) -}}
+            {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $volsyncData "caller" "PVC - VolSync") -}}
+
+            {{/* Create Secret for VolSync */}}
             {{- $volsyncSecretName := printf "%s-volsync-%s" $objectData.name $volsync.name -}}
             {{- $_ := set $volsyncData "repository" $volsyncSecretName -}}
 

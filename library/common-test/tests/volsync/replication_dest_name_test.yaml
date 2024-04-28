@@ -32,12 +32,11 @@ tests:
       credentials:
         mys3:
           type: s3
-          url: ""
-          region: ""
-          bucket: ""
-          accessKey: ""
-          secretKey: ""
-          encrKey: ""
+          url: some-url
+          bucket: some-bucket
+          encrKey: some-key
+          accessKey: some-access-key
+          secretKey: some-secret-key
     asserts:
       - documentIndex: &secretDoc 0
         isKind:
