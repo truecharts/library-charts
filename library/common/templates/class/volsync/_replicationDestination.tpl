@@ -16,12 +16,11 @@ objectData:
   {{- $rootCtx := .rootCtx -}}
   {{- $objectData := .objectData -}}
   {{- $volsyncData := .volsyncData }}
-
 ---
 apiVersion: volsync.backube/v1alpha1
-kind: replicationdestination
+kind: ReplicationDestination
 metadata:
-  name: {{ $objectData.name }}-{{ $volsyncData.name }}-dest
+  name: {{ printf "%s-%s-dest" $objectData.name $volsyncData.name }}
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "replicationdestination") }}
   {{- $labels := (mustMerge ($volsyncData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}

@@ -6,24 +6,23 @@
   {{- $volsyncData := .volsyncData -}}
   {{- $target := get $volsyncData .target -}}
 
-  {{- $runAsUser := $rootCtx.Values.securityContext.container.runAsUser -}}
-  {{- $runAsGroup := $rootCtx.Values.securityContext.container.runAsGroup -}}
-  {{- $fsGroup := $rootCtx.Values.securityContext.pod.fsGroup -}}
+  {{- $sec := dict
+      "runAsUser" $rootCtx.Values.securityContext.container.runAsUser
+      "runAsGroup" $rootCtx.Values.securityContext.container.runAsGroup
+      "fsGroup" $rootCtx.Values.securityContext.pod.fsGroup
+  -}}
 
+  {{- $items := list "runAsUser" "runAsGroup" "fsGroup" -}}
   {{- if $target.moverSecurityContext -}}
-    {{- with $target.moverSecurityContext.runAsUser -}} {{/* TODO: Handle 0 here */}}
-      {{- $runAsUser = . | default $runAsUser -}}
-    {{- end -}}
-    {{- with $target.moverSecurityContext.runAsGroup -}} {{/* TODO: Handle 0 here */}}
-      {{- $runAsGroup = . | default $runAsGroup -}}
-    {{- end -}}
-    {{- with $target.moverSecurityContext.fsGroup -}} {{/* TODO: Handle 0 here */}}
-      {{- $fsGroup = . | default $fsGroup -}}
+    {{- range $item := $items -}}
+      {{- if hasKey $target.moverSecurityContext $item -}}
+        {{- $_ := set $sec $item (get $target.moverSecurityContext $item) -}}
+      {{- end -}}
     {{- end -}}
   {{- end }}
 
 moverSecurityContext:
-  runAsUser: {{ $runAsUser }}
-  runAsGroup: {{ $runAsGroup }}
-  fsGroup: {{ $fsGroup }}
+  runAsUser: {{ $sec.runAsUser }}
+  runAsGroup: {{ $sec.runAsGroup }}
+  fsGroup: {{ $sec.fsGroup }}
 {{- end -}}

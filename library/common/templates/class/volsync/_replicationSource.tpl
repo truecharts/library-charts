@@ -22,25 +22,21 @@ objectData:
     {{- $schedule = $volsyncData.src.trigger.schedule -}}
   {{- end }}
 
-  {{- $hourly := 24 -}}
-  {{- $daily := 7 -}}
-  {{- $weekly := 5 -}}
-  {{- if and $volsyncData.src.retain -}}
-    {{- with $volsyncData.src.retain.hourly -}}
-      {{- $hourly = . }}
-    {{- end -}}
-    {{- with $volsyncData.src.retain.daily -}}
-      {{- $daily = . }}
-    {{- end -}}
-    {{- with $volsyncData.src.retain.weekly -}}
-      {{- $weekly = . }}
+  {{- $retain := dict "hourly" 24 "daily" 7 "weekly" 5 -}}
+  {{- $items := list "hourly" "daily" "weekly" -}}
+
+  {{- if $volsyncData.src.retain -}}
+    {{- range $item := $items -}}
+      {{- with get $volsyncData.src.retain $item -}}
+        {{- $_ := set $retain $item . -}}
+      {{- end -}}
     {{- end -}}
   {{- end }}
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: {{ $objectData.name }}-{{ $volsyncData.name }}
+  name: {{ printf "%s-%s" $objectData.name $volsyncData.name }}
   namespace: {{ include "tc.v1.common.lib.metadata.namespace" (dict "rootCtx" $rootCtx "objectData" $objectData "caller" "replicationsource") }}
   {{- $labels := (mustMerge ($volsyncData.labels | default dict) (include "tc.v1.common.lib.metadata.allLabels" $rootCtx | fromYaml)) -}}
   {{- with (include "tc.v1.common.lib.metadata.render" (dict "rootCtx" $rootCtx "labels" $labels) | trim) }}
@@ -66,7 +62,7 @@ spec:
     {{- include "tc.v1.common.lib.volsync.moversecuritycontext" (dict "rootCtx" $rootCtx "objectData" $objectData "volsyncData" $volsyncData "target" "src") | trim | nindent 4 }}
 
     retain:
-      hourly: {{ $hourly }}
-      daily: {{ $daily }}
-      weekly: {{ $weekly }}
+      hourly: {{ $retain.hourly }}
+      daily: {{ $retain.daily }}
+      weekly: {{ $retain.weekly }}
 {{- end }}
