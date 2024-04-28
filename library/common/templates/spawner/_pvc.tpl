@@ -81,14 +81,14 @@
 
         {{/* Create VolSync objects */}}
         {{- range $volsync := $objectData.volsync -}}
-          {{- $srcEnabled := (include "tc.v1.common.lib.util.enabled" (dict
+          {{- $srcEnabled := eq (include "tc.v1.common.lib.util.enabled" (dict
                 "rootCtx" $ "objectData" $volsync.src
                 "name" $volsync.name "caller" "VolSync Source"
-                "key" "volsync")) -}}
-          {{- $destEnabled := (include "tc.v1.common.lib.util.enabled" (dict
+                "key" "volsync")) "true" -}}
+          {{- $destEnabled := eq (include "tc.v1.common.lib.util.enabled" (dict
                 "rootCtx" $ "objectData" $volsync.dest
                 "name" $volsync.name "caller" "VolSync Destination"
-                "key" "volsync")) -}}
+                "key" "volsync")) "true" -}}
 
           {{- if or $srcEnabled $destEnabled -}}
             {{- $volsyncData := (mustDeepCopy $volsync) -}}
@@ -115,12 +115,12 @@
                 )
             ) -}}
             {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $volsyncSecretData) -}}
-
              {{/* Create VolSync resources*/}}
-            {{- if $volsync.src.enabled -}}
+            {{- if $srcEnabled -}}
               {{- include "tc.v1.common.class.replicationsource" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
             {{- end -}}
-            {{- if $volsync.dest.enabled -}}
+
+            {{- if $destEnabled -}}
               {{- include "tc.v1.common.class.replicationdestination" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
 
                {{/* modify PVC if enabled */}}
