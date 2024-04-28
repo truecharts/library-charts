@@ -23,9 +23,8 @@ objectData:
   {{- end }}
 
   {{- $retain := dict "hourly" 24 "daily" 7 "weekly" 5 -}}
-  {{- $items := list "hourly" "daily" "weekly" -}}
-
   {{- if $volsyncData.src.retain -}}
+    {{- $items := list "hourly" "daily" "weekly" -}}
     {{- range $item := $items -}}
       {{- with get $volsyncData.src.retain $item -}}
         {{- $_ := set $retain $item . -}}

@@ -12,8 +12,8 @@
       "fsGroup" $rootCtx.Values.securityContext.pod.fsGroup
   -}}
 
-  {{- $items := list "runAsUser" "runAsGroup" "fsGroup" -}}
   {{- if $target.moverSecurityContext -}}
+    {{- $items := list "runAsUser" "runAsGroup" "fsGroup" -}}
     {{- range $item := $items -}}
       {{- if hasKey $target.moverSecurityContext $item -}}
         {{- $_ := set $sec $item (get $target.moverSecurityContext $item) -}}
