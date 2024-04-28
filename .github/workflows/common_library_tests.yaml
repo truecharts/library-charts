@@ -136,6 +136,8 @@ jobs:
           - register-operator-values.yaml
           - portal-svc-values.yaml
           - portal-ingress-values.yaml
+          - volsync-dest-values.yaml
+          - volsync-src-values.yaml
 
     steps:
       - name: Checkout
