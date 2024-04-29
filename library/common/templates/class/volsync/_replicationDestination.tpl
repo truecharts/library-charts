@@ -43,7 +43,7 @@ spec:
     {{- else if $objectData.size }}
     capacity: {{ $objectData.size }}
     {{- else -}}
-    capacity: {{ $rootCtx.Values.fallbackDefaults.pvcSize }}
+    capacity: {{ $rootCtx.Values.global.fallbackDefaults.pvcSize }}
     {{- end }}
 
   {{- include "tc.v1.common.lib.volsync.storage" (dict "rootCtx" $rootCtx "objectData" $objectData "volsyncData" $volsyncData "target" "dest") | trim | nindent 4 }}
