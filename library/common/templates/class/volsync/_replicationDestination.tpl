@@ -42,7 +42,7 @@ spec:
     capacity: {{ $volsyncData.dest.capacity }}
     {{- else if $objectData.size }}
     capacity: {{ $objectData.size }}
-    {{- else -}}
+    {{- else }}
     capacity: {{ $rootCtx.Values.global.fallbackDefaults.pvcSize }}
     {{- end }}
 
