@@ -101,7 +101,7 @@
             {{- $_ := set $volsyncData "repository" $volsyncSecretName -}}
 
             {{- $credentials := get $.Values.credentials $volsync.credentials -}}
-            {{- $resticrepository := printf "s3:%s/%s/%s/%s" $credentials.url $credentials.bucket $.Release.Name $volsyncSecretName -}}
+            {{- $resticrepository := printf "s3:%s/%s/%s/volsync/%s" $credentials.url $credentials.bucket ( $credentials.path | default "/" ) $.Release.Name $volsyncSecretName -}}
             {{- $resticpassword := $credentials.encrKey -}}
             {{- $s3id := $credentials.accessKey -}}
             {{- $s3key := $credentials.secretKey -}}
