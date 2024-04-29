@@ -102,10 +102,9 @@
 
             {{- $credentials := get $.Values.credentials $volsync.credentials -}}
 
-            {{- if $credentials.path -}}
-            {{- $resticrepository := printf "s3:%s/%s/%s/volsync/%s" $credentials.url $credentials.bucket ( $credentials.path | trimSuffix "/" ) $.Release.Name $volsyncSecretName -}}
-            {{- else -}}
             {{- $resticrepository := printf "s3:%s/%s/volsync/%s" $credentials.url $credentials.bucket $.Release.Name $volsyncSecretName -}}
+            {{- if $credentials.path -}}
+            {{- $resticrepository = printf "s3:%s/%s/%s/volsync/%s" $credentials.url $credentials.bucket ( $credentials.path | trimSuffix "/" ) $.Release.Name $volsyncSecretName -}}
             {{- end -}}
 
             {{- $resticpassword := ( $credentials.encrKey | default $.Release.Name ) -}}
