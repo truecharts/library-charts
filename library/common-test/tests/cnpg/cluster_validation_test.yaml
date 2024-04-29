@@ -419,6 +419,7 @@ tests:
         test:
           type: google
           connectionString: some-credentials
+          applicationCredentials: some-credential
       cnpg:
         my-pg:
           enabled: true
