@@ -108,8 +108,10 @@ tests:
     set:
       credentials:
         test:
-          type: azure
-          connectionString: some-connection-string
+          type: s3
+          url: some-url
+          secretKey: some-secret-key
+          accessKey: some-access-key
       cnpg:
         my-pg:
           enabled: true
@@ -135,8 +137,10 @@ tests:
     set:
       credentials:
         test:
-          type: azure
-          connectionString: some-connection-string
+          type: s3
+          url: some-url
+          secretKey: some-secret-key
+          accessKey: some-access-key
       key: some-namespace
       cnpg:
         my-pg:
@@ -163,8 +167,10 @@ tests:
     set:
       credentials:
         test:
-          type: azure
-          connectionString: some-connection-string
+          type: se
+          url: some-url
+          secretKey: some-secret-key
+          accessKey: some-access-key
       key: global-namespace
       global:
         namespace: "{{ .Values.key }}"
@@ -192,8 +198,10 @@ tests:
     set:
       credentials:
         test:
-          type: azure
-          connectionString: some-connection-string
+          type: s3
+          url: some-url
+          secretKey: some-secret-key
+          accessKey: some-access-key
       key: local-namespace
       namespace: "{{ .Values.key }}"
       global:
@@ -222,8 +230,10 @@ tests:
     set:
       credentials:
         test:
-          type: azure
-          connectionString: some-connection-string
+          type: s3
+          url: some-url
+          secretKey: some-secret-key
+          accessKey: some-access-key
       global:
         ixChartContext:
           iAmNotEmpty: true
