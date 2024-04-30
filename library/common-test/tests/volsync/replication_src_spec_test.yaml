@@ -72,3 +72,56 @@ tests:
                 fsGroup: 568
                 runAsUser: 568
                 runAsGroup: 568
+
+  - it: should generate correct spec with changed defaults
+    set:
+      persistence:
+        srcbackup:
+          enabled: true
+          type: pvc
+          mountPath: /backedup
+          volsync:
+            - name: mybackup1
+              type: restic
+              credentials: mys3
+              copyMethod: Clone
+              dest:
+                enabled: false
+              src:
+                enabled: true
+                trigger:
+                  schedule: "1 0 * * *"
+                retain:
+                  hourly: 20
+                  daily: 5
+                  weekly: 3
+                pruneIntervalDays: 5
+      credentials: *credentials
+    asserts:
+      - documentIndex: *replicationDestDoc
+        isKind:
+          of: ReplicationSource
+      - documentIndex: *replicationDestDoc
+        isAPIVersion:
+          of: volsync.backube/v1alpha1
+      - documentIndex: *replicationDestDoc
+        equal:
+          path: spec
+          value:
+            sourcePVC: test-release-name-common-test-srcbackup
+            trigger:
+              schedule: "1 0 * * *"
+            restic:
+              repository: test-release-name-common-test-srcbackup-volsync-mybackup1
+              copyMethod: Clone
+              pruneIntervalDays: 5
+              retain:
+                hourly: 20
+                daily: 5
+                weekly: 3
+              accessModes:
+                - ReadWriteOnce
+              moverSecurityContext:
+                fsGroup: 568
+                runAsUser: 568
+                runAsGroup: 568
