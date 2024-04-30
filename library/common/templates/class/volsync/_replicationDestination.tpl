@@ -47,7 +47,6 @@ spec:
     repository: {{ $volsyncData.repository }}
     copyMethod: {{ $volsyncData.copyMethod | default "Snapshot"}}
     capacity: {{ $capacity }}
-
   {{- include "tc.v1.common.lib.volsync.storage" (dict "rootCtx" $rootCtx "objectData" $objectData "volsyncData" $volsyncData "target" "dest") | trim | nindent 4 }}
   {{- include "tc.v1.common.lib.volsync.cache" (dict "rootCtx" $rootCtx "objectData" $objectData "volsyncData" $volsyncData "target" "dest") | trim | nindent 4 }}
   {{- include "tc.v1.common.lib.volsync.moversecuritycontext" (dict "rootCtx" $rootCtx "objectData" $objectData "volsyncData" $volsyncData "target" "dest") | trim | nindent 4 }}
