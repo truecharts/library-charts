@@ -22,7 +22,6 @@ accessModes:
     {{- range $accessModes }}
   - {{ . }}
     {{- end -}}
-  {{- end -}}
 
   {{- with $target.volumeSnapshotClassName }}
 volumeSnapshotClassName: {{ . }}

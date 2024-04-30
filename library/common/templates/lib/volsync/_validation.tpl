@@ -28,6 +28,14 @@
   {{- end -}}
 
   {{- $credentials := get $rootCtx.Values.credentials $objectData.credentials -}}
+
+  {{- $validCredTypes := list "s3" -}}
+  {{- if $credentials.type -}} {{/* Remove this if check if more types are supported in future */}}
+    {{- if not (mustHas $credentials.type $validCredTypes) -}}
+      {{- fail (printf "VolSync - Expected [type] in [credentials.%s] to be one of [%s], but got [%s]" $objectData.credentials (join ", " $validCredTypes) $credentials.type) -}}
+    {{- end -}}
+  {{- end -}}
+
   {{- $reqFields := list "url" "bucket" "encrKey" "accessKey" "secretKey" -}}
   {{- range $key := $reqFields -}}
     {{- if not (get $credentials $key) -}}
