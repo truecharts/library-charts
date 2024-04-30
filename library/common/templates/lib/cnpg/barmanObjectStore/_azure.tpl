@@ -29,9 +29,9 @@
       {{- fail (printf "CNPG %s - You need to specify [%s.azure.containerName] or [%s.destinationPath]" ($type | camelcase) $key $key) -}}
     {{- end -}}
     {{- if $data.path -}}
-    {{- $destinationPath = (printf "https://%s.%s.core.windows.net/%s/%s/%s/cnpg" $data.storageAccount $data.serviceName $data.containerName ($data.path  | trimSuffix "/") $rootCtx.Release.Name) -}}
+      {{- $destinationPath = (printf "https://%s.%s.core.windows.net/%s/%s/%s/cnpg" $data.storageAccount $data.serviceName $data.containerName ($data.path  | trimSuffix "/") $rootCtx.Release.Name) -}}
     {{- else -}}
-    {{- $destinationPath = (printf "https://%s.%s.core.windows.net/%s/%s/cnpg" $data.storageAccount $data.serviceName $data.containerName $rootCtx.Release.Name) -}}
+      {{- $destinationPath = (printf "https://%s.%s.core.windows.net/%s/%s/cnpg" $data.storageAccount $data.serviceName $data.containerName $rootCtx.Release.Name) -}}
     {{- end -}}
   {{- end }}
 endpointURL: {{ $endpointURL }}
