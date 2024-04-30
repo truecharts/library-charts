@@ -225,7 +225,8 @@ service:
 
 serviceList: []
 
-credentials: {}
+credentials:
+  {}
   # mys3:
   #   type: s3
   #   url: ""
@@ -236,25 +237,6 @@ credentials: {}
   #   secretKey: ""
   #   ## Is used in cases where things are encrypted by a backup utility
   #   encrKey: ""
-
-
-  # azure:
-  #   path: ""
-  #   connectionString: ""
-  #   storageAccount: ""
-  #   storageKey: ""
-  #   storageSasToken: ""
-  #   containerName: ""
-  #   serviceName: blob
-  #   inheritFromAzureAD: false
-
-  ## TODO: Add support for google:
-  # google:
-  #   path: ""
-  #   bucket: ""
-  #   gkeEnvironment: false
-  #   applicationCredentials: ""
-
 
 # -- (docs/persistence/README.md)
 persistence:
