@@ -11,6 +11,9 @@ tests:
         test:
           type: s3
           secretKey: test
+          url: some-url
+          bucket: some-bucket
+          encrKey: some-encr-key
       cnpg:
         my-pg:
           enabled: true
@@ -29,6 +32,9 @@ tests:
         test:
           type: s3
           accessKey: test
+          url: some-url
+          bucket: some-bucket
+          encrKey: some-encr-key
       cnpg:
         my-pg:
           enabled: true

@@ -8,10 +8,12 @@ tests:
   - it: should generate correct spec with backups (s3)
     set:
       credentials:
-        test:
+        test: &test
           type: s3
           accessKey: some-access-key
           secretKey: some-secret-key
+          bucket: some-bucket
+          encrKey: some-encr-key
           url: some-url
       cnpg:
         my-pg:
@@ -81,11 +83,7 @@ tests:
   - it: should use the revision when set in server name
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -155,11 +153,7 @@ tests:
   - it: should override serverName when set
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -229,11 +223,7 @@ tests:
   - it: should override serverName when set (and also take account revision)
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -248,7 +238,6 @@ tests:
             destinationPath: some-path
             serverName: some-server-name
             revision: "1"
-
     asserts:
       - documentIndex: *secretDoc
         isKind:

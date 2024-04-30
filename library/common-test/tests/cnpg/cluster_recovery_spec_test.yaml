@@ -74,11 +74,13 @@ tests:
   - it: should generate correct spec with recovery/objectStore (s3)
     set:
       credentials:
-        test:
+        test: &test
           type: s3
           accessKey: some-access-key
           secretKey: some-secret-key
           bucket: some-bucket
+          encrKey: some-encr-key
+          url: https://s3.some-region.amazonaws.com
           region: some-region
           path: some-path
       cnpg:
@@ -150,11 +152,7 @@ tests:
   - it: should generate correct spec with recovery/objectStore (s3 - destinationPath/endpointURL)
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-endpoint-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -214,7 +212,7 @@ tests:
                 barmanObjectStore:
                   serverName: test-release-name-common-test-cnpg-my-pg
                   destinationPath: s3://some-bucket
-                  endpointURL: some-endpoint-url
+                  endpointURL: https://s3.some-region.amazonaws.com
                   s3Credentials:
                     accessKeyId:
                       key: ACCESS_KEY_ID
@@ -226,11 +224,7 @@ tests:
   - it: should use revision in serverName when set
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-endpoint-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -260,7 +254,8 @@ tests:
         equal:
           path: stringData
           value:
-            APPLICATION_CREDENTIALS: some-credentials
+            ACCESS_KEY_ID: some-access-key
+            ACCESS_SECRET_KEY: some-secret-key
       - documentIndex: *clusterDoc
         isKind:
           of: Cluster
@@ -293,7 +288,7 @@ tests:
                 barmanObjectStore:
                   serverName: test-release-name-common-test-cnpg-my-pg-rsome-revision
                   destinationPath: s3://some-bucket
-                  endpointURL: some-endpoint-url
+                  endpointURL: https://s3.some-region.amazonaws.com
                   s3Credentials:
                     accessKeyId:
                       key: ACCESS_KEY_ID
@@ -305,11 +300,7 @@ tests:
   - it: should override serverName when set
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-endpoint-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -339,7 +330,8 @@ tests:
         equal:
           path: stringData
           value:
-            APPLICATION_CREDENTIALS: some-credentials
+            ACCESS_KEY_ID: some-access-key
+            ACCESS_SECRET_KEY: some-secret-key
       - documentIndex: *clusterDoc
         isKind:
           of: Cluster
@@ -372,7 +364,7 @@ tests:
                 barmanObjectStore:
                   serverName: some-server-name
                   destinationPath: s3://some-bucket
-                  endpointURL: some-endpoint-url
+                  endpointURL: https://s3.some-region.amazonaws.com
                   s3Credentials:
                     accessKeyId:
                       key: ACCESS_KEY_ID
@@ -384,11 +376,7 @@ tests:
   - it: should override serverName when set along with revision
     set:
       credentials:
-        test:
-          type: s3
-          accessKey: some-access-key
-          secretKey: some-secret-key
-          url: some-endpoint-url
+        test: *test
       cnpg:
         my-pg:
           enabled: true
@@ -419,7 +407,8 @@ tests:
         equal:
           path: stringData
           value:
-            APPLICATION_CREDENTIALS: some-credentials
+            ACCESS_KEY_ID: some-access-key
+            ACCESS_SECRET_KEY: some-secret-key
       - documentIndex: *clusterDoc
         isKind:
           of: Cluster
@@ -452,7 +441,7 @@ tests:
                 barmanObjectStore:
                   serverName: some-server-name-r20
                   destinationPath: s3://some-bucket
-                  endpointURL: some-endpoint-url
+                  endpointURL: https://s3.some-region.amazonaws.com
                   s3Credentials:
                     accessKeyId:
                       key: ACCESS_KEY_ID
