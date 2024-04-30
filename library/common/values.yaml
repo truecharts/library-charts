@@ -225,8 +225,7 @@ service:
 
 serviceList: []
 
-credentials:
-  {}
+credentials: {}
   # mys3:
   #   type: s3
   #   url: ""
