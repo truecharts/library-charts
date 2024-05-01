@@ -8,7 +8,7 @@
   {{- $secretName := (printf "%s-cnpg-%s-provider-%s-s3-creds" $fullname $objectData.shortName $type) -}}
 
   {{- $calcData := include "tc.v1.common.lib.cnpg.cluster.barmanObjectStoreConfig.getData" (dict
-      "rootCtx" $rootCtx "objectData" $objectData "type" $type ) | fromYaml
+      "rootCtx" $rootCtx "objectData" $objectData "type" $type) | fromYaml
   -}}
 
   {{- $serverName := $calcData.serverName -}}
