@@ -3,7 +3,7 @@
   {{- $objectData := .objectData -}}
   {{- $type := .type -}}
 
-  {{- $serverName :=  $objectData.clusterName -}}
+  {{- $serverName := $objectData.clusterName -}}
   {{- $endpointURL := "" -}}
   {{- $destinationPath := "" -}}
   {{- $creds := dict -}}
