@@ -230,7 +230,6 @@ credentials: {}
   #   type: s3
   #   url: ""
   #   path: ""
-  #   region: ""
   #   bucket: ""
   #   accessKey: ""
   #   secretKey: ""

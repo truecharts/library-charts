@@ -81,7 +81,6 @@ tests:
           bucket: some-bucket
           encrKey: some-encr-key
           url: https://s3.some-region.amazonaws.com
-          region: some-region
           path: some-path
       cnpg:
         my-pg:
