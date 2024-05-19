@@ -6,7 +6,7 @@
   {{- $credentials := get $rootCtx.Values.credentials $credName -}}
 
   {{- if not $credentials -}}
-    {{- fail (printf "%s - Expected credentials [%s] to be defined in [credentials.%s]" $caller $credName $credName) -}}
+    {{- fail (printf "%s - Expected credentials [%s] to be defined in [credentials]" $caller $credName) -}}
   {{- end -}}
 
   {{- $validCredTypes := list "s3" -}}
