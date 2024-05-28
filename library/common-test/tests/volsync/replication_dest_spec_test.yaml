@@ -191,7 +191,7 @@ tests:
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
               copyMethod: Clone
-              capacity: 200Gi
+              capacity: 100Gi
               accessModes:
                 - ReadWriteOnce
               volumeSnapshotClassName: somevsc
