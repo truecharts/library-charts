@@ -14,7 +14,15 @@
     {{- $accessModes = $target.accessModes }}
   {{- end }}
 
-  {{- with $target.storageClassName }}
+  {{- $storageClassName := $rootCtx.Values.global.fallbackDefaults.storageClass -}}
+  {{- if $objectData.storageClass }}
+    {{- $storageClassName = $objectData.storageClass }}
+  {{- end }}
+  {{- if $target.storageClassName }}
+    {{- $storageClassName = $target.storageClassName }}
+  {{- end }}
+
+  {{- with $storageClassName }}
 storageClassName: {{ . }}
   {{- end }}
 
