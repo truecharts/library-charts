@@ -41,14 +41,7 @@
   {{- end -}}
 
   {{/* TrueNAS SCALE specific code */}}
-  {{- if $rootCtx.Values.global.ixChartContext -}}
-    {{- if $rootCtx.Values.global.ixChartContext.kubernetes_config -}}
-      {{- $podCIDR = $rootCtx.Values.global.ixChartContext.kubernetes_config.cluster_cidr -}}
-      {{- $svcCIDR = $rootCtx.Values.global.ixChartContext.kubernetes_config.service_cidr -}}
-    {{- end -}}
-  {{- else -}}
     {{/* TODO: Find ways to implement CIDR detection */}}
-  {{- end -}}
 
   {{/* If there is ingress, get data from the primary */}}
   {{- $primaryIngressName := include "tc.v1.common.lib.util.ingress.primary" (dict "rootCtx" $rootCtx) -}}
