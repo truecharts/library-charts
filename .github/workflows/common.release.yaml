@@ -24,8 +24,8 @@ jobs:
 
     - name: Configure Git
       run: |
-        git config user.name "TrueCharts-Bot"
-        git config user.email "bot@truecharts.org"
+        git config user.name "Ac1dsbot"
+        git config user.email "ac1d@fuckyoukaren.ca"
 
     - name: Install Helm
       uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4
