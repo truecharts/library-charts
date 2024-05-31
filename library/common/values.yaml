@@ -475,7 +475,7 @@ portal:
       service: ""
       port: ""
 
-# -- Set by "open" portal, used for some applications internally.
+## -- Set by "open" portal, used for some applications internally.
 APPURL: ""
 
 gluetunImage:
