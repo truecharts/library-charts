@@ -479,8 +479,8 @@ portal:
 APPURL: ""
 
 gluetunImage:
-  repository: tccr.io/tccr/gluetun
-  tag: v3.38.0@sha256:1c93687d1ba957252d11c29a741d56f3dca3765dbe666ed8595e71816e964452
+  repository: ghcr.io/ac1dburnz/gluetun
+  tag: v3.40.1@sha256:bc79ba93861fa502494f1b09c7352d5ea5b0ae7d41e0460dbf3111705e826a0d
   pullPolicy: IfNotPresent
 
 netshootImage:
