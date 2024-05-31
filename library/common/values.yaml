@@ -390,13 +390,6 @@ volumeSnapshotsList: {}
 #       persistentVolumeClaimName: "mypvcname" (does not get altered)
 #       volumeSnapshotContentName: "mysnapshotname"
 
-# -- Injected from SCALE middleware
-# Only for reference here
-ixExternalInterfacesConfiguration: []
-# -- Injected from SCALE middleware
-# Only for reference here
-ixExternalInterfacesConfigurationNames: []
-
 # -- (docs/imagePullSecrets.md)
 imagePullSecret: {}
 
@@ -424,13 +417,6 @@ notes:
     # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
-    {{- if .Values.iXPortals }}
-    ## Connecting externally
-    You can use this Chart by opening one of the following links in your browser:
-      {{- range .Values.iXPortals }}
-    - {{ toYaml . }}
-      {{- end -}}
-    {{- end }}
     ## Sources for {{ .Chart.Name }}
 
     {{- range .Chart.Sources }}
@@ -451,9 +437,6 @@ notes:
     OpenSource can only exist with your help, please consider supporting TrueCharts:
     https://truecharts.org/sponsor
   warnings: []
-
-# -- iXsystems prototype values.yaml based portals
-iXPortals: []
 
 ####
 ##
