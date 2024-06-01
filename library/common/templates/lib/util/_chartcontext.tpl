@@ -6,7 +6,6 @@
     "override" dict
     "targetSelector" dict
     "path" ""
-    "isPortal" false
   ) -}}
 
   {{- $context := (include "tc.v1.common.lib.util.chartcontext.data" (dict "rootCtx" $ "objectData" $objectData) | fromYaml) -}}
@@ -33,12 +32,6 @@
   {{- $path := "/" -}}
   {{- $podCIDR := "172.16.0.0/16" -}}
   {{- $svcCIDR := "172.17.0.0/16" -}}
-
-  {{- if $objectData.isPortal -}}
-    {{/* Adjust some defaults */}}
-    {{- $host = "$node_ip" -}}
-    {{- $path = $objectData.path | default "/" -}}
-  {{- end -}}
 
   {{/* TrueNAS SCALE specific code */}}
     {{/* TODO: Find ways to implement CIDR detection */}}
