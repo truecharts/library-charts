@@ -223,8 +223,6 @@ service:
         primary: true
         protocol: http
 
-serviceList: []
-
 credentials: {}
   # mys3:
   #   type: s3
@@ -374,14 +372,8 @@ persistence:
 #      - name: "mysnapshot"
 #        volumeSnapshotClassName: "mysnapshotclass" (optional)
 
-persistenceList: []
-
-deviceList: []
-
 volumeSnapshotClass: {}
-volumeSnapshotClassList: {}
 volumeSnapshots: {}
-volumeSnapshotsList: {}
 # volumeSnapshots:
 #   mysnapshot:
 #     volumeSnapshotClassName: "mycustomsnapshot" (optional)
@@ -392,9 +384,6 @@ volumeSnapshotsList: {}
 
 # -- (docs/imagePullSecrets.md)
 imagePullSecret: {}
-
-# -- (docs/imagePullSecrets.md)
-imagePullSecretList: []
 
 # -- (docs/configmap.md)
 configmap: {}
