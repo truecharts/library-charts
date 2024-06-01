@@ -417,6 +417,14 @@ notes:
     # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
+ {{- if .Values.iXPortals }}
+    ## Connecting externally
+    You can use this Chart by opening one of the following links in your browser:
+      {{- range .Values.portals }}
+    - {{ toYaml .rendered.url }}
+      {{- end -}}
+    {{- end }}
+
     ## Sources for {{ .Chart.Name }}
 
     {{- range .Chart.Sources }}
