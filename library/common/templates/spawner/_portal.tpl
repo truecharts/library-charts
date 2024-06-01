@@ -42,7 +42,7 @@
           "url" $context.appUrlWithPortAndPath
         ) -}}
 
-        {{- $_ := set $.Values.portal $name $portalData -}}
+        {{- $_ := set $.Values.portal $name (dict "rendered" $portalData) -}}
 
     {{- end -}}
   {{- end -}}

@@ -418,8 +418,8 @@ notes:
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
       {{- range $p := .Values.portal }}
-      {{- if $p.enabled }}
-    - {{ toYaml $p.url }}
+      {{- if $p.enabled $p.rendered }}
+    - {{ toYaml $p.rendered.url }}
       {{- end }}
       {{- end -}}
     {{- end }}
