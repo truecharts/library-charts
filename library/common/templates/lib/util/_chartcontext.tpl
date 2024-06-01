@@ -33,8 +33,7 @@
   {{- $podCIDR := "172.16.0.0/16" -}}
   {{- $svcCIDR := "172.17.0.0/16" -}}
 
-  {{/* TrueNAS SCALE specific code */}}
-    {{/* TODO: Find ways to implement CIDR detection */}}
+  {{/* TODO: Find ways to implement CIDR detection */}}
 
   {{/* If there is ingress, get data from the primary */}}
   {{- $primaryIngressName := include "tc.v1.common.lib.util.ingress.primary" (dict "rootCtx" $rootCtx) -}}
@@ -200,6 +199,5 @@
     "appPath" $path "appProtocol" $protocol
   ) -}}
 
-  {{- $context | toYaml -}}
-
+  {{- $context | toJson -}}
 {{- end -}}

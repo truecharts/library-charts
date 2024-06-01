@@ -408,21 +408,18 @@ serviceAccount: {}
 # -- (docs/rbac.md)
 rbac: {}
 
-# -- (docs/scaleExternalInterface.md)
-scaleExternalInterface: []
-
 # NOTES.txt
 notes:
   header: |
     # Thank you for installing {{ .Chart.Name }} by TrueCharts.
   # custom: "{{ toYaml $.Values }}"
   custom: |
-   {{- if .Values.portal }}
+    {{- if .Values.portal }}
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
-      {{- range .Values.portal }}
-      {{- if and .enabled .rendered }}
-    - {{ toYaml .rendered.url }}
+      {{- range $p := .Values.portal }}
+      {{- if $p.enabled }}
+    - {{ toYaml $p.url }}
       {{- end }}
       {{- end -}}
     {{- end }}

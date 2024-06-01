@@ -13,9 +13,8 @@
       {{- if eq $enabled "true" -}}
         {{/* Create a copy of the portal */}}
         {{- $objectData := (mustDeepCopy $portal) -}}
-        {{- $_ := set $objectData "isPortal" true -}}
 
-        {{- $context := (include "tc.v1.common.lib.util.chartcontext.data" (dict "rootCtx" $ "objectData" $objectData) | fromYaml) -}}
+        {{- $context := (include "tc.v1.common.lib.util.chartcontext.data" (dict "rootCtx" $ "objectData" $objectData) | fromJson) -}}
 
         {{/* create configmap entry*/}}
         {{- $portalData := (dict
@@ -36,15 +35,14 @@
         {{/* Call class to create the object */}}
         {{- include "tc.v1.common.class.configmap" (dict "rootCtx" $ "objectData" $configMap) -}}
 
-        {{- $PortalData := (dict
+        {{- $portalData := (dict
           "portalName" $name
           "protocol" $context.appProtocol "host" $context.appHost
           "port" $context.appPort "path" $context.appPath
           "url" $context.appUrlWithPortAndPath
         ) -}}
-        {{- $PortalDataRoot := (dict "rendered" $PortalData) -}}
 
-        {{- $_ := set $.Values.portal $name $PortalDataRoot -}}
+        {{- $_ := set $.Values.portal $name $portalData -}}
 
     {{- end -}}
   {{- end -}}
