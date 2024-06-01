@@ -70,7 +70,7 @@
   {{/* Render Cert-Manager Certificates(s) */}}
   {{- include "tc.v1.common.spawner.certificate" . | nindent 0 -}}
 
-  {{/* Render/Set portal configmap, .Values.iXPortals and APPURL */}}
+  {{/* Render portals */}}
   {{- include "tc.v1.common.spawner.portal" . | nindent 0 -}}
 
 {{- end -}}
