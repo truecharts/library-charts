@@ -421,7 +421,9 @@ notes:
     ## Connecting externally
     You can use this Chart by opening one of the following links in your browser:
       {{- range .Values.portal }}
+      {{- if and .enabled .rendered }}
     - {{ toYaml .rendered.url }}
+      {{- end }}
       {{- end -}}
     {{- end }}
 
