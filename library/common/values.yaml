@@ -157,7 +157,8 @@ podOptions:
   hostNetwork: false
   hostPID: false
   hostIPC: false
-  hostUsers: false
+  # If this key exists, takes precedence over the automated calculation
+  # hostUsers: false
   shareProcessNamespace: false
   restartPolicy: Always
   dnsPolicy: ClusterFirst
@@ -223,7 +224,8 @@ service:
         primary: true
         protocol: http
 
-credentials: {}
+credentials:
+  {}
   # mys3:
   #   type: s3
   #   url: ""
