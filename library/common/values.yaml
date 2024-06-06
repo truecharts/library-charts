@@ -224,8 +224,7 @@ service:
         primary: true
         protocol: http
 
-credentials:
-  {}
+credentials: {}
   # mys3:
   #   type: s3
   #   url: ""
