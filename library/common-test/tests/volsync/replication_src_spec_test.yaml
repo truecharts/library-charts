@@ -78,7 +78,7 @@ tests:
       - documentIndex: *replicationDestDoc
         matchRegex:
           path: spec.restic.unlock
-          pattern: ^[0-9]{14}$
+          pattern: "^[0-9]{14}$"
 
   - it: should generate correct spec with changed defaults
     set:
@@ -138,7 +138,7 @@ tests:
       - documentIndex: *replicationDestDoc
         matchRegex:
           path: spec.restic.unlock
-          pattern: ^[0-9]{14}$
+          pattern: "^[0-9]{14}$"
 
   - it: should generate correct spec with storageClassName
     set:
@@ -200,7 +200,7 @@ tests:
       - documentIndex: *replicationDestDoc
         matchRegex:
           path: spec.restic.unlock
-          pattern: ^[0-9]{14}$              
+          pattern: "^[0-9]{14}$"
 
   - it: should generate correct spec with volumeSnapshotClass
     set:
@@ -262,7 +262,7 @@ tests:
       - documentIndex: *replicationDestDoc
         matchRegex:
           path: spec.restic.unlock
-          pattern: ^[0-9]{14}$
+          pattern: "^[0-9]{14}$"
 
   - it: should generate correct spec with volumeSnapshotClass and StorageClass
     set:
@@ -326,4 +326,4 @@ tests:
       - documentIndex: *replicationDestDoc
         matchRegex:
           path: spec.restic.unlock
-          pattern: ^[0-9]{14}$
+          pattern: "^[0-9]{14}$"
