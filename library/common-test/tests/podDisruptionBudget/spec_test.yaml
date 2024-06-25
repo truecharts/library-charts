@@ -58,7 +58,6 @@ tests:
           path: spec
           content:
             minAvailable: 0
-            maxUnavailable: 0
             unhealthyPodEvictionPolicy: AlwaysAllow
 
   - it: should pass keys from tpl (maxUnavailable)
