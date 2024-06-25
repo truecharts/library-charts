@@ -66,6 +66,8 @@ tests:
       podDisruptionBudget:
         my-pdb1:
           enabled: true
+          customLabels:
+            label1: value1
           maxUnavailable: "{{ .Values.k2 }}"
     asserts:
       - documentIndex: *pdbDoc
