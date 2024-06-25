@@ -36,7 +36,6 @@ tests:
           customLabels:
             label1: value1
           minAvailable: "{{ .Values.k1 }}"
-          maxUnavailable: "{{ .Values.k2 }}"
           unhealthyPodEvictionPolicy: "{{ .Values.k3 }}"
     asserts:
       - documentIndex: *pdbDoc
@@ -47,6 +46,20 @@ tests:
             maxUnavailable: 0
             unhealthyPodEvictionPolicy: AlwaysAllow
 
+  - it: should pass keys from tpl
+    set:
+      k2: 0
+      podDisruptionBudget:
+        my-pdb1:
+          enabled: true
+          maxUnavailable: "{{ .Values.k2 }}"
+    asserts:
+      - documentIndex: *pdbDoc
+        isSubset:
+          path: spec
+          content:
+            maxUnavailable: 0
+
   - it: should pass with percentage in keys
     set:
       percentage: 50%
@@ -55,14 +68,12 @@ tests:
           enabled: true
           customLabels:
             label1: value1
-          minAvailable: 50%
           maxUnavailable: "{{ .Values.percentage }}"
     asserts:
       - documentIndex: *pdbDoc
         isSubset:
           path: spec
           content:
-            minAvailable: 50%
             maxUnavailable: 50%
 
   - it: should pass with minAvailable defined
