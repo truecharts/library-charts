@@ -93,7 +93,7 @@
           {{- if or $srcEnabled $destEnabled -}}
             {{- $volsyncData := (mustDeepCopy $volsync) -}}
 
-            {{- include "tc.v1.common.lib.volsync.validation" (dict "objectData" $volsyncData "rootCtx" $)  -}}
+            {{- include "tc.v1.common.lib.volsync.validation" (dict "objectData" $volsyncData "rootCtx" $) -}}
             {{- include "tc.v1.common.lib.metadata.validation" (dict "objectData" $volsyncData "caller" "PVC - VolSync") -}}
 
             {{/* Create Secret for VolSync */}}

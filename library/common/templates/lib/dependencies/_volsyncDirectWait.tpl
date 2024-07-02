@@ -2,7 +2,6 @@
 This template generates a random password and ensures it persists across updates/edits to the chart
 */}}
 {{- define "tc.v1.common.dependencies.volsync.directwait" -}}
-
 enabled: true
 type: system
 imageSelector: kubectlImage
@@ -57,7 +56,7 @@ command:
 
 {{- define "tc.v1.common.dependencies.volsync.waitrbac" -}}
 {{ $primarypresent := false }}
-{{- range .values.rbac -}}
+{{- range .values.rbac -}} {{/* FIXME: enabled could be a tpl. */}}
   {{ if and .enabled .primary }}
     {{ $primarypresent = true }}
   {{ end }}
@@ -81,40 +80,40 @@ rules:
 enabled: true
 primary: true
 targetSelectAll: true
-{{ end }}
+{{- end -}}
 
 {{/* TODO: adapt this to only assign to pods that need one */}}
 {{- define "tc.v1.common.dependencies.volsync.extrawaitsa" -}}
 enabled: true
 primary: false
-{{ end }}
+{{- end -}}
 
 {{- define "tc.v1.common.dependencies.volsync.waitsa.inject" -}}
 {{ $primarypresent := false }}
 {{ $extraSaReq := true }}
 
 {{- range .values.serviceAccount -}}
-  {{ if and .enabled .primary }}
-    {{ $primarypresent = true }}
-  {{ end }}
-  {{ if and .enabled .targetSelectAll }}
-    {{ $extraSaReq = false }}
-  {{ end }}
-{{ end }}
+  {{- if and .enabled .primary -}}{{/* FIXME: enabled could be a tpl. */}}
+    {{- $primarypresent = true -}}
+  {{- end -}}
+  {{- if and .enabled .targetSelectAll -}}
+    {{- $extraSaReq = false -}}
+  {{- end -}}
+{{- end -}}
 
 {{- if not $primarypresent -}}
-{{- $sa := include "tc.v1.common.dependencies.volsync.primarywaitsa" $ | fromYaml -}}
-{{- $_ := set .Values.serviceAccount "main" $sa -}}
-{{ $extraSaReq = false }}
-{{ end }}
+  {{- $sa := include "tc.v1.common.dependencies.volsync.primarywaitsa" $ | fromYaml -}}
+  {{- $_ := set .Values.serviceAccount "main" $sa -}}
+  {{- $extraSaReq = false -}}
+{{- end -}}
 
 {{/* TODO: We need to list of pods that have no SA assigned */}}
 
 {{- if $extraSaReq -}}
 {{/* TODO: if there are pods without SA, implement an SA anyway */}}
-{{- $saextra := include "tc.v1.common.dependencies.volsync.extrawaitsa" $ | fromYaml -}}
-{{- $_ := set .Values.serviceAccount "saextra" $saextra -}}
-{{ end }}
+  {{- $saextra := include "tc.v1.common.dependencies.volsync.extrawaitsa" $ | fromYaml -}}
+  {{- $_ := set .Values.serviceAccount "saextra" $saextra -}}
+{{- end -}}
 
 {{- end -}}
 
