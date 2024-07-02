@@ -80,23 +80,44 @@ rules:
 {{- define "tc.v1.common.dependencies.volsync.primarywaitsa" -}}
 enabled: true
 primary: true
+targetSelectAll: true
 {{ end }}
 
-{{- define "tc.v1.common.dependencies.volsync.primarywaitsa.inject" -}}
+{{/* TODO: adapt this to only assign to pods that need one */}}
+{{- define "tc.v1.common.dependencies.volsync.extrawaitsa" -}}
+enabled: true
+primary: false
+{{ end }}
+
+{{- define "tc.v1.common.dependencies.volsync.waitsa.inject" -}}
 {{ $primarypresent := false }}
-{{- range .values.rbac -}}
+{{ $extraSaReq := true }}
+
+{{- range .values.serviceAccount -}}
   {{ if and .enabled .primary }}
     {{ $primarypresent = true }}
   {{ end }}
-{{- if not $primarypresent -}}
-{{- $sa := include "tc.v1.common.dependencies.volsync.directwait" $ | fromYaml -}}
-{{- $_ := set .Values.serviceAccount "main" $sa -}}
+  {{ if and .enabled .targetSelectAll }}
+    {{ $extraSaReq = false }}
+  {{ end }}
 {{ end }}
+
+{{- if not $primarypresent -}}
+{{- $sa := include "tc.v1.common.dependencies.volsync.primarywaitsa" $ | fromYaml -}}
+{{- $_ := set .Values.serviceAccount "main" $sa -}}
+{{ $extraSaReq = false }}
+{{ end }}
+
+{{/* TODO: We need to list of pods that have no SA assigned */}}
+
+{{- if $extraSaReq -}}
+{{/* TODO: if there are pods without SA, implement an SA anyway */}}
+{{- $saextra := include "tc.v1.common.dependencies.volsync.extrawaitsa" $ | fromYaml -}}
+{{- $_ := set .Values.serviceAccount "saextra" $saextra -}}
+{{ end }}
+
 {{- end -}}
 
-{{- define "tc.v1.common.dependencies.volsync.waitonlysa" -}}
-{{/* TODO: if there are pods without SA, implement an SA anyway */}}
-{{- end -}}
 
 {{- define "tc.v1.common.lib.deps.volsync.wait" -}}
   {{- $volSyncDetect := false -}}
