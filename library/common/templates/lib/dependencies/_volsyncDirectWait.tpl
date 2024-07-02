@@ -63,6 +63,7 @@ command:
   {{ end }}
 {{ end }}
 enabled: true
+allServiceAccounts: true
 primary: {{ $primarypresent }}
 clusterWide: false
 rules:
@@ -76,6 +77,26 @@ rules:
       - watch
 {{- end -}}
 
+{{- define "tc.v1.common.dependencies.volsync.primarywaitsa" -}}
+enabled: true
+primary: true
+{{ end }}
+
+{{- define "tc.v1.common.dependencies.volsync.primarywaitsa.inject" -}}
+{{ $primarypresent := false }}
+{{- range .values.rbac -}}
+  {{ if and .enabled .primary }}
+    {{ $primarypresent = true }}
+  {{ end }}
+{{- if not $primarypresent -}}
+{{- $sa := include "tc.v1.common.dependencies.volsync.directwait" $ | fromYaml -}}
+{{- $_ := set .Values.serviceAccount "main" $sa -}}
+{{ end }}
+{{- end -}}
+
+{{- define "tc.v1.common.dependencies.volsync.waitonlysa" -}}
+{{/* TODO: if there are pods without SA, implement an SA anyway */}}
+{{- end -}}
 
 {{- define "tc.v1.common.lib.deps.volsync.wait" -}}
   {{- $volSyncDetect := false -}}
@@ -113,6 +134,7 @@ rules:
     {{- $container := include "tc.v1.common.dependencies.volsync.directwait" $ | fromYaml -}}
     {{- if $container -}}
       {{- range .Values.workload -}}
+        {{ $_ := set .podSpec.automountServiceAccountToken true }}
         {{- if not (hasKey .podSpec "initContainers") -}}
           {{- $_ := set .podSpec "initContainers" dict -}}
         {{- end -}}

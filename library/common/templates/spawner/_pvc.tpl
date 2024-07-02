@@ -134,9 +134,11 @@
               {{- include "tc.v1.common.class.replicationdestination" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
 
                {{/* modify PVC if enabled */}}
+               {{- if eq $volsyncData.copyMethod "Snapshot" -}}
                {{- $destname := printf "%s-%s-dest" $objectData.name $volsyncData.name -}}
                {{- $datasourceref := dict "kind" "ReplicationDestination" "apiGroup" "volsync.backube" "name" $destname -}}
                {{- $_ := set $objectData "dataSourceRef" $datasourceref -}}
+               {{- end -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}
