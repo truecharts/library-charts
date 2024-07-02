@@ -52,15 +52,14 @@ command:
     done
     EOF
 {{- end -}}
-{{- end -}}
 
 {{- define "tc.v1.common.dependencies.volsync.waitrbac" -}}
-{{ $primarypresent := false }}
-{{- range .values.rbac -}} {{/* FIXME: enabled could be a tpl. */}}
-  {{ if and .enabled .primary }}
-    {{ $primarypresent = true }}
-  {{ end }}
-{{ end }}
+  {{- $primarypresent := false -}}
+  {{- range .values.rbac -}} {{/* FIXME: enabled could be a tpl. */}}
+    {{- if and .enabled .primary -}}
+      {{- $primarypresent = true -}}
+    {{- end -}}
+  {{- end }}
 enabled: true
 allServiceAccounts: true
 primary: {{ $primarypresent }}
@@ -89,44 +88,44 @@ primary: false
 {{- end -}}
 
 {{- define "tc.v1.common.dependencies.volsync.waitsa.inject" -}}
-{{ $primarypresent := false }}
-{{ $extraSaReq := true }}
+  {{- $primarypresent := false -}}
+  {{- $extraSaReq := true -}}
 
-{{- range .values.serviceAccount -}}
-  {{- if and .enabled .primary -}}{{/* FIXME: enabled could be a tpl. */}}
-    {{- $primarypresent = true -}}
+  {{- range .values.serviceAccount -}}
+    {{- if and .enabled .primary -}}{{/* FIXME: enabled could be a tpl. */}}
+      {{- $primarypresent = true -}}
+    {{- end -}}
+    {{- if and .enabled .targetSelectAll -}}
+      {{- $extraSaReq = false -}}
+    {{- end -}}
   {{- end -}}
-  {{- if and .enabled .targetSelectAll -}}
+
+  {{- if not $primarypresent -}}
+    {{- $sa := include "tc.v1.common.dependencies.volsync.primarywaitsa" $ | fromYaml -}}
+    {{- $_ := set .Values.serviceAccount "main" $sa -}}
     {{- $extraSaReq = false -}}
   {{- end -}}
-{{- end -}}
 
-{{- if not $primarypresent -}}
-  {{- $sa := include "tc.v1.common.dependencies.volsync.primarywaitsa" $ | fromYaml -}}
-  {{- $_ := set .Values.serviceAccount "main" $sa -}}
-  {{- $extraSaReq = false -}}
-{{- end -}}
+  {{/* TODO: We need to list of pods that have no SA assigned */}}
 
-{{/* TODO: We need to list of pods that have no SA assigned */}}
-
-{{- if $extraSaReq -}}
-{{/* TODO: if there are pods without SA, implement an SA anyway */}}
-  {{- $saextra := include "tc.v1.common.dependencies.volsync.extrawaitsa" $ | fromYaml -}}
-  {{- $_ := set .Values.serviceAccount "saextra" $saextra -}}
-{{- end -}}
-
+  {{- if $extraSaReq -}}
+  {{/* TODO: if there are pods without SA, implement an SA anyway */}}
+    {{- $saextra := include "tc.v1.common.dependencies.volsync.extrawaitsa" $ | fromYaml -}}
+    {{- $_ := set .Values.serviceAccount "saextra" $saextra -}}
+  {{- end -}}
 {{- end -}}
 
 
 {{- define "tc.v1.common.lib.deps.volsync.wait" -}}
   {{- $volSyncDetect := false -}}
 
-  {{- range $name, $persistence := .Values.persistence -}}
+  {{- range $name, $persistence := $.Values.persistence -}}
 
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
                     "rootCtx" $ "objectData" $persistence
                     "name" $name "caller" "Persistence"
                     "key" "persistence")) -}}
+    {{- $objectData := mustDeepCopy $persistence -}}
 
     {{- if eq $enabled "true" -}}
 
@@ -142,15 +141,15 @@ primary: false
                 "name" $volsync.name "caller" "VolSync Destination"
                 "key" "volsync")) "true" -}}
 
-          {{- if and $destEnabled ( eq $volsyncData.copyMethod "Snapshot" )-}}
+          {{- if and $destEnabled (eq $volsyncData.copyMethod "Snapshot") -}}
             {{- $volSyncDetect := true -}}
-          {{ end }}
-        {{ end }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
 
-{{- if $volSyncDetect -}}
+  {{- if $volSyncDetect -}}
     {{- $container := include "tc.v1.common.dependencies.volsync.directwait" $ | fromYaml -}}
     {{- if $container -}}
       {{- range .Values.workload -}}
@@ -161,7 +160,7 @@ primary: false
       {{- $_ := set .podSpec.initContainers "redis-wait" $container -}}
       {{- end -}}
     {{- end -}}
-{{- $rbac := include "tc.v1.common.dependencies.volsync.waitrbac" $ | fromYaml -}}
-{{- $_ := set .Values.rbac "volsyncwait" dict -}}
-{{- end-}}
-{{- end-}}
+  {{- $rbac := include "tc.v1.common.dependencies.volsync.waitrbac" $ | fromYaml -}}
+  {{- $_ := set .Values.rbac "volsyncwait" dict -}}
+  {{- end -}}
+{{- end -}}

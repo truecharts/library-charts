@@ -24,15 +24,15 @@
 
     {{- with $storageClassName }}
 storageClassName: {{ . }}
-    {{- end -}}
-  {{- end }}
+    {{- end }}
 
 accessModes:
     {{- range $accessModes }}
   - {{ . }}
     {{- end }}
+  {{- end -}}
 
-  {{- if not (mustHas $objectData.copyMethod (list "Direct" "Clone")) -}}
+  {{- if eq $objectData.copyMethod "Snapshot" -}}
     {{- with $target.volumeSnapshotClassName }}
 volumeSnapshotClassName: {{ . }}
     {{- end -}}
