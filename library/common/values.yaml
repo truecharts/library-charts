@@ -276,6 +276,9 @@ persistence:
 #      - name: mybackup
 #        ## TODO: other options
 #        type: restic
+#        ## Must be either "Direct", "Snapshot" or "Clone". Default: "Clone"
+#        ## When set to "Clone" destination is auto-set to "Direct"
+#        copyMethod: Clone
 #        credentials: mys3
 #        dest:
 #          enabled: true

@@ -42,6 +42,9 @@
     {{- include "tc.v1.common.addon.netshoot" . }}
   {{- end -}}
 
+  {{/* wait for volsync to finish if needed */}}
+  {{- include "tc.v1.common.lib.deps.volsync.wait" $ }}
+
   {{/* Append database wait containers to pods */}}
   {{- include "tc.v1.common.lib.deps.wait" $ }}
 

@@ -53,7 +53,7 @@ spec:
     schedule: {{ $schedule }}
   {{ $volsyncData.type }}:
     repository: {{ $volsyncData.repository }}
-    copyMethod: {{ $volsyncData.copyMethod | default "Snapshot" }}
+    copyMethod: {{ $volsyncData.copyMethod | default "Clone" }}
     pruneIntervalDays: {{ $volsyncData.src.pruneIntervalDays | default 7 }}
     unlock: {{ now | date "20060102150405" | quote }}
     retain:

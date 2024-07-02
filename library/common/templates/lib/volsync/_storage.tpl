@@ -6,6 +6,7 @@
   {{- $volsyncData := .volsyncData -}}
   {{- $target := get $volsyncData .target -}}
 
+  {{- if not ( eq $objectData.copyMethod "Direct" ) -}}
   {{- $accessModes := $rootCtx.Values.global.fallbackDefaults.accessModes -}}
   {{- if $objectData.accessModes }}
     {{- $accessModes = $objectData.accessModes }}
@@ -13,7 +14,6 @@
   {{- if $target.accessModes }}
     {{- $accessModes = $target.accessModes }}
   {{- end }}
-
   {{- $storageClassName := $rootCtx.Values.global.fallbackDefaults.storageClass -}}
   {{- if $objectData.storageClass }}
     {{- $storageClassName = $objectData.storageClass }}
@@ -22,8 +22,10 @@
     {{- $storageClassName = $target.storageClassName }}
   {{- end }}
 
+
   {{- with $storageClassName }}
 storageClassName: {{ . }}
+  {{- end }}
   {{- end }}
 
 accessModes:
@@ -31,7 +33,9 @@ accessModes:
   - {{ . }}
     {{- end }}
 
+  {{- if or ( not eq $objectData.copyMethod "Direct" ) ( not eq $objectData.copyMethod "Clone" ) -}}
   {{- with $target.volumeSnapshotClassName }}
 volumeSnapshotClassName: {{ . }}
+  {{- end }}
   {{- end }}
 {{- end -}}
