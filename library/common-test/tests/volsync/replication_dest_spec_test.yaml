@@ -129,7 +129,7 @@ tests:
                 enabled: false
       credentials: *credentials
     asserts:
-      - documentIndex: *replicationDestDoc
+      - documentIndex: &replicationDestDoc 4
         isKind:
           of: ReplicationDestination
       - documentIndex: *replicationDestDoc

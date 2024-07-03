@@ -71,12 +71,6 @@ rules:
       - watch
 {{- end -}}
 
-{{/* TODO: adapt this to only assign to pods that need one */}}
-{{- define "tc.v1.common.dependencies.volsync.extrawaitsa" -}}
-enabled: true
-primary: false
-{{- end -}}
-
 {{- define "tc.v1.common.dependencies.volsync.waitsa.inject" -}}
   {{- $result := include "tc.v1.common.lib.rbac.hasPrimaryOnEnabled" (dict "rootCtx" $) | fromJson -}}
   {{- $hasPrimary := $result.hasPrimary -}}
@@ -98,7 +92,7 @@ primary: false
   {{- end -}}
 
   {{- $_ := set .Values.serviceAccount $saName (dict
-    "enabled" true "primary" not $hasPrimary "targetSelectAll" true
+    "enabled" true "primary" (not $hasPrimary) "targetSelectAll" true
   ) -}}
 
 {{- end -}}
@@ -139,6 +133,10 @@ primary: false
   {{- end -}}
 
   {{- if $volSyncDetect -}}
+    {{/* Inject the wait service account */}}
+    {{- include "tc.v1.common.dependencies.volsync.waitsa.inject" $ -}}
+
+    {{- /* Create the wait container */}}
     {{- $container := include "tc.v1.common.dependencies.volsync.directwait" $ | fromYaml -}}
     {{- if $container -}}
       {{- range $workload := .Values.workload -}}

@@ -341,3 +341,20 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: RBAC - Namespace [my-extra-super-duper-long-name-that-is-longer-than-63-characters] is not valid. Must start and end with an alphanumeric lowercase character. It can contain '-'. And must be at most 63 characters.
+
+  - it: should fail without serviceAccount
+    set:
+      rbac:
+        my-rbac:
+          enabled: true
+          primary: true
+          rules:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - get
+    asserts:
+      - failedTemplate:
+          errorMessage: RBAC - Expected at least one serviceAccount to exist, but got [0]
