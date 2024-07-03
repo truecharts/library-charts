@@ -23,6 +23,7 @@
   {{- $hasPrimary := false -}}
   {{- $hasMoreThanOne := false -}}
   {{- $hasEnabled := false -}}
+  {{- $hasTargetSelectAll := false -}}
 
   {{- range $name, $serviceAccount := $rootCtx.Values.serviceAccount -}}
     {{- $enabled := (include "tc.v1.common.lib.util.enabled" (dict
@@ -32,6 +33,10 @@
     {{/* If service account is enabled */}}
     {{- if eq $enabled "true" -}}
       {{- $hasEnabled = true -}}
+
+      {{- if and (hasKey $serviceAccount "targetSelectAll") ($serviceAccount.targetSelectAll) -}}
+        {{- $hasTargetSelectAll = true -}}
+      {{- end -}}
 
       {{/* And service account is primary */}}
       {{- if and (hasKey $serviceAccount "primary") ($serviceAccount.primary) -}}
@@ -48,5 +53,10 @@
     {{- end -}}
   {{- end -}}
 
-  {{ dict "hasEnabled" $hasEnabled "hasPrimary" $hasPrimary "hasMoreThanOne" $hasMoreThanOne | toJson }}
+  {{ dict
+    "hasEnabled" $hasEnabled
+    "hasPrimary" $hasPrimary
+    "hasMoreThanOne" $hasMoreThanOne
+    "hasTargetSelectAll" $hasTargetSelectAll
+  | toJson }}
 {{- end -}}
