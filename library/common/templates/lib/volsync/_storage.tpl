@@ -6,7 +6,7 @@
   {{- $volsyncData := .volsyncData -}}
   {{- $target := get $volsyncData .target -}}
 
-  {{- if not (eq $objectData.copyMethod "Direct") -}}
+  {{- if (mustHas $volsyncData.copyMethod (list "Clone" "Snapshot")) -}}
     {{- $accessModes := $rootCtx.Values.global.fallbackDefaults.accessModes -}}
     {{- if $objectData.accessModes }}
       {{- $accessModes = $objectData.accessModes }}
@@ -32,7 +32,7 @@ accessModes:
     {{- end }}
   {{- end -}}
 
-  {{- if eq $objectData.copyMethod "Snapshot" -}}
+  {{- if eq $volsyncData.copyMethod "Snapshot" -}}
     {{- with $target.volumeSnapshotClassName }}
 volumeSnapshotClassName: {{ . }}
     {{- end -}}
