@@ -39,12 +39,12 @@ command:
 
       # If no empty lastSync is found, break the loop
       if [ -z "$empty_syncs" ]; then
-        echo "No replicationDestinations with empty last-sync found in namespace '$NAMESPACE'."
+        echo "No replicationDestinations with empty last-sync found in namespace [{{ .Release.Namespace }}]."
         break
       fi
 
       # Print the names of replicationDestinations with empty lastSync
-      echo "Found replicationDestinations with empty last-sync in namespace '$NAMESPACE':"
+      echo "Found replicationDestinations with empty last-sync in namespace [{{ .Release.Namespace }}]:"
       echo "$empty_syncs"
 
       # Optionally: Add a sleep interval to avoid excessive looping
@@ -54,15 +54,11 @@ command:
 {{- end -}}
 
 {{- define "tc.v1.common.dependencies.volsync.waitrbac" -}}
-  {{- $primarypresent := false -}}
-  {{- range .values.rbac -}} {{/* FIXME: enabled could be a tpl. */}}
-    {{- if and .enabled .primary -}}
-      {{- $primarypresent = true -}}
-    {{- end -}}
-  {{- end }}
+
+  {{- $result := include "tc.v1.common.lib.rbac.hasPrimaryOnEnabled" (dict "rootCtx" $) | fromJson }}
 enabled: true
 allServiceAccounts: true
-primary: {{ $primarypresent }}
+primary: {{ not $result.hasPrimary }}
 clusterWide: false
 rules:
   - apiGroups:
