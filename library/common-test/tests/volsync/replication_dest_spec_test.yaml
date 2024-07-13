@@ -63,10 +63,8 @@ tests:
               manual: restore-once
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
-              copyMethod: Snapshot
+              copyMethod: Direct
               capacity: 100Gi
-              accessModes:
-                - ReadWriteOnce
               moverSecurityContext:
                 fsGroup: 568
                 runAsUser: 568
@@ -105,10 +103,8 @@ tests:
               manual: restore-once
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
-              copyMethod: Clone
+              copyMethod: Direct
               capacity: 200Gi
-              accessModes:
-                - ReadWriteOnce
               moverSecurityContext:
                 fsGroup: 568
                 runAsUser: 568
@@ -125,7 +121,7 @@ tests:
             - name: mybackup1
               type: restic
               credentials: mys3
-              copyMethod: Clone
+              copyMethod: Snapshot
               dest:
                 enabled: true
                 storageClassName: somestorageclass
@@ -133,7 +129,7 @@ tests:
                 enabled: false
       credentials: *credentials
     asserts:
-      - documentIndex: *replicationDestDoc
+      - documentIndex: &replicationDestDoc 4
         isKind:
           of: ReplicationDestination
       - documentIndex: *replicationDestDoc
@@ -147,7 +143,7 @@ tests:
               manual: restore-once
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
-              copyMethod: Clone
+              copyMethod: Snapshot
               capacity: 100Gi
               accessModes:
                 - ReadWriteOnce
@@ -168,7 +164,7 @@ tests:
             - name: mybackup1
               type: restic
               credentials: mys3
-              copyMethod: Clone
+              copyMethod: Snapshot
               dest:
                 enabled: true
                 volumeSnapshotClassName: somevsc
@@ -190,7 +186,7 @@ tests:
               manual: restore-once
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
-              copyMethod: Clone
+              copyMethod: Snapshot
               capacity: 100Gi
               accessModes:
                 - ReadWriteOnce
@@ -211,7 +207,7 @@ tests:
             - name: mybackup1
               type: restic
               credentials: mys3
-              copyMethod: Clone
+              copyMethod: Snapshot
               dest:
                 enabled: true
                 storageClassName: somestorageclass
@@ -234,7 +230,7 @@ tests:
               manual: restore-once
             restic:
               repository: test-release-name-common-test-destbackup-volsync-mybackup1
-              copyMethod: Clone
+              copyMethod: Snapshot
               capacity: 100Gi
               accessModes:
                 - ReadWriteOnce

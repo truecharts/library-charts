@@ -124,16 +124,24 @@
             {{- include "tc.v1.common.class.secret" (dict "rootCtx" $ "objectData" $volsyncSecretData) -}}
              {{/* Create VolSync resources*/}}
             {{- if $srcEnabled -}}
+              {{- if not $volsyncData.copyMethod -}}
+                {{- $_ := set $volsyncData "copyMethod" "Clone" -}}
+              {{- end -}}
               {{- include "tc.v1.common.class.replicationsource" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
             {{- end -}}
 
             {{- if $destEnabled -}}
+              {{- if or (not $volsyncData.copyMethod) (eq $volsyncData.copyMethod "Clone") -}}
+                 {{- $_ := set $volsyncData "copyMethod" "Direct" -}}
+              {{- end -}}
               {{- include "tc.v1.common.class.replicationdestination" (dict "rootCtx" $ "objectData" $objectData "volsyncData" $volsyncData) -}}
 
-               {{/* modify PVC if enabled */}}
-               {{- $destname := printf "%s-%s-dest" $objectData.name $volsyncData.name -}}
-               {{- $datasourceref := dict "kind" "ReplicationDestination" "apiGroup" "volsync.backube" "name" $destname -}}
-               {{- $_ := set $objectData "dataSourceRef" $datasourceref -}}
+              {{/* Modify PVC if enabled */}}
+              {{- if eq $volsyncData.copyMethod "Snapshot" -}}
+                {{- $destname := printf "%s-%s-dest" $objectData.name $volsyncData.name -}}
+                {{- $datasourceref := dict "kind" "ReplicationDestination" "apiGroup" "volsync.backube" "name" $destname -}}
+                {{- $_ := set $objectData "dataSourceRef" $datasourceref -}}
+              {{- end -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}

@@ -63,7 +63,7 @@ tests:
           path: spec.restic
           content:
             repository: test-release-name-common-test-srcbackup-volsync-mybackup1
-            copyMethod: Snapshot
+            copyMethod: Clone
             pruneIntervalDays: 7
             retain:
               hourly: 24
@@ -213,7 +213,7 @@ tests:
             - name: mybackup1
               type: restic
               credentials: mys3
-              copyMethod: Clone
+              copyMethod: Snapshot
               dest:
                 enabled: false
               src:
@@ -246,7 +246,7 @@ tests:
           path: spec.restic
           content:
             repository: test-release-name-common-test-srcbackup-volsync-mybackup1
-            copyMethod: Clone
+            copyMethod: Snapshot
             pruneIntervalDays: 5
             retain:
               hourly: 20
@@ -275,7 +275,7 @@ tests:
             - name: mybackup1
               type: restic
               credentials: mys3
-              copyMethod: Clone
+              copyMethod: Snapshot
               dest:
                 enabled: false
               src:
@@ -309,7 +309,7 @@ tests:
           path: spec.restic
           content:
             repository: test-release-name-common-test-srcbackup-volsync-mybackup1
-            copyMethod: Clone
+            copyMethod: Snapshot
             pruneIntervalDays: 5
             retain:
               hourly: 20

@@ -10,6 +10,9 @@ objectData: The object data to be used to render the RBAC.
   {{- $objectData := .objectData -}}
 
   {{- $serviceAccounts := list -}}
+  {{- if not $rootCtx.Values.serviceAccount -}}
+    {{- fail "RBAC - Expected at least one serviceAccount to exist, but got [0]" -}}
+  {{- end -}}
 
   {{- range $name, $serviceAccount := $rootCtx.Values.serviceAccount -}}
     {{- $saName := include "tc.v1.common.lib.chart.names.fullname" $rootCtx -}}
